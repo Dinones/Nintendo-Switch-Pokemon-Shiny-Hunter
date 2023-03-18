@@ -17,19 +17,28 @@ class Game_Capture:
         self.video_capture.set(cv2.CAP_PROP_FRAME_WIDTH, CONST.ORIGINAL_FRAME_SIZE[0])
         self.video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, CONST.ORIGINAL_FRAME_SIZE[1])
 
-        self.original_frame = None
+        self.frame = None
         self.resized_frame = None
+        self.masked_frame = None
 
         self.read()
-        if self.original_frame is None: exit(print(f'[χ] Could not access to the video capture nº{video_capture_index}'))
+        if self.frame is None: exit(print(f'[χ] Could not access to the video capture nº{video_capture_index}'))
 
     # ↓↓ Take a frame
     def read(self): 
-        ret, self.original_frame = self.video_capture.read()
+
+        ################################# TRANSFORMAR A GRAYSCALE Y MIRAR SI TODO SON ZEROS, SI ES ASÍ, RETURN None TAMBIÉN
+        #################### PONER EN OTRA FUNCIÓN, SOLO QUEREMOS QUE SE COMPRUEBE CUANDO SE ENCIENDE LA CÁMARA POR PRIMERA VEZ (PUEDE HABER FRAMES NEGROS EN EL JUEGO)
+        # print(self.frame)
+        # array = [x for x in self.frame if x]
+        # print(array)
+        #############################################################
+
+        ret, self.frame = self.video_capture.read()
         # ↓↓ Could not read the frame
-        if not ret: self.original_frame = None; return
+        if not ret: self.frame = None; return
         # ↓↓ Resize the image so it does not fit the full screen when displaying
-        self.resized_frame = cv2.resize(self.original_frame, CONST.BOT_WINDOW_SIZE)
+        self.resized_frame = cv2.resize(self.frame, CONST.BOT_WINDOW_SIZE)
 
     # ↓↓ Release the capture card and close all windows
     def stop(self):
@@ -40,16 +49,17 @@ class Game_Capture:
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
 
-Game_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
-while True:
-    Game_Capture.read()
-    if Game_Capture.original_frame is None: continue
-    
-    # ↓↓ Display the frame
-    cv2.imshow(CONST.BOT_NAME, Game_Capture.resized_frame)
+if __name__ == '__main__':
+    Game_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
+    while True:
+        Game_Capture.read()
+        if Game_Capture.frame is None: continue
+        
+        # ↓↓ Display the frame
+        cv2.imshow(CONST.BOT_NAME, Game_Capture.resized_frame)
+        # ↓↓ Press 'q' to stop the program
+        key = cv2.waitKey(1)
+        if key == ord('q') or key == ord('Q'): break
 
-    key = cv2.waitKey(1)
-    if key == ord('q'): break
-
-# ↓↓ Release the capture card and close all windows
-Game_Capture.stop()
+    # ↓↓ Release the capture card and close all windows
+    Game_Capture.stop()
