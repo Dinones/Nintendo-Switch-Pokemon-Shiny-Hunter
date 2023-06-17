@@ -2,9 +2,12 @@
 ####################################################     LIBRARIES     ####################################################
 ###########################################################################################################################
 
+# ↓↓ Set the cwd to the one of the file
+import os; os.chdir(os.path.dirname(__file__))
+
 import cv2
 
-import sys; sys.path.append('./')
+import sys; sys.path.append('../')
 import Constants as CONST
 
 ###########################################################################################################################
@@ -27,18 +30,21 @@ class Game_Capture:
     # ↓↓ Take a frame
     def read(self): 
 
+        '''
         ################################# TRANSFORMAR A GRAYSCALE Y MIRAR SI TODO SON ZEROS, SI ES ASÍ, RETURN None TAMBIÉN
         #################### PONER EN OTRA FUNCIÓN, SOLO QUEREMOS QUE SE COMPRUEBE CUANDO SE ENCIENDE LA CÁMARA POR PRIMERA VEZ (PUEDE HABER FRAMES NEGROS EN EL JUEGO)
         # print(self.frame)
         # array = [x for x in self.frame if x]
         # print(array)
         #############################################################
+        '''
 
         ret, self.frame = self.video_capture.read()
         # ↓↓ Could not read the frame
         if not ret: self.frame = None; return
         # ↓↓ Resize the image so it does not fit the full screen when displaying
         self.resized_frame = cv2.resize(self.frame, CONST.BOT_WINDOW_SIZE)
+        return self.frame
 
     # ↓↓ Release the capture card and close all windows
     def stop(self):

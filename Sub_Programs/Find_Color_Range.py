@@ -3,14 +3,14 @@
 ###########################################################################################################################
 
 # ↓↓ Set the cwd to the one of the file
-import os
-os.chdir(os.path.dirname(__file__))
+import os; os.chdir(os.path.dirname(__file__))
 
 from tkinter import *
 from tkinter import filedialog
 
 from PIL import Image, ImageTk
 import numpy as np
+import copy
 import cv2
 
 import sys; sys.path.append('../'); sys.path.append('../Utils/')
@@ -33,18 +33,31 @@ root.update_idletasks()
 
 Pokemon_Images = {
     'Shiny'  :  None,
-    'Normal' :  None
+    'Normal' :  None,
+    'Countours' : None,
 }
 Upper_Color = {
-    'Red': IntVar(value=255),
+    'Red': IntVar(value=200),
     'Green': IntVar(value=255),
-    'Blue': IntVar(value=255),
+    'Blue': IntVar(value=70),
 }
 Lower_Color = {
-    'Red': IntVar(),
-    'Green': IntVar(),
-    'Blue': IntVar(),
+    'Red': IntVar(value=55),
+    'Green': IntVar(value=110),
+    'Blue': IntVar(value=0),
 }
+GUI_Items = {
+    'Match_Window': None,
+    'Shiny_Canvas': {
+        'Canvas': None,
+        'ID': None,
+    },
+    'Normal_Canvas': {
+        'Canvas': None,
+        'ID': None,
+    },
+}
+Show_Match = False
 
 ###########################################################################################################################
 
@@ -87,10 +100,16 @@ INSTRUCTIONS = [
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
 
-def update_color(_, color_range, specific_frame_items):
+def update_items(_, color_range, specific_frame_items):
     # ↓↓ Prevent lower colors from being bigger than upper colors
-    def solve_lower_upper_errors(colors):
+    def solve_lower_upper_errors():
+        colors = []
+        # ↓↓ Check if the lower color is higher than the upper color for each RGB component
+        if Lower_Color['Red'].get() > Upper_Color['Red'].get(): colors.append('Red')
+        if Lower_Color['Green'].get() > Upper_Color['Green'].get(): colors.append('Green')
+        if Lower_Color['Blue'].get() > Upper_Color['Blue'].get(): colors.append('Blue')
         if not len(colors): return
+
         for color in colors:
             # ↓↓ Set lower color to the upper color
             Lower_Color[color].set(Upper_Color[color].get())
@@ -109,13 +128,35 @@ def update_color(_, color_range, specific_frame_items):
         # ↓↓ (Start-X, Start-Y, End-X, End-Y, extras)
         canvas.create_rectangle(0, 0, 500, 10, fill='#{:02x}{:02x}{:02x}'.format(*color), width=0)
         canvas.pack()
-
-    colors = []
     # ↓↓ Prevent lower colors from being bigger than upper colors
-    if Lower_Color['Red'].get() > Upper_Color['Red'].get(): colors.append('Red')
-    if Lower_Color['Green'].get() > Upper_Color['Green'].get(): colors.append('Green')
-    if Lower_Color['Blue'].get() > Upper_Color['Blue'].get(): colors.append('Blue')
-    solve_lower_upper_errors(colors)
+    solve_lower_upper_errors()
+
+    # ↓↓ Calculate and display the new masked image 
+    def update_image(name):
+        # ↓↓ Do not process the placeholder image
+        if Pokemon_Images[name].resized_image is None: return
+        
+        lower_color = (Lower_Color['Red'].get(), Lower_Color['Green'].get(), Lower_Color['Blue'].get())
+        upper_color = (Upper_Color['Red'].get(), Upper_Color['Green'].get(), Upper_Color['Blue'].get())
+        # ↓↓ Get the masked image and convert it to tkinter compatible image
+        Pokemon_Images[name].detect_color(lower_color, upper_color)
+        Pokemon_Images[name].get_tkinter_image(Pokemon_Images[name].masked_image)
+
+        if GUI_Items[f'{name}_Canvas']['Canvas'] is None:
+            # ↓↓ Done with canvas to avoid white flashing when moving the slides fast
+            GUI_Items[f'{name}_Canvas']['Canvas'] = Canvas(main_frame, bg='#000', highlightthickness=0, width=CONST.NEW_FRAME_SIZE[0],
+                height=CONST.NEW_FRAME_SIZE[1])
+            GUI_Items[f'{name}_Canvas']['ID'] = GUI_Items[f'{name}_Canvas']['Canvas'].create_image(0, 0, anchor='nw', image=Pokemon_Images[name].tkinter_image)
+            if name == 'Shiny': GUI_Items[f'{name}_Canvas']['Canvas'].grid(row=0, column=2, rowspan=5, padx=10, pady=(10, 20))
+            else: GUI_Items[f'{name}_Canvas']['Canvas'].grid(row=6, column=2, rowspan=1, padx=10, pady=(20, 10))
+        else:
+            GUI_Items[f'{name}_Canvas']['Canvas'].itemconfig(GUI_Items[f'{name}_Canvas']['ID'], image=str(Pokemon_Images[name].tkinter_image))
+
+    for key in  ['Shiny', 'Normal']: update_image(key)
+    
+    # ↓↓ Show the image with the contours drawn
+    if Show_Match: update_gui('Match_Window')
+    else: destroy_gui('Match_Window')
 
     # ↓↓ Update the color of the rectangle on the top of the slider
     # ↓↓ Body frame
@@ -132,6 +173,8 @@ def update_color(_, color_range, specific_frame_items):
     specific_frame_items['Value_Text'].destroy()
     specific_frame_items['Value_Text'] = Label(specific_frame_items['Color_Rectangle'], text=text,  background='#222', fg='#fff')
     specific_frame_items['Value_Text'].grid(row=3, column=0, columnspan=3, pady=(0, 10))
+
+###########################################################################################################################
 
 def build_gui():
     # ↓↓ Insert a title
@@ -160,15 +203,15 @@ def build_gui():
         if key == 'Shiny': frame.grid(row=0, column=2, rowspan=5, padx=10, pady=(10, 20))
         else: frame.grid(row=6, column=2, rowspan=1, padx=10, pady=(20, 10))
         # ↓↓ Image
-        Pokemon_Images[key] = Image_Processing(Image.open(CONST.SELECT_IMAGE_PATH))
-        Pokemon_Images[key].tkinter_image = ImageTk.PhotoImage(Pokemon_Images[key].original_image)
+        Pokemon_Images[key] = Image_Processing(f'.{CONST.SELECT_IMAGE_PATH}')
+        Pokemon_Images[key].get_tkinter_image(Pokemon_Images[key].original_image)
         Label(frame, image=Pokemon_Images[key].tkinter_image, borderwidth=0).pack()
 
     # ↓↓ Create a division line between the images
-    canvas = Canvas(main_frame, width=CONST.NEW_PIXEL_SIZE[0], height=1, highlightthickness=0)
+    canvas = Canvas(main_frame, width=CONST.NEW_FRAME_SIZE[0], height=1, highlightthickness=0)
     canvas.grid(row=5, column=2)
     # ↓↓ (Start-X, Start-Y, End-X, End-Y, extras)
-    canvas.create_rectangle(0, 0, CONST.NEW_PIXEL_SIZE[0], 1, fill='#222', width=0)
+    canvas.create_rectangle(0, 0, CONST.NEW_FRAME_SIZE[0], 1, fill='#222', width=0)
 
     # ↓↓ Create the sliders 
     def create_slider(color_range, text):
@@ -194,15 +237,15 @@ def build_gui():
         scales = [
             # ↓↓ Red
             Scale(frame, from_=255, to=0, **slider_style, background='#f00', activebackground='#400', variable=color_range['Red'],
-                command=lambda _: update_color(_, color_range, lower_slider_items if 'Lower' in text else upper_slider_items),
+                command=lambda _: update_items(_, color_range, lower_slider_items if 'Lower' in text else upper_slider_items),
                 cursor='sb_v_double_arrow'),
             # ↓↓ Green
             Scale(frame, from_=255, to=0, **slider_style, background='#0f0', activebackground='#040', variable=color_range['Green'],
-                command=lambda _: update_color(_, color_range, lower_slider_items if 'Lower' in text else upper_slider_items),
+                command=lambda _: update_items(_, color_range, lower_slider_items if 'Lower' in text else upper_slider_items),
                 cursor='sb_v_double_arrow'),
             # ↓↓ Blue
             Scale(frame, from_=255, to=0, **slider_style, background='#00f', activebackground='#004', variable=color_range['Blue'],
-                command=lambda _: update_color(_, color_range, lower_slider_items if 'Lower' in text else upper_slider_items),
+                command=lambda _: update_items(_, color_range, lower_slider_items if 'Lower' in text else upper_slider_items),
                 cursor='sb_v_double_arrow'),
         ]
 
@@ -232,37 +275,71 @@ def build_gui():
     for instruction in INSTRUCTIONS:
         Label(frame, text=instruction, background='#222', fg='#aaa', width=50, anchor='w').pack(padx=15, pady=10)
 
+    def toggle_match_showing(): global Show_Match; Show_Match = not Show_Match
+    # ↓↓ Check match button
+    # ↓↓ Body frame
+    frame =  Frame(main_frame, **frame_style)
+    frame.grid(row=5, column=0, columnspan=2, rowspan=10, sticky=N, pady=(230, 0))
+    Button(frame, text=f'Toggle Check Match', command=lambda: toggle_match_showing(), **button_style).pack()
+
     return upper_slider_items, lower_slider_items
 
+###########################################################################################################################
+
+def destroy_gui(item_name = ''):
+    if item_name not in GUI_Items.keys(): return
+    if GUI_Items[item_name] is None: return
+    GUI_Items[item_name].destroy()
+    GUI_Items[item_name] = None
+
+###########################################################################################################################
+
+def update_gui(item_name = ''):
+    # if item_name not in GUI_Items.keys(): return
+    if Pokemon_Images['Normal'].masked_image is None or Pokemon_Images['Shiny'].masked_image is None: return
+    
+    if GUI_Items[item_name] is None: 
+        GUI_Items[item_name] = Toplevel()
+        GUI_Items[item_name].title('Matching Window')
+        GUI_Items[item_name].iconbitmap("../Media/Metal Slime.ico")
+
+    # ↓↓ Match window has been closed
+    if not GUI_Items[item_name].winfo_exists(): 
+        global Show_Match
+        Show_Match = False
+        return
+
+    match = Pokemon_Images['Shiny'].get_rectangles()
+    if match is None: return
+    Pokemon_Images['Countours'] = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(Pokemon_Images['Shiny'].contours_image, cv2.COLOR_BGR2RGB)))
+    Label(GUI_Items[item_name], image=Pokemon_Images['Countours'], borderwidth=0).grid(row=0, column=0)
+
+###########################################################################################################################
+    
 def get_image(name):
     try: file_path = filedialog.askopenfile(initialdir=f'{os.path.dirname(__file__)}/../Media/', title='Choose one image',
         filetypes=(('Valid Formats', ['*.png', '*.jpg', '*.jpeg']), ('All Files', '*.*'))).name
     # ↓↓ The selection window has been closed without selecting any element
-    except: return print('No file selected!')
+    except: return
 
-    try: Pokemon_Images[name] = Image_Processing(Image.open(file_path))
-    except: return print(f"[‼] Could not open '{file_path}'. Check if it is damaged.")
-    
-    # ↓↓ Get the desired aspect ratio and size
-    aspect_ratio = CONST.ORIGINAL_FRAME_SIZE[0]/CONST.ORIGINAL_FRAME_SIZE[1]
-    size = Pokemon_Images[name].original_image.size
-    max_size_index = np.argmax(size)
-    if not max_size_index: new_size = [CONST.NEW_PIXEL_SIZE[max_size_index], int(CONST.NEW_PIXEL_SIZE[max_size_index]/aspect_ratio)]
-    else: new_size = [int(CONST.NEW_PIXEL_SIZE[max_size_index]*aspect_ratio), CONST.NEW_PIXEL_SIZE[max_size_index]]
-
-    # ↓↓ Resize the image
-    Pokemon_Images[name].resized_image = Pokemon_Images[name].original_image.resize(new_size, Image.BICUBIC)
-    # ↓↓ Convert the image to tkinter compatible format
-    Pokemon_Images[name].tkinter_image = ImageTk.PhotoImage(Pokemon_Images[name].resized_image)
+    # ↓↓ Load the image
+    Pokemon_Images[name] = Image_Processing(file_path)
+    Pokemon_Images[name].resize_image(CONST.NEW_FRAME_SIZE)
+    # ↓↓ Convert from BGR to RGB (I don't know why this one is the only one that is processed as BGR)
+    aux_image = cv2.cvtColor(Pokemon_Images[name].resized_image, cv2.COLOR_BGR2RGB)
+    Pokemon_Images[name].get_tkinter_image(cv2.cvtColor(aux_image, cv2.COLOR_BGR2RGB))
+    # ↓↓ Reset the Canvas. If not, when updating it with the new image, it appears a white canvas 
+    GUI_Items[f'{name}_Canvas']['Canvas'] = None
 
     # ↓↓ Body frame
-    frame = Frame(main_frame, highlightthickness=1, highlightbackground ='#222')
+    frame = Frame(main_frame, highlightthickness=1, highlightbackground ='#444')
     # ↓↓ Image
     Label(frame, image=Pokemon_Images[name].tkinter_image, borderwidth=0).pack()
     # ↓↓ Shiny: Top | Normal: Bottom
     if name == 'Shiny': frame.grid(row=0, column=2, rowspan=5, padx=10, pady=(10, 20))
     else: frame.grid(row=6, column=2, rowspan=1, padx=10, pady=(20, 10))
 
+###########################################################################################################################
 ###########################################################################################################################
 
 upper_slider_items, lower_slider_items = build_gui()
