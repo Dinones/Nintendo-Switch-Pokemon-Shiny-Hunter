@@ -3,7 +3,8 @@
 ###########################################################################################################################
 
 # ↓↓ Set the cwd to the one of the file
-import os; os.chdir(os.path.dirname(__file__))
+import os
+if __name__ == '__main__': os.chdir(os.path.dirname(__file__))
 
 from tkinter import *
 from tkinter import filedialog
@@ -13,7 +14,7 @@ import numpy as np
 import copy
 import cv2
 
-import sys; sys.path.append('../'); sys.path.append('../Utils/')
+import sys; sys.path.append('..'); sys.path.append('../Utils')
 from Image_Processing import Image_Processing
 import Constants as CONST
 
@@ -179,8 +180,9 @@ def update_items(_, color_range, specific_frame_items):
 def build_gui():
     # ↓↓ Insert a title
     root.title("Pokemon Shiny Hunter")
-    # ↓↓ Set the icon for the GUI
-    root.iconbitmap("../Media/Metal Slime.ico")
+    # ↓↓ Set the icon for the GUI. It raises an error on Linux systems
+    try: root.iconbitmap("../Media/Metal Slime.ico")
+    except: pass
     # ↓↓ Set the background color
     root.configure(bg='#333')
     # ↓↓ Set the font
@@ -301,7 +303,9 @@ def update_gui(item_name = ''):
     if GUI_Items[item_name] is None: 
         GUI_Items[item_name] = Toplevel()
         GUI_Items[item_name].title('Matching Window')
-        GUI_Items[item_name].iconbitmap("../Media/Metal Slime.ico")
+        # ↓↓ It raises an error on Linux systems
+        try: GUI_Items[item_name].iconbitmap("../Media/Metal Slime.ico")
+        except: pass
 
     # ↓↓ Match window has been closed
     if not GUI_Items[item_name].winfo_exists(): 

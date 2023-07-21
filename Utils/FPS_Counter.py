@@ -3,11 +3,12 @@
 ###########################################################################################################################
 
 # ↓↓ Set the cwd to the one of the file
-import os; os.chdir(os.path.dirname(__file__))
+import os
+if __name__ == '__main__': os.chdir(os.path.dirname(__file__))
 
 from time import time, sleep
 
-import sys; sys.path.append('../')
+import sys; sys.path.append('..')
 import Constants as CONST
 
 ###########################################################################################################################

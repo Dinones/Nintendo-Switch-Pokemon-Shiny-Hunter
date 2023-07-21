@@ -3,11 +3,12 @@
 ###########################################################################################################################
 
 # ↓↓ Set the cwd to the one of the file
-import os; os.chdir(os.path.dirname(__file__))
+import os
+if __name__ == '__main__': os.chdir(os.path.dirname(__file__))
 
 import cv2
 
-import sys; sys.path.append('../')
+import sys; sys.path.append('..')
 import Constants as CONST
 
 ###########################################################################################################################
@@ -16,7 +17,7 @@ import Constants as CONST
 
 class Game_Capture:
     def __init__(self, video_capture_index = 0):
-        self.video_capture = cv2.VideoCapture(video_capture_index, cv2.CAP_DSHOW)
+        self.video_capture = cv2.VideoCapture(video_capture_index)
         self.video_capture.set(cv2.CAP_PROP_FRAME_WIDTH, CONST.ORIGINAL_FRAME_SIZE[0])
         self.video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, CONST.ORIGINAL_FRAME_SIZE[1])
 

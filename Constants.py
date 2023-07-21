@@ -32,7 +32,7 @@ MIN_DETECT_SIZE = 300
 # ↓↓ GUI title
 BOT_NAME = "FBot Shiny Hunter"
 # ↓↓ [PIXELS] GUI size
-BOT_WINDOW_SIZE = (1000, 562)
+BOT_WINDOW_SIZE = (720, 405) # (1000, 562)
 # ↓↓ All image paths must be relative paths from the main folder
 SELECT_IMAGE_PATH = "./Media/Select Image.png"
 
@@ -40,7 +40,13 @@ SELECT_IMAGE_PATH = "./Media/Select Image.png"
 ##################################################     VIDEO CAPTURE     ##################################################
 ###########################################################################################################################
 
-VIDEO_CAPTURE_INDEX = 1
+VIDEO_CAPTURE_INDEX = 0
 FPS_COUNTER = True
 # ↓↓ [SECONDS]
 REFRESH_FPS_TIME = 1
+
+###########################################################################################################################
+######################################################     TESTS     ######################################################
+###########################################################################################################################
+
+TESTING_IMAGE = 'Shiny Dialga.png'

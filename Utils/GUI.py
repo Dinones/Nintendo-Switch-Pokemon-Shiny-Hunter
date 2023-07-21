@@ -3,7 +3,8 @@
 ###########################################################################################################################
 
 # ↓↓ Set the cwd to the one of the file
-import os; os.chdir(os.path.dirname(__file__))
+import os
+if __name__ == '__main__': os.chdir(os.path.dirname(__file__))
 
 from threading import Thread, Timer
 from tkinter import filedialog
@@ -17,7 +18,7 @@ import cv2
 
 from Image_Processing import Image_Processing
 
-import sys; sys.path.append('../')
+import sys; sys.path.append('..')
 import Constants as CONST
 
 ###########################################################################################################################
@@ -56,8 +57,9 @@ class GUI(Thread):
         self.root = tk.Tk()
         # ↓↓ Insert a title
         self.root.title("Pokemon Shiny Hunter")
-        # ↓↓ Set the icon for the GUI
-        self.root.iconbitmap("../Media/Metal Slime.ico")
+        # ↓↓ Set the icon for the GUI. It raises an error on Linux systems
+        try: root.iconbitmap("../Media/Metal Slime.ico")
+        except: pass
         # ↓↓ Set the background color
         self.root.configure(bg='#333')
         # ↓↓ Set the font

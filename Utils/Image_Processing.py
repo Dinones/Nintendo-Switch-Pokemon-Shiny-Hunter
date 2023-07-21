@@ -3,13 +3,14 @@
 ###########################################################################################################################
 
 # ↓↓ Set the cwd to the one of the file
-import os; os.chdir(os.path.dirname(__file__))
+import os
+if __name__ == '__main__': os.chdir(os.path.dirname(__file__))
 
 import cv2
 import numpy as np
 from PIL import Image, ImageTk
 
-import sys; sys.path.append('../')
+import sys; sys.path.append('..')
 import Constants as CONST
 
 ###########################################################################################################################
@@ -107,7 +108,7 @@ class Image_Processing():
 ###########################################################################################################################
 
 if __name__ == '__main__':
-    image = Image_Processing('../Media/Dialga Shiny.png')
+    image = Image_Processing(f'../Media/{CONST.TESTING_IMAGE}')
 
     image.resize_image(CONST.NEW_FRAME_SIZE)
     image.detect_color()

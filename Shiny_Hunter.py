@@ -3,7 +3,8 @@
 ###########################################################################################################################
 
 # ↓↓ Set the cwd to the one of the file
-import os; os.chdir(os.path.dirname(__file__))
+import os
+if __name__ == '__main__': os.chdir(os.path.dirname(__file__))
 
 from threading import Thread
 from queue import Queue
@@ -11,7 +12,7 @@ import cv2
 
 import Constants as CONST
 
-import sys; sys.path.append('./Utils')
+import sys; sys.path.append('Utils')
 from Image_Processing import Image_Processing
 from Game_Capture import Game_Capture
 from FPS_Counter import FPS_Counter

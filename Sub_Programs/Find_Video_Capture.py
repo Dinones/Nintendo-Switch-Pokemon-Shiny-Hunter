@@ -3,7 +3,8 @@
 ###########################################################################################################################
 
 # ↓↓ Set the cwd to the one of the file
-import os; os.chdir(os.path.dirname(__file__))
+import os
+if __name__ == '__main__': os.chdir(os.path.dirname(__file__))
 
 import cv2
 
@@ -11,6 +12,8 @@ import cv2
 #################################################     INITIALIZATIONS     #################################################
 ###########################################################################################################################
 
+# ↓↓ Disable warning messages
+cv2.setLogLevel(0)
 MAX_DEVICE_ANALIZER = 10
 
 ###########################################################################################################################
@@ -20,7 +23,7 @@ MAX_DEVICE_ANALIZER = 10
 print('\n[♦️] Capture devices found:')
 # ↓↓ Print the index of all available capture devices
 for index in range(MAX_DEVICE_ANALIZER):
-    video_capture = cv2.VideoCapture(index, cv2.CAP_DSHOW)
+    video_capture = cv2.VideoCapture(index)
     if video_capture.read()[0]: print(f"    Video Capture {index}: OK")
     else: print(f"    Video Capture {index}: NOT OK")
     video_capture.release()
