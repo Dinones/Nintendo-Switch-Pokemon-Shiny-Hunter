@@ -181,7 +181,7 @@ def build_gui():
     # ↓↓ Insert a title
     root.title("Pokemon Shiny Hunter")
     # ↓↓ Set the icon for the GUI. It raises an error on Linux systems
-    try: root.iconbitmap("../Media/Metal Slime.ico")
+    try: root.iconbitmap(f"../Media/{CONST.GUI_ICON}")
     except: pass
     # ↓↓ Set the background color
     root.configure(bg='#333')
@@ -205,7 +205,7 @@ def build_gui():
         if key == 'Shiny': frame.grid(row=0, column=2, rowspan=5, padx=10, pady=(10, 20))
         else: frame.grid(row=6, column=2, rowspan=1, padx=10, pady=(20, 10))
         # ↓↓ Image
-        Pokemon_Images[key] = Image_Processing(f'.{CONST.SELECT_IMAGE_PATH}')
+        Pokemon_Images[key] = Image_Processing(f'../Media/{CONST.DEFAULT_SELECTION_IMAGE}')
         Pokemon_Images[key].get_tkinter_image(Pokemon_Images[key].original_image)
         Label(frame, image=Pokemon_Images[key].tkinter_image, borderwidth=0).pack()
 

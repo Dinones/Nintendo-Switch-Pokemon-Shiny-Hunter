@@ -58,7 +58,7 @@ class GUI(Thread):
         # ↓↓ Insert a title
         self.root.title("Pokemon Shiny Hunter")
         # ↓↓ Set the icon for the GUI. It raises an error on Linux systems
-        try: root.iconbitmap("../Media/Metal Slime.ico")
+        try: root.iconbitmap(f"../Media/{CONST.GUI_ICON}")
         except: pass
         # ↓↓ Set the background color
         self.root.configure(bg='#333')
