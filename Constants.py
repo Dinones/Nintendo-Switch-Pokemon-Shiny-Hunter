@@ -33,7 +33,7 @@ MIN_DETECT_SIZE = 300
 BOT_NAME = "FBot Shiny Hunter"
 # ↓↓ [PIXELS] GUI size
 BOT_WINDOW_SIZE = (720, 405) # (1000, 562)
-# ↓↓ All image paths must be relative paths from the main folder
+# ↓↓ Only image names
 DEFAULT_SELECTION_IMAGE = "Select Image.png"
 GUI_ICON = "Metal Slime.ico"
 
@@ -52,6 +52,9 @@ REFRESH_FPS_TIME = 1
 
 CONTROLLER_BODY_COLOR = [0, 200, 0]
 CONTROLLER_BUTTONS_COLOR = [200, 0, 0]
+RESTART_BLUETOOTH_SECONDS = 3
+WALKING_SECONDS = 2
+BLACK_SCREEN_LOAD_SECONDS = 15
 
 ###########################################################################################################################
 ######################################################     TESTS     ######################################################
