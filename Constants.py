@@ -52,9 +52,10 @@ REFRESH_FPS_TIME = 1
 
 CONTROLLER_BODY_COLOR = [0, 200, 0]
 CONTROLLER_BUTTONS_COLOR = [200, 0, 0]
-RESTART_BLUETOOTH_SECONDS = 3
+RESTART_BLUETOOTH_SECONDS = 4
 WALKING_SECONDS = 2
 BLACK_SCREEN_LOAD_SECONDS = 15
+ENTER_COMBAT_WAIT_SECONDS = 3
 
 ###########################################################################################################################
 ######################################################     TESTS     ######################################################

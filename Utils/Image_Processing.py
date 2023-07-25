@@ -103,6 +103,12 @@ class Image_Processing():
         cv2.putText(self.FPS_image, f'FPS: {FPS}', CONST.TEXT_PARAMS['position'], cv2.FONT_HERSHEY_SIMPLEX, 
             CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'], CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
 
+    #######################################################################################################################
+
+    def check_corner_color(self): 
+        # ↓↓ Return upper-left pixel
+        return self.original_image[0][0]
+
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################

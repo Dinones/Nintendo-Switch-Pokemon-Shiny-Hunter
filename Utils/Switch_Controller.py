@@ -14,10 +14,12 @@ if __name__ == '__main__':
     # ↓↓ NXBT requires administrator permissions
     if 'SUDO_USER' not in os.environ: 
         print('NXBT must be executed using administrator permission: Restarting using sudo...')
-        exit(os.system('sudo python3 Switch_Controller.py'))
+        program_name = __file__.split('/')[-1]
+        exit(os.system(f'sudo python3 {program_name}'))
 
 import nxbt
 from time import sleep
+from threading import Lock
 
 from Macros import *
 import sys; sys.path.append('..')
@@ -32,6 +34,8 @@ class Switch_Controller():
         # ↓↓ Init NXBT
         self.nxbt_manager = nxbt.Nxbt()
         self.controller_index = None
+        self.event_lock = Lock()
+        self.current_event = None
 
     @staticmethod
     def restart_bluetooth():
@@ -45,6 +49,7 @@ class Switch_Controller():
         print('Bluetooth restarted successfully!')
 
     def connect_controller(self):
+        self.restart_bluetooth()
         # ↓↓ Get a list of all available Bluetooth adapters
         adapters = self.nxbt_manager.get_available_adapters()
         controller_indexes = []
@@ -63,6 +68,21 @@ class Switch_Controller():
         # ↓↓ Connect to Nintendo Switch
         self.nxbt_manager.wait_for_connection(self.controller_index)
         print('Controller connected!')
+        with self.event_lock: self.current_event = 'RESTART'
+
+    def run_event(self):
+        while True:
+            with self.event_lock: 
+                if self.current_event == 'RESTART': 
+                    setup_macro(self.nxbt_manager, self.controller_index)
+                    self.current_event = 'WAIT_COMBAT'
+                elif self.current_event == 'COMBAT': 
+                    start_combat_macro(self.nxbt_manager, self.controller_index)
+                    self.current_event = 'WAIT_RESTART'
+                elif self.current_event == 'STOP': 
+                    stop_macro(self.nxbt_manager, self.controller_index)
+                    self.current_event = 'FINISH'
+            sleep(0.5)
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
@@ -70,11 +90,10 @@ class Switch_Controller():
 
 if __name__ == '__main__':
     Switch_Controller = Switch_Controller()
-    Switch_Controller.restart_bluetooth()
     Switch_Controller.connect_controller()
     for _ in range(2):
         setup_macro(Switch_Controller.nxbt_manager, Switch_Controller.controller_index)
         sleep(10)
-        start_combat(Switch_Controller.nxbt_manager, Switch_Controller.controller_index, False)
+        start_combat_macro(Switch_Controller.nxbt_manager, Switch_Controller.controller_index, False)
         sleep(7)
     stop_macro(Switch_Controller.nxbt_manager, Switch_Controller.controller_index)
