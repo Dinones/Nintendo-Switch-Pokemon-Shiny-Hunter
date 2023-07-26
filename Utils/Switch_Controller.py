@@ -68,18 +68,22 @@ class Switch_Controller():
         # ↓↓ Connect to Nintendo Switch
         self.nxbt_manager.wait_for_connection(self.controller_index)
         print('Controller connected!')
-        with self.event_lock: self.current_event = 'RESTART'
+        with self.event_lock: self.current_event = 'SETUP'
 
     def run_event(self):
         while True:
             with self.event_lock: 
-                if self.current_event == 'RESTART': 
+                if self.current_event == 'SETUP': 
                     setup_macro(self.nxbt_manager, self.controller_index)
+                    self.current_event = 'WAIT_COMBAT'
+                if self.current_event == 'RESTART': 
+                    restart_game_macro(self.nxbt_manager, self.controller_index)
                     self.current_event = 'WAIT_COMBAT'
                 elif self.current_event == 'COMBAT': 
                     start_combat_macro(self.nxbt_manager, self.controller_index)
                     self.current_event = 'WAIT_RESTART'
                 elif self.current_event == 'STOP': 
+                    sleep(CONST.SHINY_RECORDING_SECONDS)
                     stop_macro(self.nxbt_manager, self.controller_index)
                     self.current_event = 'FINISH'
             sleep(0.5)

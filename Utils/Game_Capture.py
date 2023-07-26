@@ -20,6 +20,9 @@ class Game_Capture:
         self.video_capture = cv2.VideoCapture(video_capture_index)
         self.video_capture.set(cv2.CAP_PROP_FRAME_WIDTH, CONST.ORIGINAL_FRAME_SIZE[0])
         self.video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, CONST.ORIGINAL_FRAME_SIZE[1])
+        
+        self.video_recorder = None
+        self.video_recorder_contours = None
 
         self.frame = None
         self.resized_frame = None
@@ -30,16 +33,6 @@ class Game_Capture:
 
     # ↓↓ Take a frame
     def read(self): 
-
-        '''
-        ################################# TRANSFORMAR A GRAYSCALE Y MIRAR SI TODO SON ZEROS, SI ES ASÍ, RETURN None TAMBIÉN
-        #################### PONER EN OTRA FUNCIÓN, SOLO QUEREMOS QUE SE COMPRUEBE CUANDO SE ENCIENDE LA CÁMARA POR PRIMERA VEZ (PUEDE HABER FRAMES NEGROS EN EL JUEGO)
-        # print(self.frame)
-        # array = [x for x in self.frame if x]
-        # print(array)
-        #############################################################
-        '''
-
         ret, self.frame = self.video_capture.read()
         # ↓↓ Could not read the frame
         if not ret: self.frame = None; return
@@ -50,7 +43,33 @@ class Game_Capture:
     # ↓↓ Release the capture card and close all windows
     def stop(self):
         self.video_capture.release()
+        if CONST.RECORD_VIDEO:
+            self.video_recorder.release()
+            if CONST.RECORD_MULTIPLE_WINDOWS and type(self.video_recorder_contours) is not type(None):
+                self.video_recorder_contours.release()
         cv2.destroyAllWindows()
+
+    # ↓↓ Records a video of each soft reset
+    def start_recording(self, image = None):
+        self.video_recorder = cv2.VideoWriter(f'./Media/{CONST.OUTPUT_VIDEO_NAME}', cv2.VideoWriter_fourcc(*'XVID'),
+            CONST.VIDEO_FPS, CONST.ORIGINAL_FRAME_SIZE)
+            
+        if CONST.RECORD_MULTIPLE_WINDOWS and type(image) is not type(None):
+            self.video_recorder_contours = cv2.VideoWriter(f'./Media/{CONST.OUTPUT_CONTOURS_VIDEO_NAME}',
+                cv2.VideoWriter_fourcc(*'XVID'), CONST.VIDEO_FPS, image.resized_image.shape[1::-1])
+
+    # ↓↓ Save the current video and start recording the next one
+    def save_video(self, image = None):
+        self.video_recorder.release()
+        if CONST.RECORD_MULTIPLE_WINDOWS and type(image) is not type(None):
+            if type(self.video_recorder_contours) is not type(None): 
+                self.video_recorder_contours.release()
+                
+    def add_frame_to_video(self, image):
+        if CONST.RECORD_VIDEO: 
+            self.video_recorder.write(image.original_image)
+            if CONST.RECORD_MULTIPLE_WINDOWS and type(self.video_recorder_contours) is not type(None):
+                    self.video_recorder_contours.write(image.contours_image)
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################

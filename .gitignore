@@ -2,5 +2,7 @@ __pycache__
 Objectives.txt
 Borrar.py
 
+*.xlsx
+*.avi
 *png
 !Select Image.png

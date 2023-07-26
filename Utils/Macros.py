@@ -42,6 +42,10 @@ def stop_macro(nxbt_manager, controller_index):
     sleep(2); nxbt_manager.press_buttons(controller_index, [Buttons.A])
     sleep(2)
 
+def restart_game_macro(nxbt_manager, controller_index): 
+    nxbt_manager.press_buttons(controller_index, [Buttons.HOME])
+    start_game_macro(nxbt_manager, controller_index)
+
 def start_game_macro(nxbt_manager, controller_index):
     sleep(1); nxbt_manager.press_buttons(controller_index, [Buttons.X])
     for _ in range(5): 

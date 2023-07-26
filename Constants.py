@@ -3,8 +3,8 @@
 ###########################################################################################################################
 
 # ↓↓ [RGB] Default Ranges
-LOWER_COLOR = (55, 110, 0)
-UPPER_COLOR = (200, 255, 70)
+LOWER_COLOR = (110, 0, 65)
+UPPER_COLOR = (255, 255, 105)
 # ↓↓ [PIXELS] Nintendo Switch captured frames' size 
 ORIGINAL_FRAME_SIZE = (1920, 1080)
 # ↓↓ [PIXELS] Size the captured frame is resized to
@@ -23,7 +23,7 @@ RECTANGLES_PARAMS = {
     'thickness': 4
 }
 # ↓↓ [PIXELS²] Minimum area to detect something as a match
-MIN_DETECT_SIZE = 300
+MIN_DETECT_SIZE = 50
 
 ###########################################################################################################################
 #######################################################     GUI     #######################################################
@@ -45,6 +45,13 @@ VIDEO_CAPTURE_INDEX = 0
 FPS_COUNTER = True
 # ↓↓ [SECONDS]
 REFRESH_FPS_TIME = 1
+# ↓↓ Record a video for every attempt. Overwrites always the file
+RECORD_VIDEO = True
+RECORD_MULTIPLE_WINDOWS = True
+VIDEO_FPS = 5
+OUTPUT_VIDEO_NAME = 'Video.avi'
+OUTPUT_CONTOURS_VIDEO_NAME = 'Video (Contours).avi'
+SHINY_RECORDING_SECONDS = 60
 
 ###########################################################################################################################
 ################################################     SWITCH CONTROLLER     ################################################
@@ -61,4 +68,4 @@ ENTER_COMBAT_WAIT_SECONDS = 3
 ######################################################     TESTS     ######################################################
 ###########################################################################################################################
 
-TESTING_IMAGE = 'Shiny Dialga.png'
+TESTING_IMAGE = 'Select Image.png'

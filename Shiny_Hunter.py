@@ -35,7 +35,14 @@ from GUI import GUI
 #################################################     INITIALIZATIONS     #################################################
 ###########################################################################################################################
 
+with open('./Media/Attempts.txt', 'r') as txt_file:
+    attempts = int(txt_file.read())
+    print(f'Current attempts: {attempts}')
+
 Game_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
+if CONST.RECORD_VIDEO: 
+    print('Recording video for each soft reset...')
+    Game_Capture.start_recording()
 
 Switch_Controller = Switch_Controller()
 Thread(target = Switch_Controller.connect_controller, daemon = True).start()
@@ -46,7 +53,7 @@ Image_Queue = Queue()
 GUI = GUI(Image_Queue)
 GUI.start()
 
-def queue_next_frame(image=None):
+def queue_next_frame(image = None):
     if image is None: return
     Image_Queue.put(image)
 
@@ -68,6 +75,8 @@ while True:
     image.detect_color()
     match = image.get_rectangles()
 
+    Game_Capture.add_frame_to_video(image)
+
     if Switch_Controller.event_lock.acquire(blocking = False):
         # ↓↓ Wait for the black screen to load the game
         if Switch_Controller.current_event == 'WAIT_COMBAT':
@@ -80,9 +89,28 @@ while True:
                 timer = time()
         elif Switch_Controller.current_event == 'WAIT_SHINY_CHECK':
                 if time() - timer >= CONST.ENTER_COMBAT_WAIT_SECONDS:
-                    cv2.imwrite(f'./Media/{time()}.png', image.original_image)
-                    Switch_Controller.current_event = 'RESTART'
-        elif Switch_Controller.current_event == 'FINISH': exit()
+                    cv2.imwrite(f'./Media/Results/{attempts}.png', image.original_image)
+                    
+                    if match: 
+                        Switch_Controller.current_event = 'STOP'
+                        Switch_Controller.event_lock.release()
+                        continue
+                    else: Switch_Controller.current_event = 'RESTART'
+
+                    attempts += 1
+                    with open('./Media/Attempts.txt', 'w') as txt_file:
+                        txt_file.write(str(attempts))
+                        print(f'Current attempts: {attempts}')
+
+                    timer = time()
+                    # ↓↓ Save the current video and start the new one
+                    if CONST.RECORD_VIDEO and Switch_Controller.current_event == 'RESTART':
+                        Game_Capture.save_video(image)
+                        Game_Capture.start_recording(image)
+        elif Switch_Controller.current_event == 'FINISH': 
+            print('Shiny found!')
+            Game_Capture.save_video(image)
+            exit()
         Switch_Controller.event_lock.release()
 
     queue_next_frame(image)
@@ -91,3 +119,5 @@ while True:
 
 # ↓↓ Release the capture card and close all windows
 Game_Capture.stop()
+program_name = __file__.split('/')[-1]
+os.system(f'sudo pkill -f "{program_name}"')
