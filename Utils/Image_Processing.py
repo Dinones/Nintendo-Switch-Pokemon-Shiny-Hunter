@@ -105,9 +105,22 @@ class Image_Processing():
 
     #######################################################################################################################
 
-    def check_corner_color(self): 
-        # ↓↓ Return upper-left pixel
-        return self.original_image[0][0]
+    # ↓↓ Return the requested pixel color, by default: Lower-left corner
+    def check_pixel_color(self, pixel = [-1, 0]): 
+        return self.original_image[pixel[0]][pixel[1]]
+
+    #######################################################################################################################
+
+    # ↓↓ Return whether all the pixels of the specifiead row are white
+    def check_multiple_pixel_colors(self, start, end):
+        pixels = []
+        for index in range(start[1], end[1]):
+            if all(pixel_value == 255 for pixel_value in self.resized_image[-index][start[0]]): pixels.append(True)
+            # ↓↓ If one False is found, there is no need to check the other pixels
+            else: pixels.append(False); break
+        if CONST.TESTING: 
+            for index in range(start[1], end[1]): self.resized_image[-index][start[0]] = [0, 0, 255]
+        return all(pixels)
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################

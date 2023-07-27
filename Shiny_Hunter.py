@@ -80,34 +80,53 @@ while True:
     if Switch_Controller.event_lock.acquire(blocking = False):
         # ↓↓ Wait for the black screen to load the game
         if Switch_Controller.current_event == 'WAIT_COMBAT':
-            if not all(pixel_value == 0 for pixel_value in image.check_corner_color()):
+            if not all(pixel_value == 0 for pixel_value in image.check_pixel_color()):
                 Switch_Controller.current_event = 'COMBAT'
+
         # ↓↓ Wait for the white screen to load the combat
         elif Switch_Controller.current_event == 'WAIT_RESTART':
-            if not all(pixel_value == 255 for pixel_value in image.check_corner_color()):
-                Switch_Controller.current_event = 'WAIT_SHINY_CHECK'
-                timer = time()
-        elif Switch_Controller.current_event == 'WAIT_SHINY_CHECK':
-                if time() - timer >= CONST.ENTER_COMBAT_WAIT_SECONDS:
-                    cv2.imwrite(f'./Media/Results/{attempts}.png', image.original_image)
-                    
-                    if match: 
-                        Switch_Controller.current_event = 'STOP'
-                        Switch_Controller.event_lock.release()
-                        continue
-                    else: Switch_Controller.current_event = 'RESTART'
+            if not all(pixel_value == 255 for pixel_value in image.check_pixel_color()):
+                Switch_Controller.current_event = 'WAIT_POKEMON_FOREGROUND'
 
-                    attempts += 1
-                    with open('./Media/Attempts.txt', 'w') as txt_file:
-                        txt_file.write(str(attempts))
-                        print(f'Current attempts: {attempts}')
+        # ↓↓ Wait for the pokemon to appear in the foreground
+        elif Switch_Controller.current_event == 'WAIT_POKEMON_FOREGROUND':
+            # ↓↓ Calculate the coordinates of the dialogue box background
+            x = int(len(Game_Capture.resized_frame[0]) // 16 * 1.2)
+            y1 = int(len(Game_Capture.resized_frame) // 15 * 1)
+            y2 = int(len(Game_Capture.resized_frame) // 15 * 2)
+            if image.check_multiple_pixel_colors([x, y1], [x, y2]):
+                print(f'Pokemon foreground detected!')
+                # ↓↓ Save the image of the pokemon
+                cv2.imwrite(f'./Media/Results/{attempts}.png', image.original_image)
 
-                    timer = time()
-                    # ↓↓ Save the current video and start the new one
-                    if CONST.RECORD_VIDEO and Switch_Controller.current_event == 'RESTART':
-                        Game_Capture.save_video(image)
-                        Game_Capture.start_recording(image)
-        elif Switch_Controller.current_event == 'FINISH': 
+                # ↓↓ Check whether the pokemon is shiny or not
+                if match: 
+                    Switch_Controller.current_event = 'HOME_STOP'
+                    Switch_Controller.event_lock.release()
+                    continue
+                Switch_Controller.current_event = 'HOME_RESTART'
+    
+                attempts += 1
+                with open('./Media/Attempts.txt', 'w') as txt_file:
+                    txt_file.write(str(attempts))
+                    print(f'Current attempts: {attempts}')
+
+                # ↓↓ Save the current video and start the new one
+                if CONST.RECORD_VIDEO:
+                    Game_Capture.save_video(image)
+                    Game_Capture.start_recording(image)
+
+        # ↓↓ Check if it's in the HOME page. Sometimes it fails to press the HOME button
+        elif Switch_Controller.current_event in ['WAIT_HOME_STOP', 'WAIT_HOME_RESTART']:
+            if all(pixel_value == 255 for pixel_value in image.check_pixel_color()):
+                if Switch_Controller.current_event == 'WAIT_HOME_STOP': Switch_Controller.current_event = 'STOP'
+                else: Switch_Controller.current_event = 'RESTART'
+            else: 
+                if Switch_Controller.current_event == 'WAIT_HOME_STOP': Switch_Controller.current_event = 'HOME_STOP'
+                else: Switch_Controller.current_event = 'HOME_RESTART'
+
+        # ↓↓ Stop the program
+        elif Switch_Controller.current_event == 'FINISH':
             print('Shiny found!')
             Game_Capture.save_video(image)
             exit()

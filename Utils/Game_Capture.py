@@ -26,7 +26,6 @@ class Game_Capture:
 
         self.frame = None
         self.resized_frame = None
-        self.masked_frame = None
 
         self.read()
         if self.frame is None: exit(print(f'[χ] Could not access to the video capture nº{video_capture_index}'))
@@ -43,7 +42,7 @@ class Game_Capture:
     # ↓↓ Release the capture card and close all windows
     def stop(self):
         self.video_capture.release()
-        if CONST.RECORD_VIDEO:
+        if CONST.RECORD_VIDEO and type(self.video_recorder) is not type(None):
             self.video_recorder.release()
             if CONST.RECORD_MULTIPLE_WINDOWS and type(self.video_recorder_contours) is not type(None):
                 self.video_recorder_contours.release()
@@ -76,11 +75,20 @@ class Game_Capture:
 ###########################################################################################################################
 
 if __name__ == '__main__':
+    from FPS_Counter import FPS_Counter
+
     Game_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
+    FPS_Counter = FPS_Counter()
+    
     while True:
         Game_Capture.read()
         if Game_Capture.frame is None: continue
-        
+
+        FPS_Counter.get_FPS()
+        cv2.putText(Game_Capture.resized_frame, f'FPS: {FPS_Counter.FPS}', CONST.TEXT_PARAMS['position'], 
+            cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'], 
+            CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
+
         # ↓↓ Display the frame
         cv2.imshow(CONST.BOT_NAME, Game_Capture.resized_frame)
         # ↓↓ Press 'q' to stop the program

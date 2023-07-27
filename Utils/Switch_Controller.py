@@ -72,20 +72,24 @@ class Switch_Controller():
 
     def run_event(self):
         while True:
-            with self.event_lock: 
+            with self.event_lock:
                 if self.current_event == 'SETUP': 
                     setup_macro(self.nxbt_manager, self.controller_index)
-                    self.current_event = 'WAIT_COMBAT'
-                if self.current_event == 'RESTART': 
-                    restart_game_macro(self.nxbt_manager, self.controller_index)
                     self.current_event = 'WAIT_COMBAT'
                 elif self.current_event == 'COMBAT': 
                     start_combat_macro(self.nxbt_manager, self.controller_index)
                     self.current_event = 'WAIT_RESTART'
-                elif self.current_event == 'STOP': 
+                elif self.current_event in ['HOME_STOP', 'HOME_RESTART']:
+                    home_macro(self.nxbt_manager, self.controller_index)
+                    if self.current_event == 'STOP_HOME': self.current_event = 'WAIT_HOME_STOP'
+                    else: self.current_event = 'WAIT_HOME_RESTART'
+                elif self.current_event == 'RESTART':
+                    start_game_macro(self.nxbt_manager, self.controller_index)
+                    self.current_event = 'WAIT_COMBAT'
+                elif self.current_event == 'STOP':
                     sleep(CONST.SHINY_RECORDING_SECONDS)
                     stop_macro(self.nxbt_manager, self.controller_index)
-                    self.current_event = 'FINISH'
+                    self.current_event = 'FINISH'                                    
             sleep(0.5)
 
 ###########################################################################################################################

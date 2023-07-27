@@ -3,8 +3,8 @@
 ###########################################################################################################################
 
 # ↓↓ [RGB] Default Ranges
-LOWER_COLOR = (110, 0, 65)
-UPPER_COLOR = (255, 255, 105)
+LOWER_COLOR = (70, 0, 150)
+UPPER_COLOR = (210, 100, 255)
 # ↓↓ [PIXELS] Nintendo Switch captured frames' size 
 ORIGINAL_FRAME_SIZE = (1920, 1080)
 # ↓↓ [PIXELS] Size the captured frame is resized to
@@ -62,10 +62,14 @@ CONTROLLER_BUTTONS_COLOR = [200, 0, 0]
 RESTART_BLUETOOTH_SECONDS = 4
 WALKING_SECONDS = 2
 BLACK_SCREEN_LOAD_SECONDS = 15
-ENTER_COMBAT_WAIT_SECONDS = 3
+# ↓↓ Time to wait for the pokemon to be in the foreground
+ENTER_COMBAT_WAIT_SECONDS = 2
+# ↓↓ Time to wait for the overworld entering combat animation
+OVERWORLD_ENTER_COMBAT_WAIT_SECONDS = 7
 
 ###########################################################################################################################
 ######################################################     TESTS     ######################################################
 ###########################################################################################################################
 
+TESTING = True
 TESTING_IMAGE = 'Select Image.png'

@@ -30,24 +30,10 @@ import Constants as CONST
 def setup_macro(nxbt_manager, controller_index):
     sleep(1); nxbt_manager.press_buttons(controller_index, [Buttons.B])
     sleep(1); nxbt_manager.press_buttons(controller_index, [Buttons.HOME])
-    start_game_macro(nxbt_manager, controller_index)
-
-def stop_macro(nxbt_manager, controller_index):
-    nxbt_manager.press_buttons(controller_index, [Buttons.HOME])
-    sleep(1); nxbt_manager.press_buttons(controller_index, [Buttons.DPAD_DOWN])
-    for _ in range(4): 
-        sleep(0.2)
-        nxbt_manager.press_buttons(controller_index, [Buttons.DPAD_RIGHT])
-    sleep(0.5); nxbt_manager.press_buttons(controller_index, [Buttons.A])
-    sleep(2); nxbt_manager.press_buttons(controller_index, [Buttons.A])
-    sleep(2)
-
-def restart_game_macro(nxbt_manager, controller_index): 
-    nxbt_manager.press_buttons(controller_index, [Buttons.HOME])
-    start_game_macro(nxbt_manager, controller_index)
+    sleep(1); start_game_macro(nxbt_manager, controller_index)
 
 def start_game_macro(nxbt_manager, controller_index):
-    sleep(1); nxbt_manager.press_buttons(controller_index, [Buttons.X])
+    for _ in range(3): nxbt_manager.press_buttons(controller_index, [Buttons.X])
     for _ in range(5): 
         sleep(0.5)
         nxbt_manager.press_buttons(controller_index, [Buttons.A])
@@ -57,8 +43,20 @@ def start_game_macro(nxbt_manager, controller_index):
         nxbt_manager.press_buttons(controller_index, [Buttons.A])
 
 def start_combat_macro(nxbt_manager, controller_index, movement = False):
-    if movement: nxbt_manager.press_buttons(controller_index, [Buttons.DPAD_UP], down=CONST.WALKING_SECONDS)
+    if movement: nxbt_manager.press_buttons(controller_index, [Buttons.DPAD_UP], down = CONST.WALKING_SECONDS)
     for _ in range(10): 
         sleep(0.5)
         nxbt_manager.press_buttons(controller_index, [Buttons.A])
-    sleep(0.5)
+    sleep(CONST.OVERWORLD_ENTER_COMBAT_WAIT_SECONDS)
+
+def home_macro(nxbt_manager, controller_index):
+    nxbt_manager.press_buttons(controller_index, [Buttons.HOME])
+    sleep(1)
+
+def stop_macro(nxbt_manager, controller_index):
+    for _ in range(2): nxbt_manager.press_buttons(controller_index, [Buttons.DPAD_DOWN])
+    for _ in range(4): 
+        sleep(0.3); nxbt_manager.press_buttons(controller_index, [Buttons.DPAD_RIGHT])
+    sleep(0.5); nxbt_manager.press_buttons(controller_index, [Buttons.A])
+    sleep(2); nxbt_manager.press_buttons(controller_index, [Buttons.A])
+    sleep(3)
