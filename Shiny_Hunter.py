@@ -19,7 +19,6 @@ if __name__ == '__main__':
         
 from threading import Thread
 from queue import Queue
-from time import time
 import cv2
 
 import Constants as CONST
@@ -37,6 +36,7 @@ from GUI import GUI
 
 with open('./Media/Attempts.txt', 'r') as txt_file:
     attempts = int(txt_file.read())
+    initial_attempts = attempts
     print(f'Current attempts: {attempts}')
 
 Game_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
@@ -62,10 +62,6 @@ def queue_next_frame(image = None):
 ###########################################################################################################################
 
 while True:
-    if Switch_Controller.event_lock.acquire(blocking = False):
-        if Switch_Controller.current_event == 'FINISH': exit()
-        Switch_Controller.event_lock.release()
-
     image = Image_Processing(Game_Capture.read())
     if image.original_image is None: continue
 
@@ -97,14 +93,17 @@ while True:
             if image.check_multiple_pixel_colors([x, y1], [x, y2]):
                 print(f'Pokemon foreground detected!')
                 # ↓↓ Save the image of the pokemon
-                cv2.imwrite(f'./Media/Results/{attempts}.png', image.original_image)
+                if CONST.SAVE_SCREENSHOTS: cv2.imwrite(f'./Media/Results/{attempts}.png', image.original_image)
 
                 # ↓↓ Check whether the pokemon is shiny or not
                 if match: 
                     Switch_Controller.current_event = 'HOME_STOP'
                     Switch_Controller.event_lock.release()
                     continue
-                Switch_Controller.current_event = 'HOME_RESTART'
+                # ↓↓ Avoid memory leaks
+                if attempts - initial_attempts >= CONST.AUTORESTART_ATTEMPTS: 
+                    Switch_Controller.current_event = 'HOME_RESTART_SYSTEM'
+                else: Switch_Controller.current_event = 'HOME_RESTART'
     
                 attempts += 1
                 with open('./Media/Attempts.txt', 'w') as txt_file:
@@ -117,19 +116,30 @@ while True:
                     Game_Capture.start_recording(image)
 
         # ↓↓ Check if it's in the HOME page. Sometimes it fails to press the HOME button
-        elif Switch_Controller.current_event in ['WAIT_HOME_STOP', 'WAIT_HOME_RESTART']:
+        elif Switch_Controller.current_event in ['WAIT_HOME_STOP', 'WAIT_HOME_RESTART', 'WAIT_HOME_RESTART_SYSTEM']:
             if all(pixel_value == 255 for pixel_value in image.check_pixel_color()):
                 if Switch_Controller.current_event == 'WAIT_HOME_STOP': Switch_Controller.current_event = 'STOP'
-                else: Switch_Controller.current_event = 'RESTART'
+                elif Switch_Controller.current_event == 'WAIT_HOME_RESTART': Switch_Controller.current_event = 'RESTART'
+                elif Switch_Controller.current_event == 'WAIT_HOME_RESTART_SYSTEM': 
+                    Switch_Controller.current_event = 'RESTART_SYSTEM'
             else: 
                 if Switch_Controller.current_event == 'WAIT_HOME_STOP': Switch_Controller.current_event = 'HOME_STOP'
-                else: Switch_Controller.current_event = 'HOME_RESTART'
+                elif Switch_Controller.current_event == 'WAIT_HOME_RESTART': Switch_Controller.current_event = 'HOME_RESTART'
+                elif Switch_Controller.current_event == 'WAIT_HOME_RESTART_SYSTEM': 
+                    Switch_Controller.current_event = 'HOME_RESTART_SYSTEM'
 
         # ↓↓ Stop the program
         elif Switch_Controller.current_event == 'FINISH':
             print('Shiny found!')
             Game_Capture.save_video(image)
             exit()
+
+        elif Switch_Controller.current_event == 'FINISH_RESTART_SYSTEM':
+            print('Restarting system!')
+            Game_Capture.save_video(image)
+            Game_Capture.stop()
+            break
+
         Switch_Controller.event_lock.release()
 
     queue_next_frame(image)
@@ -139,4 +149,7 @@ while True:
 # ↓↓ Release the capture card and close all windows
 Game_Capture.stop()
 program_name = __file__.split('/')[-1]
-os.system(f'sudo pkill -f "{program_name}"')
+# os.system(f'sudo pkill -f "{program_name}"')
+# exit(os.system(f'sudo python3 {program_name}'))
+# import subprocess
+# subprocess.call([sys.executable, program_name])

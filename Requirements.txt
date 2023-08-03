@@ -1,4 +1,5 @@
 numpy==1.21.3
+nxbt==0.1.4
 opencv_python==4.5.3.56
 Pillow==9.5.0
 PyAutoGUI==0.9.53

@@ -1,10 +1,16 @@
 ###########################################################################################################################
+#####################################################     GENERAL     #####################################################
+###########################################################################################################################
+
+AUTORESTART_ATTEMPTS = 100000
+
+###########################################################################################################################
 #################################################     IMAGE PROCESSING     ################################################
 ###########################################################################################################################
 
 # ↓↓ [RGB] Default Ranges
-LOWER_COLOR = (70, 0, 150)
-UPPER_COLOR = (210, 100, 255)
+LOWER_COLOR = (0, 0, 0)
+UPPER_COLOR = (0, 0, 0)
 # ↓↓ [PIXELS] Nintendo Switch captured frames' size 
 ORIGINAL_FRAME_SIZE = (1920, 1080)
 # ↓↓ [PIXELS] Size the captured frame is resized to
@@ -45,7 +51,8 @@ VIDEO_CAPTURE_INDEX = 0
 FPS_COUNTER = True
 # ↓↓ [SECONDS]
 REFRESH_FPS_TIME = 1
-# ↓↓ Record a video for every attempt. Overwrites always the file
+SAVE_SCREENSHOTS = True
+# ↓↓ Record a video for every attempt. Overwrites always the old file
 RECORD_VIDEO = True
 RECORD_MULTIPLE_WINDOWS = True
 VIDEO_FPS = 5
@@ -60,6 +67,7 @@ SHINY_RECORDING_SECONDS = 60
 CONTROLLER_BODY_COLOR = [0, 200, 0]
 CONTROLLER_BUTTONS_COLOR = [200, 0, 0]
 RESTART_BLUETOOTH_SECONDS = 4
+WALK_FORWARD_BEFORE_COMBAT = False
 WALKING_SECONDS = 2
 BLACK_SCREEN_LOAD_SECONDS = 15
 # ↓↓ Time to wait for the pokemon to be in the foreground

@@ -43,7 +43,7 @@ def start_game_macro(nxbt_manager, controller_index):
         nxbt_manager.press_buttons(controller_index, [Buttons.A])
 
 def start_combat_macro(nxbt_manager, controller_index, movement = False):
-    if movement: nxbt_manager.press_buttons(controller_index, [Buttons.DPAD_UP], down = CONST.WALKING_SECONDS)
+    if CONST.WALK_FORWARD_BEFORE_COMBAT: nxbt_manager.press_buttons(controller_index, [Buttons.DPAD_UP], down = CONST.WALKING_SECONDS)
     for _ in range(10): 
         sleep(0.5)
         nxbt_manager.press_buttons(controller_index, [Buttons.A])

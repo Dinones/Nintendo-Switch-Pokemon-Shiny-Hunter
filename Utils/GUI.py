@@ -123,8 +123,9 @@ class GUI(Thread):
     #######################################################################################################################
 
     def update_GUI(self):
-        try: image = self.queue.get(block=True)
+        try: image = self.queue.get(block=True, timeout=3)
         except: 
+            if not self.is_alive(): exit(self.root.destroy())
             # ↓↓ Schedule the next update_GUI() call in 10 milliseconds
             self.timer = Timer(0.01, self.update_GUI)
             self.timer.start()
@@ -151,3 +152,8 @@ class GUI(Thread):
         # ↓↓ Schedule the next update_GUI() call in 10 milliseconds
         self.timer = Timer(0.01, self.update_GUI)
         self.timer.start()
+
+    #######################################################################################################################
+
+    def destroy_GUI(self):
+        self.root.destroy()

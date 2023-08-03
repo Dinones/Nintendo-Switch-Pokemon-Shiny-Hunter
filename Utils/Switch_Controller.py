@@ -79,17 +79,21 @@ class Switch_Controller():
                 elif self.current_event == 'COMBAT': 
                     start_combat_macro(self.nxbt_manager, self.controller_index)
                     self.current_event = 'WAIT_RESTART'
-                elif self.current_event in ['HOME_STOP', 'HOME_RESTART']:
+                elif self.current_event in ['HOME_STOP', 'HOME_RESTART', 'HOME_RESTART_SYSTEM']:
                     home_macro(self.nxbt_manager, self.controller_index)
-                    if self.current_event == 'STOP_HOME': self.current_event = 'WAIT_HOME_STOP'
-                    else: self.current_event = 'WAIT_HOME_RESTART'
+                    if self.current_event == 'HOME_STOP': self.current_event = 'WAIT_HOME_STOP'
+                    elif self.current_event == 'HOME_RESTART': self.current_event = 'WAIT_HOME_RESTART'
+                    elif self.current_event == 'HOME_RESTART_SYSTEM': self.current_event = 'WAIT_HOME_RESTART_SYSTEM'
                 elif self.current_event == 'RESTART':
                     start_game_macro(self.nxbt_manager, self.controller_index)
                     self.current_event = 'WAIT_COMBAT'
                 elif self.current_event == 'STOP':
                     sleep(CONST.SHINY_RECORDING_SECONDS)
                     stop_macro(self.nxbt_manager, self.controller_index)
-                    self.current_event = 'FINISH'                                    
+                    self.current_event = 'FINISH'
+                elif self.current_event == 'RESTART_SYSTEM':
+                    stop_macro(self.nxbt_manager, self.controller_index)
+                    self.current_event = 'FINISH_RESTART_SYSTEM'
             sleep(0.5)
 
 ###########################################################################################################################
