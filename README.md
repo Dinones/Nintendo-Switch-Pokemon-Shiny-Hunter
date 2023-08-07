@@ -44,7 +44,7 @@ git clone https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter.git
 ### Linux and Raspberry Pi OS
 
 ```bash
-sudo apt-get install python-tk
+sudo apt-get install python3-tk
 ```
 Go to the project folder and install the libraries.
 ```bash

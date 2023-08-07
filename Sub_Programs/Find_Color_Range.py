@@ -38,13 +38,13 @@ Pokemon_Images = {
     'Countours' : None,
 }
 Upper_Color = {
-    'Red': IntVar(value=200),
+    'Red': IntVar(value=255),
     'Green': IntVar(value=255),
-    'Blue': IntVar(value=70),
+    'Blue': IntVar(value=255),
 }
 Lower_Color = {
-    'Red': IntVar(value=55),
-    'Green': IntVar(value=110),
+    'Red': IntVar(value=0),
+    'Green': IntVar(value=0),
     'Blue': IntVar(value=0),
 }
 GUI_Items = {

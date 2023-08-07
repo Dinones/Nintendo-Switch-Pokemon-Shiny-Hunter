@@ -107,6 +107,7 @@ class Image_Processing():
 
     # ↓↓ Return the requested pixel color, by default: Lower-left corner
     def check_pixel_color(self, pixel = [-1, 0]): 
+        if type(pixel) == type(None): pixel = [len(self.original_image)//2, len(self.original_image[0])//2]
         return self.original_image[pixel[0]][pixel[1]]
 
     #######################################################################################################################

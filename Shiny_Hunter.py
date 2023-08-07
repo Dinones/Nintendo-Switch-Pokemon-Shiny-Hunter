@@ -116,29 +116,19 @@ while True:
                     Game_Capture.start_recording(image)
 
         # ↓↓ Check if it's in the HOME page. Sometimes it fails to press the HOME button
-        elif Switch_Controller.current_event in ['WAIT_HOME_STOP', 'WAIT_HOME_RESTART', 'WAIT_HOME_RESTART_SYSTEM']:
+        elif Switch_Controller.current_event in ['WAIT_HOME_STOP', 'WAIT_HOME_RESTART']:
             if all(pixel_value == 255 for pixel_value in image.check_pixel_color()):
                 if Switch_Controller.current_event == 'WAIT_HOME_STOP': Switch_Controller.current_event = 'STOP'
                 elif Switch_Controller.current_event == 'WAIT_HOME_RESTART': Switch_Controller.current_event = 'RESTART'
-                elif Switch_Controller.current_event == 'WAIT_HOME_RESTART_SYSTEM': 
-                    Switch_Controller.current_event = 'RESTART_SYSTEM'
             else: 
                 if Switch_Controller.current_event == 'WAIT_HOME_STOP': Switch_Controller.current_event = 'HOME_STOP'
                 elif Switch_Controller.current_event == 'WAIT_HOME_RESTART': Switch_Controller.current_event = 'HOME_RESTART'
-                elif Switch_Controller.current_event == 'WAIT_HOME_RESTART_SYSTEM': 
-                    Switch_Controller.current_event = 'HOME_RESTART_SYSTEM'
 
         # ↓↓ Stop the program
         elif Switch_Controller.current_event == 'FINISH':
             print('Shiny found!')
             Game_Capture.save_video(image)
             exit()
-
-        elif Switch_Controller.current_event == 'FINISH_RESTART_SYSTEM':
-            print('Restarting system!')
-            Game_Capture.save_video(image)
-            Game_Capture.stop()
-            break
 
         Switch_Controller.event_lock.release()
 
@@ -149,7 +139,3 @@ while True:
 # ↓↓ Release the capture card and close all windows
 Game_Capture.stop()
 program_name = __file__.split('/')[-1]
-# os.system(f'sudo pkill -f "{program_name}"')
-# exit(os.system(f'sudo python3 {program_name}'))
-# import subprocess
-# subprocess.call([sys.executable, program_name])
