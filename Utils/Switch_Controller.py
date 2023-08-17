@@ -90,6 +90,20 @@ class Switch_Controller():
                 elif self.current_event == 'STOP':
                     stop_macro(self.nxbt_manager, self.controller_index)
                     self.current_event = 'FINISH'
+
+                #####################################     STARTERS     ####################################################
+
+                elif self.current_event == 'MOVE_FORWARD':
+                    move_forward(self.nxbt_manager, self.controller_index)
+                    self.current_event = 'PRESS_A'
+                elif self.current_event == 'PRESS_A':
+                    press_A(self.nxbt_manager, self.controller_index)
+                elif self.current_event == 'WAIT_STARTER_SELECTION':
+                    select_starter(self.nxbt_manager, self.controller_index)
+                    self.current_event = 'STARTER_SELECTED'
+                elif self.current_event == 'WAIT_STARTER_POKEMON_FOREGROUND':
+                    sleep(2.5); self.current_event = 'DETECT_STARTER_POKEMON'
+            # ↓↓ Provide the main thread some time to check the current event
             sleep(0.5)
 
 ###########################################################################################################################

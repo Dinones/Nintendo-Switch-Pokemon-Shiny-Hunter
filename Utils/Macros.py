@@ -43,7 +43,8 @@ def start_game_macro(nxbt_manager, controller_index):
         nxbt_manager.press_buttons(controller_index, [Buttons.A])
 
 def start_combat_macro(nxbt_manager, controller_index, movement = False):
-    if CONST.WALK_FORWARD_BEFORE_COMBAT: nxbt_manager.press_buttons(controller_index, [Buttons.DPAD_UP], down = CONST.WALKING_SECONDS)
+    if CONST.WALK_FORWARD_BEFORE_COMBAT: 
+        nxbt_manager.press_buttons(controller_index, [Buttons.DPAD_UP], down = CONST.WALKING_SECONDS)
     for _ in range(10): 
         sleep(0.5)
         nxbt_manager.press_buttons(controller_index, [Buttons.A])
@@ -60,3 +61,15 @@ def stop_macro(nxbt_manager, controller_index):
     sleep(0.5); nxbt_manager.press_buttons(controller_index, [Buttons.A])
     sleep(2); nxbt_manager.press_buttons(controller_index, [Buttons.A])
     sleep(3)
+
+###########################################################################################################################
+
+def move_forward(nxbt_manager, controller_index):
+    nxbt_manager.press_buttons(controller_index, [Buttons.DPAD_UP], down = CONST.WALKING_SECONDS)
+
+def press_A(nxbt_manager, controller_index): nxbt_manager.press_buttons(controller_index, [Buttons.A])
+
+def select_starter(nxbt_manager, controller_index):
+    for _ in range(2): nxbt_manager.press_buttons(controller_index, [Buttons.DPAD_UP])
+    for _ in range(2): nxbt_manager.press_buttons(controller_index, [Buttons.A])
+    sleep(CONST.STARTER_OVERWORLD_ENTER_COMBAT_WAIT_SECONDS)

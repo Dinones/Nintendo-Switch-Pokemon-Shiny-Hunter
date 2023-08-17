@@ -78,6 +78,13 @@ class Image_Processing():
         # ↓↓ Applies the filter to the image
         self.masked_image = cv2.inRange(self.resized_image, lower_color, upper_color)
 
+    def detect_pokemon_color(self, pokemon):
+        if self.resized_image is None: return
+        # ↓↓ Applies the filter to the image
+        if pokemon['shiny_color']: 
+            self.masked_image = cv2.inRange(self.resized_image, pokemon['lower_shiny'], pokemon['upper_shiny'])
+        else: self.masked_image = cv2.inRange(self.resized_image, pokemon['lower_normal'], pokemon['upper_normal'])
+
     #######################################################################################################################
 
     def get_rectangles(self):
@@ -92,7 +99,8 @@ class Image_Processing():
                     # ↓↓ Draws the rectangles
                     x, y, w, h = cv2.boundingRect(contour)
                     # ↓↓ (Image, (Lower left corner), (Upper right corner), Color, Thickness)
-                    cv2.rectangle(self.contours_image, (x, y), (x + w, y + h), CONST.RECTANGLES_PARAMS['color'], CONST.RECTANGLES_PARAMS['thickness'])
+                    cv2.rectangle(self.contours_image, (x, y), (x + w, y + h), CONST.RECTANGLES_PARAMS['color'], 
+                        CONST.RECTANGLES_PARAMS['thickness'])
                     match = True
         return match
 
@@ -106,21 +114,21 @@ class Image_Processing():
     #######################################################################################################################
 
     # ↓↓ Return the requested pixel color, by default: Lower-left corner
-    def check_pixel_color(self, pixel = [-1, 0]): 
+    def check_pixel_color(self, pixel = None): 
         if type(pixel) == type(None): pixel = [len(self.original_image)//2, len(self.original_image[0])//2]
         return self.original_image[pixel[0]][pixel[1]]
 
     #######################################################################################################################
 
     # ↓↓ Return whether all the pixels of the specifiead row are white
-    def check_multiple_pixel_colors(self, start, end):
+    def check_multiple_pixel_colors(self, start, end, color = 255):
         pixels = []
         for index in range(start[1], end[1]):
-            if all(pixel_value == 255 for pixel_value in self.resized_image[-index][start[0]]): pixels.append(True)
+            if all(pixel_value == color for pixel_value in self.resized_image[-index][start[0]]): pixels.append(True)
             # ↓↓ If one False is found, there is no need to check the other pixels
             else: pixels.append(False); break
         if CONST.TESTING: 
-            for index in range(start[1], end[1]): self.resized_image[-index][start[0]] = [0, 0, 255]
+            for index in range(start[1], end[1]): self.resized_image[-index][start[0]] = [255, 0, 255]
         return all(pixels)
 
 ###########################################################################################################################

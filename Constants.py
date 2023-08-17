@@ -3,8 +3,8 @@
 ###########################################################################################################################
 
 # ↓↓ [RGB] Default Ranges
-LOWER_COLOR = (0, 0, 0)
-UPPER_COLOR = (0, 0, 0)
+LOWER_COLOR = (125, 150, 95)
+UPPER_COLOR = (190, 230, 140)
 # ↓↓ [PIXELS] Nintendo Switch captured frames' size 
 ORIGINAL_FRAME_SIZE = (1920, 1080)
 # ↓↓ [PIXELS] Size the captured frame is resized to
@@ -65,9 +65,10 @@ WALK_FORWARD_BEFORE_COMBAT = False
 WALKING_SECONDS = 2
 BLACK_SCREEN_LOAD_SECONDS = 15
 # ↓↓ Time to wait for the pokemon to be in the foreground
-ENTER_COMBAT_WAIT_SECONDS = 2
+# ENTER_COMBAT_WAIT_SECONDS = 2
 # ↓↓ Time to wait for the overworld entering combat animation
 OVERWORLD_ENTER_COMBAT_WAIT_SECONDS = 7
+STARTER_OVERWORLD_ENTER_COMBAT_WAIT_SECONDS = 5
 
 ###########################################################################################################################
 ######################################################     TESTS     ######################################################

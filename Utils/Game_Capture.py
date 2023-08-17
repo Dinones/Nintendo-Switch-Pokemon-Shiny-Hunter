@@ -84,6 +84,18 @@ if __name__ == '__main__':
         Game_Capture.read()
         if Game_Capture.frame is None: continue
 
+        if CONST.TESTING:
+            print(f'Middle Dot Color: {Game_Capture.frame[len(Game_Capture.frame)//2, len(Game_Capture.frame[0])//2]}')
+            Game_Capture.resized_frame[len(Game_Capture.resized_frame)//2, 
+                len(Game_Capture.resized_frame[0])//2] = [255, 0, 255]
+            x = int(len(Game_Capture.resized_frame[0]) // 8 * 5.3)
+            y1 = int(len(Game_Capture.resized_frame) // 8 * 4)
+            y2 = int(len(Game_Capture.resized_frame) // 8 * 5)
+            # [x, y1], [x, y2]
+            for index in range(y1, y2): 
+                print(all(pixel_value == 255 for pixel_value in Game_Capture.resized_frame[-index][x]))
+                Game_Capture.resized_frame[-index][x] = [255, 0, 255]
+
         FPS_Counter.get_FPS()
         cv2.putText(Game_Capture.resized_frame, f'FPS: {FPS_Counter.FPS}', CONST.TEXT_PARAMS['position'], 
             cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'], 
