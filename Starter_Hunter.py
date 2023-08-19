@@ -30,6 +30,7 @@ from Game_Capture import Game_Capture
 from FPS_Counter import FPS_Counter
 from Pokemon_Database import Starly, Turtwig
 from GUI import GUI
+import Messages as MSG
 
 import pyautogui, random; random.seed(6)
 
@@ -40,11 +41,11 @@ import pyautogui, random; random.seed(6)
 with open('./Media/Attempts.txt', 'r') as txt_file:
     attempts = int(txt_file.read())
     initial_attempts = attempts
-    print(f'Current attempts: {attempts}')
+    print(MSG.CURRENT_ATTEMPTS.replace('{attempts}', str(attempts)))
 
 Game_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
 if CONST.RECORD_VIDEO: 
-    print('Recording video for each soft reset...')
+    print(MSG.RECORDING_VIDEO)
     Game_Capture.start_recording()
 
 Switch_Controller = Switch_Controller()
@@ -63,8 +64,7 @@ def queue_next_frame(image = None):
     if image is None: return
     Image_Queue.put(image)
 
-def test_print(text):
-    if CONST.TESTING: print(text)
+def __test_print(text): print(text) if CONST.TESTING else None
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
@@ -94,14 +94,14 @@ while True:
             y1 = int(len(image.resized_image) // 8 * 4)
             y2 = int(len(image.resized_image) // 8 * 5)
             if image.check_multiple_pixel_colors([x, y1], [x, y2]): 
-                test_print('Starter Detected!')
+                __test_print(MSG.STARTER_DETECTED)
                 Switch_Controller.current_event = 'WAIT_STARTER_SELECTION'
 
         # ↓↓ Wait for the white screen to load the combat
         elif Switch_Controller.current_event == 'STARTER_SELECTED':
             if not all(pixel_value == 255 for pixel_value in image.check_pixel_color()):
                 Switch_Controller.current_event = 'WAIT_WILD_POKEMON_FOREGROUND'
-                test_print('Starting Combat Detection...')
+                __test_print(MSG.WILD_POKEMON_SEARCHING)
 
         # ↓↓ Wait for the wild pokemon to appear in the foreground
         elif Switch_Controller.current_event == 'WAIT_WILD_POKEMON_FOREGROUND':
@@ -109,19 +109,21 @@ while True:
             y1 = int(len(image.resized_image) // 15 * 1)
             y2 = int(len(image.resized_image) // 15 * 2)
             if image.check_multiple_pixel_colors([x, y1], [x, y2]):
-                test_print(f'Wild Pokemon Detected!')
+                __test_print(MSG.WILD_POKEMON_DETECTED)
 
                 image.detect_pokemon_color(wild_pokemon)
                 match = image.get_rectangles()
                 if not wild_pokemon['shiny_color']: match = not match
 
-                test_print(f'Shiny Detection: {match}')
+                __test_print(MSG.SHINY_DETECTION.replace('{match}', str(match)))
                 # ↓↓ Check whether the wild pokemon is shiny or not
                 if match: 
                     Switch_Controller.current_event = 'HOME_STOP'
                     Switch_Controller.event_lock.release()
                     continue
-                else: Switch_Controller.current_event = 'WAIT_CHANGE_POKEMON'
+                else: 
+                    __test_print(MSG.TOGGLE_POKEMON_DETECTION)
+                    Switch_Controller.current_event = 'WAIT_CHANGE_POKEMON'
 
         # ↓↓ Wait for the text box of the wild pokemon to disappear
         elif Switch_Controller.current_event == 'WAIT_CHANGE_POKEMON':
@@ -130,7 +132,7 @@ while True:
             y2 = int(len(image.resized_image) // 15 * 2)
             if not image.check_multiple_pixel_colors([x, y1], [x, y2]): 
                 Switch_Controller.current_event = 'WAIT_STARTER_POKEMON_FOREGROUND'
-                test_print('Toggling Pokemon Detection...')
+                __test_print('Toggling Pokemon Detection...')
 
         # ↓↓ Wait for the starter pokemon to appear in the foreground
         elif Switch_Controller.current_event == 'DETECT_STARTER_POKEMON':
@@ -138,20 +140,20 @@ while True:
             y1 = int(len(image.resized_image) // 15 * 1)
             y2 = int(len(image.resized_image) // 15 * 2)
             if image.check_multiple_pixel_colors([x, y1], [x, y2]):
-                test_print(f'Starter Pokemon Detected!')
+                __test_print(f'Starter Pokemon Detected!')
                 if CONST.SAVE_SCREENSHOTS: cv2.imwrite(f'./Media/Results/{attempts}.png', image.original_image)
 
                 image.detect_pokemon_color(starter_pokemon)
                 match = image.get_rectangles()
                 if not starter_pokemon['shiny_color']: match = not match
 
-                test_print(f'Shiny Detection: {match}')
+                __test_print(f'Shiny Detection: {match}')
                 # ↓↓ Check whether the wild pokemon is shiny or not
                 if match: 
                     Switch_Controller.current_event = 'HOME_STOP'
                     Switch_Controller.event_lock.release()
                     continue
-                else: Switch_Controller.current_event = 'HOME_RESTART'
+                else: print(); Switch_Controller.current_event = 'HOME_RESTART'
 
                 try:
                     random_number = random.randint(100, 1000)
@@ -161,7 +163,7 @@ while True:
                 attempts += 1
                 with open('./Media/Attempts.txt', 'w') as txt_file:
                     txt_file.write(str(attempts))
-                    print(f'Current Attempts: {attempts}')
+                    print(MSG.CURRENT_ATTEMPTS.replace('{attempts}', str(attempts)))
 
                 # ↓↓ Save the current video and start the new one
                 if CONST.RECORD_VIDEO:
@@ -181,7 +183,7 @@ while True:
 
         # ↓↓ Stop the program
         elif Switch_Controller.current_event == 'FINISH':
-            print('Shiny Found!')
+            print(MSG.SHINY_FOUND)
             Game_Capture.save_video(image)
             exit()
 

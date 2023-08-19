@@ -22,6 +22,7 @@ from time import sleep
 from threading import Lock
 
 from Macros import *
+import Messages as MSG
 import sys; sys.path.append('..')
 import Constants as CONST
 
@@ -38,15 +39,18 @@ class Switch_Controller():
         self.current_event = None
 
     @staticmethod
+    def __test_print(text): print(text) if CONST.TESTING else None
+
+    @staticmethod
     def restart_bluetooth():
-        print('Restarting bluetooth systems...')
+        print(MSG.RESTARTING_BLUETOOTH)
         # ↓↓ Turns off bluetooth systems
         os.system('sudo rfkill block bluetooth')
         sleep(1)
         # ↓↓ Turns on bluetooth systems
         os.system('sudo rfkill unblock bluetooth')
         sleep(CONST.RESTART_BLUETOOTH_SECONDS)
-        print('Bluetooth restarted successfully!')
+        print(MSG.BLUETOOTH_RESTARTED)
 
     def connect_controller(self):
         self.restart_bluetooth()
@@ -64,10 +68,10 @@ class Switch_Controller():
             controller_indexes.append(controller_index)
 
         self.controller_index = controller_indexes[-1]
-        print('Connecting to Nintendo Switch...')
+        print(MSG.CONNECTING_TO_SWITCH)
         # ↓↓ Connect to Nintendo Switch
         self.nxbt_manager.wait_for_connection(self.controller_index)
-        print('Controller connected!')
+        print(MSG.CONTROLLER_CONNECTED)
         with self.event_lock: self.current_event = 'SETUP'
 
     def run_event(self):
@@ -75,6 +79,7 @@ class Switch_Controller():
             with self.event_lock:
                 if self.current_event == 'SETUP': 
                     setup_macro(self.nxbt_manager, self.controller_index)
+                    self.__test_print(MSG.LOADING_GAME)
                     self.current_event = 'WAIT_COMBAT'
                 elif self.current_event == 'COMBAT': 
                     start_combat_macro(self.nxbt_manager, self.controller_index)
@@ -95,6 +100,7 @@ class Switch_Controller():
 
                 elif self.current_event == 'MOVE_FORWARD':
                     move_forward(self.nxbt_manager, self.controller_index)
+                    self__test_print(MSG.SKIPPING_DIALOGUE)
                     self.current_event = 'PRESS_A'
                 elif self.current_event == 'PRESS_A':
                     press_A(self.nxbt_manager, self.controller_index)
