@@ -85,16 +85,44 @@ if __name__ == '__main__':
         if Game_Capture.frame is None: continue
 
         if CONST.TESTING:
-            print(f'Middle Dot Color: {Game_Capture.frame[len(Game_Capture.frame)//2, len(Game_Capture.frame[0])//2]}')
+            # ↓↓ Middle dot
+            # print(f'Middle Dot Color: {Game_Capture.frame[len(Game_Capture.frame)//2, len(Game_Capture.frame[0])//2]}')
             Game_Capture.resized_frame[len(Game_Capture.resized_frame)//2, 
                 len(Game_Capture.resized_frame[0])//2] = [255, 0, 255]
+
+            # ↓↓ Starter backpack
             x = int(len(Game_Capture.resized_frame[0]) // 8 * 5.3)
             y1 = int(len(Game_Capture.resized_frame) // 8 * 4)
             y2 = int(len(Game_Capture.resized_frame) // 8 * 5)
             # [x, y1], [x, y2]
             for index in range(y1, y2): 
-                print(all(pixel_value == 255 for pixel_value in Game_Capture.resized_frame[-index][x]))
+                # print(all(pixel_value == 255 for pixel_value in Game_Capture.resized_frame[-index][x]))
                 Game_Capture.resized_frame[-index][x] = [255, 0, 255]
+
+            # ↓↓ Text box
+            x = int(len(Game_Capture.resized_frame[0]) // 16 * 1.2)
+            y1 = int(len(Game_Capture.resized_frame) // 15 * 1)
+            y2 = int(len(Game_Capture.resized_frame) // 15 * 2)
+            # [x, y1], [x, y2]
+            for index in range(y1, y2): 
+                # print(all(pixel_value == 255 for pixel_value in Game_Capture.resized_frame[-index][x]))
+                Game_Capture.resized_frame[-index][x] = [255, 0, 255]
+
+            # ↓↓ Wild pokemon life box
+            x = int(len(Game_Capture.resized_frame[0]) // 8 * 7.9)
+            y1 = int(len(Game_Capture.resized_frame) // 16 * 14.3)
+            y2 = int(len(Game_Capture.resized_frame) // 16 * 15.2)
+            # [x, y1], [x, y2]
+            for index in range(y1, y2): 
+                # print(all(pixel_value == 255 for pixel_value in Game_Capture.resized_frame[-index][x]))
+                Game_Capture.resized_frame[-index][x] = [255, 0, 255]
+
+            # ↓↓ Wild pokemon life box
+            x1 = int(len(Game_Capture.resized_frame[0]) // 8 * 0.65)
+            x2 = int(len(Game_Capture.resized_frame[0]) // 8 * 7.5)
+            y1 = int(len(Game_Capture.resized_frame) // 16 * 13.2)
+            y2 = int(len(Game_Capture.resized_frame) // 16 * 14.7)
+            Game_Capture.resized_frame = cv2.rectangle(Game_Capture.resized_frame, [x1, y1], [x2, y2], [255, 0, 255])
 
         FPS_Counter.get_FPS()
         cv2.putText(Game_Capture.resized_frame, f'FPS: {FPS_Counter.FPS}', CONST.TEXT_PARAMS['position'], 

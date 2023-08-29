@@ -30,6 +30,10 @@ import Messages as MSG
 
 def __test_print(text): print(text) if CONST.TESTING else None
 def __test_print_command(text): print(text) if CONST.TESTING and CONST.PRINT_CONTROLS else None
+# ↓↓ Used to toggle the direction when walking on the wild grass searching for a pokemon combat
+walking_direction = bool(0)
+
+#####################################################     GENERAL     #####################################################
 
 def setup_macro(nxbt_manager, controller_index):
     __test_print(MSG.STARTING_MACRO.replace('{macro}', 'setup'))
@@ -55,19 +59,6 @@ def start_game_macro(nxbt_manager, controller_index):
         __test_print_command(MSG.BUTTON_PRESSED.replace('{button}', 'A'))
     __test_print(MSG.FINISHED_MACRO.replace('{macro}', 'start_game'))
 
-def start_combat_macro(nxbt_manager, controller_index, movement = False):
-    __test_print(MSG.STARTING_MACRO.replace('{macro}', 'start_combat'))
-    if CONST.WALK_FORWARD_BEFORE_COMBAT: 
-        __test_print_command(MSG.BUTTON_LARGE_PRESSED.replace('{button}', 'DPAD_UP')
-            .replace('{seconds}', str(CONST.WALKING_SECONDS)))
-        nxbt_manager.press_buttons(controller_index, [Buttons.DPAD_UP], down = CONST.WALKING_SECONDS)
-    for _ in range(10): 
-        sleep(0.5); nxbt_manager.press_buttons(controller_index, [Buttons.A])
-        __test_print_command(MSG.BUTTON_PRESSED.replace('{button}', 'A'))
-    __test_print_command(MSG.WAITING_SECONDS.replace('{seconds}', str(CONST.OVERWORLD_ENTER_COMBAT_WAIT_SECONDS)))
-    sleep(CONST.OVERWORLD_ENTER_COMBAT_WAIT_SECONDS)
-    __test_print(MSG.FINISHED_MACRO.replace('{macro}', 'start_combat'))
-
 def home_macro(nxbt_manager, controller_index):
     __test_print(MSG.STARTING_MACRO.replace('{macro}', 'home'))
     nxbt_manager.press_buttons(controller_index, [Buttons.HOME])
@@ -90,13 +81,28 @@ def stop_macro(nxbt_manager, controller_index):
     sleep(3)
     __test_print(MSG.FINISHED_MACRO.replace('{macro}', 'stop'))
 
-###########################################################################################################################
+#####################################################     STATIC     ######################################################
+
+def start_combat_macro(nxbt_manager, controller_index, movement = False):
+    __test_print(MSG.STARTING_MACRO.replace('{macro}', 'start_combat'))
+    if CONST.WALK_FORWARD_BEFORE_COMBAT: 
+        __test_print_command(MSG.BUTTON_LARGE_PRESSED.replace('{button}', 'DPAD_UP')
+            .replace('{seconds}', str(CONST.STATIC_ENCOUNTER_WALKING_SECONDS)))
+        nxbt_manager.press_buttons(controller_index, [Buttons.DPAD_UP], down = CONST.STATIC_ENCOUNTER_WALKING_SECONDS)
+    for _ in range(10): 
+        sleep(0.5); nxbt_manager.press_buttons(controller_index, [Buttons.A])
+        __test_print_command(MSG.BUTTON_PRESSED.replace('{button}', 'A'))
+    __test_print_command(MSG.WAITING_SECONDS.replace('{seconds}', str(CONST.OVERWORLD_ENTER_COMBAT_WAIT_SECONDS)))
+    sleep(CONST.OVERWORLD_ENTER_COMBAT_WAIT_SECONDS)
+    __test_print(MSG.FINISHED_MACRO.replace('{macro}', 'start_combat'))
+
+#####################################################     STARTER     #####################################################
 
 def move_forward(nxbt_manager, controller_index):
     __test_print(MSG.STARTING_MACRO.replace('{macro}', 'move_forward'))
     __test_print_command(MSG.BUTTON_LARGE_PRESSED.replace('{button}', 'DPAD_UP')
-            .replace('{seconds}', str(CONST.WALKING_SECONDS)))
-    nxbt_manager.press_buttons(controller_index, [Buttons.DPAD_UP], down = CONST.WALKING_SECONDS)
+            .replace('{seconds}', str(CONST.STATIC_ENCOUNTER_WALKING_SECONDS)))
+    nxbt_manager.press_buttons(controller_index, [Buttons.DPAD_UP], down = CONST.STATIC_ENCOUNTER_WALKING_SECONDS)
     __test_print(MSG.FINISHED_MACRO.replace('{macro}', 'move_forward'))
 
 def press_A(nxbt_manager, controller_index): nxbt_manager.press_buttons(controller_index, [Buttons.A])
@@ -112,3 +118,36 @@ def select_starter(nxbt_manager, controller_index):
     __test_print_command(MSG.WAITING_SECONDS.replace('{seconds}', str(CONST.STARTER_OVERWORLD_ENTER_COMBAT_WAIT_SECONDS)))
     sleep(CONST.STARTER_OVERWORLD_ENTER_COMBAT_WAIT_SECONDS)
     __test_print(MSG.FINISHED_MACRO.replace('{macro}', 'select_starter'))
+
+######################################################     WILD     #######################################################
+
+def fast_setup_macro(nxbt_manager, controller_index):
+    __test_print(MSG.STARTING_MACRO.replace('{macro}', 'fast_setup'))
+    sleep(1); nxbt_manager.press_buttons(controller_index, [Buttons.B]); 
+    __test_print_command(MSG.BUTTON_PRESSED.replace('{button}', 'B'))
+    sleep(1); nxbt_manager.press_buttons(controller_index, [Buttons.HOME])
+    __test_print_command(MSG.BUTTON_PRESSED.replace('{button}', 'HOME'))
+    sleep(1); nxbt_manager.press_buttons(controller_index, [Buttons.A]); 
+    __test_print_command(MSG.BUTTON_PRESSED.replace('{button}', 'A'))
+    __test_print(MSG.FINISHED_MACRO.replace('{macro}', 'fast_setup'))
+    sleep(1)
+
+def move_straight_macro(nxbt_manager, controller_index):
+    global walking_direction
+    if CONST.WILD_WALKING_DIRECTION == 'NS':
+        if not walking_direction:
+            nxbt_manager.press_buttons(controller_index, [Buttons.DPAD_UP], down = CONST.WILD_WALKING_SECONDS)
+        else: nxbt_manager.press_buttons(controller_index, [Buttons.DPAD_DOWN], down = CONST.WILD_WALKING_SECONDS)
+    elif CONST.WILD_WALKING_DIRECTION == 'WE':
+        if not walking_direction:
+            nxbt_manager.press_buttons(controller_index, [Buttons.DPAD_LEFT], down = CONST.WILD_WALKING_SECONDS)
+        else: nxbt_manager.press_buttons(controller_index, [Buttons.DPAD_RIGHT], down = CONST.WILD_WALKING_SECONDS)
+    walking_direction = not walking_direction
+
+def escape_combat_macro(nxbt_manager, controller_index):
+    __test_print(MSG.STARTING_MACRO.replace('{macro}', 'escape_combat'))
+    nxbt_manager.press_buttons(controller_index, [Buttons.DPAD_UP])
+    __test_print_command(MSG.BUTTON_PRESSED.replace('{button}', 'DPAD_UP'))
+    sleep(0.5); nxbt_manager.press_buttons(controller_index, [Buttons.A]); 
+    __test_print_command(MSG.BUTTON_PRESSED.replace('{button}', 'A'))
+    __test_print(MSG.FINISHED_MACRO.replace('{macro}', 'escape_combat'))

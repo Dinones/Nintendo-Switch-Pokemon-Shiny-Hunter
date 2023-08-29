@@ -56,7 +56,7 @@ class GUI(Thread):
         # ↓↓ Create the GUI
         self.root = tk.Tk()
         # ↓↓ Insert a title
-        self.root.title("Pokemon Shiny Hunter")
+        self.root.title(CONST.BOT_NAME)
         # ↓↓ Set the icon for the GUI. It raises an error on Linux systems
         try: root.iconbitmap(f"../Media/{CONST.GUI_ICON}")
         except: pass

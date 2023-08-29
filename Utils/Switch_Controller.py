@@ -52,7 +52,7 @@ class Switch_Controller():
         sleep(CONST.RESTART_BLUETOOTH_SECONDS)
         print(MSG.BLUETOOTH_RESTARTED)
 
-    def connect_controller(self):
+    def connect_controller(self, special_case = None):
         self.restart_bluetooth()
         # ↓↓ Get a list of all available Bluetooth adapters
         adapters = self.nxbt_manager.get_available_adapters()
@@ -72,18 +72,19 @@ class Switch_Controller():
         # ↓↓ Connect to Nintendo Switch
         self.nxbt_manager.wait_for_connection(self.controller_index)
         print(MSG.CONTROLLER_CONNECTED)
-        with self.event_lock: self.current_event = 'SETUP'
+        if type(special_case) == type(None): 
+            with self.event_lock: self.current_event = 'SETUP'
+        with self.event_lock: self.current_event = special_case
 
     def run_event(self):
         while True:
-            with self.event_lock:
+            if self.event_lock.acquire():
+                ######################################     GENERAL     ####################################################
+
                 if self.current_event == 'SETUP': 
                     setup_macro(self.nxbt_manager, self.controller_index)
                     self.__test_print(MSG.LOADING_GAME)
                     self.current_event = 'WAIT_COMBAT'
-                elif self.current_event == 'COMBAT': 
-                    start_combat_macro(self.nxbt_manager, self.controller_index)
-                    self.current_event = 'WAIT_RESTART'
                 elif self.current_event in ['HOME_STOP', 'HOME_RESTART']:
                     if self.current_event == 'HOME_STOP': sleep(CONST.SHINY_RECORDING_SECONDS)
                     home_macro(self.nxbt_manager, self.controller_index)
@@ -95,6 +96,12 @@ class Switch_Controller():
                 elif self.current_event == 'STOP':
                     stop_macro(self.nxbt_manager, self.controller_index)
                     self.current_event = 'FINISH'
+
+                ######################################     STATIC     #####################################################
+
+                elif self.current_event == 'COMBAT': 
+                    start_combat_macro(self.nxbt_manager, self.controller_index)
+                    self.current_event = 'WAIT_RESTART'
 
                 #####################################     STARTERS     ####################################################
 
@@ -109,6 +116,27 @@ class Switch_Controller():
                     self.current_event = 'STARTER_SELECTED'
                 elif self.current_event == 'WAIT_STARTER_POKEMON_FOREGROUND':
                     sleep(2.5); self.current_event = 'DETECT_STARTER_POKEMON'
+
+                #######################################     WILD     ######################################################
+                
+                elif self.current_event == 'FAST_SETUP': 
+                    fast_setup_macro(self.nxbt_manager, self.controller_index)
+                    self.__test_print(MSG.STARTING_MACRO.replace('{macro}', 'move_straight'))
+                    self.current_event = 'MOVE_STRAIGHT'
+                elif self.current_event == 'MOVE_STRAIGHT': 
+                    # ↓↓ Provide more accurate detection when entering the combat walking long distances
+                    self.event_lock.release()
+                    move_straight_macro(self.nxbt_manager, self.controller_index)
+                    sleep(0.5); continue
+                elif self.current_event == 'WAIT_WILD_POKEMON_FOREGROUND': 
+                    sleep(1.5); self.current_event = 'DETECT_WILD_POKEMON'
+                elif self.current_event == 'ESCAPE_COMBAT': 
+                    escape_combat_macro(self.nxbt_manager, self.controller_index)
+                    sleep(2)
+                    self.__test_print(MSG.STARTING_MACRO.replace('{macro}', 'move_straight'))
+                    self.current_event = 'MOVE_STRAIGHT'
+
+                self.event_lock.release()
             # ↓↓ Provide the main thread some time to check the current event
             sleep(0.5)
 

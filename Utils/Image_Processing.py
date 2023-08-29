@@ -29,7 +29,7 @@ class Image_Processing():
         # ↓↓ Load the image
         if type(image) is str: self.original_image = cv2.imread(image)
         else: self.original_image = image
-        if self.original_image is None: return print(f'\t[χ] Could not load the image: {image}')
+        if self.original_image is None: return print(f'[χ] Could not load the image: {image}')
 
     #######################################################################################################################
 
@@ -128,7 +128,7 @@ class Image_Processing():
             # ↓↓ If one False is found, there is no need to check the other pixels
             else: pixels.append(False); break
         if CONST.TESTING: 
-            for index in range(start[1], end[1]): self.resized_image[-index][start[0]] = [255, 0, 255]
+            for index in range(start[1], end[1]): self.FPS_image[-index][start[0]] = [255, 0, 255]
         return all(pixels)
 
 ###########################################################################################################################

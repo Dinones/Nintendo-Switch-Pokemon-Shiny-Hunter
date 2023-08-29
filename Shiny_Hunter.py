@@ -100,9 +100,6 @@ while True:
                     Switch_Controller.current_event = 'HOME_STOP'
                     Switch_Controller.event_lock.release()
                     continue
-                # ↓↓ Avoid memory leaks
-                if attempts - initial_attempts >= CONST.AUTORESTART_ATTEMPTS: 
-                    Switch_Controller.current_event = 'HOME_RESTART_SYSTEM'
                 else: Switch_Controller.current_event = 'HOME_RESTART'
     
                 attempts += 1

@@ -29,14 +29,15 @@ RECTANGLES_PARAMS = {
     'thickness': 4
 }
 # ↓↓ [PIXELS²] Minimum area to detect something as a match
-MIN_DETECT_SIZE = 50
+MIN_DETECT_SIZE = 100
+TARGET_WILD_POKEMON = ['Starly', 'Bidoof', 'Shinx', 'Kricketot']
 
 ###########################################################################################################################
 #######################################################     GUI     #######################################################
 ###########################################################################################################################
 
 # ↓↓ GUI title
-BOT_NAME = "FBot Shiny Hunter"
+BOT_NAME = "FB Pokemon Shiny Hunter by @Dinones"
 # ↓↓ [PIXELS] GUI size
 BOT_WINDOW_SIZE = (720, 405) # (1000, 562)
 # ↓↓ Only image names
@@ -68,13 +69,16 @@ CONTROLLER_BODY_COLOR = [0, 200, 0]
 CONTROLLER_BUTTONS_COLOR = [200, 0, 0]
 RESTART_BLUETOOTH_SECONDS = 4
 WALK_FORWARD_BEFORE_COMBAT = False
-WALKING_SECONDS = 2
+STATIC_ENCOUNTER_WALKING_SECONDS = 2
 BLACK_SCREEN_LOAD_SECONDS = 15
 # ↓↓ Time to wait for the pokemon to be in the foreground
 # ENTER_COMBAT_WAIT_SECONDS = 2
 # ↓↓ Time to wait for the overworld entering combat animation
 OVERWORLD_ENTER_COMBAT_WAIT_SECONDS = 7
 STARTER_OVERWORLD_ENTER_COMBAT_WAIT_SECONDS = 5
+WILD_WALKING_SECONDS = 1
+# ↓↓ Options: 'NS' (North-South) or 'WE' (West-East)
+WILD_WALKING_DIRECTION = 'NS'
 
 ###########################################################################################################################
 ######################################################     TESTS     ######################################################
