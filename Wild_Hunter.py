@@ -152,6 +152,13 @@ while True:
                 if not getattr(Pokemon_DB, max(all_matches, key=all_matches.get))['shiny_color']: match = not match
                 __test_print(MSG.SHINY_DETECTION.replace('{match}', str(match)))
 
+                # ↓↓ Move mouse to prevent system from entering in rest mode
+                try:
+                    if CONST.INACTIVITY_AVOIDER:
+                        random_number = random.randint(100, 1000)
+                        pyautogui.moveTo(random_number, random_number)
+                except: pass
+
                 attempts += 1
                 with open('./Media/Attempts.txt', 'w') as txt_file:
                     txt_file.write(str(attempts))

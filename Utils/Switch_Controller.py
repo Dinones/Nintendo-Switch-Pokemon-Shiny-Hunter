@@ -106,13 +106,13 @@ class Switch_Controller():
                 #####################################     STARTERS     ####################################################
 
                 elif self.current_event == 'MOVE_FORWARD':
-                    move_forward(self.nxbt_manager, self.controller_index)
+                    move_forward_macro(self.nxbt_manager, self.controller_index)
                     self__test_print(MSG.SKIPPING_DIALOGUE)
                     self.current_event = 'PRESS_A'
                 elif self.current_event == 'PRESS_A':
-                    press_A(self.nxbt_manager, self.controller_index)
+                    press_A_macro(self.nxbt_manager, self.controller_index)
                 elif self.current_event == 'WAIT_STARTER_SELECTION':
-                    select_starter(self.nxbt_manager, self.controller_index)
+                    select_starter_macro(self.nxbt_manager, self.controller_index)
                     self.current_event = 'STARTER_SELECTED'
                 elif self.current_event == 'WAIT_STARTER_POKEMON_FOREGROUND':
                     sleep(2.5); self.current_event = 'DETECT_STARTER_POKEMON'
@@ -132,7 +132,7 @@ class Switch_Controller():
                     sleep(1.5); self.current_event = 'DETECT_WILD_POKEMON'
                 elif self.current_event == 'ESCAPE_COMBAT': 
                     escape_combat_macro(self.nxbt_manager, self.controller_index)
-                    sleep(2)
+                    sleep(4)
                     self.__test_print(MSG.STARTING_MACRO.replace('{macro}', 'move_straight'))
                     self.current_event = 'MOVE_STRAIGHT'
 

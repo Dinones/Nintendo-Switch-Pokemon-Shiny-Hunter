@@ -4,8 +4,10 @@
 
 # ↓↓ Set the cwd to the one of the file
 import os
-if __name__ == '__main__': os.chdir(os.path.dirname(__file__))
-
+if __name__ == '__main__':
+    try: os.chdir(os.path.dirname(__file__))
+    except: pass
+    
 import cv2
 
 import sys; sys.path.append('..')
@@ -28,7 +30,7 @@ class Game_Capture:
         self.resized_frame = None
 
         self.read()
-        if self.frame is None: exit(print(f'[χ] Could not access to the video capture nº{video_capture_index}'))
+        if self.frame is None: exit(print(f'Could not access to the video capture nº{video_capture_index}'))
 
     # ↓↓ Take a frame
     def read(self): 
