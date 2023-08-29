@@ -29,7 +29,7 @@ RECTANGLES_PARAMS = {
     'thickness': 4
 }
 # ↓↓ [PIXELS²] Minimum area to detect something as a match
-MIN_DETECT_SIZE = 100
+MIN_DETECT_SIZE = 300
 TARGET_WILD_POKEMON = ['Starly', 'Bidoof', 'Shinx', 'Kricketot']
 
 ###########################################################################################################################

@@ -6,7 +6,9 @@ import os
 
 # ↓↓ Set the cwd to the one of the file
 import os
-if __name__ == '__main__': os.chdir(os.path.dirname(__file__))
+if __name__ == '__main__':
+    try: os.chdir(os.path.dirname(__file__))
+    except: pass
 
 import cv2
 from queue import Queue

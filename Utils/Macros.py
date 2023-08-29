@@ -98,16 +98,16 @@ def start_combat_macro(nxbt_manager, controller_index, movement = False):
 
 #####################################################     STARTER     #####################################################
 
-def move_forward(nxbt_manager, controller_index):
+def move_forward_macro(nxbt_manager, controller_index):
     __test_print(MSG.STARTING_MACRO.replace('{macro}', 'move_forward'))
     __test_print_command(MSG.BUTTON_LARGE_PRESSED.replace('{button}', 'DPAD_UP')
             .replace('{seconds}', str(CONST.STATIC_ENCOUNTER_WALKING_SECONDS)))
     nxbt_manager.press_buttons(controller_index, [Buttons.DPAD_UP], down = CONST.STATIC_ENCOUNTER_WALKING_SECONDS)
     __test_print(MSG.FINISHED_MACRO.replace('{macro}', 'move_forward'))
 
-def press_A(nxbt_manager, controller_index): nxbt_manager.press_buttons(controller_index, [Buttons.A])
+def press_A_macro(nxbt_manager, controller_index): nxbt_manager.press_buttons(controller_index, [Buttons.A])
 
-def select_starter(nxbt_manager, controller_index):
+def select_starter_macro(nxbt_manager, controller_index):
     __test_print(MSG.STARTING_MACRO.replace('{macro}', 'select_starter'))
     for _ in range(2): 
         sleep(0.5); nxbt_manager.press_buttons(controller_index, [Buttons.DPAD_UP])
@@ -148,6 +148,7 @@ def escape_combat_macro(nxbt_manager, controller_index):
     __test_print(MSG.STARTING_MACRO.replace('{macro}', 'escape_combat'))
     nxbt_manager.press_buttons(controller_index, [Buttons.DPAD_UP])
     __test_print_command(MSG.BUTTON_PRESSED.replace('{button}', 'DPAD_UP'))
-    sleep(0.5); nxbt_manager.press_buttons(controller_index, [Buttons.A]); 
-    __test_print_command(MSG.BUTTON_PRESSED.replace('{button}', 'A'))
+    for _ in range(2):
+        sleep(0.5); nxbt_manager.press_buttons(controller_index, [Buttons.A]); 
+        __test_print_command(MSG.BUTTON_PRESSED.replace('{button}', 'A'))
     __test_print(MSG.FINISHED_MACRO.replace('{macro}', 'escape_combat'))

@@ -155,6 +155,7 @@ while True:
                     continue
                 else: print(); Switch_Controller.current_event = 'HOME_RESTART'
 
+                # ↓↓ Move mouse to prevent system from entering in rest mode
                 try:
                     if CONST.INACTIVITY_AVOIDER:
                         random_number = random.randint(100, 1000)

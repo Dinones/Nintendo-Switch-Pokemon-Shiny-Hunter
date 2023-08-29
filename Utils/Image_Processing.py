@@ -4,7 +4,9 @@
 
 # ↓↓ Set the cwd to the one of the file
 import os
-if __name__ == '__main__': os.chdir(os.path.dirname(__file__))
+if __name__ == '__main__':
+    try: os.chdir(os.path.dirname(__file__))
+    except: pass
 
 import cv2
 import numpy as np
@@ -29,7 +31,7 @@ class Image_Processing():
         # ↓↓ Load the image
         if type(image) is str: self.original_image = cv2.imread(image)
         else: self.original_image = image
-        if self.original_image is None: return print(f'[χ] Could not load the image: {image}')
+        if self.original_image is None: return print(f'Could not load the image: {image}')
 
     #######################################################################################################################
 
