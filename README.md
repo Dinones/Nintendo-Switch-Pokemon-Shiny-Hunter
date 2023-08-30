@@ -1,6 +1,7 @@
 <h1 align="center">
     <br>
-        <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/Shiny%20Charizard.png" alt="Shiny_Charizard" width="250">
+        <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/Shiny%20Charizard.png" width="250">
+    </br>
 </h1>
 
 <h4 align="center">Search for shiny pokémon on your Nintendo Switch while sleeping!</h4>
@@ -22,7 +23,7 @@
 
 <h1 align="center">
     <br>
-        <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/Shiny%20Pokemon%20Collection.png" alt="Shiny_Pokemon_Collection" width="80%" style="border-radius: 15px;">
+        <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/Shiny%20Pokemon%20Collection.png" width="80%" style="border-radius: 15px;">
     <br>
 </h1>
 
@@ -61,7 +62,7 @@ sudo pip install -r Requirements.txt
 
 ### Windows and MacOS
 
-Install a Linux Virtual Machine and follow the installation steps for <a href="#linux-and-raspberry-pi-os">Linux and Raspberry Pi OS</a>. The program has been tested using Raspberry Pi OS 11 (Bullseye) and Virtual Box with XUbuntu 20.04.3.
+Install a Linux Virtual Machine and follow the installation steps for <a href="#linux-and-raspberry-pi-os">Linux and Raspberry Pi OS</a>. The program has been tested using Raspberry Pi OS 11 (Bullseye) and Virtual Box with XUbuntu 22.04.3. You can find a step-by-step guide on how to setup the Virtual Machine [here](./Media/Docs/VM%20Setup.md).
 
 ## Getting Started
 
@@ -86,7 +87,7 @@ Place the Nintendo Switch into the Dock. Connect the dock to the official Ninten
 
 <!-- If your game has an auto-save option, disable it. Otherwise, in case you kill the pokémon you won't be able to restart the process. In the game, place your player right in front of the pokémon (overworld), you have to be able to enter the combat just by pressing "**A**", if you need to move forward some steps before, read the note in the <a href="#running-the-shiny-hunter">Running the Shiny Hunter</a> section. -->
 
-Once in the home screen, go to "Controllers" and "Change Grip/Order Menu". Remove both controllers from the Nintendo Switch and make sure they're not connected via bluetooth.
+Once in the home screen, go to <i>Controllers</i> > "<i>Change Grip/Order Menu</i>". Remove both controllers from the Nintendo Switch and make sure they're not connected via bluetooth. (See steps <a href="./Media/Docs/Change%20Grip%20Menu.md">here</a>).<br>
 
 
 
@@ -103,7 +104,7 @@ To discover which is the good one, note all the detected devices. You will have 
 Once you have selected your pokemon you have execute `/Sub_Programs/Find_Color_Range.py`. It will open the following interface:
 
 <h1 align="center">
-        <img src="https://raw.githubusercontent.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/master/Media/Color%20Selector%20Interface.png" alt="Color_Selector_Interface" width="80%" style="border-radius: 10px;">
+        <img src="https://raw.githubusercontent.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/master/Media/Color%20Selector%20Interface.png" width="80%" style="border-radius: 10px;">
 </h1>
 
 Now, you have to find on internet one image for each, the normal pokémon and the shiny one. Download them, and select the images using the two buttons that appear on the top of the interface.
@@ -111,7 +112,7 @@ Now, you have to find on internet one image for each, the normal pokémon and th
 Once both images are loaded in the interface, you can start moving the color slides. Follow the instructions that appear on the interface until you get a similar result to this one:
 
 <h1 align="center">
-        <img src="https://raw.githubusercontent.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/master/Media/Giratina%20Color%20Example.png" alt="Giratina_Color_Example" width="80%" style="border-radius: 10px;">
+        <img src="https://raw.githubusercontent.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/master/Media/Giratina%20Color%20Example.png" width="80%" style="border-radius: 10px;">
 </h1>
 
 As you can see, the image above has white pixels, while the one below does not. It doesn't matter if there are a few white pixels in the image below, just make sure they don't form a large grouping. Keep in mind that the better accuracy you achieve, the better the program will work. It's a good idea to spend some time trying to get precise results.
@@ -119,12 +120,12 @@ As you can see, the image above has white pixels, while the one below does not. 
 Once you have detected the colors, you can press the "Toggle Check Match" button. It will open a new window where you should see rectangles around the areas where the color is present. If any rectangle appears, your area is too small to be detected, try finding another color with larger area.
 
 <h1 align="center">
-        <img src="https://raw.githubusercontent.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/master/Media/Giratina%20Contour%20Example.png" alt="Giratina_Contour_Example" width="80%" style="border-radius: 10px;">
+        <img src="https://raw.githubusercontent.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/master/Media/Giratina%20Contour%20Example.png" width="80%" style="border-radius: 10px;">
 </h1>
 
 Once you've found the color ranges that fit the requirements, change the `LOWER_COLOR` and `UPPER_COLOR` variables in the `Constants.py` file to the new values.
 
-## Contolling the Nintendo Switch
+## Controlling the Nintendo Switch
 
 Before executing the main program, check NXBT is successfully working in your system. Please, visit [NXBT repository](https://github.com/Brikwerk/nxbt) and perform the demo testing.
 
@@ -152,8 +153,8 @@ This error can occur due to missing dbus-related libraries on some Linux distrib
 sudo apt-get install libdbus-glib-1-dev libdbus-1-dev
 ```
 
-<h2 style="display: flex; align-items: center;">
-    <img src="./Media/Docs/Virus.svg" width="25px" style="margin-right: 10px;" />
+<h2>
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Virus.svg" width="30px" align="top"/>
     Issues
 </h2>
 

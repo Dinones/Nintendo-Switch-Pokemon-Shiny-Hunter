@@ -74,7 +74,8 @@ class Switch_Controller():
         print(MSG.CONTROLLER_CONNECTED)
         if type(special_case) == type(None): 
             with self.event_lock: self.current_event = 'SETUP'
-        with self.event_lock: self.current_event = special_case
+        else:
+            with self.event_lock: self.current_event = special_case
 
     def run_event(self):
         while True:

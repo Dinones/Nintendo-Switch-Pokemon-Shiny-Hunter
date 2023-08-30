@@ -146,7 +146,7 @@ def move_straight_macro(nxbt_manager, controller_index):
 
 def escape_combat_macro(nxbt_manager, controller_index):
     __test_print(MSG.STARTING_MACRO.replace('{macro}', 'escape_combat'))
-    nxbt_manager.press_buttons(controller_index, [Buttons.DPAD_UP])
+    sleep(0.5); nxbt_manager.press_buttons(controller_index, [Buttons.DPAD_UP])
     __test_print_command(MSG.BUTTON_PRESSED.replace('{button}', 'DPAD_UP'))
     for _ in range(2):
         sleep(0.5); nxbt_manager.press_buttons(controller_index, [Buttons.A]); 
