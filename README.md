@@ -1,6 +1,6 @@
 <h1 align="center">
     <br>
-        <img src="https://raw.githubusercontent.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/master/Media/Shiny%20Charizard.png" alt="Shiny_Charizard" width="250">
+        <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/Shiny%20Charizard.png" alt="Shiny_Charizard" width="250">
 </h1>
 
 <h4 align="center">Search for shiny pokémon on your Nintendo Switch while sleeping!</h4>
@@ -8,7 +8,7 @@
 <div align="center">
     
 [![YouTube Channel Subscribers](https://img.shields.io/youtube/channel/subscribers/UCUDcDii2WU8SVoTCgYlQCiw?style=flat&logo=youtube&logoColor=ff0000&label=Youtube&color=ff0000)](https://www.youtube.com/watch?v=XE8Oeh71BQ4&ab_channel=Dinones)
-[![GitHub Repo stars](https://img.shields.io/github/stars/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter?label=%E2%9C%A8%20Stars&color=ffff00)](https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter)
+[![GitHub Repo Stars](https://img.shields.io/github/stars/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter?label=%E2%9C%A8%20Stars&color=ffff00)](https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter)
 
 </div>
 
@@ -22,23 +22,29 @@
 
 <h1 align="center">
     <br>
-        <img src="https://raw.githubusercontent.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/master/Media/Shiny%20Pokemon%20Collection.png" alt="Shiny_Pokemon_Collection" width="80%" style="border-radius: 15px;">
+        <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/Shiny%20Pokemon%20Collection.png" alt="Shiny_Pokemon_Collection" width="80%" style="border-radius: 15px;">
     <br>
 </h1>
 
 ## Key Features
 
-- Use your Raspberry Pi or a Virtual Machine to search for shiny pokémon while you sleep.
-- Works on physical games running on a Nintendo Switch, not emulators.
-- Compatible with all games that have static encounters.
-- Based on the soft reset method for starters, legendaries, event pokémon, etc. 
-- Automatically saves a video of the shiny encounter.
+<p>
+    <p>
+        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Raspberry.svg" width="20px" align="center"/>⠀ Use your computer or Raspberry Pi to automatically search for shiny pokémon. <br>
+    </p><p>
+        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/NS%20Controller.svg" width="20px" align="center" style="margin-top:0px"/>⠀ Works on physical games running on a Nintendo Switch, not emulators. <br>
+    </p><p>
+        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Pokemon.svg" width="20px" align="top"/>⠀ Compatible with all games that have static encounters (<a href="./Media/Docs/Compatible%20Games.md">see compatible games</a>). <br>
+    </p><p>
+        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Camera.svg" width="20px" align="top"/>⠀ Automatically saves a video of the shiny encounter. <br>
+    </p> 
+</p>
 
 ## Installation
 
 Download or clone the repository.
 ```bash
-git clone https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter.git
+git clone https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter.git 
 ```
 
 ### Linux and Raspberry Pi OS
@@ -51,30 +57,38 @@ Go to the project folder and install the libraries.
 sudo pip install -r Requirements.txt
 ```
 
-**Please Note:** NXBT needs root privileges to toggle the BlueZ Input plugin. If you're not comfortable running this program as root, you can disable the Input plugin manually, and install NXBT as a regular user. I've always run the program as root, so you may need to investigate how to adapt it (Visit [NXBT](https://github.com/Brikwerk/nxbt) repository to learn more).
-
-In Raspberry Pi OS and other operating systems, OpenCV may take forever to install, eventually raising an error. If this happens, force the installation of the version 4.5.3.56 running: `pip install opencv-python==4.5.3.56`.
+**Please Note:** NXBT needs root privileges to toggle the BlueZ Input plugin. If you don't feel comfortable running this program as root, you can disable the Input plugin manually, and install NXBT as a regular user. I've always run the program as root, so you may need to investigate how to adapt it (Visit [NXBT](https://github.com/Brikwerk/nxbt) repository to learn more).
 
 ### Windows and MacOS
 
-Install a Linux Virtual Machine and follow the installation steps for <a href="#linux-and-raspberry-pi-os">Linux and Raspberry Pi OS</a>. It's been tested using Raspberry Pi OS 11 (Bullseye) and Virtual Box with XUbuntu 20.04.3.
+Install a Linux Virtual Machine and follow the installation steps for <a href="#linux-and-raspberry-pi-os">Linux and Raspberry Pi OS</a>. The program has been tested using Raspberry Pi OS 11 (Bullseye) and Virtual Box with XUbuntu 20.04.3.
 
 ## Getting Started
 
 ### Material List
-- Capture card that transform HDMI input into USB output. They're not expensive, I bought a new one for 7€. 
-- HDMI cable.
-- Nintendo Switch Dock.
+
+<p>
+    &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/USB.svg" width="14px">
+    ⠀Capture card that converts HDMI input into USB output. <br>
+    &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Switch.svg" width="14px">
+    ⠀Nintendo Switch Dock. <br>
+    &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Cable.svg" width="14px">
+    ⠀HDMI cable. <br>
+</p>
 
 ### Setting Up the Nintendo Switch
 
 Place the Nintendo Switch into the Dock. Connect the dock to the official Nintendo Switch charger. Connect the HDMI output of the Dock to the input of your capture card. Finally, connect your capture card to your computer / Raspberry via USB. If your game is not digital, insert the game card in the Nintendo.
 
-**NOTE:** The algorithm is programmed to always open the first game slot. Make sure the pokémon game you want to run is in the first position. If it's not, you can simply open the game and it'll move to the beginning.
+<p style="display: flex; align-items: start;">
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Warning.svg" width="17px" align="left"/><span><strong>NOTE:</strong>  The program will always open the first game slot. Make sure the pokémon game you want to run is in the first position. If it's not, you can simply start the game and it'll move to the beginning.</span>
+</p>
 
-If your game has an auto-save option, disable it. Otherwise, in case you kill the pokémon you won't be able to restart the process. In the game, place your player right in front of the pokémon (overworld), you have to be able to enter the combat just by pressing "**A**", if you need to move forward some steps before, read the note in the <a href="#running-the-shiny-hunter">Running the Shiny Hunter</a> section.
+<!-- If your game has an auto-save option, disable it. Otherwise, in case you kill the pokémon you won't be able to restart the process. In the game, place your player right in front of the pokémon (overworld), you have to be able to enter the combat just by pressing "**A**", if you need to move forward some steps before, read the note in the <a href="#running-the-shiny-hunter">Running the Shiny Hunter</a> section. -->
 
 Once in the home screen, go to "Controllers" and "Change Grip/Order Menu". Remove both controllers from the Nintendo Switch and make sure they're not connected via bluetooth.
+
+
 
 ## Detecting the Capture Card
 
@@ -84,7 +98,7 @@ To discover which is the good one, note all the detected devices. You will have 
 
 ## Selecting the Shiny Pokémon
 
-**CAUTION:** The shiny pokémon you want to obtain must meet one condition: it must be found by an static encounter. Also, make sure that specific pokémon has not been shiny locked in the game.
+<img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Warning.svg" width="17px" align="left"/> **CAUTION:** Make sure the desired shiny pokémon has not been shiny locked in the game.
 
 Once you have selected your pokemon you have execute `/Sub_Programs/Find_Color_Range.py`. It will open the following interface:
 
@@ -126,9 +140,25 @@ If you find a shiny pokémon and you want to search for another one, you must re
 
 ## Troubleshooting
 
-## Issues
+### It takes forever to install *`opencv-python`* library 
 
-- **Failed to allocate XXXX bytes in function 'OutOfMemoryError'**: I did something impossible, I got memory leaks in a Python project. In the Raspberry Pi, it crashes after about 500 soft resets (~5h 40min) I'm still working on it. I will upload the new version as soon as I find the solution.
+In some Raspberry Pi OS versions and other operating systems, OpenCV may take forever to install, eventually raising an error. If this happens, force the installation of the version 4.5.3.56 by running: `pip install opencv-python==4.5.3.56`.
+
+### Error when installing the *`dbus-python`* package
+
+This error can occur due to missing dbus-related libraries on some Linux distributions. To fix this in most cases, `libdbus-glib-1-dev` and `libdbus-1-dev` need to be installed with your system's package manager:
+
+```bash
+sudo apt-get install libdbus-glib-1-dev libdbus-1-dev
+```
+
+<h2 style="display: flex; align-items: center;">
+    <img src="./Media/Docs/Virus.svg" width="25px" style="margin-right: 10px;" />
+    Issues
+</h2>
+
+### Failed to allocate *XXX* bytes in function 'OutOfMemoryError'
+After some hours running, program may crash due to it has ran out of memory, this error only raises on Raspberry Pi. Still working on it, a new version will be uploaded as soon as possible. 
 
 ## Credits
 
