@@ -10,6 +10,7 @@
 - Go to the [Virtual Box Official Webpage](https://www.virtualbox.org/wiki/Downloads). Download and install the correct *VirtualBox Platform Package* for your operating system. 
 - Feel free to use the OS you feel more comfortable with; I'm using **XUbuntu**, but other Linux distributions will work as well. Go to [XUbuntu Webpage](https://xubuntu.org/download/). Select your nearest location to get the mirror and download the *xubuntu-xx.xx.x-desktop-amd64.iso*, where *xx.xx.x* is the version of the ISO (I'm currently using the version *22.04.3*). The file is about 3GB; it's the operating system of the Virtual Machine.
 
+⠀
 <h2>
     <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/VBox%20Instructions/SVG/Gear.svg" width="25px" align="top"/>
     Setup the Virtual Machine
@@ -53,6 +54,7 @@
     </li>
 </ul>
 
+⠀
 ### Configure the Virtual Machine
 
 <ul>
@@ -108,6 +110,37 @@ sudo apt update</code></pre>
     </li>
 </ul>
 
+⠀
+### Stablish Connection with Capture Card and Bluetooth Adapter
+
+<ul>
+    <li>
+        <p>Once you have successfully installed and configured the VM, power it off. Open <strong>Oracle VM VirtualBox</strong>, select your VM and click the <code>Configuration</code> button.</p>
+        <h6 align="center">
+            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/VBox%20Instructions/VBox%2017.png" width="50%" style="border-radius: 5px;">
+        </h6>
+    </li>
+    <li>
+        <p>Go to <i>USB</i> and enable the option "<i>Enable USB Controller</i>". Select the USB controller type that you have installed on your PC. If you don't know it, just select any of them; if it doesn't work, try another one. Now, click on the <code>Add New USB Filter</code> button and select your capture card device (<i>Macrosilicon USB Video</i> in my case, but yours will probably be different).</p>
+        <h6 align="center">
+            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/VBox%20Instructions/VBox%2021.png" width="70%" style="border-radius: 5px;">
+        </h6>
+    </li>
+    <li>
+        <p>Note that you have created a filter for your capture card on a specific port, which means that if you connect the device to a different physical port of your computer, it won't be detected. To avoid this, you can connect the capture card to all your ports and add the filters one by one. This example shows my configuration for the same device on two different ports:</p>
+        <h6 align="center">
+            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/VBox%20Instructions/VBox%2022.png" width="70%" style="border-radius: 5px;">
+        </h6>
+    </li>
+    <li>
+        <p>Click on the <code>Add New USB Filter</code> button and select your Bluetooth adapter (<i>Intel Corp</i> in my case, but it will vary depending on your adapter brand). If you don't know what your adapter is, try disconnecting all USB from your computer; it will filter all your external devices and make it easier to identify it.</p>
+        <h6 align="center">
+            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/VBox%20Instructions/VBox%2023.png" width="70%" style="border-radius: 5px;">
+        </h6>
+    </li>
+</ul>
+
+⠀
 ### [Optional] Extra Configurations for the Virtual Machine 
 
 The following configurations are completely optional, but highly recommended for a more friendly experience:
