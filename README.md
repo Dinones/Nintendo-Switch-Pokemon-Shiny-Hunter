@@ -28,6 +28,8 @@
     <br>
 </h1>
 
+<!-- #################### KEY FEATURES #################### -->
+⠀
 <h2>
     <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Star.svg" width="30px" align="top"/>
     ⠀Key Features
@@ -45,6 +47,7 @@
     </p> 
 </p>
 
+<!-- #################### INSTALLATION #################### -->
 ⠀
 <h2>
     <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Gear.svg" width="30px" align="top"/>
@@ -72,6 +75,7 @@ sudo pip install -r Requirements.txt
 
 Install a Linux Virtual Machine and follow the installation steps for <a href="#linux-and-raspberry-pi-os">Linux and Raspberry Pi OS</a>. The program has been tested using Raspberry Pi OS 11 (Bullseye) and Virtual Box with XUbuntu 22.04.3. You can find a step-by-step guide on how to setup the Virtual Machine [here](./Media/Docs/VM%20Setup.md).
 
+<!-- #################### GETTING STARTED #################### -->
 ⠀
 <h2>
     <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Rocket.svg" width="30px" align="top"/>
@@ -101,6 +105,7 @@ Place the Nintendo Switch into the Dock. Connect the dock to the official Ninten
 
 Once in the home screen, go to <i>Controllers</i> > "<i>Change Grip/Order Menu</i>". Remove both controllers from the Nintendo Switch and make sure they're not connected via bluetooth. (See steps <a href="./Media/Docs/Change%20Grip%20Menu.md">here</a>).<br>
 
+<!-- #################### DETECTING CAPTURE CARD #################### -->
 ⠀
 <h2>
     <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Camera.svg" width="30px" align="top"/>
@@ -111,6 +116,7 @@ Execute `/Sub_Programs/Find_Video_Capture.py`. It will print all the video captu
 
 To discover which is the good one, note all the detected devices. You will have to change the `VIDEO_CAPTURE_INDEX` variable of the `Constants.py` file. Now, execute `/Utils/Game_Capture.py`. It will open a window showing what is being captured. Repeat the process until you find the desired device.
 
+<!-- #################### SELECTING SHINY POKEMON #################### -->
 ⠀
 <h2>
     <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Diamond.svg" width="30px" align="top"/>
@@ -143,16 +149,18 @@ Once you have detected the colors, you can press the "Toggle Check Match" button
 
 Once you've found the color ranges that fit the requirements, change the `LOWER_COLOR` and `UPPER_COLOR` variables in the `Constants.py` file to the new values.
 
+<!-- #################### CONTROLLING NINTENDO SWITCH #################### -->
 ⠀
 <h2>
     <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Controller.svg" width="30px" align="top"/>
     ⠀Controlling the Nintendo Switch
 </h2>
 
-Before executing the main program, check NXBT is successfully working in your system. Please, visit [NXBT repository](https://github.com/Brikwerk/nxbt) and perform the demo testing.
+Before executing the main program, check NXBT is successfully working in your system. Please, visit [NXBT repository](https://github.com/Brikwerk/nxbt#running-the-demo) and perform the demo testing.
 
 It may not be working at the beginning, try restarting the computer and bluetooth systems, you can use `rfkill block bluetooth` and `rfkill unblock bluetooth`. If you are not able to connect your computer to the Nintendo, please, report to [NXBT](https://github.com/Brikwerk/nxbt).
 
+<!-- #################### RUNNING SHINY HUNTER #################### -->
 ⠀
 <h2>
     <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Pokeball.svg" width="30px" align="top"/>
@@ -165,13 +173,14 @@ Execute the `Shiny_Hunter.py` file. The controller should connect in a few secon
 
 If you find a shiny pokémon and you want to search for another one, you must reset the number of the `/Media/Attempts.txt` file to zero, to keep track of the current resets for the new pokémon. It's also recomendable to delete all the images generated in the `/Media/Results/` folder.
 
+<!-- #################### TROUBLESHOOTING #################### -->
 ⠀
 <h2>
     <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Tools.svg" width="30px" align="top"/>
     ⠀Troubleshooting
 </h2>
 
-### It takes forever to install *`opencv-python`* library 
+### Unable to install *`opencv-python`* library 
 
 In some Raspberry Pi OS versions and other operating systems, OpenCV may take forever to install, eventually raising an error. If this happens, force the installation of the version 4.5.3.56 by running: `pip install opencv-python==4.5.3.56`.
 
@@ -183,6 +192,7 @@ This error can occur due to missing dbus-related libraries on some Linux distrib
 sudo apt-get install libdbus-glib-1-dev libdbus-1-dev
 ```
 
+<!-- #################### ISSUES #################### -->
 ⠀
 <h2>
     <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Virus.svg" width="30px" align="top"/>
@@ -192,6 +202,7 @@ sudo apt-get install libdbus-glib-1-dev libdbus-1-dev
 ### Failed to allocate *XXX* bytes in function 'OutOfMemoryError'
 After some hours running, program may crash due to it has ran out of memory, this error only raises on Raspberry Pi. Still working on it, a new version will be uploaded as soon as possible. 
 
+<!-- #################### CREDITS #################### -->
 ⠀
 <h2>
     <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Medal.svg" width="30px" align="top"/>
