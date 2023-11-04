@@ -114,7 +114,7 @@ while True:
 
         # ↓↓ Check if it's in the HOME page. Sometimes it fails to press the HOME button
         elif Switch_Controller.current_event in ['WAIT_HOME_STOP', 'WAIT_HOME_RESTART']:
-            if all(pixel_value == 255 for pixel_value in image.check_pixel_color()):
+            if all(pixel_value == 255 for pixel_value in image.check_pixel_color([0, 0])):
                 if Switch_Controller.current_event == 'WAIT_HOME_STOP': Switch_Controller.current_event = 'STOP'
                 elif Switch_Controller.current_event == 'WAIT_HOME_RESTART': Switch_Controller.current_event = 'RESTART'
             else: 
