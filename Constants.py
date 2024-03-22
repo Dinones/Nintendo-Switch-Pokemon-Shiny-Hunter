@@ -2,9 +2,11 @@
 ##################################################     VIDEO CAPTURE     ##################################################
 ###########################################################################################################################
 
+VIDEO_CAPTURE_INDEX = 0
 FPS_COUNTER = True
 # [SECONDS]
 REFRESH_FPS_TIME = 1
+MAX_VIDEO_DEVICES_ANALIZED = 5
 
 ###########################################################################################################################
 #################################################     IMAGE PROCESSING     ################################################
@@ -15,6 +17,14 @@ ORIGINAL_FRAME_SIZE = (1920, 1080)
 RECTANGLES_PARAMS = {
     'color': (0, 255, 0),
     'thickness': 4
+}
+TEXT_PARAMS = {
+    'font_scale': 0.5,
+    # [RGB]
+    'font_color': (255, 0, 125),
+    'thickness': 2,
+    # [PIXELS]
+    'position': (2, 15)
 }
 # [PIXELS²] Minimum area to detect something as a match
 MIN_DETECT_SIZE = 5

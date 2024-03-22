@@ -80,6 +80,14 @@ class Image_Processing():
 
         return len(filtered_contours)
 
+    #######################################################################################################################
+
+    def draw_FPS(self, FPS = 0):
+        self.FPS_image = np.copy(self.resized_image)
+        cv2.putText(self.FPS_image, f'FPS: {FPS}', CONST.TEXT_PARAMS['position'], cv2.FONT_HERSHEY_SIMPLEX, 
+            CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'], CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
+
+
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
@@ -91,12 +99,12 @@ if __name__ == "__main__":
     #######################################################################################################################
 
     def main_menu():
-        print('\n' + COLOR_str.MENU
-            .replace('{module}', 'Image Processing')
-            .replace('{options}', '[1] Process video\n    [2] Process image\n    [3] Extract frames from video')
-        )
+        print('\n' + COLOR_str.MENU.replace('{module}', 'Image Processing'))
+        print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Process video'))
+        print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Process image'))
+        print(COLOR_str.MENU_OPTION.replace('{index}', '3').replace('{option}', 'Extract frames from video'))
+
         option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Image Processing'))
-        # option = '1'
 
         menu_options = {
             '1': process_video,
@@ -113,11 +121,12 @@ if __name__ == "__main__":
         print('\n' + COLOR_str.SELECTED_OPTION
             .replace('{module}', 'Image Processing')
             .replace('{option}', f"{option}")
-            .replace('{action}', f"Processing video '../{CONST.TESTING_VIDEO_PATH}'")
+            .replace('{action}', f"Processing video")
+            .replace('{path}', f"'../{CONST.TESTING_VIDEO_PATH}'")
         )
 
         if not os.path.exists(f'../{CONST.TESTING_VIDEO_PATH}'): 
-            return print(COLOR_str.INVALID_PATH
+            return print(COLOR_str.INVALID_PATH_ERROR
                 .replace('{module}', 'Image Processing')
                 .replace('{path}', f"'../{CONST.TESTING_VIDEO_PATH}'") + '\n'
             )
@@ -162,7 +171,8 @@ if __name__ == "__main__":
         print('\n' + COLOR_str.SELECTED_OPTION
             .replace('{module}', 'Image Processing')
             .replace('{option}', f"{option}")
-            .replace('{action}', f"Processing image '../{CONST.TESTING_IMAGE_PATH}'")
+            .replace('{action}', f"Processing image")
+            .replace('{path}', f"'../{CONST.TESTING_IMAGE_PATH}'")
         )
 
         image = Image_Processing(f'../{CONST.TESTING_IMAGE_PATH}' )
@@ -197,11 +207,12 @@ if __name__ == "__main__":
         print(COLOR_str.SELECTED_OPTION
             .replace('{module}', 'Image Processing')
             .replace('{option}', f"{option}")
-            .replace('{action}', f'Extracting frames to \'{CONST.SAVING_FRAMES_PATH}\'...')
+            .replace('{action}', f'Extracting frames into')
+            .replace('{path}', f"'../{CONST.SAVING_FRAMES_PATH}'")
         )
 
         if not os.path.exists(f'../{CONST.TESTING_VIDEO_PATH}') or not os.path.exists(f'../{CONST.SAVING_FRAMES_PATH}'): 
-            return print(COLOR_str.INVALID_PATH
+            return print(COLOR_str.INVALID_PATH_ERROR
                 .replace('{module}', 'Image Processing')
                 .replace('{path}', f"'../{CONST.TESTING_VIDEO_PATH}' or '../{CONST.SAVING_FRAMES_PATH}'") + '\n'
             )
@@ -225,7 +236,7 @@ if __name__ == "__main__":
 
             cv2.imwrite(f'../{CONST.SAVING_FRAMES_PATH}/{frame_index}.png', image.original_image)
 
-            # Inefficient? Maybe, but looks cool and does not affect the main code
+            # Inefficient? Maybe, but looks cool and doesn't affect the main code
             print(COLOR_str.CURRENT_EXTRACTED_FRAMES
                 .replace('{extracted_frame}', str(frame_index + 1))
                 .replace('{total_frames}', str(total_frames))
