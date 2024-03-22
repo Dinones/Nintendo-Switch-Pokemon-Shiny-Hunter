@@ -33,7 +33,7 @@ class Game_Capture():
         self.read_frame()
         if isinstance(self.frame, type(None)): 
             self.stop()
-            exit(COLOR_str.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{video_capture_index}'"))
+            exit(COLOR_str.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{video_capture_index}'") + '\n')
 
     #######################################################################################################################
 

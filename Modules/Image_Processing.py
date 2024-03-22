@@ -32,7 +32,7 @@ class Image_Processing():
         # Load the image
         if isinstance(image, str): self.original_image = cv2.imread(image)
         else: self.original_image = image
-        if isinstance(self.original_image, type(None)): return print(COLOR_str.COULD_NOT_PROCESS_IMAGE)
+        if isinstance(self.original_image, type(None)): return print(COLOR_str.COULD_NOT_PROCESS_IMAGE + '\n')
 
     #######################################################################################################################
 
@@ -87,15 +87,16 @@ class Image_Processing():
 if __name__ == "__main__":
     import time
     from Game_Capture import Game_Capture
-
+    
+    #######################################################################################################################
 
     def main_menu():
-        print(COLOR_str.MENU
+        print('\n' + COLOR_str.MENU
             .replace('{module}', 'Image Processing')
             .replace('{options}', '[1] Process video\n    [2] Process image\n    [3] Extract frames from video')
         )
-        # option = input(COLOR_str.OPTION_SELECTION.replace('{module}', 'Image Processing'))
-        option = '1'
+        option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Image Processing'))
+        # option = '1'
 
         menu_options = {
             '1': process_video,
@@ -103,25 +104,32 @@ if __name__ == "__main__":
             '3': extract_frames_from_video,
         }
 
-        if option in menu_options: menu_options[option]()
-        else: print(COLOR_str.INVALID_OPTION.replace('{module}', 'Image Processing'))
+        if option in menu_options: menu_options[option](option)
+        else: print(COLOR_str.INVALID_OPTION.replace('{module}', 'Image Processing') + '\n')
 
     #######################################################################################################################
 
-    def process_video():
-        print(COLOR_str.SELECTED_OPTION
+    def process_video(option):
+        print('\n' + COLOR_str.SELECTED_OPTION
             .replace('{module}', 'Image Processing')
+            .replace('{option}', f"{option}")
             .replace('{action}', f"Processing video '../{CONST.TESTING_VIDEO_PATH}'")
         )
 
         if not os.path.exists(f'../{CONST.TESTING_VIDEO_PATH}'): 
             return print(COLOR_str.INVALID_PATH
                 .replace('{module}', 'Image Processing')
-                .replace('{path}', f"'../{CONST.TESTING_VIDEO_PATH}'")
+                .replace('{path}', f"'../{CONST.TESTING_VIDEO_PATH}'") + '\n'
             )
 
         Video_Capture = Game_Capture(f'../{CONST.TESTING_VIDEO_PATH}')
         image = Image_Processing(Video_Capture.frame)
+
+        print(COLOR_str.PRESS_KEY_TO_INSTRUCTION
+            .replace('{module}', 'Image Processing')
+            .replace('{key}', "'q'")
+            .replace('{instruction}', 'exit the program')
+        )
 
         while True:
             image.original_image = Video_Capture.read_frame()
@@ -143,11 +151,17 @@ if __name__ == "__main__":
 
         Video_Capture.stop()
 
+        print(COLOR_str.SUCCESS_EXIT_PROGRAM
+            .replace('{module}', 'Image Processing')
+            .replace('{reason}', 'Successfully processed the video!') + '\n'
+        )
+
     #######################################################################################################################
 
-    def process_image(): 
-        print(COLOR_str.SELECTED_OPTION
+    def process_image(option): 
+        print('\n' + COLOR_str.SELECTED_OPTION
             .replace('{module}', 'Image Processing')
+            .replace('{option}', f"{option}")
             .replace('{action}', f"Processing image '../{CONST.TESTING_IMAGE_PATH}'")
         )
 
@@ -159,6 +173,11 @@ if __name__ == "__main__":
         contours = image.get_rectangles()
 
         print(COLOR_str.CONTOURS_FOUND.replace('{contours}', str(contours)))
+        print(COLOR_str.PRESS_KEY_TO_INSTRUCTION
+            .replace('{module}', 'Image Processing')
+            .replace('{key}', "'q'")
+            .replace('{instruction}', 'exit the program')
+        )
 
         # cv2.imshow(f'{CONST.BOT_NAME} - Original', image.resized_image)
         # cv2.imshow(f'{CONST.BOT_NAME} - Grayscale', image.grayscale_image)
@@ -167,34 +186,56 @@ if __name__ == "__main__":
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
+        print(COLOR_str.SUCCESS_EXIT_PROGRAM
+            .replace('{module}', 'Image Processing')
+            .replace('{reason}', 'Successfully processed the image!') + '\n'
+        )
+
     #######################################################################################################################
 
-    def extract_frames_from_video(): 
+    def extract_frames_from_video(option): 
         print(COLOR_str.SELECTED_OPTION
             .replace('{module}', 'Image Processing')
-            .replace('{action}', 'Extracting frames...')
+            .replace('{option}', f"{option}")
+            .replace('{action}', f'Extracting frames to \'{CONST.SAVING_FRAMES_PATH}\'...')
         )
 
         if not os.path.exists(f'../{CONST.TESTING_VIDEO_PATH}') or not os.path.exists(f'../{CONST.SAVING_FRAMES_PATH}'): 
             return print(COLOR_str.INVALID_PATH
                 .replace('{module}', 'Image Processing')
-                .replace('{path}', f"'../{CONST.TESTING_VIDEO_PATH}' or '../{CONST.SAVING_FRAMES_PATH}'")
+                .replace('{path}', f"'../{CONST.TESTING_VIDEO_PATH}' or '../{CONST.SAVING_FRAMES_PATH}'") + '\n'
             )
 
         Video_Capture = Game_Capture(f'../{CONST.TESTING_VIDEO_PATH}')
         image = Image_Processing(Video_Capture.frame)
 
-        frame_index = 0
+        total_frames = int(Video_Capture.video_capture.get(cv2.CAP_PROP_FRAME_COUNT))
+        frame_index = 1
+        
+        print(COLOR_str.CURRENT_EXTRACTED_FRAMES
+            .replace('{extracted_frame}', str(frame_index))
+            .replace('{total_frames}', str(total_frames))
+            .replace('{percentage}', '0'), end='\r', flush=True
+        )
+
         while True:
             image.original_image = Video_Capture.read_frame()
             # No more frames in the video
-            if isinstance(image.original_image, type(None)): break
+            if isinstance(image.original_image, type(None)): print(); break
 
-            cv2.imwrite(f'../{CONST.SAVING_FRAMES_PATH}/{frame_index + 1}.png', image.original_image)
+            cv2.imwrite(f'../{CONST.SAVING_FRAMES_PATH}/{frame_index}.png', image.original_image)
+
+            # Inefficient? Maybe, but looks cool and does not affect the main code
+            print(COLOR_str.CURRENT_EXTRACTED_FRAMES
+                .replace('{extracted_frame}', str(frame_index + 1))
+                .replace('{total_frames}', str(total_frames))
+                .replace('{percentage}', str(int((frame_index + 1)/total_frames*100))), end='\r', flush=True
+            )         
+
             frame_index += 1
 
         Video_Capture.stop()
-        print(COLOR_str.SUCCESSFULLY_EXTRACTED_FRAMES.replace('{frames}', str(frame_index)))
+        print(COLOR_str.SUCCESSFULLY_EXTRACTED_FRAMES.replace('{frames}', str(frame_index)) + '\n')
 
     #######################################################################################################################
 
