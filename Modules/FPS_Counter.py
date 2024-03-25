@@ -54,6 +54,7 @@ class FPS_Counter():
         while not shutdown_event.is_set():
             mem_info = self.process.memory_info()
             self.memory_usage = mem_info.rss / (1024 * 1024)
+            print(f'RAM Usage: {self.memory_usage} MB')
             sleep(1)
 
 ###########################################################################################################################

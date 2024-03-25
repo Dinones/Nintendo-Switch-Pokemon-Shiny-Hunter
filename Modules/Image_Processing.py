@@ -123,12 +123,22 @@ class Image_Processing():
     def get_tkinter_images(self, images = []):
         if not isinstance(images, list): return
 
-        for image in images:
-            if hasattr(self, image) and not isinstance(getattr(self, image), type(None)): 
-                try:
-                    self.tkinter_images[image] = \
-                        ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(getattr(self, image), cv2.COLOR_BGR2RGB)))
-                except: pass
+        def get_tkinter_image(image):
+            try: return ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB)))
+            except: return None
+
+        self.tkinter_images['FPS_image'] = get_tkinter_image(self.FPS_image)
+        for image_name in ['contours_image', 'masked_image']:
+            self.tkinter_images[image_name] = cv2.resize(getattr(self, image_name), CONST.SECONDARY_FRAME_SIZE)
+            self.tkinter_images[image_name] = get_tkinter_image(self.tkinter_images[image_name])
+
+        # for image in images:
+        #     if hasattr(self, image) and not isinstance(getattr(self, image), type(None)):
+        #         self.tkinter_images[image] = cv2.resize(getattr(self, image), CONST.SECONDARY_FRAME_SIZE)
+        #         try:
+        #             self.tkinter_images[image] = \
+        #                 ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(self.tkinter_images[image], cv2.COLOR_BGR2RGB)))
+        #         except: pass
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################

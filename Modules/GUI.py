@@ -19,16 +19,24 @@ import Constants as CONST
 #################################################     INITIALIZATIONS     #################################################
 ###########################################################################################################################
 
-# Define default frame style
 frame_style = {
     'background': '#555',
     # Space left between the borders of the frame and the items inside it 
     'bd': 2,
 }
-# Define default canvas style
 canvas_style = {
     'background': '#000',
     'highlightthickness': 0,
+}
+text_frame_style = {
+    'background': '#222',
+    'highlightthickness': 1,
+    'highlightbackground': '#444',
+}
+text_style = {
+    'fg': '#aaa',
+    'anchor': 'w',
+    'background': '#222',
 }
 
 # GUI inherits from the class Thread. It will behave like a thread
@@ -61,6 +69,9 @@ class GUI():
 
             'bottom_right_image_frame': None,
             'bottom_right_image': new_image(),
+
+            'RAM_usage_frame': None,
+            'RAM_usage_label': None,
         }
 
         ##### MAIN FRAME #####
@@ -90,6 +101,19 @@ class GUI():
             width=CONST.SECONDARY_FRAME_SIZE[0], height=CONST.SECONDARY_FRAME_SIZE[1])
         self.items['bottom_right_image']['canvas'].pack()
 
+        ##### RAM USAGE #####
+        self.items['RAM_usage_frame'] = tk.Frame(self.items['main_frame'], **text_frame_style)
+        self.items['RAM_usage_frame'].place(x=10, y=CONST.MAIN_FRAME_SIZE[1] + 20)
+        self.items['RAM_usage_label'] = \
+            tk.Label(self.items['RAM_usage_frame'], text='  🔹⠀ RAM Usage: 0 MB', height=2, width=59, **text_style)
+        self.items['RAM_usage_label'].pack(fill=tk.BOTH)
+
+        aaaa = tk.Frame(self.items['main_frame'], **text_frame_style)
+        aaaa.place(x=557, y=CONST.MAIN_FRAME_SIZE[1] + 20)
+        bbbb = \
+            tk.Label(aaaa, text='  🔹⠀ RAM Usage: 0 MB', height=2, width=59, **text_style)
+        bbbb.pack(fill=tk.BOTH)
+
         # Whenever the GUI geometry (size) is changed, it is automatically restored to the original one
         def enforce_geometry(event): self.root.geometry(f'{CONST.BOT_WINDOW_SIZE[0]}x{CONST.BOT_WINDOW_SIZE[1]}')
         self.root.bind("<Configure>", enforce_geometry)
@@ -101,7 +125,7 @@ class GUI():
     #######################################################################################################################
 
     def update_GUI(self):
-        try: image = self.queue.get(block=True, timeout=1)
+        try: [image, memory_usage] = self.queue.get(block=True, timeout=1)
         except: 
             # Schedule the next update_GUI() call in 10 milliseconds
             self.timer = Timer(0.01, self.update_GUI)
@@ -111,7 +135,7 @@ class GUI():
         # Check if the GUI is still alive (hasn't been closed)
         try: self.root.winfo_exists()
         except: return
-                
+        
         image.get_tkinter_images(['FPS_image', 'masked_image', 'contours_image'])
 
         # Update the images
@@ -134,6 +158,9 @@ class GUI():
         self.items['main_image']['tkinter_image'] = image.tkinter_images['FPS_image']
         self.items['top_right_image']['tkinter_image'] = image.tkinter_images['masked_image']
         self.items['bottom_right_image']['tkinter_image'] = image.tkinter_images['contours_image']
+
+        # Update the RAM usage
+        self.items['RAM_usage_label'].config(text=f'  🔹⠀ RAM Usage: {memory_usage:.2f} MB')
 
         # Schedule the next update_GUI() call in 10 milliseconds
         self.timer = Timer(0.01, self.update_GUI)
@@ -182,8 +209,10 @@ if __name__ == "__main__":
         FPS = FPS_Counter()
         shutdown_event = Event()
         
-        def test_GUI_control():
-            while True:
+        def test_GUI_control(shutdown_event = None):
+            if isinstance(shutdown_event, type(None)): return
+
+            while not shutdown_event.is_set():
                 image = Image_Processing(Video_Capture.read_frame())
                 if isinstance(image.original_image, type(None)): continue
 
@@ -193,10 +222,10 @@ if __name__ == "__main__":
                 image.get_mask()
                 n_contours = image.get_rectangles()
 
-                Image_Queue.put(image)
+                Image_Queue.put([image, FPS.memory_usage])
 
         threads = []
-        threads.append(Thread(target=test_GUI_control, daemon=True))
+        threads.append(Thread(target=lambda: test_GUI_control(shutdown_event), daemon=True))
         threads.append(Thread(target=lambda: FPS.get_memory_usage(shutdown_event), daemon=True))
         for thread in threads: thread.start()
 

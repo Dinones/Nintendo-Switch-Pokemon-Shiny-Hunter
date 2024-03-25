@@ -2,7 +2,7 @@
 ##################################################     VIDEO CAPTURE     ##################################################
 ###########################################################################################################################
 
-VIDEO_CAPTURE_INDEX = 0
+VIDEO_CAPTURE_INDEX = 2
 FPS_COUNTER = True
 # [SECONDS]
 REFRESH_FPS_TIME = 1
@@ -40,7 +40,7 @@ UPPER_COLOR = 255
 # GUI title
 BOT_NAME = "FB Pokemon Shiny Hunter by @Dinones"
 # [PIXELS] GUI size
-BOT_WINDOW_SIZE = (1104, 427)
+BOT_WINDOW_SIZE = (1104, 477)
 MAIN_FRAME_SIZE = (720, 405)
 SECONDARY_FRAME_SIZE = (350, 197)
 
