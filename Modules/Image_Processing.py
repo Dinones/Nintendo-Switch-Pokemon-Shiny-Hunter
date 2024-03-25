@@ -125,8 +125,10 @@ class Image_Processing():
 
         for image in images:
             if hasattr(self, image) and not isinstance(getattr(self, image), type(None)): 
-                self.tkinter_images[image] = \
-                    ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(getattr(self, image), cv2.COLOR_BGR2RGB)))
+                try:
+                    self.tkinter_images[image] = \
+                        ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(getattr(self, image), cv2.COLOR_BGR2RGB)))
+                except: pass
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################

@@ -107,6 +107,10 @@ class GUI():
             self.timer = Timer(0.01, self.update_GUI)
             self.timer.start()
             return
+
+        # Check if the GUI is still alive (hasn't been closed)
+        try: self.root.winfo_exists()
+        except: return
                 
         image.get_tkinter_images(['FPS_image', 'masked_image', 'contours_image'])
 
@@ -173,12 +177,13 @@ if __name__ == "__main__":
             .replace('{path}', '')
         )
 
-
+        Image_Queue = Queue()
         Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
         FPS = FPS_Counter()
+        shutdown_event = Event()
         
         def test_GUI_control():
-            while not shutdown_event.is_set():
+            while True:
                 image = Image_Processing(Video_Capture.read_frame())
                 if isinstance(image.original_image, type(None)): continue
 
@@ -188,17 +193,18 @@ if __name__ == "__main__":
                 image.get_mask()
                 n_contours = image.get_rectangles()
 
+                Image_Queue.put(image)
 
+        threads = []
+        threads.append(Thread(target=test_GUI_control, daemon=True))
+        threads.append(Thread(target=lambda: FPS.get_memory_usage(shutdown_event), daemon=True))
+        for thread in threads: thread.start()
 
+        user_interface = GUI(Image_Queue)
+        shutdown_event.set()
 
-                
-
-
-        shutdown_event = Event()
-        Thread(target=test_GUI_control, daemon=True)
-        user_interface = GUI(None)
+        print(COLOR_str.RELEASING_THREADS.replace('{module}', 'GUI').replace('{threads}', str(len(threads))) + '\n')        
 
     #######################################################################################################################
 
     main_menu()
-    # user_interface = GUI(None)
