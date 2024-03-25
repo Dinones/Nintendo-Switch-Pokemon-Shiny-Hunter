@@ -1,9 +1,5 @@
 __pycache__
 
 /OLD
-
-/Media/Tests/*
-!/Media/Tests/.gitkeep
-!/Media/Tests/Results/
-/Media/Tests/Results/*
-!/Media/Tests/Results/.gitkeep
+/Media/Tests
+/Media/To-Do List.txt

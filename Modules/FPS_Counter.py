@@ -50,6 +50,7 @@ if __name__ == '__main__':
     max_FPS = min_FPS = 0
     FPS_array = []
 
+    print()
     while True:
         FPS_Counter.get_FPS()
 

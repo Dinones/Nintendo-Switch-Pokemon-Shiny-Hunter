@@ -10,6 +10,7 @@ if __name__ == '__main__':
 
 import cv2
 import numpy as np
+from PIL import Image, ImageTk
 
 import sys; sys.path.append('..')
 import Colored_Strings as COLOR_str
@@ -24,7 +25,7 @@ class Image_Processing():
         self.original_image = None
         self.grayscale_image = None
         self.resized_image = None
-        self.tkinter_image = None
+        self.tkinter_images = {}
         self.masked_image = None
         self.contours_image = None
         self.FPS_image = None
@@ -36,7 +37,7 @@ class Image_Processing():
 
     #######################################################################################################################
 
-    def resize_image(self, desired_size = CONST.BOT_WINDOW_SIZE):
+    def resize_image(self, desired_size = CONST.MAIN_FRAME_SIZE):
         if isinstance(self.original_image, type(None)): return
 
         # Get the desired aspect ratio and size
@@ -114,6 +115,18 @@ class Image_Processing():
         cv2.putText(self.contours_image, str(n_contours), (star_center_x - 5*len(str(n_contours)), star_center_y + 5),
             cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['star_num_color'],
             CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
+
+    #######################################################################################################################
+
+    # Convert the image to tkinter compatible format
+    # Will raise an error if used before creating a GUI (root = Tk())
+    def get_tkinter_images(self, images = []):
+        if not isinstance(images, list): return
+
+        for image in images:
+            if hasattr(self, image) and not isinstance(getattr(self, image), type(None)): 
+                self.tkinter_images[image] = \
+                    ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(getattr(self, image), cv2.COLOR_BGR2RGB)))
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################

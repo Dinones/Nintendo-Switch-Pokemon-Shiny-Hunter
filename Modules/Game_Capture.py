@@ -133,7 +133,7 @@ if __name__ == "__main__":
 
         while True: 
             image = Image_Processing(Video_Capture.read_frame())
-            if image.original_image is None: continue
+            if isinstance(image.original_image, type(None)): continue
 
             image.resize_image()
             FPS.get_FPS()
