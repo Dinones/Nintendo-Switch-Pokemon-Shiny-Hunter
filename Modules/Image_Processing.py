@@ -30,7 +30,7 @@ class Image_Processing():
         self.FPS_image = None
 
         # Load the image
-        if isinstance(image, str): self.original_image = cv2.imread(image)
+        if isinstance(image, str): self.original_image = cv2.imread(image, cv2.IMREAD_UNCHANGED)
         else: self.original_image = image
         if isinstance(self.original_image, type(None)): return print(COLOR_str.COULD_NOT_PROCESS_IMAGE + '\n')
 
@@ -87,6 +87,33 @@ class Image_Processing():
         cv2.putText(self.FPS_image, f'FPS: {FPS}', CONST.TEXT_PARAMS['position'], cv2.FONT_HERSHEY_SIMPLEX, 
             CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'], CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
 
+    #######################################################################################################################
+
+    def draw_star(self, n_contours = 0):
+        image_height, image_width = self.contours_image.shape[:2]
+        inner_radius = 13
+        outer_radius = 26
+        border_margin = 10
+        n_points = 8
+        star_center_x = image_width - outer_radius - border_margin
+        star_center_y = outer_radius + border_margin
+
+        angle = np.pi / n_points
+        star_points = []
+        for i in range(n_points * 2):
+            r = outer_radius if i % 2 == 0 else inner_radius
+            # Adjust starting angle
+            theta = i * angle - np.pi/2  
+            x = star_center_x + int(r * np.cos(theta))
+            y = star_center_y + int(r * np.sin(theta))
+            star_points.append((x, y))
+
+        star_points = np.array([star_points], dtype=np.int32)
+        cv2.fillPoly(self.contours_image, [star_points], color=(0, 255, 255))
+
+        cv2.putText(self.contours_image, str(n_contours), (star_center_x - 5*len(str(n_contours)), star_center_y + 5),
+            cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['star_num_color'],
+            CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
@@ -114,56 +141,6 @@ if __name__ == "__main__":
 
         if option in menu_options: menu_options[option](option)
         else: print(COLOR_str.INVALID_OPTION.replace('{module}', 'Image Processing') + '\n')
-
-    #######################################################################################################################
-
-    def process_video(option):
-        print('\n' + COLOR_str.SELECTED_OPTION
-            .replace('{module}', 'Image Processing')
-            .replace('{option}', f"{option}")
-            .replace('{action}', f"Processing video")
-            .replace('{path}', f"'../{CONST.TESTING_VIDEO_PATH}'")
-        )
-
-        if not os.path.exists(f'../{CONST.TESTING_VIDEO_PATH}'): 
-            return print(COLOR_str.INVALID_PATH_ERROR
-                .replace('{module}', 'Image Processing')
-                .replace('{path}', f"'../{CONST.TESTING_VIDEO_PATH}'") + '\n'
-            )
-
-        Video_Capture = Game_Capture(f'../{CONST.TESTING_VIDEO_PATH}')
-        image = Image_Processing(Video_Capture.frame)
-
-        print(COLOR_str.PRESS_KEY_TO_INSTRUCTION
-            .replace('{module}', 'Image Processing')
-            .replace('{key}', "'q'")
-            .replace('{instruction}', 'exit the program')
-        )
-
-        while True:
-            image.original_image = Video_Capture.read_frame()
-            # No more frames in the video
-            if isinstance(image.original_image, type(None)): break
-
-            image.resize_image()
-            image.get_mask()
-            contours = image.get_rectangles()
-
-            cv2.imshow(f'{CONST.BOT_NAME} - Contours', image.contours_image)
-            cv2.imshow(f'{CONST.BOT_NAME} - Mask', image.masked_image)
-
-            # Press 'q' to stop the program
-            key = cv2.waitKey(1)
-            if key == ord('q') or key == ord('Q'): break
-
-            time.sleep(0.1)
-
-        Video_Capture.stop()
-
-        print(COLOR_str.SUCCESS_EXIT_PROGRAM
-            .replace('{module}', 'Image Processing')
-            .replace('{reason}', 'Successfully processed the video!') + '\n'
-        )
 
     #######################################################################################################################
 
@@ -247,6 +224,107 @@ if __name__ == "__main__":
 
         Video_Capture.stop()
         print(COLOR_str.SUCCESSFULLY_EXTRACTED_FRAMES.replace('{frames}', str(frame_index)) + '\n')
+
+    #######################################################################################################################
+
+    def process_video(option):
+        print('\n' + COLOR_str.SELECTED_OPTION
+            .replace('{module}', 'Image Processing')
+            .replace('{option}', f"{option}")
+            .replace('{action}', f"Processing video")
+            .replace('{path}', f"'../{CONST.TESTING_VIDEO_PATH}'")
+        )
+
+        if not os.path.exists(f'../{CONST.TESTING_VIDEO_PATH}'): 
+            return print(COLOR_str.INVALID_PATH_ERROR
+                .replace('{module}', 'Image Processing')
+                .replace('{path}', f"'../{CONST.TESTING_VIDEO_PATH}'") + '\n'
+            )
+
+        Video_Capture = Game_Capture(f'../{CONST.TESTING_VIDEO_PATH}')
+        image = Image_Processing(Video_Capture.frame)
+
+        print(COLOR_str.PRESS_KEY_TO_INSTRUCTION
+            .replace('{module}', 'Image Processing')
+            .replace('{key}', "'q'")
+            .replace('{instruction}', 'exit the program')
+        )
+        print(COLOR_str.PRESS_KEY_TO_INSTRUCTION
+            .replace('{module}', 'Image Processing')
+            .replace('{key}', "'SPACE'")
+            .replace('{instruction}', 'pause/resume the execution')
+        )
+        print(COLOR_str.PRESS_KEY_TO_INSTRUCTION
+            .replace('{module}', 'Image Processing')
+            .replace('{key}', "'a'")
+            .replace('{instruction}', 'move a frame backwards')
+        )
+        print(COLOR_str.PRESS_KEY_TO_INSTRUCTION
+            .replace('{module}', 'Image Processing')
+            .replace('{key}', "'d'")
+            .replace('{instruction}', 'move a frame forward')
+        )
+
+        counter = 0
+        pause = False
+        total_video_frames = int(Video_Capture.video_capture.get(cv2.CAP_PROP_FRAME_COUNT))
+
+        def process_single_frame(image, frame = None):
+            if not isinstance(frame, type(None)): Video_Capture.video_capture.set(cv2.CAP_PROP_POS_FRAMES, frame)
+
+            image.original_image = Video_Capture.read_frame()
+            # No more frames in the video
+            if isinstance(image.original_image, type(None)): return
+
+            image.resize_image()
+            image.get_mask()
+            n_contours = image.get_rectangles()
+            image.draw_star(n_contours)
+
+            cv2.imshow(f'{CONST.BOT_NAME} - Mask', image.masked_image)
+            cv2.imshow(f'{CONST.BOT_NAME} - Contours', image.contours_image)
+
+        while True:
+            if pause: 
+                # Press 'SPACE' to resume the execution
+                # Press 'a' or 'd' to move between frames
+                # Press 'q' to stop the program
+                key = cv2.waitKey(1)
+                if key == ord('q') or key == ord('Q'): break
+                elif key == ord(' '): pause = not pause
+                elif key == ord('a') or key == ord('A'): 
+                    if counter > 0: 
+                        counter = counter - 1
+                        process_single_frame(image, counter)
+                        continue
+                elif key == ord('d') or key == ord('D'):
+                    if counter < total_video_frames:
+                        counter = counter + 1
+                        process_single_frame(image, counter)
+                        continue
+
+                time.sleep(0.1)
+                continue
+
+            process_single_frame(image)
+            # No more frames in the video
+            if isinstance(image.original_image, type(None)): break
+
+            # Press 'SPACE' to pause the execution
+            # Press 'q' to stop the program
+            key = cv2.waitKey(1)
+            if key == ord('q') or key == ord('Q'): break
+            if key == ord(' '): pause = not pause
+
+            counter += 1
+            time.sleep(0.1)
+
+        Video_Capture.stop()
+
+        print(COLOR_str.SUCCESS_EXIT_PROGRAM
+            .replace('{module}', 'Image Processing')
+            .replace('{reason}', 'Successfully processed the video!') + '\n'
+        )
 
     #######################################################################################################################
 

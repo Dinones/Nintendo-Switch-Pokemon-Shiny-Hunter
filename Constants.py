@@ -20,14 +20,16 @@ RECTANGLES_PARAMS = {
 }
 TEXT_PARAMS = {
     'font_scale': 0.5,
-    # [RGB]
+    # [BGR]
     'font_color': (255, 0, 125),
     'thickness': 2,
     # [PIXELS]
-    'position': (2, 15)
+    'position': (2, 15),
+    'star_num_color': (0, 0, 255),
 }
 # [PIXELS²] Minimum area to detect something as a match
 MIN_DETECT_SIZE = 5
+MIN_DETECTED_CONTOURS = 10
 LOWER_COLOR = 235
 UPPER_COLOR = 255
 
