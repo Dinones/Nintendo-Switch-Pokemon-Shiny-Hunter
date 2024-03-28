@@ -72,10 +72,14 @@ class GUI():
 
             'RAM_usage_frame': None,
             'RAM_usage_label': None,
+
+            'switch_controller_frame': None,
+            'switch_controller_image': new_image(),
         }
 
         ##### MAIN FRAME #####
         self.items['main_frame'].pack(expand=True, padx=0, pady=0)
+
 
         ##### MAIN IMAGE #####
         self.items['main_image_frame'] = tk.Frame(self.items['main_frame'], **frame_style)
@@ -83,7 +87,10 @@ class GUI():
         # Made with canvas to avoid white flashing when moving the slides fast
         self.items['main_image']['canvas'] = tk.Canvas(self.items['main_image_frame'], **canvas_style,
             width=CONST.MAIN_FRAME_SIZE[0], height=CONST.MAIN_FRAME_SIZE[1])
+        self.items['main_image']['image_id'] = self.items['main_image']['canvas']\
+            .create_image(0, 0, anchor='nw', image=None)
         self.items['main_image']['canvas'].pack()
+
 
         ##### RIGHT TOP IMAGE #####
         self.items['top_right_image_frame'] = tk.Frame(self.items['main_frame'], **frame_style)
@@ -91,7 +98,10 @@ class GUI():
         # Made with canvas to avoid white flashing when moving the slides fast
         self.items['top_right_image']['canvas'] = tk.Canvas(self.items['top_right_image_frame'], **canvas_style,
             width=CONST.SECONDARY_FRAME_SIZE[0], height=CONST.SECONDARY_FRAME_SIZE[1])
+        self.items['top_right_image']['image_id'] = self.items['top_right_image']['canvas']\
+            .create_image(0, 0, anchor='nw', image=None)
         self.items['top_right_image']['canvas'].pack()
+
 
         ##### RIGHT BOTTOM IMAGE #####
         self.items['bottom_right_image_frame'] = tk.Frame(self.items['main_frame'], **frame_style)
@@ -99,7 +109,10 @@ class GUI():
         # Made with canvas to avoid white flashing when moving the slides fast
         self.items['bottom_right_image']['canvas'] = tk.Canvas(self.items['bottom_right_image_frame'], **canvas_style,
             width=CONST.SECONDARY_FRAME_SIZE[0], height=CONST.SECONDARY_FRAME_SIZE[1])
+        self.items['bottom_right_image']['image_id'] = self.items['bottom_right_image']['canvas']\
+            .create_image(0, 0, anchor='nw', image=None)
         self.items['bottom_right_image']['canvas'].pack()
+
 
         ##### RAM USAGE #####
         self.items['RAM_usage_frame'] = tk.Frame(self.items['main_frame'], **text_frame_style)
@@ -108,11 +121,17 @@ class GUI():
             tk.Label(self.items['RAM_usage_frame'], text='  🔹⠀ RAM Usage: 0 MB', height=2, width=59, **text_style)
         self.items['RAM_usage_label'].pack(fill=tk.BOTH)
 
-        aaaa = tk.Frame(self.items['main_frame'], **text_frame_style)
-        aaaa.place(x=557, y=CONST.MAIN_FRAME_SIZE[1] + 20)
-        bbbb = \
-            tk.Label(aaaa, text='  🔹⠀ RAM Usage: 0 MB', height=2, width=59, **text_style)
-        bbbb.pack(fill=tk.BOTH)
+
+        ##### SWITCH CONTROLLER #####
+        self.items['switch_controller_frame'] = tk.Frame(self.items['main_frame'], **frame_style)
+        self.items['switch_controller_frame'].place(x=CONST.MAIN_FRAME_SIZE[0] + 20, y=CONST.MAIN_FRAME_SIZE[1] + 20)
+        # Made with canvas to avoid white flashing when moving the slides fast
+        self.items['switch_controller_image']['canvas'] = tk.Canvas(self.items['switch_controller_frame'], **canvas_style,
+            width=CONST.SWITCH_CONTROLLER_FRAME_SIZE[0], height=CONST.SWITCH_CONTROLLER_FRAME_SIZE[1])
+        self.items['switch_controller_image']['image_id'] = self.items['switch_controller_image']['canvas']\
+                .create_image(0, 0, anchor='nw', image=None)
+        self.items['switch_controller_image']['canvas'].pack()
+
 
         # Whenever the GUI geometry (size) is changed, it is automatically restored to the original one
         def enforce_geometry(event): self.root.geometry(f'{CONST.BOT_WINDOW_SIZE[0]}x{CONST.BOT_WINDOW_SIZE[1]}')
@@ -125,7 +144,7 @@ class GUI():
     #######################################################################################################################
 
     def update_GUI(self):
-        try: [image, memory_usage] = self.queue.get(block=True, timeout=1)
+        try: [image, memory_usage, switch_controller_image] = self.queue.get(block=True, timeout=1)
         except: 
             # Schedule the next update_GUI() call in 10 milliseconds
             self.timer = Timer(0.01, self.update_GUI)
@@ -136,30 +155,29 @@ class GUI():
         try: self.root.winfo_exists()
         except: return
         
+        # Convert images to a Tkinter compatible format
         image.get_tkinter_images(['FPS_image', 'masked_image', 'contours_image'])
+        switch_controller_image.tkinter_images['switch_controller_image'] = \
+            switch_controller_image.get_tkinter_image(switch_controller_image.resized_image)
 
-        # Update the images
-        if self.items['main_image']['tkinter_image'] is None:
-            self.items['main_image']['image_id'] = self.items['main_image']['canvas']\
-                .create_image(0, 0, anchor='nw', image=image.tkinter_images['FPS_image'])
-            self.items['top_right_image']['image_id'] = self.items['top_right_image']['canvas']\
-                .create_image(0, 0, anchor='nw', image=image.tkinter_images['masked_image'])
-            self.items['bottom_right_image']['image_id'] = self.items['bottom_right_image']['canvas']\
-                .create_image(0, 0, anchor='nw', image=image.tkinter_images['contours_image'])
-        else: 
-            self.items['main_image']['canvas'].itemconfig(self.items['main_image']['image_id'],
-                image=str(image.tkinter_images['FPS_image']))
-            self.items['top_right_image']['canvas'].itemconfig(self.items['top_right_image']['image_id'],
-                image=str(image.tkinter_images['masked_image']))
-            self.items['bottom_right_image']['canvas'].itemconfig(self.items['bottom_right_image']['image_id'],
-                image=str(image.tkinter_images['contours_image']))
+        # Update images
+        self.items['main_image']['canvas'].itemconfig(self.items['main_image']['image_id'],
+            image=str(image.tkinter_images['FPS_image']))
+        self.items['top_right_image']['canvas'].itemconfig(self.items['top_right_image']['image_id'],
+            image=str(image.tkinter_images['masked_image']))
+        self.items['bottom_right_image']['canvas'].itemconfig(self.items['bottom_right_image']['image_id'],
+            image=str(image.tkinter_images['contours_image']))
+        self.items['switch_controller_image']['canvas'].itemconfig(self.items['switch_controller_image']['image_id'],
+            image=str(switch_controller_image.tkinter_images['switch_controller_image']))
 
         # Avoid white flasing
         self.items['main_image']['tkinter_image'] = image.tkinter_images['FPS_image']
         self.items['top_right_image']['tkinter_image'] = image.tkinter_images['masked_image']
         self.items['bottom_right_image']['tkinter_image'] = image.tkinter_images['contours_image']
+        self.items['switch_controller_image']['tkinter_image'] = \
+            switch_controller_image.tkinter_images['switch_controller_image']
 
-        # Update the RAM usage
+        # Update RAM usage
         self.items['RAM_usage_label'].config(text=f'  🔹⠀ RAM Usage: {memory_usage:.2f} MB')
 
         # Schedule the next update_GUI() call in 10 milliseconds
@@ -185,7 +203,8 @@ if __name__ == "__main__":
         print('\n' + COLOR_str.MENU.replace('{module}', 'GUI'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Open GUI using capture card'))
 
-        option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'GUI'))
+        # option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'GUI'))
+        option = '1'
 
         menu_options = {
             '1': test_GUI,
@@ -208,6 +227,8 @@ if __name__ == "__main__":
         Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
         FPS = FPS_Counter()
         shutdown_event = Event()
+        switch_controller_image = Image_Processing(f'../{CONST.SWITCH_CONTROLLER_IMAGE_PATH}')
+        switch_controller_image.resize_image(CONST.SWITCH_CONTROLLER_FRAME_SIZE)
         
         def test_GUI_control(shutdown_event = None):
             if isinstance(shutdown_event, type(None)): return
@@ -222,7 +243,7 @@ if __name__ == "__main__":
                 image.get_mask()
                 n_contours = image.get_rectangles()
 
-                Image_Queue.put([image, FPS.memory_usage])
+                Image_Queue.put([image, FPS.memory_usage, switch_controller_image])
 
         threads = []
         threads.append(Thread(target=lambda: test_GUI_control(shutdown_event), daemon=True))

@@ -2,7 +2,7 @@
 ##################################################     VIDEO CAPTURE     ##################################################
 ###########################################################################################################################
 
-VIDEO_CAPTURE_INDEX = 2
+VIDEO_CAPTURE_INDEX = 0
 FPS_COUNTER = True
 # [SECONDS]
 REFRESH_FPS_TIME = 1
@@ -40,14 +40,16 @@ UPPER_COLOR = 255
 # GUI title
 BOT_NAME = "FB Pokemon Shiny Hunter by @Dinones"
 # [PIXELS] GUI size
-BOT_WINDOW_SIZE = (1104, 477)
+BOT_WINDOW_SIZE = (1104, 718)
 MAIN_FRAME_SIZE = (720, 405)
 SECONDARY_FRAME_SIZE = (350, 197)
+SWITCH_CONTROLLER_FRAME_SIZE = (350, 280)
+SWITCH_CONTROLLER_IMAGE_PATH = 'Media/Interface/Switch Controller.png'
 
 ###########################################################################################################################
 ######################################################     TESTS     ######################################################
 ###########################################################################################################################
 
 TESTING_VIDEO_PATH = 'Media/Tests/Turtwig.mp4'
-TESTING_IMAGE_PATH = 'Media/Tests/Mesprit.png'
+TESTING_IMAGE_PATH = 'Media/Interface/Switch Controller.png'
 SAVING_FRAMES_PATH = 'Media/Tests/Results'

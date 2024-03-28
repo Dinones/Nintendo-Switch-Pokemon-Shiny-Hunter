@@ -33,17 +33,17 @@ class Image_Processing():
         # Load the image
         if isinstance(image, str): self.original_image = cv2.imread(image, cv2.IMREAD_UNCHANGED)
         else: self.original_image = image
-        if isinstance(self.original_image, type(None)): return print(COLOR_str.COULD_NOT_PROCESS_IMAGE + '\n')
+        if isinstance(self.original_image, type(None)): return print(COLOR_str.COULD_NOT_PROCESS_IMAGE)
 
     #######################################################################################################################
 
     def resize_image(self, desired_size = CONST.MAIN_FRAME_SIZE):
         if isinstance(self.original_image, type(None)): return
 
-        # Get the desired aspect ratio and size
-        aspect_ratio = CONST.ORIGINAL_FRAME_SIZE[0]/CONST.ORIGINAL_FRAME_SIZE[1]
         # (width, height)
         original_size = self.original_image.shape[1::-1]
+        # Get the desired aspect ratio and size
+        aspect_ratio = original_size[0]/original_size[1]
         max_size_index = np.argmax(original_size)
         if not max_size_index: new_size = [desired_size[max_size_index], int(desired_size[max_size_index]/aspect_ratio)]
         else: new_size = [int(desired_size[max_size_index]*aspect_ratio), desired_size[max_size_index]]
@@ -120,25 +120,19 @@ class Image_Processing():
 
     # Convert the image to tkinter compatible format
     # Will raise an error if used before creating a GUI (root = Tk())
+    def get_tkinter_image(self, image):
+        try: return ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB)))
+        except: return None
+
+    #######################################################################################################################
+
     def get_tkinter_images(self, images = []):
         if not isinstance(images, list): return
 
-        def get_tkinter_image(image):
-            try: return ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB)))
-            except: return None
-
-        self.tkinter_images['FPS_image'] = get_tkinter_image(self.FPS_image)
+        self.tkinter_images['FPS_image'] = self.get_tkinter_image(self.FPS_image)
         for image_name in ['contours_image', 'masked_image']:
             self.tkinter_images[image_name] = cv2.resize(getattr(self, image_name), CONST.SECONDARY_FRAME_SIZE)
-            self.tkinter_images[image_name] = get_tkinter_image(self.tkinter_images[image_name])
-
-        # for image in images:
-        #     if hasattr(self, image) and not isinstance(getattr(self, image), type(None)):
-        #         self.tkinter_images[image] = cv2.resize(getattr(self, image), CONST.SECONDARY_FRAME_SIZE)
-        #         try:
-        #             self.tkinter_images[image] = \
-        #                 ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(self.tkinter_images[image], cv2.COLOR_BGR2RGB)))
-        #         except: pass
+            self.tkinter_images[image_name] = self.get_tkinter_image(self.tkinter_images[image_name])
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
@@ -191,7 +185,7 @@ if __name__ == "__main__":
             .replace('{instruction}', 'exit the program')
         )
 
-        # cv2.imshow(f'{CONST.BOT_NAME} - Original', image.resized_image)
+        cv2.imshow(f'{CONST.BOT_NAME} - Original', image.original_image)
         # cv2.imshow(f'{CONST.BOT_NAME} - Grayscale', image.grayscale_image)
         cv2.imshow(f'{CONST.BOT_NAME} - Mask', image.masked_image)
         cv2.imshow(f'{CONST.BOT_NAME} - Contours', image.contours_image)
