@@ -134,6 +134,22 @@ class Image_Processing():
             self.tkinter_images[image_name] = cv2.resize(getattr(self, image_name), CONST.SECONDARY_FRAME_SIZE)
             self.tkinter_images[image_name] = self.get_tkinter_image(self.tkinter_images[image_name])
 
+    #######################################################################################################################
+
+    def draw_button(self, button = ''):
+        if not isinstance(button, str): return
+
+        self.contours_image = np.copy(self.resized_image)
+        if button == 'A': cv2.circle(self.contours_image, (307, 80), 9, CONST.PRESSED_BUTTON_COLOR, -1)
+        elif button == 'B': cv2.circle(self.contours_image, (288, 99), 9, CONST.PRESSED_BUTTON_COLOR, -1)
+        elif button == 'Y': cv2.circle(self.contours_image, (269, 80), 9, CONST.PRESSED_BUTTON_COLOR, -1)
+        elif button == 'X': cv2.circle(self.contours_image, (288, 61), 9, CONST.PRESSED_BUTTON_COLOR, -1)
+        elif button == 'HOME': cv2.circle(self.contours_image, (275, 195), 9, CONST.PRESSED_BUTTON_COLOR, -1)
+        elif button == 'UP': cv2.circle(self.contours_image, (62, 129), 9, CONST.PRESSED_BUTTON_COLOR, -1)
+        elif button == 'DOWN': cv2.circle(self.contours_image, (61, 167), 9, CONST.PRESSED_BUTTON_COLOR, -1)
+        elif button == 'RIGHT': cv2.circle(self.contours_image, (81, 148), 9, CONST.PRESSED_BUTTON_COLOR, -1)
+        elif button == 'LEFT': cv2.circle(self.contours_image, (43, 148), 9, CONST.PRESSED_BUTTON_COLOR, -1)
+
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
@@ -185,7 +201,7 @@ if __name__ == "__main__":
             .replace('{instruction}', 'exit the program')
         )
 
-        cv2.imshow(f'{CONST.BOT_NAME} - Original', image.original_image)
+        # cv2.imshow(f'{CONST.BOT_NAME} - Original', image.original_image)
         # cv2.imshow(f'{CONST.BOT_NAME} - Grayscale', image.grayscale_image)
         cv2.imshow(f'{CONST.BOT_NAME} - Mask', image.masked_image)
         cv2.imshow(f'{CONST.BOT_NAME} - Contours', image.contours_image)

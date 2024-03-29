@@ -133,11 +133,40 @@ IMAGE_SAVED = \
     f'\033[{COLORS["Green"]};{SPECIAL["Italics"]}m{"{path}"}\033[0;m'
 
 ###########################################################################################################################
+################################################     SWITCH CONTROLLER     ################################################
+###########################################################################################################################
+
+NOT_LINUX_SYSTEM = \
+    f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Switch Controller] "}\033[0;m'+\
+    f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}mNXBT is only available on Linux systems!\033[0;m'
+
+NOT_SUDO = \
+    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Switch Controller] "}\033[0;m'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mNXBT must be executed with administrator permissions: \033[0;m'+\
+    f'\033[{COLORS["Yellow"]}mRestarting using sudo...\033[0;m'
+
+RESTARTING_BLUETOOTH = \
+    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Switch Controller] "}\033[0;m'+\
+    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mRestarting bluetooth systems...\033[0;m'
+
+BLUETOOTH_RESTARTED = \
+    f'{CORRECT}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Switch Controller] "}\033[0;m'+\
+    f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}mBluetooth restarted successfully!\033[0;m'
+
+CONNECTING_TO_SWITCH = \
+    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Switch Controller] "}\033[0;m'+\
+    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mConnecting to Nintendo Switch...\033[0;m'
+
+CONTROLLER_CONNECTED = \
+    f'{CORRECT}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Switch Controller] "}\033[0;m'+\
+    f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}mController connected!\033[0;m'
+
+###########################################################################################################################
 ###################################################     FPS COUNTER     ###################################################
 ###########################################################################################################################
 
 FPS_COUNTER = \
-    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[FPS COUNTER] "}\033[0;m'+\
+    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[FPS Counter] "}\033[0;m'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mFPS: \033[0;m'+\
     f'\033[{COLORS["Blue"]}m{"{current_fps}"}     \033[0;m'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mMax FPS: \033[0;m'+\

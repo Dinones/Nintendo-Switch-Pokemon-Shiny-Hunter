@@ -158,7 +158,7 @@ class GUI():
         # Convert images to a Tkinter compatible format
         image.get_tkinter_images(['FPS_image', 'masked_image', 'contours_image'])
         switch_controller_image.tkinter_images['switch_controller_image'] = \
-            switch_controller_image.get_tkinter_image(switch_controller_image.resized_image)
+            switch_controller_image.get_tkinter_image(switch_controller_image.contours_image)
 
         # Update images
         self.items['main_image']['canvas'].itemconfig(self.items['main_image']['image_id'],
@@ -203,8 +203,7 @@ if __name__ == "__main__":
         print('\n' + COLOR_str.MENU.replace('{module}', 'GUI'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Open GUI using capture card'))
 
-        # option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'GUI'))
-        option = '1'
+        option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'GUI'))
 
         menu_options = {
             '1': test_GUI,
