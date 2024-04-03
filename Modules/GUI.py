@@ -228,6 +228,7 @@ if __name__ == "__main__":
         shutdown_event = Event()
         switch_controller_image = Image_Processing(f'../{CONST.SWITCH_CONTROLLER_IMAGE_PATH}')
         switch_controller_image.resize_image(CONST.SWITCH_CONTROLLER_FRAME_SIZE)
+        switch_controller_image.draw_button()
         
         def test_GUI_control(shutdown_event = None):
             if isinstance(shutdown_event, type(None)): return

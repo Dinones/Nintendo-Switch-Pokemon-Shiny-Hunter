@@ -150,6 +150,24 @@ class Image_Processing():
         elif button == 'RIGHT': cv2.circle(self.contours_image, (81, 148), 9, CONST.PRESSED_BUTTON_COLOR, -1)
         elif button == 'LEFT': cv2.circle(self.contours_image, (43, 148), 9, CONST.PRESSED_BUTTON_COLOR, -1)
 
+    #######################################################################################################################
+
+    # Return the requested pixel color. Default: top-left corner pixel
+    def check_pixel_color(self, pixel = (5, 5)): return self.original_image[pixel[0]][pixel[1]]
+
+    #######################################################################################################################
+
+    # Return whether all the pixels of the specifiead row are white
+    def check_multiple_pixel_colors(self, start, end, color = 255):
+        pixels = []
+        for index in range(start[1], end[1]):
+            if all(pixel_value == color for pixel_value in self.resized_image[-index][start[0]]): pixels.append(True)
+            # If one False is found, there is no need to check the other pixels
+            else: pixels.append(False); break
+        if CONST.TESTING: 
+            for index in range(start[1], end[1]): self.FPS_image[-index][start[0]] = [255, 0, 255]
+        return all(pixels)
+
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################

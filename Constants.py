@@ -25,7 +25,7 @@ TEXT_PARAMS = {
     'thickness': 2,
     # [PIXELS]
     'position': (2, 15),
-    'star_num_color': (0, 0, 255),
+    'star_num_color': (0, 0, 255)
 }
 # [PIXELS²] Minimum area to detect something as a match
 MIN_DETECT_SIZE = 5
@@ -52,13 +52,24 @@ SWITCH_CONTROLLER_IMAGE_PATH = 'Media/Interface/Switch Controller.png'
 ###########################################################################################################################
 
 RESTART_BLUETOOTH_SECONDS = 4
-CONTROLLER_BODY_COLOR = [0, 200, 0]
-CONTROLLER_BUTTONS_COLOR = [200, 0, 0]
+CONTROLLER_BODY_COLOR = (0, 200, 0)
+CONTROLLER_BUTTONS_COLOR = (200, 0, 0)
+
+###########################################################################################################################
+##################################################     CONTROL SYSTEM     #################################################
+###########################################################################################################################
+
+TEXT_BOX_LINE = {
+    'x': int(MAIN_FRAME_SIZE[0] // 16 * 1.2),
+    'y1': int(MAIN_FRAME_SIZE[1] // 16 * 1),
+    'y2': int(MAIN_FRAME_SIZE[1] // 16 * 2)
+}
 
 ###########################################################################################################################
 ######################################################     TESTS     ######################################################
 ###########################################################################################################################
 
-TESTING_VIDEO_PATH = 'Media/Tests/Turtwig.mp4'
+TESTING = True
+TESTING_VIDEO_PATH = 'Media/Tests/Shiny Abomasnow.mp4'
 TESTING_IMAGE_PATH = 'Media/Interface/Switch Controller.png'
 SAVING_FRAMES_PATH = 'Media/Tests/Results'
