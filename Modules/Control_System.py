@@ -15,59 +15,54 @@ import Constants as CONST
 #################################################     INITIALIZATIONS     #################################################
 ###########################################################################################################################
 
-
-
-###########################################################################################################################
-#####################################################     PROGRAM     #####################################################
-###########################################################################################################################
-
 def search_wild_pokemon(image, state):
     if not state: return 'WAIT_HOME_SCREEN'
 
     # Nintendo Switch pairing controller menu
     elif state == 'WAIT_HOME_SCREEN':
-        if all(pixel_value == 240 for pixel_value in image.check_pixel_color()):
-            return 'RESTART_GAME_1'
+        if all(pixel_value == CONST.PAIRING_MENU_COLOR for pixel_value in image.check_pixel_color()):
+            return 'FAST_RESTART_GAME'
         # Wait
 
     # Nintendo Switch main menu
-    elif state == 'RESTART_GAME_1':
-        if all(pixel_value == 8 for pixel_value in image.check_pixel_color()):
-            return 'RESTART_GAME_2'
-        # Press A
-
-    # Game main loadscreen (Full black)
-    elif state == 'RESTART_GAME_2':
-        if all(pixel_value != 8 for pixel_value in image.check_pixel_color()):
-            return 'RESTART_GAME_3'
-        # Press A
-
-    # Game main loadscreen (Dialga / Palkia)
-    elif state == 'RESTART_GAME_3':
-        if all(pixel_value == 8 for pixel_value in image.check_pixel_color()):
-            return 'RESTART_GAME_4'
-        # Press A
-
-    # Game main loadscreen (Full black)
-    elif state == 'RESTART_GAME_4':
-        if all(pixel_value != 8 for pixel_value in image.check_pixel_color()):
+    elif state == 'FAST_RESTART_GAME':
+        if not all(pixel_value == CONST.HOME_MENU_COLOR for pixel_value in image.check_pixel_color()):
             return 'MOVE_PLAYER'
-        # Wait
+
+    # # Nintendo Switch main menu
+    # elif state == 'RESTART_GAME_1':
+    #     if all(pixel_value == CONST.GAME_LOAD_SCREEN_BLACK_COLOR for pixel_value in image.check_pixel_color()):
+    #         return 'RESTART_GAME_2'
+
+    # # Game main loadscreen (Full black screen)
+    # elif state == 'RESTART_GAME_2':
+    #     if all(pixel_value != CONST.GAME_LOAD_SCREEN_BLACK_COLOR for pixel_value in image.check_pixel_color()):
+    #         return 'RESTART_GAME_3'
+
+    # # Game main loadscreen (Dialga / Palkia)
+    # elif state == 'RESTART_GAME_3':
+    #     if all(pixel_value == CONST.GAME_LOAD_SCREEN_BLACK_COLOR for pixel_value in image.check_pixel_color()):
+    #         return 'RESTART_GAME_4'
+
+    # # Game main loadscreen (Full black screen)
+    # elif state == 'RESTART_GAME_4':
+    #     if all(pixel_value != CONST.GAME_LOAD_SCREEN_BLACK_COLOR for pixel_value in image.check_pixel_color()):
+    #         return 'MOVE_PLAYER'
+    #     # Wait
 
     # Game loaded, player in the overworld
     elif state == 'MOVE_PLAYER':
         if image.check_multiple_pixel_colors(
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
-            [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']]
+            [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
         ):
             return 'ENTER_COMBAT_1'
-        # Up-Down / Right-Left
 
-    # Combat loadscreen (Full white)
+    # Combat loadscreen (Full white screen)
     elif state == 'ENTER_COMBAT_1':
         if not image.check_multiple_pixel_colors(
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
-            [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']]
+            [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
         ):
             return 'ENTER_COMBAT_2'
         # wait
@@ -76,7 +71,7 @@ def search_wild_pokemon(image, state):
     elif state == 'ENTER_COMBAT_2':
         if image.check_multiple_pixel_colors(
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
-            [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']]
+            [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
         ):
             return 'ENTER_COMBAT_3'
         # wait
@@ -85,27 +80,49 @@ def search_wild_pokemon(image, state):
     elif state == 'ENTER_COMBAT_3':
         if not image.check_multiple_pixel_colors(
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
-            [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']]
+            [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
         ):
             return 'CHECK_SHINY'
         # wait
 
     # Combat loaded (Wild Pokémon stars)
     elif state == 'CHECK_SHINY':
-        n_contours = image.get_rectangles()
-        image.draw_star(n_contours)
-        
-        if n_contours >= CONST.MIN_DETECTED_CONTOURS:
-            return 'SHINY_FOUND'
-
         if image.check_multiple_pixel_colors(
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
-            [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']]
+            [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
         ):
-            return 'ESCAPE_COMBAT'
+            return 'ESCAPE_COMBAT_1'
+
+        if image.n_contours >= CONST.MIN_DETECTED_CONTOURS:
+            return 'SHINY_FOUND'
         # wait
 
-    
+    # Combat loaded (Both Pokémon in the field)
+    elif state == 'ESCAPE_COMBAT_1':
+        if image.check_multiple_pixel_colors(
+            [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y1']],
+            [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y2']], CONST.LIFE_BOX_LINE['color']
+        ):
+            return 'ESCAPE_COMBAT_2'
+        # wait
+
+    # Escaped from combat
+    elif state == 'ESCAPE_COMBAT_2':
+        if image.check_multiple_pixel_colors(
+            [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y1']],
+            [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y2']], CONST.ESCAPE_COMBAT_BLACK_COLOR
+        ):
+            return 'ESCAPE_COMBAT_3'
+        # wait
+
+    # Escaped from combat (Full black screen)
+    elif state == 'ESCAPE_COMBAT_3':
+        if not image.check_multiple_pixel_colors(
+            [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y1']],
+            [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y2']], CONST.ESCAPE_COMBAT_BLACK_COLOR
+        ):
+            return 'MOVE_PLAYER'
+        # wait
 
     return state
 
@@ -121,6 +138,7 @@ if __name__ == "__main__":
     from Image_Processing import Image_Processing
     from Game_Capture import Game_Capture
 
+    # Game_Capture = Game_Capture(f'../{CONST.TESTING_VIDEO_PATH}')
     Game_Capture = Game_Capture()
     state = 'MOVE_PLAYER'
 

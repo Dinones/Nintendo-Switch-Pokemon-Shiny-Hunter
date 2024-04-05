@@ -36,6 +36,7 @@ class Switch_Controller():
         self.controller_index = None
         self.event_lock = Lock()
         self.current_event = None
+        self.previous_event = None
         self.current_button_pressed = ''
 
     #######################################################################################################################
@@ -53,7 +54,7 @@ class Switch_Controller():
 
     #######################################################################################################################
 
-    def connect_controller(self, special_case = None):
+    def connect_controller(self):
         self.restart_bluetooth()
         # Get a list of all available Bluetooth adapters
         adapters = self.nxbt_manager.get_available_adapters()
@@ -73,10 +74,6 @@ class Switch_Controller():
         # Connect to Nintendo Switch
         self.nxbt_manager.wait_for_connection(self.controller_index)
         print(COLOR_str.CONTROLLER_CONNECTED)
-        # if type(special_case) == type(None): 
-        #     with self.event_lock: self.current_event = 'SETUP'
-        # else:
-        #     with self.event_lock: self.current_event = special_case
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
@@ -142,7 +139,7 @@ if __name__ == '__main__':
                     switch_controller_image.draw_button(Controller.current_button_pressed)
                     previous_button = Controller.current_button_pressed
 
-                Image_Queue.put([image, FPS.memory_usage, switch_controller_image])
+                Image_Queue.put([image, FPS.memory_usage, switch_controller_image, None])
 
         def test_controller():
             Controller.connect_controller()

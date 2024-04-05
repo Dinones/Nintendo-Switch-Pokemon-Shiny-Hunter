@@ -29,6 +29,7 @@ class Image_Processing():
         self.masked_image = None
         self.contours_image = None
         self.FPS_image = None
+        self.n_contours = 0
 
         # Load the image
         if isinstance(image, str): self.original_image = cv2.imread(image, cv2.IMREAD_UNCHANGED)
@@ -90,7 +91,7 @@ class Image_Processing():
 
     #######################################################################################################################
 
-    def draw_star(self, n_contours = 0):
+    def draw_star(self):
         image_height, image_width = self.contours_image.shape[:2]
         inner_radius = 13
         outer_radius = 26
@@ -110,9 +111,10 @@ class Image_Processing():
             star_points.append((x, y))
 
         star_points = np.array([star_points], dtype=np.int32)
-        cv2.fillPoly(self.contours_image, [star_points], color=(0, 255, 255))
+        cv2.fillPoly(self.FPS_image, [star_points], color=(0, 255, 255))
+        cv2.polylines(self.FPS_image, [star_points], isClosed=True, color=(0, 0, 0), thickness=2)
 
-        cv2.putText(self.contours_image, str(n_contours), (star_center_x - 5*len(str(n_contours)), star_center_y + 5),
+        cv2.putText(self.FPS_image, str(self.n_contours), (star_center_x - 5*len(str(self.n_contours)), star_center_y + 5),
             cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['star_num_color'],
             CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
 

@@ -59,10 +59,26 @@ CONTROLLER_BUTTONS_COLOR = (200, 0, 0)
 ##################################################     CONTROL SYSTEM     #################################################
 ###########################################################################################################################
 
+# Time the player is moving in each direction
+WILD_WALKING_SECONDS = 1
+# 'NS': Up/Down | 'EW': Right/Left
+WILD_WALKING_DIRECTION = 'NS'
+
+HOME_MENU_COLOR = 255
+PAIRING_MENU_COLOR = 240
+ESCAPE_COMBAT_BLACK_COLOR = 7
+GAME_LOAD_SCREEN_BLACK_COLOR = 8
 TEXT_BOX_LINE = {
     'x': int(MAIN_FRAME_SIZE[0] // 16 * 1.2),
     'y1': int(MAIN_FRAME_SIZE[1] // 16 * 1),
-    'y2': int(MAIN_FRAME_SIZE[1] // 16 * 2)
+    'y2': int(MAIN_FRAME_SIZE[1] // 16 * 2), 
+    'color': 255
+}
+LIFE_BOX_LINE = {
+    'x': int(MAIN_FRAME_SIZE[0] // 96 * 1),
+    'y1': int(MAIN_FRAME_SIZE[1] // 16 * 2),
+    'y2': int(MAIN_FRAME_SIZE[1] // 16 * 2.6),
+    'color': 250
 }
 
 ###########################################################################################################################
