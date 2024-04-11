@@ -8,6 +8,9 @@ if __name__ == '__main__':
     try: os.chdir(os.path.dirname(__file__))
     except: pass
 
+import cv2
+from time import time
+
 import sys; sys.path.append('..')
 import Constants as CONST
 
@@ -22,7 +25,6 @@ def search_wild_pokemon(image, state):
     elif state == 'WAIT_HOME_SCREEN':
         if all(pixel_value == CONST.PAIRING_MENU_COLOR for pixel_value in image.check_pixel_color()):
             return 'FAST_RESTART_GAME'
-        # Wait
 
     # Nintendo Switch main menu
     elif state == 'FAST_RESTART_GAME':
@@ -65,7 +67,6 @@ def search_wild_pokemon(image, state):
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
         ):
             return 'ENTER_COMBAT_2'
-        # wait
 
     # Combat loadscreen (Grass/Rock/Water animation)
     elif state == 'ENTER_COMBAT_2':
@@ -74,7 +75,6 @@ def search_wild_pokemon(image, state):
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
         ):
             return 'ENTER_COMBAT_3'
-        # wait
 
     # Combat loaded (Wild Pokémon appeared)
     elif state == 'ENTER_COMBAT_3':
@@ -82,8 +82,8 @@ def search_wild_pokemon(image, state):
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
         ):
+            cv2.imwrite(f'./{CONST.IMAGES_FOLDER_PATH}{str(int(time()))}.png', image.original_image) 
             return 'CHECK_SHINY'
-        # wait
 
     # Combat loaded (Wild Pokémon stars)
     elif state == 'CHECK_SHINY':
@@ -95,7 +95,11 @@ def search_wild_pokemon(image, state):
 
         if image.n_contours >= CONST.MIN_DETECTED_CONTOURS:
             return 'SHINY_FOUND'
-        # wait
+
+    # Combat loaded (Shiny found)
+    elif state == 'CHECK_SHINY':
+        sleep(CONST.SHINY_RECORDING_SECONDS)
+        return 'FINISH'
 
     # Combat loaded (Both Pokémon in the field)
     elif state == 'ESCAPE_COMBAT_1':
@@ -104,7 +108,6 @@ def search_wild_pokemon(image, state):
             [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y2']], CONST.LIFE_BOX_LINE['color']
         ):
             return 'ESCAPE_COMBAT_2'
-        # wait
 
     # Escaped from combat
     elif state == 'ESCAPE_COMBAT_2':
@@ -113,7 +116,6 @@ def search_wild_pokemon(image, state):
             [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y2']], CONST.ESCAPE_COMBAT_BLACK_COLOR
         ):
             return 'ESCAPE_COMBAT_3'
-        # wait
 
     # Escaped from combat (Full black screen)
     elif state == 'ESCAPE_COMBAT_3':
@@ -122,7 +124,6 @@ def search_wild_pokemon(image, state):
             [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y2']], CONST.ESCAPE_COMBAT_BLACK_COLOR
         ):
             return 'MOVE_PLAYER'
-        # wait
 
     return state
 
@@ -131,7 +132,6 @@ def search_wild_pokemon(image, state):
 ###########################################################################################################################
 
 if __name__ == "__main__":
-    import cv2
     import numpy as np
     from time import sleep
 

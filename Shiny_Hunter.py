@@ -39,10 +39,12 @@ from Switch_Controller import Switch_Controller
 
 def GUI_control(FPS, Controller, Image_Queue, shutdown_event, previous_button = None):
     Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
+    Video_Capture.start_recording()
 
     switch_controller_image = Image_Processing(CONST.SWITCH_CONTROLLER_IMAGE_PATH)
     switch_controller_image.resize_image(CONST.SWITCH_CONTROLLER_FRAME_SIZE)
     switch_controller_image.draw_button()
+    encounter_counter = 0
 
     while not shutdown_event.is_set():
         image = Image_Processing(Video_Capture.read_frame())
@@ -55,6 +57,8 @@ def GUI_control(FPS, Controller, Image_Queue, shutdown_event, previous_button = 
         image.n_contours = image.get_rectangles()
         image.draw_star()
 
+        Video_Capture.add_frame_to_video(image)
+
         # Don't care if any race condition
         if Controller.current_button_pressed != previous_button:
             switch_controller_image.draw_button(Controller.current_button_pressed)
@@ -62,7 +66,23 @@ def GUI_control(FPS, Controller, Image_Queue, shutdown_event, previous_button = 
 
         with Controller.event_lock: 
             Controller.current_event = search_wild_pokemon(image, Controller.current_event)
-            Image_Queue.put([image, FPS.memory_usage, switch_controller_image, Controller.current_event])
+
+            if Controller.current_event == "ENTER_COMBAT_1" and Controller.current_event != Controller.previous_event:
+                Controller.previous_event = Controller.current_event
+                encounter_counter += 1 
+                Video_Capture.save_video()
+                Video_Capture.start_recording()
+
+            elif Controller.current_event == "FINISH":
+                Video_Capture.save_video()
+
+            Image_Queue.put([
+                image, FPS.memory_usage, 
+                switch_controller_image, 
+                Controller.current_event, 
+                shutdown_event, 
+                encounter_counter
+            ])
 
 ###########################################################################################################################
 
@@ -80,6 +100,12 @@ def controller_control(controller, shutdown_event):
             press_single_button(controller, 'A')
         elif aux_current_event == 'MOVE_PLAYER': move_player_wild_macro(controller)
         elif aux_current_event == 'ESCAPE_COMBAT_2': escape_combat_macro(controller)
+        elif aux_current_event == 'FINISH': 
+            # Give some time to save the video
+            sleep(3)
+            stop_macro(controller)
+            shutdown_event.set()
+
 
         controller.previous_event = controller.current_event
         controller.current_button_pressed = ''
@@ -132,6 +158,10 @@ if __name__ == "__main__":
 
         print(COLOR_str.RELEASING_THREADS.replace('{module}', 'Shiny Hunter').replace('{threads}',
             str(len(threads))) + '\n')
+
+        Controller.disconnect_controller()
+        sleep(5)
+        os.system('sudo pkill -9 python')
 
     #######################################################################################################################
 

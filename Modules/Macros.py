@@ -23,6 +23,7 @@ walking_direction = bool(0)
 
 def test_macro(controller):
     start_macro(controller)
+    sleep(1); controller.current_button_pressed = 'HOME'
     sleep(1); stop_macro(controller)
 
 ###########################################################################################################################
@@ -52,7 +53,9 @@ def fast_start_macro(controller):
 def stop_macro(controller):
     if controller.previous_event == controller.current_event: return
 
-    controller.current_button_pressed = 'DOWN'
+    controller.current_button_pressed = 'HOME'
+    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME])
+    sleep(2); controller.current_button_pressed = 'DOWN'
     for _ in range(2): controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.DPAD_DOWN])
     for _ in range(4): 
         controller.current_button_pressed = 'RIGHT'; sleep(0.2) 

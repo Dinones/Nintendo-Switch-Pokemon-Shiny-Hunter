@@ -76,6 +76,9 @@ class GUI():
             'current_state_frame': None,
             'current_state_label': None,
 
+            'encounter_count_frame': None,
+            'encounter_count_label': None,
+
             'switch_controller_frame': None,
             'switch_controller_image': new_image(),
         }
@@ -133,6 +136,14 @@ class GUI():
         self.items['current_state_label'].pack(fill=tk.BOTH)
 
 
+        ##### ENCOUNTER COUNT #####
+        self.items['encounter_count_frame'] = tk.Frame(self.items['main_frame'], **text_frame_style)
+        self.items['encounter_count_frame'].place(x=10, y=CONST.MAIN_FRAME_SIZE[1] + 10 + 109)
+        self.items['encounter_count_label'] = \
+            tk.Label(self.items['encounter_count_frame'], text='  🔹⠀ Encounter Count: 0', height=2, width=59, **text_style)
+        self.items['encounter_count_label'].pack(fill=tk.BOTH)
+
+
         ##### SWITCH CONTROLLER #####
         self.items['switch_controller_frame'] = tk.Frame(self.items['main_frame'], **frame_style)
         self.items['switch_controller_frame'].place(x=CONST.MAIN_FRAME_SIZE[0] + 20, y=CONST.MAIN_FRAME_SIZE[1] + 20)
@@ -155,7 +166,8 @@ class GUI():
     #######################################################################################################################
 
     def update_GUI(self):
-        try: [image, memory_usage, switch_controller_image, current_state] = self.queue.get(block=True, timeout=1)
+        try: [image, memory_usage, switch_controller_image, current_state, shutdown_event, encounter_count] = \
+            self.queue.get(block=True, timeout=1)
         except: 
             # Schedule the next update_GUI() call in 10 milliseconds
             self.timer = Timer(0.01, self.update_GUI)
@@ -188,9 +200,10 @@ class GUI():
         self.items['switch_controller_image']['tkinter_image'] = \
             switch_controller_image.tkinter_images['switch_controller_image']
 
-        # Update RAM usage and current state
+        # Update RAM usage, current state and encounter count
         self.items['RAM_usage_label'].config(text=f'  🔹⠀ RAM Usage: {memory_usage:.2f} MB')
         self.items['current_state_label'].config(text=f'  🔹⠀ Current State: {current_state}')
+        self.items['encounter_count_label'].config(text=f'  🔹⠀ Encounter Count: {str(encounter_count)}')
 
         # Schedule the next update_GUI() call in 10 milliseconds
         self.timer = Timer(0.01, self.update_GUI)
@@ -255,7 +268,7 @@ if __name__ == "__main__":
                 image.get_mask()
                 n_contours = image.get_rectangles()
 
-                Image_Queue.put([image, FPS.memory_usage, switch_controller_image, None])
+                Image_Queue.put([image, FPS.memory_usage, switch_controller_image, None, None, 0])
 
         threads = []
         threads.append(Thread(target=lambda: test_GUI_control(shutdown_event), daemon=True))

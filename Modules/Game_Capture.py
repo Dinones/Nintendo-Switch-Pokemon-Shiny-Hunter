@@ -25,7 +25,6 @@ class Game_Capture():
         self.video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, CONST.ORIGINAL_FRAME_SIZE[1])
         
         self.video_recorder = None
-        self.video_recorder_contours = None
 
         self.frame = None
 
@@ -33,7 +32,8 @@ class Game_Capture():
         self.read_frame()
         if isinstance(self.frame, type(None)): 
             self.stop()
-            exit(COLOR_str.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{video_capture_index}'") + '\n')
+            print(COLOR_str.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{video_capture_index}'") + '\n')
+            exit()
 
     #######################################################################################################################
 
@@ -66,6 +66,25 @@ class Game_Capture():
             if video_capture.read()[0]: print(COLOR_str.CAPTURE_DEVICE_OK.replace('{index}', str(index)))
             else: print(COLOR_str.CAPTURE_DEVICE_NOT_OK.replace('{index}', str(index)))
             video_capture.release()
+
+    #######################################################################################################################
+
+    # Record a video of each encounter
+    def start_recording(self):
+        self.video_recorder = cv2.VideoWriter(f'./{CONST.OUTPUT_VIDEO_PATH}', cv2.VideoWriter_fourcc(*'XVID'),
+            CONST.VIDEO_FPS, CONST.ORIGINAL_FRAME_SIZE)
+
+    #######################################################################################################################
+
+    # Save the current video and start recording the next one
+    def save_video(self):
+        self.video_recorder.release()
+
+    #######################################################################################################################
+
+    # Add a frame to the video
+    def add_frame_to_video(self, image):
+        self.video_recorder.write(image.original_image)
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
