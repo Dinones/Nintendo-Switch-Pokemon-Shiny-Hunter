@@ -26,30 +26,35 @@ def search_wild_pokemon(image, state):
         if all(pixel_value == CONST.PAIRING_MENU_COLOR for pixel_value in image.check_pixel_color()):
             return 'FAST_RESTART_GAME'
 
-    # Nintendo Switch main menu
+    # Nintendo Switch pairing controller menu
     elif state == 'FAST_RESTART_GAME':
         if not all(pixel_value == CONST.HOME_MENU_COLOR for pixel_value in image.check_pixel_color()):
             return 'MOVE_PLAYER'
 
+    # Stuck screen (only used when the bot gets stuck in one state)
+    elif state == 'RESTART_GAME_0':
+        if all(pixel_value == CONST.HOME_MENU_COLOR for pixel_value in image.check_pixel_color()):
+            return 'RESTART_GAME_1'
+
     # Nintendo Switch main menu
-    # elif state == 'RESTART_GAME_1':
-    #     if all(pixel_value == CONST.GAME_LOAD_SCREEN_BLACK_COLOR for pixel_value in image.check_pixel_color()):
-    #         return 'RESTART_GAME_2'
+    elif state == 'RESTART_GAME_1':
+        if all(pixel_value == CONST.GAME_LOAD_SCREEN_BLACK_COLOR for pixel_value in image.check_pixel_color()):
+            return 'RESTART_GAME_2'
 
-    # # Game main loadscreen (Full black screen)
-    # elif state == 'RESTART_GAME_2':
-    #     if all(pixel_value != CONST.GAME_LOAD_SCREEN_BLACK_COLOR for pixel_value in image.check_pixel_color()):
-    #         return 'RESTART_GAME_3'
+    # Game main loadscreen (Full black screen)
+    elif state == 'RESTART_GAME_2':
+        if all(pixel_value != CONST.GAME_LOAD_SCREEN_BLACK_COLOR for pixel_value in image.check_pixel_color()):
+            return 'RESTART_GAME_3'
 
-    # # Game main loadscreen (Dialga / Palkia)
-    # elif state == 'RESTART_GAME_3':
-    #     if all(pixel_value == CONST.GAME_LOAD_SCREEN_BLACK_COLOR for pixel_value in image.check_pixel_color()):
-    #         return 'RESTART_GAME_4'
+    # Game main loadscreen (Dialga / Palkia)
+    elif state == 'RESTART_GAME_3':
+        if all(pixel_value == CONST.GAME_LOAD_SCREEN_BLACK_COLOR for pixel_value in image.check_pixel_color()):
+            return 'RESTART_GAME_4'
 
-    # # Game main loadscreen (Full black screen)
-    # elif state == 'RESTART_GAME_4':
-    #     if all(pixel_value != CONST.GAME_LOAD_SCREEN_BLACK_COLOR for pixel_value in image.check_pixel_color()):
-    #         return 'MOVE_PLAYER'
+    # Game main loadscreen (Full black screen)
+    elif state == 'RESTART_GAME_4':
+        if all(pixel_value != CONST.GAME_LOAD_SCREEN_BLACK_COLOR for pixel_value in image.check_pixel_color()):
+            return 'MOVE_PLAYER'
 
     # Game loaded, player in the overworld
     elif state == 'MOVE_PLAYER':

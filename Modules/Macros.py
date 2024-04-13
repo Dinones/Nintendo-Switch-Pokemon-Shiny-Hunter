@@ -71,7 +71,9 @@ def stop_macro(controller):
 def restart_game_macro(controller):
     if controller.previous_event == controller.current_event: return
     
-    controller.current_button_pressed = 'X'
+    controller.current_button_pressed = 'HOME'
+    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME])
+    sleep(2); controller.current_button_pressed = 'X'
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.X]); sleep(0.5)
     for _ in range(10): 
         controller.current_button_pressed = 'A'; sleep(0.2)

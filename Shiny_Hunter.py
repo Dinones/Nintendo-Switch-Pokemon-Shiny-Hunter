@@ -69,18 +69,26 @@ def GUI_control(FPS, Controller, Image_Queue, shutdown_event, previous_button = 
 
         with Controller.event_lock: 
             Controller.current_event = search_wild_pokemon(image, Controller.current_event)
-            # if Controller.current_event == Controller.previous_event and \
-            #     time() - stuck_timer > CONST.STUCK_TIMER_SECONDS:
-            #         stuck_timer = time()
-            #         Controller.current_event = "RESTART_GAME_1"
+            # if Controller.current_event not in ["FINISH", "SHINY_FOUND", "MOVE_PLAYER"] and \
+            if Controller.current_event not in ["WAIT_HOME_SCREEN", "FINISH", "SHINY_FOUND"] and \
+                Controller.current_event == Controller.previous_event and \
+                time() - stuck_timer > CONST.STUCK_TIMER_SECONDS:
+                    stuck_timer = time()
+                    # If stuck in "RESTART_GAME_1", it will stuck forever
+                    Controller.previous_event = None
+                    Controller.current_event = "RESTART_GAME_1"
+            elif Controller.current_event != Controller.previous_event: stuck_timer = time()
 
+            # Take a screenshot of the wild pokémon
             if Controller.current_event == "ENTER_COMBAT_1" and Controller.current_event != Controller.previous_event:
+                Controller.previous_event = Controller.current_event
                 encounter_counter += 1 
                 with open(f'./{CONST.ENCOUNTERS_TXT_PATH}', 'w') as file: file.write(str(encounter_counter))
                 Video_Capture.save_video()
                 Video_Capture.start_recording()
 
             elif Controller.current_event == "FINISH":
+                sleep(CONST.SHINY_RECORDING_SECONDS)
                 Video_Capture.save_video()
 
             Image_Queue.put([
@@ -107,11 +115,12 @@ def controller_control(controller, shutdown_event):
         elif aux_current_event == 'MOVE_PLAYER': move_player_wild_macro(controller)
         elif aux_current_event == 'ESCAPE_COMBAT_2': escape_combat_macro(controller)
         elif aux_current_event == 'FINISH': 
-            # Give some time to save the video
-            sleep(3)
+            # Give some time to save the video before killing the bot
+            sleep(5)
             stop_macro(controller)
             shutdown_event.set()
 
+        # Don't care about race conditions here
         controller.previous_event = controller.current_event
         controller.current_button_pressed = ''
         sleep(0.1)
