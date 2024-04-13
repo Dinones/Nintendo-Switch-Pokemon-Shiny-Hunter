@@ -31,7 +31,7 @@ def search_wild_pokemon(image, state):
         if not all(pixel_value == CONST.HOME_MENU_COLOR for pixel_value in image.check_pixel_color()):
             return 'MOVE_PLAYER'
 
-    # # Nintendo Switch main menu
+    # Nintendo Switch main menu
     # elif state == 'RESTART_GAME_1':
     #     if all(pixel_value == CONST.GAME_LOAD_SCREEN_BLACK_COLOR for pixel_value in image.check_pixel_color()):
     #         return 'RESTART_GAME_2'
@@ -50,7 +50,6 @@ def search_wild_pokemon(image, state):
     # elif state == 'RESTART_GAME_4':
     #     if all(pixel_value != CONST.GAME_LOAD_SCREEN_BLACK_COLOR for pixel_value in image.check_pixel_color()):
     #         return 'MOVE_PLAYER'
-    #     # Wait
 
     # Game loaded, player in the overworld
     elif state == 'MOVE_PLAYER':

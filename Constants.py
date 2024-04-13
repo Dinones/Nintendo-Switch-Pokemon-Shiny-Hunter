@@ -8,7 +8,7 @@ FPS_COUNTER = True
 REFRESH_FPS_TIME = 1
 MAX_VIDEO_DEVICES_ANALIZED = 5
 VIDEO_FPS = 27
-OUTPUT_VIDEO_PATH = '/Media/Videos/Video.avi'
+OUTPUT_VIDEO_PATH = 'Media/Videos/Video.avi'
 SHINY_RECORDING_SECONDS = 60
 
 ###########################################################################################################################
@@ -36,7 +36,7 @@ MIN_DETECTED_CONTOURS = 10
 LOWER_COLOR = 235
 UPPER_COLOR = 255
 PRESSED_BUTTON_COLOR = (255, 0, 200)
-IMAGES_FOLDER_PATH = '/Media/Images/'
+IMAGES_FOLDER_PATH = 'Media/Images'
 
 ###########################################################################################################################
 #######################################################     GUI     #######################################################
@@ -67,7 +67,9 @@ CONTROLLER_BUTTONS_COLOR = (200, 0, 0)
 WILD_WALKING_SECONDS = 1
 # 'NS': Up/Down | 'EW': Right/Left
 WILD_WALKING_DIRECTION = 'NS'
-
+# How long has the bot been stuck in the same state before restarting the game
+STUCK_TIMER_SECONDS = 20
+ENCOUNTERS_TXT_PATH = 'Media/Encounters.txt'
 HOME_MENU_COLOR = 255
 PAIRING_MENU_COLOR = 240
 ESCAPE_COMBAT_BLACK_COLOR = 7
@@ -92,4 +94,3 @@ LIFE_BOX_LINE = {
 TESTING = True
 TESTING_VIDEO_PATH = 'Media/Tests/Shiny Abomasnow.mp4'
 TESTING_IMAGE_PATH = 'Media/Interface/Switch Controller.png'
-SAVING_FRAMES_PATH = 'Media/Tests/Results'

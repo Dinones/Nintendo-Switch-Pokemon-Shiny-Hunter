@@ -19,8 +19,8 @@ if __name__ == '__main__':
         program_name = __file__.split('/')[-1]
         exit(os.system(f'sudo python3 {program_name}'))
 
-from time import sleep
 from queue import Queue
+from time import sleep, time
 from threading import Thread, Event
 
 from GUI import GUI
@@ -44,11 +44,14 @@ def GUI_control(FPS, Controller, Image_Queue, shutdown_event, previous_button = 
     switch_controller_image = Image_Processing(CONST.SWITCH_CONTROLLER_IMAGE_PATH)
     switch_controller_image.resize_image(CONST.SWITCH_CONTROLLER_FRAME_SIZE)
     switch_controller_image.draw_button()
-    encounter_counter = 0
+    
+    with open(f'./{CONST.ENCOUNTERS_TXT_PATH}', 'r') as file: encounter_counter = int(file.read())
+
+    stuck_timer = time()
 
     while not shutdown_event.is_set():
         image = Image_Processing(Video_Capture.read_frame())
-        if isinstance(image.original_image, type(None)): continue
+        if isinstance(image.original_image, type(None)): sleep(0.1); continue
 
         image.resize_image()
         FPS.get_FPS()
@@ -66,10 +69,14 @@ def GUI_control(FPS, Controller, Image_Queue, shutdown_event, previous_button = 
 
         with Controller.event_lock: 
             Controller.current_event = search_wild_pokemon(image, Controller.current_event)
+            # if Controller.current_event == Controller.previous_event and \
+            #     time() - stuck_timer > CONST.STUCK_TIMER_SECONDS:
+            #         stuck_timer = time()
+            #         Controller.current_event = "RESTART_GAME_1"
 
             if Controller.current_event == "ENTER_COMBAT_1" and Controller.current_event != Controller.previous_event:
-                Controller.previous_event = Controller.current_event
                 encounter_counter += 1 
+                with open(f'./{CONST.ENCOUNTERS_TXT_PATH}', 'w') as file: file.write(str(encounter_counter))
                 Video_Capture.save_video()
                 Video_Capture.start_recording()
 
@@ -93,10 +100,9 @@ def controller_control(controller, shutdown_event):
         # Prevent the main execution from being blocked
         with controller.event_lock: aux_current_event = controller.current_event
 
-
         if aux_current_event == 'WAIT_HOME_SCREEN': fast_start_macro(controller)
         elif aux_current_event == 'RESTART_GAME_1': restart_game_macro(controller)
-        elif aux_current_event in ['RESTART_GAME_2', 'RESTART_GAME_3']:
+        elif aux_current_event in ['RESTART_GAME_2', 'RESTART_GAME_3']: 
             press_single_button(controller, 'A')
         elif aux_current_event == 'MOVE_PLAYER': move_player_wild_macro(controller)
         elif aux_current_event == 'ESCAPE_COMBAT_2': escape_combat_macro(controller)
@@ -105,7 +111,6 @@ def controller_control(controller, shutdown_event):
             sleep(3)
             stop_macro(controller)
             shutdown_event.set()
-
 
         controller.previous_event = controller.current_event
         controller.current_button_pressed = ''

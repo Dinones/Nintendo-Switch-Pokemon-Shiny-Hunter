@@ -185,6 +185,7 @@ if __name__ == "__main__":
         print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Process video'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Process image'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '3').replace('{option}', 'Extract frames from video'))
+        print(COLOR_str.MENU_OPTION.replace('{index}', '4').replace('{option}', 'Check lost shiny'))
 
         option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Image Processing'))
 
@@ -192,6 +193,7 @@ if __name__ == "__main__":
             '1': process_video,
             '2': process_image,
             '3': extract_frames_from_video,
+            '4': check_lost_shiny,
         }
 
         if option in menu_options: menu_options[option](option)
@@ -301,7 +303,7 @@ if __name__ == "__main__":
 
         print(COLOR_str.PRESS_KEY_TO_INSTRUCTION
             .replace('{module}', 'Image Processing')
-            .replace('{key}', "'q'")
+            .replace('{key}', "'Q'")
             .replace('{instruction}', 'exit the program')
         )
         print(COLOR_str.PRESS_KEY_TO_INSTRUCTION
@@ -311,12 +313,12 @@ if __name__ == "__main__":
         )
         print(COLOR_str.PRESS_KEY_TO_INSTRUCTION
             .replace('{module}', 'Image Processing')
-            .replace('{key}', "'a'")
+            .replace('{key}', "'A'")
             .replace('{instruction}', 'move a frame backwards')
         )
         print(COLOR_str.PRESS_KEY_TO_INSTRUCTION
             .replace('{module}', 'Image Processing')
-            .replace('{key}', "'d'")
+            .replace('{key}', "'D'")
             .replace('{instruction}', 'move a frame forward')
         )
 
@@ -334,7 +336,7 @@ if __name__ == "__main__":
             image.resize_image()
             image.get_mask()
             n_contours = image.get_rectangles()
-            image.draw_star(n_contours)
+            image.draw_star()
 
             cv2.imshow(f'{CONST.BOT_NAME} - Mask', image.masked_image)
             cv2.imshow(f'{CONST.BOT_NAME} - Contours', image.contours_image)
@@ -372,7 +374,7 @@ if __name__ == "__main__":
             if key == ord(' '): pause = not pause
 
             counter += 1
-            time.sleep(0.1)
+            time.sleep(0.05)
 
         Video_Capture.stop()
 
@@ -382,5 +384,65 @@ if __name__ == "__main__":
         )
 
     #######################################################################################################################
+
+    def check_lost_shiny(option):
+        print('\n' + COLOR_str.SELECTED_OPTION
+            .replace('{module}', 'Image Processing')
+            .replace('{option}', f"{option}")
+            .replace('{action}', f"Checking lost shiny")
+            .replace('{path}', f"")
+        )
+
+        if not os.path.exists(f'../{CONST.IMAGES_FOLDER_PATH}'): 
+            return print(COLOR_str.INVALID_PATH_ERROR
+                .replace('{module}', 'Image Processing')
+                .replace('{path}', f"'../{CONST.IMAGES_FOLDER_PATH}'") + '\n'
+        )
+
+        images = [image for image in sorted(os.listdir(f'../{CONST.IMAGES_FOLDER_PATH}')) 
+            if image.lower().endswith(('.png', '.jpg', 'jpeg'))]
+
+        # Instructions
+        print(COLOR_str.SUCCESSFULLY_LOADED_IMAGES.replace('{images}', str(len(images))))
+        print(COLOR_str.PRESS_KEY_TO_INSTRUCTION.replace('{key}', "'SPACE'")
+            .replace('{module}', 'Image Processing')
+            .replace('{instruction}', 'pause the program'))
+        print(COLOR_str.PRESS_KEY_TO_INSTRUCTION.replace('{key}', "'A' or 'D'")
+            .replace('{module}', 'Image Processing')
+            .replace('{instruction}', 'go back / forward while in pause'))
+        print(COLOR_str.PRESS_KEY_TO_INSTRUCTION.replace('{key}', "'Q'")
+            .replace('{module}', 'Image Processing')
+            .replace('{instruction}', 'stop the program'))
+
+        index = 0
+        pause = False
+        timer = time.time()
+
+        while True and (index + 1) != len(images):
+            if time.time() - timer >= 0.3:
+                if pause: index -= 1
+                image = Image_Processing(f'../{CONST.IMAGES_FOLDER_PATH}//{images[index]}')
+                image.resize_image()
+                cv2.putText(image.resized_image, f'Count: {index}/{len(images)}', CONST.TEXT_PARAMS['position'], 
+                    cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'],
+                    CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
+                cv2.imshow('Lost Shiny Checker', image.resized_image)
+
+                index += 1
+                timer = time.time()
+
+            # Press 'SPACE' to resume the execution
+            # Press 'a' or 'd' to move between frames
+            # Press 'q' to stop the program
+            key = cv2.waitKey(1)
+            if key in [ord('q'), ord('Q')]: break
+            elif key == ord(' '): pause = not pause
+            elif pause and key in [ord('a'), ord('A')]: index -= 1
+            elif pause and key in [ord('d'), ord('D')]: index += 1 
+
+        print(COLOR_str.SUCCESS_EXIT_PROGRAM
+            .replace('{module}', 'Image Processing')
+            .replace('{reason}', f'Successfully checked {index}/{len(images)} images!') + '\n'
+        )
 
     main_menu()

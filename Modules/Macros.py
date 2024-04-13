@@ -113,7 +113,8 @@ def escape_combat_macro(controller):
     controller.current_button_pressed = 'UP'
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.DPAD_UP]); sleep(0.5)
     controller.current_button_pressed = 'A'
-    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A])
+    for _ in range(5): controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A]); sleep(0.1)
+    
 
 ###########################################################################################################################
 
