@@ -63,6 +63,7 @@ CONTROLLER_BUTTONS_COLOR = (200, 0, 0)
 ##################################################     CONTROL SYSTEM     #################################################
 ###########################################################################################################################
 
+IMAGES_COUNT_WARNING = 0
 # Time the player is moving in each direction
 WILD_WALKING_SECONDS = 1
 # 'NS': Up/Down | 'EW': Right/Left

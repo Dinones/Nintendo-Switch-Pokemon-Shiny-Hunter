@@ -154,6 +154,14 @@ if __name__ == "__main__":
             .replace('{path}', '')
         )
 
+        # Saving images constantly can cause to run out of memory
+        if len(os.listdir(f'./{CONST.IMAGES_FOLDER_PATH}')) - 1 > CONST.IMAGES_COUNT_WARNING:
+            print(COLOR_str.IMAGES_COUNT_WARNING
+                .replace('{module}', 'Shiny Hunter')
+                .replace('{images}', str(len(os.listdir(f'./{CONST.IMAGES_FOLDER_PATH}')) - 1))
+                .replace('{path}', f'./{CONST.IMAGES_FOLDER_PATH}')
+            )
+
         FPS = FPS_Counter()
         Image_Queue = Queue()
         Controller = Switch_Controller()

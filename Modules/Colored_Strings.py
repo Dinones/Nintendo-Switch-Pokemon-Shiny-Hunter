@@ -80,6 +80,13 @@ RELEASING_THREADS = \
     f'\033[{COLORS["Blue"]}m{"{threads}"}\033[0;m'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}m thread(s)... \033[0;m'
 
+IMAGES_COUNT_WARNING = \
+    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}\033[0;m'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mDetected {"{images}"} images inside \033[0;m'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}m"{"{path}"}"\033[0;m'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}m: \033[0;m'+\
+    f'\033[{COLORS["Yellow"]}mPlease, consider checking and deleting them...\033[0;m'
+
 ###########################################################################################################################
 ######################################################     MENU     #######################################################
 ###########################################################################################################################

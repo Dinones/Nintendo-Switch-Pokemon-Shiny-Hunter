@@ -399,8 +399,8 @@ if __name__ == "__main__":
                 .replace('{path}', f"'../{CONST.IMAGES_FOLDER_PATH}'") + '\n'
         )
 
-        images = [image for image in sorted(os.listdir(f'../{CONST.IMAGES_FOLDER_PATH}')) 
-            if image.lower().endswith(('.png', '.jpg', 'jpeg'))]
+        images = sorted([image for image in sorted(os.listdir(f'../{CONST.IMAGES_FOLDER_PATH}')) 
+            if image.lower().endswith(('.png', '.jpg', 'jpeg'))], key = lambda x: int(x.split('.')[0]))
 
         # Instructions
         print(COLOR_str.SUCCESSFULLY_LOADED_IMAGES.replace('{images}', str(len(images))))
@@ -417,13 +417,17 @@ if __name__ == "__main__":
         index = 0
         pause = False
         timer = time.time()
+        second_text_position = [CONST.TEXT_PARAMS['position'][0], CONST.TEXT_PARAMS['position'][1] + 20]
 
         while True and (index + 1) != len(images):
             if time.time() - timer >= 0.3:
                 if pause: index -= 1
-                image = Image_Processing(f'../{CONST.IMAGES_FOLDER_PATH}//{images[index]}')
+                image = Image_Processing(f'../{CONST.IMAGES_FOLDER_PATH}/{images[index]}')
                 image.resize_image()
                 cv2.putText(image.resized_image, f'Count: {index}/{len(images)}', CONST.TEXT_PARAMS['position'], 
+                    cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'],
+                    CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
+                cv2.putText(image.resized_image, f'{images[index]}', second_text_position, 
                     cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'],
                     CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
                 cv2.imshow('Lost Shiny Checker', image.resized_image)
@@ -442,7 +446,7 @@ if __name__ == "__main__":
 
         print(COLOR_str.SUCCESS_EXIT_PROGRAM
             .replace('{module}', 'Image Processing')
-            .replace('{reason}', f'Successfully checked {index}/{len(images)} images!') + '\n'
+            .replace('{reason}', f'Successfully checked {index + 1}/{len(images)} images!') + '\n'
         )
 
     main_menu()
