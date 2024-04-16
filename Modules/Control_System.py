@@ -101,7 +101,7 @@ def search_wild_pokemon(image, state):
             return 'SHINY_FOUND'
 
     # Combat loaded (Shiny found)
-    elif state == 'CHECK_SHINY':
+    elif state == 'SHINY_FOUND':
         sleep(CONST.SHINY_RECORDING_SECONDS)
         return 'FINISH'
 
