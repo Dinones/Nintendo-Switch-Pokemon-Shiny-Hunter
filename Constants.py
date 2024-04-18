@@ -67,7 +67,7 @@ IMAGES_COUNT_WARNING = 100
 # Time the player is moving in each direction
 WILD_WALKING_SECONDS = 1
 # 'NS': Up/Down | 'EW': Right/Left
-WILD_WALKING_DIRECTION = 'NS'
+WILD_WALKING_DIRECTION = 'EW'
 # How long has the bot been stuck in the same state before restarting the game
 STUCK_TIMER_SECONDS = 30
 ENCOUNTERS_TXT_PATH = 'Media/Encounters.txt'

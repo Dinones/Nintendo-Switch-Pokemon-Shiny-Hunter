@@ -69,8 +69,7 @@ def GUI_control(FPS, Controller, Image_Queue, shutdown_event, previous_button = 
 
         with Controller.event_lock: 
             Controller.current_event = search_wild_pokemon(image, Controller.current_event)
-            # if Controller.current_event not in ["FINISH", "SHINY_FOUND", "MOVE_PLAYER"] and \
-            if Controller.current_event not in ["WAIT_HOME_SCREEN", "FINISH", "SHINY_FOUND"] and \
+            if Controller.current_event not in ["MOVE_PLAYER", "WAIT_HOME_SCREEN", "FINISH", "SHINY_FOUND"] and \
                 Controller.current_event == Controller.previous_event and \
                 time() - stuck_timer > CONST.STUCK_TIMER_SECONDS:
                     stuck_timer = time()

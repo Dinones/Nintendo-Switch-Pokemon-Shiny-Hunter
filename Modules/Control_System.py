@@ -9,7 +9,7 @@ if __name__ == '__main__':
     except: pass
 
 import cv2
-from time import time
+from time import time, sleep
 
 import sys; sys.path.append('..')
 import Constants as CONST
@@ -137,7 +137,6 @@ def search_wild_pokemon(image, state):
 
 if __name__ == "__main__":
     import numpy as np
-    from time import sleep
 
     from Image_Processing import Image_Processing
     from Game_Capture import Game_Capture
