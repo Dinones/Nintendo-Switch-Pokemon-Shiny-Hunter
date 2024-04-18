@@ -200,10 +200,12 @@ class GUI():
         self.items['switch_controller_image']['tkinter_image'] = \
             switch_controller_image.tkinter_images['switch_controller_image']
 
+        bad_luck = (1 - 1/4096)**encounter_count*100
         # Update RAM usage, current state and encounter count
         self.items['RAM_usage_label'].config(text=f'  🔹⠀ RAM Usage: {memory_usage:.2f} MB')
         self.items['current_state_label'].config(text=f'  🔹⠀ Current State: {current_state}')
-        self.items['encounter_count_label'].config(text=f'  🔹⠀ Encounter Count: {str(encounter_count)}')
+        self.items['encounter_count_label'].config(text=f'  🔹⠀ Encounter Count: {str(encounter_count)}' +\
+            f'   -   ({bad_luck:.2f})%')
 
         # Schedule the next update_GUI() call in 10 milliseconds
         self.timer = Timer(0.01, self.update_GUI)
