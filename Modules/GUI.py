@@ -30,6 +30,7 @@ text_style = "background-color: #222; border: 2px solid #aaa; color: #aaa; font-
 
 ###########################################################################################################################
 
+# Removes Queue memory leaks
 class DllistQueue(Queue):
     def _init(self, maxsize):
         self.queue = dllist()
@@ -107,8 +108,6 @@ class GUI(pyqt_w.QWidget):
     #######################################################################################################################
 
     def update_GUI(self):
-        # try: [image, memory_usage, switch_controller_image, current_state, shutdown_event, encounter_count] = \
-        #     self.queue.get(block=True, timeout=1)
         try: update_items = self.queue.get(block=True, timeout=1)
         except: 
             # Schedule the next update_GUI() call (Max FPS: 60)
@@ -128,10 +127,12 @@ class GUI(pyqt_w.QWidget):
         self.items['switch_controller_image_label'] \
             .setPixmap(update_items['switch_controller_image'].pyqt_images['switch_controller_image'])
 
+        bad_luck = (1 - 1/4096)**update_items['encounter_count']
         # Update text boxes
-        self.items['RAM_usage_label'].setText(f"  ★   RAM Usage: {update_items['memory_usage']} MB")
+        self.items['RAM_usage_label'].setText(f"  ★   RAM Usage: {update_items['memory_usage']:.2f} MB")
         self.items['current_state_label'].setText(f"  ★   Current State: {update_items['current_state']}")
-        self.items['encounter_count_label'].setText(f"  ★   Encounter Count: {update_items['encounter_count']}")
+        self.items['encounter_count_label'].setText(f"  ★   Encounter Count: {update_items['encounter_count']}" + \
+            f'   -   ({bad_luck:.2f})%')
 
         # Schedule the next update_GUI() call (Max FPS: 60)
         self.timer = Timer(0.016, self.update_GUI)
