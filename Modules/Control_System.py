@@ -9,7 +9,7 @@ if __name__ == '__main__':
     except: pass
 
 import cv2
-from time import time
+from time import time, sleep
 
 import sys; sys.path.append('..')
 import Constants as CONST
@@ -100,11 +100,6 @@ def search_wild_pokemon(image, state):
         if image.n_contours >= CONST.MIN_DETECTED_CONTOURS:
             return 'SHINY_FOUND'
 
-    # Combat loaded (Shiny found)
-    elif state == 'CHECK_SHINY':
-        sleep(CONST.SHINY_RECORDING_SECONDS)
-        return 'FINISH'
-
     # Combat loaded (Both Pokémon in the field)
     elif state == 'ESCAPE_COMBAT_1':
         if image.check_multiple_pixel_colors(
@@ -137,7 +132,6 @@ def search_wild_pokemon(image, state):
 
 if __name__ == "__main__":
     import numpy as np
-    from time import sleep
 
     from Image_Processing import Image_Processing
     from Game_Capture import Game_Capture
