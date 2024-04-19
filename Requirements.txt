@@ -4,3 +4,4 @@ opencv_python==4.5.3.56
 Pillow==9.5.0
 PyAutoGUI==0.9.53
 pynput==1.7.1
+cllist==1.1.0

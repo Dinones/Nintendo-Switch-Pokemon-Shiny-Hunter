@@ -44,6 +44,7 @@ IMAGES_FOLDER_PATH = 'Media/Images/'
 
 # GUI title
 BOT_NAME = "FB Pokemon Shiny Hunter by @Dinones"
+SPAWN_POSITION = (300, 200)
 # [PIXELS] GUI size
 BOT_WINDOW_SIZE = (1104, 718)
 MAIN_FRAME_SIZE = (720, 405)

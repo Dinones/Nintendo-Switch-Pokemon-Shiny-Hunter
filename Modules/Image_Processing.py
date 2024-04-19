@@ -10,6 +10,7 @@ if __name__ == '__main__':
 
 import cv2
 import numpy as np
+import PyQt5.QtGui as pyqt_g
 from PIL import Image, ImageTk
 
 import sys; sys.path.append('..')
@@ -26,6 +27,7 @@ class Image_Processing():
         self.grayscale_image = None
         self.resized_image = None
         self.tkinter_images = {}
+        self.pyqt_images = {}
         self.masked_image = None
         self.contours_image = None
         self.FPS_image = None
@@ -120,21 +122,27 @@ class Image_Processing():
 
     #######################################################################################################################
 
-    # Convert the image to tkinter compatible format
-    # Will raise an error if used before creating a GUI (root = Tk())
-    def get_tkinter_image(self, image):
-        try: return ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB)))
-        except: return None
+    # Convert the image to PyQt compatible format
+    def get_pyqt_image(self, image):
+        try: height, width, channel = image.shape
+        except: height, width = image.shape
+
+        bytes_per_line = 3 * width
+        aux = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        qt_image = pyqt_g.QImage(aux.data, width, height, bytes_per_line, pyqt_g.QImage.Format_RGB888)
+        return pyqt_g.QPixmap.fromImage(qt_image)
 
     #######################################################################################################################
 
-    def get_tkinter_images(self, images = []):
+    def get_pyqt_images(self, images = []):
         if not isinstance(images, list): return
+        for image in ['FPS_image', 'contours_image', 'masked_image']: 
+            if not image in images: return
 
-        self.tkinter_images['FPS_image'] = self.get_tkinter_image(self.FPS_image)
+        self.pyqt_images['FPS_image'] = self.get_pyqt_image(self.FPS_image)
         for image_name in ['contours_image', 'masked_image']:
-            self.tkinter_images[image_name] = cv2.resize(getattr(self, image_name), CONST.SECONDARY_FRAME_SIZE)
-            self.tkinter_images[image_name] = self.get_tkinter_image(self.tkinter_images[image_name])
+            self.pyqt_images[image_name] = cv2.resize(getattr(self, image_name), CONST.SECONDARY_FRAME_SIZE)
+            self.pyqt_images[image_name] = self.get_pyqt_image(self.pyqt_images[image_name])
 
     #######################################################################################################################
 
