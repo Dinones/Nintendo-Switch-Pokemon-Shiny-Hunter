@@ -97,13 +97,8 @@ def search_wild_pokemon(image, state):
         ):
             return 'ESCAPE_COMBAT_1'
 
-        if image.n_contours >= CONST.MIN_DETECTED_CONTOURS:
+        if not image.n_contours >= CONST.MIN_DETECTED_CONTOURS:
             return 'SHINY_FOUND'
-
-    # Combat loaded (Shiny found)
-    elif state == 'SHINY_FOUND':
-        sleep(CONST.SHINY_RECORDING_SECONDS)
-        return 'FINISH'
 
     # Combat loaded (Both Pokémon in the field)
     elif state == 'ESCAPE_COMBAT_1':
