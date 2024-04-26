@@ -24,9 +24,9 @@ import Constants as CONST
 #################################################     INITIALIZATIONS     #################################################
 ###########################################################################################################################
 
-image_label_style = "background-color: #000; border: 2px solid #aaa;"
-text_label_style = "background-color: #222; border: 2px solid #aaa;"
-text_style = "background-color: #222; border: 2px solid #aaa; color: #aaa; font-size: 16pt; font-family: Arial;"
+image_label_style = "background-color: #000; border: 1px solid #aaa;"
+text_label_style = "background-color: #222; border: 1px solid #aaa;"
+text_style = "background-color: #222; border: 1px solid #aaa; color: #aaa; font-size: 13pt; font-family: Arial;"
 
 ###########################################################################################################################
 
@@ -85,21 +85,21 @@ class GUI(pyqt_w.QWidget):
         self.items['switch_controller_image_label'].move(CONST.MAIN_FRAME_SIZE[0] + 20, CONST.MAIN_FRAME_SIZE[1] + 20)
 
         ##### RAM USAGE #####
-        self.items['RAM_usage_label'].setFixedSize(2*CONST.MAIN_FRAME_SIZE[0]//3 - 10, CONST.SECONDARY_FRAME_SIZE[1]//4)
+        self.items['RAM_usage_label'].setFixedSize(2*CONST.MAIN_FRAME_SIZE[0]//3 - 10, CONST.SECONDARY_FRAME_SIZE[1]//5)
         self.items['RAM_usage_label'].setStyleSheet(text_style)
         self.items['RAM_usage_label'].move(10, CONST.MAIN_FRAME_SIZE[1] + 20)
         self.items['RAM_usage_label'].setText("  ★   RAM Usage: 0 MB")
 
         ##### CURRENT STATE #####
-        self.items['current_state_label'].setFixedSize(2*CONST.MAIN_FRAME_SIZE[0]//3 - 10, CONST.SECONDARY_FRAME_SIZE[1]//4)
+        self.items['current_state_label'].setFixedSize(2*CONST.MAIN_FRAME_SIZE[0]//3 - 10, CONST.SECONDARY_FRAME_SIZE[1]//5)
         self.items['current_state_label'].setStyleSheet(text_style)
-        self.items['current_state_label'].move(10, CONST.MAIN_FRAME_SIZE[1] + CONST.SECONDARY_FRAME_SIZE[1]//4 + 30)
+        self.items['current_state_label'].move(10, CONST.MAIN_FRAME_SIZE[1] + CONST.SECONDARY_FRAME_SIZE[1]//5 + 30)
         self.items['current_state_label'].setText("  ★   Current State: None")
 
         ##### ENCOUNTER COUNT #####
-        self.items['encounter_count_label'].setFixedSize(2*CONST.MAIN_FRAME_SIZE[0]//3 - 10, CONST.SECONDARY_FRAME_SIZE[1]//4)
+        self.items['encounter_count_label'].setFixedSize(2*CONST.MAIN_FRAME_SIZE[0]//3 - 10, CONST.SECONDARY_FRAME_SIZE[1]//5)
         self.items['encounter_count_label'].setStyleSheet(text_style)
-        self.items['encounter_count_label'].move(10, CONST.MAIN_FRAME_SIZE[1] + 2*CONST.SECONDARY_FRAME_SIZE[1]//4 + 40)
+        self.items['encounter_count_label'].move(10, CONST.MAIN_FRAME_SIZE[1] + 2*CONST.SECONDARY_FRAME_SIZE[1]//5 + 40)
         self.items['encounter_count_label'].setText("  ★   Encounter Count: 0")
 
         self.update_GUI()
@@ -114,6 +114,9 @@ class GUI(pyqt_w.QWidget):
             self.timer = Timer(0.016, self.update_GUI)
             self.timer.start()
             return
+
+        # GUI has been closed
+        if pyqt_g.QGuiApplication.instance() is None: return
 
         # Convert images to a PyQt compatible format
         update_items['image'].get_pyqt_images(['FPS_image', 'masked_image', 'contours_image'])
@@ -208,7 +211,7 @@ if __name__ == "__main__":
                     'switch_controller_image': switch_controller_image,
                 }
 
-                # print(f'{update_items["memory_usage"]} MB')
+                print(f'{update_items["memory_usage"]} MB')
                 # https://stackoverflow.com/questions/67210155/queue-get-memory-leak
                 Image_Queue.put(update_items)
 
