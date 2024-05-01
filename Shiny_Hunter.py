@@ -166,7 +166,9 @@ if __name__ == "__main__":
             )
 
         FPS = FPS_Counter()
-        Image_Queue = DllistQueue(maxsize = 2)
+        # Image_Queue = DllistQueue(maxsize = 2)
+        from queue import Queue
+        Image_Queue = Queue()
         Controller = Switch_Controller()
 
         shutdown_event = Event()

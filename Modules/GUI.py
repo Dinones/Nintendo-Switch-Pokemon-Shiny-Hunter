@@ -111,7 +111,11 @@ class GUI(pyqt_w.QWidget):
         self.items['encounter_count_label'].move(10, CONST.MAIN_FRAME_SIZE[1] + 2*CONST.SECONDARY_FRAME_SIZE[1]//5 + 40)
         self.items['encounter_count_label'].setText("  ★   Encounter Count: 0")
 
-        self.update_GUI()
+        self.timer = pyqt_c.QTimer(self)
+        self.timer.timeout.connect(self.update_GUI)
+        self.timer.start(16)
+
+        # self.update_GUI()
         self.show()
 
     #######################################################################################################################
@@ -119,9 +123,10 @@ class GUI(pyqt_w.QWidget):
     def update_GUI(self):
         try: update_items = self.queue.get(block=True, timeout=1)
         except: 
+            print('hello')
             # Schedule the next update_GUI() call (Max FPS: 60)
-            self.timer = Timer(0.016, self.update_GUI)
-            self.timer.start()
+            # self.timer = Timer(0.016, self.update_GUI)
+            # self.timer.start()
             return
 
         # GUI has been closed
@@ -147,8 +152,8 @@ class GUI(pyqt_w.QWidget):
             f'   -   ({bad_luck:.2f})%')
 
         # Schedule the next update_GUI() call (Max FPS: 60)
-        self.timer = Timer(0.016, self.update_GUI)
-        self.timer.start()
+        # self.timer = Timer(0.016, self.update_GUI)
+        # self.timer.start()
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
@@ -168,7 +173,8 @@ if __name__ == "__main__":
         print('\n' + COLOR_str.MENU.replace('{module}', 'GUI'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Open GUI using capture card'))
 
-        option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'GUI'))
+        # option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'GUI'))
+        option = '1'
 
         menu_options = {
             '1': test_GUI,
