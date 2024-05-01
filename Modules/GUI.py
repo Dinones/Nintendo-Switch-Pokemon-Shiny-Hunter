@@ -30,10 +30,19 @@ text_style = "background-color: #222; border: 1px solid #aaa; color: #aaa; font-
 
 ###########################################################################################################################
 
-# Removes Queue memory leaks
+# Solve Queue memory leaks
 class DllistQueue(Queue):
     def _init(self, maxsize):
         self.queue = dllist()
+
+###########################################################################################################################
+
+class App(pyqt_w.QApplication):
+    def __init__(self):
+        # Initializes the clas a QApplication object
+        super().__init__([])
+
+        self.setStyleSheet("QWidget { background-color: #333; }")
 
 ###########################################################################################################################
 
@@ -116,7 +125,7 @@ class GUI(pyqt_w.QWidget):
             return
 
         # GUI has been closed
-        if pyqt_g.QGuiApplication.instance() is None: return
+        # if pyqt_g.QGuiApplication.instance() is None: return
 
         # Convert images to a PyQt compatible format
         update_items['image'].get_pyqt_images(['FPS_image', 'masked_image', 'contours_image'])
@@ -159,8 +168,7 @@ if __name__ == "__main__":
         print('\n' + COLOR_str.MENU.replace('{module}', 'GUI'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Open GUI using capture card'))
 
-        # option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'GUI'))
-        option = '1'
+        option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'GUI'))
 
         menu_options = {
             '1': test_GUI,
@@ -180,8 +188,7 @@ if __name__ == "__main__":
         )
 
         FPS = FPS_Counter()
-        Image_Queue = Queue()
-        # Image_Queue = DllistQueue(maxsize = 2)
+        Image_Queue = DllistQueue(maxsize = 2)
         shutdown_event = Event()
         Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
 
@@ -211,8 +218,6 @@ if __name__ == "__main__":
                     'switch_controller_image': switch_controller_image,
                 }
 
-                print(f'{update_items["memory_usage"]} MB')
-                # https://stackoverflow.com/questions/67210155/queue-get-memory-leak
                 Image_Queue.put(update_items)
 
         threads = []
@@ -220,11 +225,10 @@ if __name__ == "__main__":
         threads.append(Thread(target=lambda: FPS.get_memory_usage(shutdown_event), daemon=True))
         for thread in threads: thread.start()
 
-        App = pyqt_w.QApplication([])
-        App.setStyleSheet("QWidget { background-color: #333; }")
+        GUI_App = App()
         gui = GUI(Image_Queue)
         # Blocking function until the GUI is closed
-        App.exec_()
+        GUI_App.exec_()
 
         # Kill all secondary threads
         shutdown_event.set()
@@ -233,61 +237,3 @@ if __name__ == "__main__":
     #######################################################################################################################
 
     main_menu()
-
-    
-
-
-
-
-
-
-
-# ###########################################################################################################################
-# #####################################################     PROGRAM     #####################################################
-# ###########################################################################################################################
-
-# def test_GUI(option):
-#         print('\n' + COLOR_str.SELECTED_OPTION
-#             .replace('{module}', 'GUI')
-#             .replace('{option}', f"{option}")
-#             .replace('{action}', f"Testing GUI with the capture card...")
-#             .replace('{path}', '')
-#         )
-
-#         Image_Queue = Queue()
-#         Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
-#         FPS = FPS_Counter()
-#         shutdown_event = Event()
-#         switch_controller_image = Image_Processing(f'../{CONST.SWITCH_CONTROLLER_IMAGE_PATH}')
-#         switch_controller_image.resize_image(CONST.SWITCH_CONTROLLER_FRAME_SIZE)
-#         switch_controller_image.draw_button()
-        
-#         def test_GUI_control(shutdown_event = None):
-#             if isinstance(shutdown_event, type(None)): return
-
-#             while not shutdown_event.is_set():
-#                 image = Image_Processing(Video_Capture.read_frame())
-#                 if isinstance(image.original_image, type(None)): continue
-
-#                 image.resize_image()
-#                 FPS.get_FPS()
-#                 image.draw_FPS(FPS.FPS)
-#                 image.get_mask()
-#                 n_contours = image.get_rectangles()
-
-#                 Image_Queue.put([image, FPS.memory_usage, switch_controller_image, None, None, 0])
-
-#         threads = []
-#         threads.append(Thread(target=lambda: test_GUI_control(shutdown_event), daemon=True))
-#         threads.append(Thread(target=lambda: FPS.get_memory_usage(shutdown_event), daemon=True))
-#         for thread in threads: thread.start()
-
-#         # Blocking function until the GUI is closed
-#         user_interface = GUI(Image_Queue)
-#         shutdown_event.set()
-
-#         print(COLOR_str.RELEASING_THREADS.replace('{module}', 'GUI').replace('{threads}', str(len(threads))) + '\n')        
-
-#     #######################################################################################################################
-
-#     main_menu()

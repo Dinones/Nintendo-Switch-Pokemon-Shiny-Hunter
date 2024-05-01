@@ -85,13 +85,13 @@ class Switch_Controller():
 ###########################################################################################################################
 
 if __name__ == '__main__':
-    from queue import Queue
     from threading import Thread, Event
-
-    from GUI import GUI
+    import PyQt5.QtWidgets as pyqt_w
+    
     import Colored_Strings as COLOR_str
     from FPS_Counter import FPS_Counter
     from Game_Capture import Game_Capture
+    from GUI import GUI, DllistQueue, App
     from Image_Processing import Image_Processing
 
     #######################################################################################################################
@@ -119,7 +119,7 @@ if __name__ == '__main__':
             .replace('{path}', '')
         )
 
-        Image_Queue = Queue()
+        Image_Queue = DllistQueue(maxsize = 2)
         Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
         FPS = FPS_Counter()
         shutdown_event = Event()
@@ -140,11 +140,20 @@ if __name__ == '__main__':
                 image.get_mask()
                 n_contours = image.get_rectangles()
 
+                update_items = {
+                    'image': image,
+                    'current_state': None,
+                    'shutdown_event': shutdown_event,
+                    'encounter_count': 0,
+                    'memory_usage': FPS.memory_usage,
+                    'switch_controller_image': switch_controller_image,
+                }
+
                 if Controller.current_button_pressed != previous_button:
                     switch_controller_image.draw_button(Controller.current_button_pressed)
                     previous_button = Controller.current_button_pressed
 
-                Image_Queue.put([image, FPS.memory_usage, switch_controller_image, None])
+                Image_Queue.put(update_items)
 
         def test_controller():
             Controller.connect_controller()
@@ -156,13 +165,21 @@ if __name__ == '__main__':
         threads.append(Thread(target=test_controller, daemon=True))
         for thread in threads: thread.start()
 
-        user_interface = GUI(Image_Queue)
+        GUI_App = App()
+        gui = GUI(Image_Queue)
+        # Blocking function until the GUI is closed
+        GUI_App.exec_()
+        
+        # Kill all secondary threads
         shutdown_event.set()
-
         print(COLOR_str.RELEASING_THREADS
             .replace('{module}', 'Switch Controller')
             .replace('{threads}', str(len(threads))) + '\n'
         ) 
+
+        Controller.disconnect_controller()
+        sleep(5)
+        os.system('sudo pkill -9 python')
 
     #######################################################################################################################
 

@@ -49,10 +49,6 @@ class Game_Capture():
     # Release the capture card
     def stop(self):
         self.video_capture.release()
-        # if CONST.RECORD_VIDEO and type(self.video_recorder) is not type(None):
-        #     self.video_recorder.release()
-        #     if CONST.RECORD_MULTIPLE_WINDOWS and type(self.video_recorder_contours) is not type(None):
-        #         self.video_recorder_contours.release()
         cv2.destroyAllWindows()
 
     #######################################################################################################################

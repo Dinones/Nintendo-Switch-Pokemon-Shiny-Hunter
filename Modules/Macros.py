@@ -22,8 +22,10 @@ walking_direction = bool(0)
 ###########################################################################################################################
 
 def test_macro(controller):
+    controller.current_event = "Test"
     start_macro(controller)
-    sleep(1); controller.current_button_pressed = 'HOME'
+    sleep(2); controller.current_button_pressed = 'HOME'
+    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME])
     sleep(1); stop_macro(controller)
 
 ###########################################################################################################################
@@ -63,7 +65,7 @@ def stop_macro(controller):
         controller.current_button_pressed = ''; sleep(0.1)
     sleep(0.5); controller.current_button_pressed = 'A'
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A])
-    sleep(2); controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A]); sleep(2)
+    sleep(3); controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A]); sleep(2)
     controller.current_button_pressed = ''
 
 ###########################################################################################################################

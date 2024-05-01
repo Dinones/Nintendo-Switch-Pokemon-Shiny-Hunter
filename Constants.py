@@ -95,4 +95,5 @@ LIFE_BOX_LINE = {
 
 TESTING = True
 TESTING_VIDEO_PATH = 'Media/Tests/Shiny Abomasnow.mp4'
-TESTING_IMAGE_PATH = 'Media/Interface/Switch Controller.png'
+TESTING_IMAGE_PATH = 'Media/Tests/Turtwig.png'
+SAVING_FRAMES_PATH = 'Media/Tests/Results'

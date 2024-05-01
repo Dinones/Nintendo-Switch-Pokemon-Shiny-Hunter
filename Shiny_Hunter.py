@@ -19,17 +19,17 @@ if __name__ == '__main__':
         program_name = __file__.split('/')[-1]
         exit(os.system(f'sudo python3 {program_name}'))
 
-from queue import Queue
+import copy
 from time import sleep, time
 from threading import Thread, Event
 
-from GUI import GUI
 from Macros import *
 import Constants as CONST
 from Control_System import *
 import Colored_Strings as COLOR_str
 from FPS_Counter import FPS_Counter
 from Game_Capture import Game_Capture
+from GUI import GUI, DllistQueue, App
 from Image_Processing import Image_Processing
 from Switch_Controller import Switch_Controller
 
@@ -90,13 +90,17 @@ def GUI_control(FPS, Controller, Image_Queue, shutdown_event, previous_button = 
                 if time() - stuck_timer > CONST.SHINY_RECORDING_SECONDS:
                     Video_Capture.save_video()
 
-            Image_Queue.put([
-                image, FPS.memory_usage, 
-                switch_controller_image, 
-                Controller.current_event, 
-                shutdown_event, 
-                encounter_counter
-            ])
+            update_items = {
+                'image': copy.copy(image),
+                'current_state': copy.copy(Controller.current_event),
+                'shutdown_event': shutdown_event,
+                'encounter_count': copy.copy(encounter_counter),
+                'memory_usage': copy.copy(FPS.memory_usage),
+                'switch_controller_image': copy.copy(switch_controller_image),
+            }
+
+            # print(Controller.current_event, image.original_image[0][0])
+            Image_Queue.put(update_items)
 
 ###########################################################################################################################
 
@@ -162,7 +166,7 @@ if __name__ == "__main__":
             )
 
         FPS = FPS_Counter()
-        Image_Queue = Queue()
+        Image_Queue = DllistQueue(maxsize = 2)
         Controller = Switch_Controller()
 
         shutdown_event = Event()
@@ -173,8 +177,10 @@ if __name__ == "__main__":
         threads.append(Thread(target=lambda: controller_control(Controller, shutdown_event), daemon=True))
         for thread in threads: thread.start()
 
-        # Blocking function until the GUI is closed
+        GUI_App = App()
         User_Interface = GUI(Image_Queue)
+        # Blocking function until the GUI is closed
+        GUI_App.exec_()
         shutdown_event.set()
 
         print(COLOR_str.RELEASING_THREADS.replace('{module}', 'Shiny Hunter').replace('{threads}',

@@ -136,7 +136,6 @@ if __name__ == "__main__":
     from Image_Processing import Image_Processing
     from Game_Capture import Game_Capture
 
-    # Game_Capture = Game_Capture(f'../{CONST.TESTING_VIDEO_PATH}')
     Game_Capture = Game_Capture()
     state = 'MOVE_PLAYER'
 

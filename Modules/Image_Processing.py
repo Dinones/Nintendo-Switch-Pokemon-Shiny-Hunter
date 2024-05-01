@@ -368,7 +368,8 @@ if __name__ == "__main__":
                         process_single_frame(image, counter)
                         continue
 
-                time.sleep(0.1)
+                # Reduce workload
+                time.sleep(0.05)
                 continue
 
             process_single_frame(image)
@@ -382,7 +383,7 @@ if __name__ == "__main__":
             if key == ord(' '): pause = not pause
 
             counter += 1
-            time.sleep(0.05)
+            time.sleep(0.016)
 
         Video_Capture.stop()
 
