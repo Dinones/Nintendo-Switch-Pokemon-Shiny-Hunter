@@ -17,10 +17,6 @@ SHINY_RECORDING_SECONDS = 60
 
 # [PIXELS] Nintendo Switch captured frames' size 
 ORIGINAL_FRAME_SIZE = (1920, 1080)
-RECTANGLES_PARAMS = {
-    'color': (0, 255, 0),
-    'thickness': 4
-}
 TEXT_PARAMS = {
     'font_scale': 0.5,
     # [BGR]
@@ -30,11 +26,6 @@ TEXT_PARAMS = {
     'position': (2, 15),
     'star_num_color': (0, 0, 255)
 }
-# [PIXELS²] Minimum area to detect something as a match
-MIN_DETECT_SIZE = 5
-MIN_DETECTED_CONTOURS = 10
-LOWER_COLOR = 235
-UPPER_COLOR = 255
 PRESSED_BUTTON_COLOR = (255, 0, 200)
 IMAGES_FOLDER_PATH = 'Media/Images/'
 
@@ -72,6 +63,7 @@ WILD_WALKING_SECONDS = 1
 WILD_WALKING_DIRECTION = 'EW'
 # How long has the bot been stuck in the same state before restarting the game
 STUCK_TIMER_SECONDS = 30
+SHINY_DETECTION_TIME = 1
 ENCOUNTERS_TXT_PATH = 'Media/Encounters.txt'
 HOME_MENU_COLOR = 255
 PAIRING_MENU_COLOR = 240

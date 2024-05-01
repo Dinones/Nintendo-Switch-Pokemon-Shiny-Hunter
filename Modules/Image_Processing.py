@@ -27,6 +27,7 @@ class Image_Processing():
         self.resized_image = None
         self.pyqt_image = None
         self.FPS_image = None
+        self.shiny_detection_time = 0
 
         # Load the image
         if isinstance(image, str): self.original_image = cv2.imread(image, cv2.IMREAD_UNCHANGED)

@@ -97,7 +97,7 @@ def search_wild_pokemon(image, state):
         ):
             return 'ESCAPE_COMBAT_1'
 
-        if image.n_contours >= CONST.MIN_DETECTED_CONTOURS:
+        if image.shiny_detection_time and time() - image.shiny_detection_time >= CONST.SHINY_DETECTION_TIME:
             return 'SHINY_FOUND'
 
     # Combat loaded (Both Pokémon in the field)
@@ -143,7 +143,6 @@ if __name__ == "__main__":
         sleep(0.01)
         image = Image_Processing(Game_Capture.read_frame())
         image.resize_image()
-        image.get_mask()
         image.FPS_image = np.copy(image.resized_image)
 
         # print(image.check_pixel_color())

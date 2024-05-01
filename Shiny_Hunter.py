@@ -48,6 +48,8 @@ def GUI_control(FPS, Controller, Image_Queue, shutdown_event, previous_button = 
     with open(f'./{CONST.ENCOUNTERS_TXT_PATH}', 'r') as file: encounter_counter = int(file.read())
 
     stuck_timer = time()
+    initial_time = time()
+    shiny_detection_time = 0
 
     while not shutdown_event.is_set():
         image = Image_Processing(Video_Capture.read_frame())
@@ -56,9 +58,6 @@ def GUI_control(FPS, Controller, Image_Queue, shutdown_event, previous_button = 
         image.resize_image()
         FPS.get_FPS()
         image.draw_FPS(FPS.FPS)
-        image.get_mask()
-        image.n_contours = image.get_rectangles()
-        image.draw_star()
 
         Video_Capture.add_frame_to_video(image)
 
@@ -68,7 +67,13 @@ def GUI_control(FPS, Controller, Image_Queue, shutdown_event, previous_button = 
             previous_button = Controller.current_button_pressed
 
         with Controller.event_lock: 
+            if Controller.current_event == "CHECK_SHINY":
+                # Only resets the first time it enters to the state
+                if time() - shiny_detection_time >= CONST.SHINY_DETECTION_TIME: shiny_detection_time = time()
+                image.shiny_detection_time = shiny_detection_time
+
             Controller.current_event = search_wild_pokemon(image, Controller.current_event)
+
             if Controller.current_event not in ["MOVE_PLAYER", "WAIT_HOME_SCREEN", "SHINY_FOUND"] and \
                 Controller.current_event == Controller.previous_event and \
                 time() - stuck_timer > CONST.STUCK_TIMER_SECONDS:
@@ -91,12 +96,13 @@ def GUI_control(FPS, Controller, Image_Queue, shutdown_event, previous_button = 
                     Video_Capture.save_video()
 
             update_items = {
-                'image': copy.copy(image),
-                'current_state': copy.copy(Controller.current_event),
+                'image': image,
+                'current_state': Controller.current_event,
                 'shutdown_event': shutdown_event,
-                'encounter_count': copy.copy(encounter_counter),
-                'memory_usage': copy.copy(FPS.memory_usage),
-                'switch_controller_image': copy.copy(switch_controller_image),
+                'encounter_count': encounter_counter,
+                'memory_usage': FPS.memory_usage,
+                'switch_controller_image': switch_controller_image,
+                'clock': int(time() - initial_time),
             }
 
             # print(Controller.current_event, image.original_image[0][0])
