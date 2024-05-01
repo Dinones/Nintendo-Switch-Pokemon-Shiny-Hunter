@@ -48,8 +48,9 @@ SPAWN_POSITION = (300, 200)
 # [PIXELS] GUI size
 BOT_WINDOW_SIZE = (1104, 718)
 MAIN_FRAME_SIZE = (720, 405)
-SECONDARY_FRAME_SIZE = (350, 197)
 SWITCH_CONTROLLER_FRAME_SIZE = (350, 280)
+CLOCK_FRAME_SIZE = (350, 115)
+TEXT_FRAME_SIZE = (200, 39)
 SWITCH_CONTROLLER_IMAGE_PATH = 'Media/Interface/Switch Controller.png'
 
 ###########################################################################################################################

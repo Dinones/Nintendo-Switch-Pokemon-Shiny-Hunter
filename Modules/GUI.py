@@ -14,8 +14,6 @@ import PyQt5.QtGui as pyqt_g
 
 from queue import Queue
 from cllist import dllist
-from threading import Timer
-from time import sleep, time
 
 import sys; sys.path.append('..')
 import Constants as CONST
@@ -27,6 +25,7 @@ import Constants as CONST
 image_label_style = "background-color: #000; border: 1px solid #aaa;"
 text_label_style = "background-color: #222; border: 1px solid #aaa;"
 text_style = "background-color: #222; border: 1px solid #aaa; color: #aaa; font-size: 13pt; font-family: Arial;"
+clock_style = "background-color: #222; border: 1px solid #aaa; color: #aaa; font-size: 30pt; font-family: Arial;"
 
 ###########################################################################################################################
 
@@ -53,7 +52,6 @@ class GUI(pyqt_w.QWidget):
 
         # Used to share object between threads
         self.queue = queue
-        self.timer = None
 
         self.setWindowTitle(CONST.BOT_NAME)
         # Prevent window from being resized
@@ -63,8 +61,7 @@ class GUI(pyqt_w.QWidget):
 
         self.items = {
             'main_image_label': pyqt_w.QLabel(self),
-            'mask_image_label': pyqt_w.QLabel(self),
-            'contours_image_label': pyqt_w.QLabel(self),
+            'clock_label': pyqt_w.QLabel(self),
             'switch_controller_image_label': pyqt_w.QLabel(self),
 
             'RAM_usage_label': pyqt_w.QLabel(self),
@@ -77,89 +74,76 @@ class GUI(pyqt_w.QWidget):
         self.items['main_image_label'].setStyleSheet(image_label_style)
         self.items['main_image_label'].move(10, 10)
 
-        ##### RIGHT TOP IMAGE #####
-        self.items['mask_image_label'].setFixedSize(CONST.SECONDARY_FRAME_SIZE[0], CONST.SECONDARY_FRAME_SIZE[1])
-        self.items['mask_image_label'].setStyleSheet(image_label_style)
-        self.items['mask_image_label'].move(CONST.MAIN_FRAME_SIZE[0] + 20, 10)
-
-        ##### RIGHT BOTTOM IMAGE #####
-        self.items['contours_image_label'].setFixedSize(CONST.SECONDARY_FRAME_SIZE[0], CONST.SECONDARY_FRAME_SIZE[1])
-        self.items['contours_image_label'].setStyleSheet(image_label_style)
-        self.items['contours_image_label'].move(CONST.MAIN_FRAME_SIZE[0] + 20, CONST.SECONDARY_FRAME_SIZE[1] + 21)
-
         ##### SWITCH CONTROLLER #####
         self.items['switch_controller_image_label'] \
             .setFixedSize(CONST.SWITCH_CONTROLLER_FRAME_SIZE[0], CONST.SWITCH_CONTROLLER_FRAME_SIZE[1])
         self.items['switch_controller_image_label'].setStyleSheet(image_label_style)
-        self.items['switch_controller_image_label'].move(CONST.MAIN_FRAME_SIZE[0] + 20, CONST.MAIN_FRAME_SIZE[1] + 20)
+        self.items['switch_controller_image_label'].move(CONST.MAIN_FRAME_SIZE[0] + 20, CONST.CLOCK_FRAME_SIZE[1] + 20)
+        
+        ##### TIME COUNTER #####
+        self.items['clock_label'].setFixedSize(CONST.CLOCK_FRAME_SIZE[0], CONST.CLOCK_FRAME_SIZE[1])
+        self.items['clock_label'].setStyleSheet(clock_style)
+        self.items['clock_label'].move(CONST.MAIN_FRAME_SIZE[0] + 20, 10)
+        self.items['clock_label'].setAlignment(pyqt_c.Qt.AlignCenter)
+        self.items['clock_label'].setText("00 : 00 : 00")
 
         ##### RAM USAGE #####
-        self.items['RAM_usage_label'].setFixedSize(2*CONST.MAIN_FRAME_SIZE[0]//3 - 10, CONST.SECONDARY_FRAME_SIZE[1]//5)
+        self.items['RAM_usage_label'].setFixedSize(2*CONST.MAIN_FRAME_SIZE[0]//3 - 10, CONST.TEXT_FRAME_SIZE[1])
         self.items['RAM_usage_label'].setStyleSheet(text_style)
         self.items['RAM_usage_label'].move(10, CONST.MAIN_FRAME_SIZE[1] + 20)
         self.items['RAM_usage_label'].setText("  ★   RAM Usage: 0 MB")
 
         ##### CURRENT STATE #####
-        self.items['current_state_label'].setFixedSize(2*CONST.MAIN_FRAME_SIZE[0]//3 - 10, CONST.SECONDARY_FRAME_SIZE[1]//5)
+        self.items['current_state_label'].setFixedSize(2*CONST.MAIN_FRAME_SIZE[0]//3 - 10, CONST.TEXT_FRAME_SIZE[1])
         self.items['current_state_label'].setStyleSheet(text_style)
-        self.items['current_state_label'].move(10, CONST.MAIN_FRAME_SIZE[1] + CONST.SECONDARY_FRAME_SIZE[1]//5 + 30)
+        self.items['current_state_label'].move(10, CONST.MAIN_FRAME_SIZE[1] + CONST.TEXT_FRAME_SIZE[1] + 30)
         self.items['current_state_label'].setText("  ★   Current State: None")
 
         ##### ENCOUNTER COUNT #####
-        self.items['encounter_count_label'].setFixedSize(2*CONST.MAIN_FRAME_SIZE[0]//3 - 10, CONST.SECONDARY_FRAME_SIZE[1]//5)
+        self.items['encounter_count_label'].setFixedSize(2*CONST.MAIN_FRAME_SIZE[0]//3 - 10, CONST.TEXT_FRAME_SIZE[1])
         self.items['encounter_count_label'].setStyleSheet(text_style)
-        self.items['encounter_count_label'].move(10, CONST.MAIN_FRAME_SIZE[1] + 2*CONST.SECONDARY_FRAME_SIZE[1]//5 + 40)
+        self.items['encounter_count_label'].move(10, CONST.MAIN_FRAME_SIZE[1] + 2*CONST.TEXT_FRAME_SIZE[1] + 40)
         self.items['encounter_count_label'].setText("  ★   Encounter Count: 0")
 
+        # QTimer automatically calls the function when finishes the previous execution
         self.timer = pyqt_c.QTimer(self)
         self.timer.timeout.connect(self.update_GUI)
         self.timer.start(16)
 
-        # self.update_GUI()
         self.show()
 
     #######################################################################################################################
 
     def update_GUI(self):
         try: update_items = self.queue.get(block=True, timeout=1)
-        except: 
-            print('hello')
-            # Schedule the next update_GUI() call (Max FPS: 60)
-            # self.timer = Timer(0.016, self.update_GUI)
-            # self.timer.start()
-            return
-
-        # GUI has been closed
-        # if pyqt_g.QGuiApplication.instance() is None: return
+        except: return
 
         # Convert images to a PyQt compatible format
-        update_items['image'].get_pyqt_images(['FPS_image', 'masked_image', 'contours_image'])
-        update_items['switch_controller_image'].pyqt_images['switch_controller_image'] = \
-            update_items['switch_controller_image'].get_pyqt_image(update_items['switch_controller_image'].contours_image)
+        update_items['image'].get_pyqt_image(update_items['image'].FPS_image)
+        update_items['switch_controller_image'].get_pyqt_image(update_items['switch_controller_image'].FPS_image)
 
         # Update images
-        self.items['main_image_label'].setPixmap(update_items['image'].pyqt_images['FPS_image'])
-        self.items['mask_image_label'].setPixmap(update_items['image'].pyqt_images['masked_image'])
-        self.items['contours_image_label'].setPixmap(update_items['image'].pyqt_images['contours_image'])
-        self.items['switch_controller_image_label'] \
-            .setPixmap(update_items['switch_controller_image'].pyqt_images['switch_controller_image'])
+        self.items['main_image_label'].setPixmap(update_items['image'].pyqt_image)
+        self.items['switch_controller_image_label'].setPixmap(update_items['switch_controller_image'].pyqt_image)
 
-        bad_luck = (1 - 1/4096)**update_items['encounter_count']
         # Update text boxes
+        bad_luck = (1 - 1/4096)**update_items['encounter_count'] if update_items['encounter_count'] else 100
+        hours = update_items['clock']//3600
+        minutes = (update_items['clock'] - hours*60)//60
+        seconds = update_items['clock'] - hours*3600 - minutes*60
+
         self.items['RAM_usage_label'].setText(f"  ★   RAM Usage: {update_items['memory_usage']:.2f} MB")
         self.items['current_state_label'].setText(f"  ★   Current State: {update_items['current_state']}")
         self.items['encounter_count_label'].setText(f"  ★   Encounter Count: {update_items['encounter_count']}" + \
-            f'   -   ({bad_luck:.2f})%')
-
-        # Schedule the next update_GUI() call (Max FPS: 60)
-        # self.timer = Timer(0.016, self.update_GUI)
-        # self.timer.start()
+            f'   -   ({bad_luck:.2f}%)')
+        self.items['clock_label'].setText(f"{hours:02} : {minutes:02} : {seconds:02}")
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
 
 if __name__ == "__main__":
+    import time
     from threading import Thread, Event
 
     import Colored_Strings as COLOR_str
@@ -194,6 +178,7 @@ if __name__ == "__main__":
         )
 
         FPS = FPS_Counter()
+        initial_time = time.time()
         Image_Queue = DllistQueue(maxsize = 2)
         shutdown_event = Event()
         Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
@@ -212,8 +197,6 @@ if __name__ == "__main__":
                 image.resize_image()
                 FPS.get_FPS()
                 image.draw_FPS(FPS.FPS)
-                image.get_mask()
-                n_contours = image.get_rectangles()
 
                 update_items = {
                     'image': image,
@@ -222,6 +205,7 @@ if __name__ == "__main__":
                     'encounter_count': 0,
                     'memory_usage': FPS.memory_usage,
                     'switch_controller_image': switch_controller_image,
+                    'clock': int(time.time() - initial_time),
                 }
 
                 Image_Queue.put(update_items)

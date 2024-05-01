@@ -24,14 +24,9 @@ import Constants as CONST
 class Image_Processing():
     def __init__(self, image = ''):
         self.original_image = None
-        self.grayscale_image = None
         self.resized_image = None
-        self.tkinter_images = {}
-        self.pyqt_images = {}
-        self.masked_image = None
-        self.contours_image = None
+        self.pyqt_image = None
         self.FPS_image = None
-        self.n_contours = 0
 
         # Load the image
         if isinstance(image, str): self.original_image = cv2.imread(image, cv2.IMREAD_UNCHANGED)
@@ -56,69 +51,10 @@ class Image_Processing():
 
     #######################################################################################################################
 
-    def get_mask(self):
-        if isinstance(self.resized_image, type(None)): return
-
-        self.grayscale_image = cv2.cvtColor(self.resized_image, cv2.COLOR_BGR2GRAY)
-        _, self.masked_image = cv2.threshold(self.grayscale_image, CONST.LOWER_COLOR, CONST.UPPER_COLOR, cv2.THRESH_BINARY)
-
-    #######################################################################################################################
-
-    def get_rectangles(self):
-        if isinstance(self.masked_image, type(None)): return
-        self.contours_image = np.copy(self.resized_image)
-
-        contours, hierarchy = cv2.findContours(self.masked_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        filtered_contours = []
-
-        import random
-        for contour in contours:
-            # Minimum object size to detect as a match
-            if cv2.contourArea(contour) > CONST.MIN_DETECT_SIZE:
-                filtered_contours.append(contour)
-                # Draw the rectangles
-                x, y, w, h = cv2.boundingRect(contour)
-                # The "-1" parameter indicates that all contours should be drawn
-                cv2.drawContours(self.contours_image, filtered_contours, -1, CONST.RECTANGLES_PARAMS['color'], 
-                    CONST.RECTANGLES_PARAMS['thickness'])
-
-        return len(filtered_contours)
-
-    #######################################################################################################################
-
     def draw_FPS(self, FPS = 0):
         self.FPS_image = np.copy(self.resized_image)
         cv2.putText(self.FPS_image, f'FPS: {FPS}', CONST.TEXT_PARAMS['position'], cv2.FONT_HERSHEY_SIMPLEX, 
             CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'], CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
-
-    #######################################################################################################################
-
-    def draw_star(self):
-        image_height, image_width = self.contours_image.shape[:2]
-        inner_radius = 13
-        outer_radius = 26
-        border_margin = 10
-        n_points = 8
-        star_center_x = image_width - outer_radius - border_margin
-        star_center_y = outer_radius + border_margin
-
-        angle = np.pi / n_points
-        star_points = []
-        for i in range(n_points * 2):
-            r = outer_radius if i % 2 == 0 else inner_radius
-            # Adjust starting angle
-            theta = i * angle - np.pi/2  
-            x = star_center_x + int(r * np.cos(theta))
-            y = star_center_y + int(r * np.sin(theta))
-            star_points.append((x, y))
-
-        star_points = np.array([star_points], dtype=np.int32)
-        cv2.fillPoly(self.FPS_image, [star_points], color=(0, 255, 255))
-        cv2.polylines(self.FPS_image, [star_points], isClosed=True, color=(0, 0, 0), thickness=2)
-
-        cv2.putText(self.FPS_image, str(self.n_contours), (star_center_x - 5*len(str(self.n_contours)), star_center_y + 5),
-            cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['star_num_color'],
-            CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
 
     #######################################################################################################################
 
@@ -130,35 +66,24 @@ class Image_Processing():
         bytes_per_line = 3 * width
         aux = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         qt_image = pyqt_g.QImage(aux.data, width, height, bytes_per_line, pyqt_g.QImage.Format_RGB888)
-        return pyqt_g.QPixmap.fromImage(qt_image)
+        self.pyqt_image = pyqt_g.QPixmap.fromImage(qt_image)
 
     #######################################################################################################################
 
-    def get_pyqt_images(self, images = []):
-        if not isinstance(images, list): return
-        for image in ['FPS_image', 'contours_image', 'masked_image']: 
-            if not image in images: return
-
-        self.pyqt_images['FPS_image'] = self.get_pyqt_image(self.FPS_image)
-        for image_name in ['contours_image', 'masked_image']:
-            self.pyqt_images[image_name] = cv2.resize(getattr(self, image_name), CONST.SECONDARY_FRAME_SIZE)
-            self.pyqt_images[image_name] = self.get_pyqt_image(self.pyqt_images[image_name])
-
-    #######################################################################################################################
-
+    # Draw the pressed button in the switch controller image
     def draw_button(self, button = ''):
         if not isinstance(button, str): return
 
-        self.contours_image = np.copy(self.resized_image)
-        if button == 'A': cv2.circle(self.contours_image, (307, 80), 9, CONST.PRESSED_BUTTON_COLOR, -1)
-        elif button == 'B': cv2.circle(self.contours_image, (288, 99), 9, CONST.PRESSED_BUTTON_COLOR, -1)
-        elif button == 'Y': cv2.circle(self.contours_image, (269, 80), 9, CONST.PRESSED_BUTTON_COLOR, -1)
-        elif button == 'X': cv2.circle(self.contours_image, (288, 61), 9, CONST.PRESSED_BUTTON_COLOR, -1)
-        elif button == 'HOME': cv2.circle(self.contours_image, (275, 195), 9, CONST.PRESSED_BUTTON_COLOR, -1)
-        elif button == 'UP': cv2.circle(self.contours_image, (62, 129), 9, CONST.PRESSED_BUTTON_COLOR, -1)
-        elif button == 'DOWN': cv2.circle(self.contours_image, (61, 167), 9, CONST.PRESSED_BUTTON_COLOR, -1)
-        elif button == 'RIGHT': cv2.circle(self.contours_image, (81, 148), 9, CONST.PRESSED_BUTTON_COLOR, -1)
-        elif button == 'LEFT': cv2.circle(self.contours_image, (43, 148), 9, CONST.PRESSED_BUTTON_COLOR, -1)
+        self.FPS_image = np.copy(self.resized_image)
+        if button == 'A': cv2.circle(self.FPS_image, (307, 80), 9, CONST.PRESSED_BUTTON_COLOR, -1)
+        elif button == 'B': cv2.circle(self.FPS_image, (288, 99), 9, CONST.PRESSED_BUTTON_COLOR, -1)
+        elif button == 'Y': cv2.circle(self.FPS_image, (269, 80), 9, CONST.PRESSED_BUTTON_COLOR, -1)
+        elif button == 'X': cv2.circle(self.FPS_image, (288, 61), 9, CONST.PRESSED_BUTTON_COLOR, -1)
+        elif button == 'HOME': cv2.circle(self.FPS_image, (275, 195), 9, CONST.PRESSED_BUTTON_COLOR, -1)
+        elif button == 'UP': cv2.circle(self.FPS_image, (62, 129), 9, CONST.PRESSED_BUTTON_COLOR, -1)
+        elif button == 'DOWN': cv2.circle(self.FPS_image, (61, 167), 9, CONST.PRESSED_BUTTON_COLOR, -1)
+        elif button == 'RIGHT': cv2.circle(self.FPS_image, (81, 148), 9, CONST.PRESSED_BUTTON_COLOR, -1)
+        elif button == 'LEFT': cv2.circle(self.FPS_image, (43, 148), 9, CONST.PRESSED_BUTTON_COLOR, -1)
 
     #######################################################################################################################
 
