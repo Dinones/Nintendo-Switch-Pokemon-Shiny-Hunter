@@ -129,7 +129,7 @@ class GUI(pyqt_w.QWidget):
         # Update text boxes
         bad_luck = (1 - 1/4096)**update_items['encounter_count'] if update_items['encounter_count'] else 100
         hours = update_items['clock']//3600
-        minutes = (update_items['clock'] - hours*60)//60
+        minutes = (update_items['clock'] - hours*3600)//60
         seconds = update_items['clock'] - hours*3600 - minutes*60
 
         self.items['RAM_usage_label'].setText(f"  ★   RAM Usage: {update_items['memory_usage']:.2f} MB")
