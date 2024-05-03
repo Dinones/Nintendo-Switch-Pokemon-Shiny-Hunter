@@ -91,21 +91,21 @@ def move_player_wild_macro(controller):
         if not walking_direction:
             controller.current_button_pressed = 'UP'
             controller.nxbt_manager.press_buttons(
-                controller.controller_index, [Buttons.DPAD_UP], down=CONST.WILD_WALKING_SECONDS)
+                controller.controller_index, [Buttons.DPAD_UP, Buttons.B], down=CONST.WILD_WALKING_SECONDS)
         else: 
             controller.current_button_pressed = 'DOWN'
             controller.nxbt_manager.press_buttons(
-                controller.controller_index, [Buttons.DPAD_DOWN], down=CONST.WILD_WALKING_SECONDS)
+                controller.controller_index, [Buttons.DPAD_DOWN, Buttons.B], down=CONST.WILD_WALKING_SECONDS)
 
     elif CONST.WILD_WALKING_DIRECTION == 'EW':
         if not walking_direction:
             controller.current_button_pressed = 'LEFT'
             controller.nxbt_manager.press_buttons(
-                controller.controller_index, [Buttons.DPAD_LEFT], down=CONST.WILD_WALKING_SECONDS)
+                controller.controller_index, [Buttons.DPAD_LEFT, Buttons.B], down=CONST.WILD_WALKING_SECONDS)
         else: 
             controller.current_button_pressed = 'RIGHT'
             controller.nxbt_manager.press_buttons(
-                controller.controller_index, [Buttons.DPAD_RIGHT], down=CONST.WILD_WALKING_SECONDS)
+                controller.controller_index, [Buttons.DPAD_RIGHT, Buttons.B], down=CONST.WILD_WALKING_SECONDS)
     
     walking_direction = not walking_direction
 
