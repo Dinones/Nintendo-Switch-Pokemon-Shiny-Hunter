@@ -9,6 +9,7 @@ if __name__ == '__main__':
     except: pass
 
 import cv2
+import pytesseract
 import numpy as np
 import PyQt5.QtGui as pyqt_g
 from PIL import Image, ImageTk
@@ -104,6 +105,23 @@ class Image_Processing():
             for index in range(start[1], end[1]): self.FPS_image[-index][start[0]] = [255, 0, 255]
         return all(pixels)
 
+    #######################################################################################################################
+
+    # Read the pokémon name
+    def recognize_pokemon(self):
+        # Wild: [27:43, 535:650] | Starter: [y1:y2, x1:x2]
+        name_image = self.resized_image[27:43, 535:650]
+        name_image = cv2.cvtColor(name_image, cv2.COLOR_BGR2GRAY)
+
+        # --oem 1: Faster and use less resources
+        # --psm 6: Assume a single uniform block of text
+        custom_config = '--oem 1 --psm 6'
+        text = pytesseract.image_to_string(name_image, config=custom_config)
+        # The male/female symbols are detected as random characters
+        for character in ("@", "(", ")", "<", ">"): text = text.replace(character, '')
+
+        return text
+
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
@@ -147,20 +165,15 @@ if __name__ == "__main__":
         if isinstance(image.original_image, type(None)): return
 
         image.resize_image()
-        image.get_mask()
-        contours = image.get_rectangles()
+        print(image.recognize_pokemon())
 
-        print(COLOR_str.CONTOURS_FOUND.replace('{contours}', str(contours)))
         print(COLOR_str.PRESS_KEY_TO_INSTRUCTION
             .replace('{module}', 'Image Processing')
             .replace('{key}', "'q'")
             .replace('{instruction}', 'exit the program')
         )
 
-        # cv2.imshow(f'{CONST.BOT_NAME} - Original', image.original_image)
-        # cv2.imshow(f'{CONST.BOT_NAME} - Grayscale', image.grayscale_image)
-        cv2.imshow(f'{CONST.BOT_NAME} - Mask', image.masked_image)
-        cv2.imshow(f'{CONST.BOT_NAME} - Contours', image.contours_image)
+        cv2.imshow(f'{CONST.BOT_NAME} - Resized', image.resized_image)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
@@ -268,12 +281,8 @@ if __name__ == "__main__":
             if isinstance(image.original_image, type(None)): return
 
             image.resize_image()
-            image.get_mask()
-            n_contours = image.get_rectangles()
-            image.draw_star()
 
-            cv2.imshow(f'{CONST.BOT_NAME} - Mask', image.masked_image)
-            cv2.imshow(f'{CONST.BOT_NAME} - Contours', image.contours_image)
+            cv2.imshow(f'{CONST.BOT_NAME} - Resized', image.resized_image)
 
         while True:
             if pause: 
