@@ -109,7 +109,7 @@ class Image_Processing():
 
     # Read the pokémon name
     def recognize_pokemon(self):
-        # Wild: [27:43, 535:650] | Starter: [y1:y2, x1:x2]
+        # Wild Pokémon: [27:43, 535:650] | Player Pokémon: [y1:y2, x1:x2]
         name_image = self.resized_image[27:43, 535:650]
         name_image = cv2.cvtColor(name_image, cv2.COLOR_BGR2GRAY)
 

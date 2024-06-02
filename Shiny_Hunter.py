@@ -37,7 +37,7 @@ from Switch_Controller import Switch_Controller
 #################################################     INITIALIZATIONS     #################################################
 ###########################################################################################################################
 
-def GUI_control(FPS, Controller, Image_Queue, shutdown_event, previous_button = None):
+def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, previous_button = None):
     Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
     Video_Capture.start_recording()
 
@@ -72,13 +72,14 @@ def GUI_control(FPS, Controller, Image_Queue, shutdown_event, previous_button = 
                 if time() - shiny_detection_time >= CONST.SHINY_DETECTION_TIME: shiny_detection_time = time()
                 image.shiny_detection_time = shiny_detection_time
 
-            Controller.current_event = search_wild_pokemon(image, Controller.current_event)
+            if Encounter_Type == 'WILD': Controller.current_event = search_wild_pokemon(image, Controller.current_event)
+            elif Encounter_Type == 'STATIC': Controller.current_event = static_encounter(image, Controller.current_event)
 
             if Controller.current_event not in ["MOVE_PLAYER", "WAIT_HOME_SCREEN", "SHINY_FOUND"] and \
                 Controller.current_event == Controller.previous_event and \
                 time() - stuck_timer > CONST.STUCK_TIMER_SECONDS:
                     stuck_timer = time()
-                    # If stuck in "RESTART_GAME_1", it will stuck forever
+                    # If stuck in "RESTART_GAME_1", it would be stuck forever
                     Controller.previous_event = None
                     Controller.current_event = "RESTART_GAME_1"
             elif Controller.current_event != Controller.previous_event: stuck_timer = time()
@@ -119,7 +120,7 @@ def controller_control(controller, shutdown_event):
 
         if aux_current_event == 'WAIT_HOME_SCREEN': fast_start_macro(controller)
         elif aux_current_event == 'RESTART_GAME_1': restart_game_macro(controller)
-        elif aux_current_event in ['RESTART_GAME_2', 'RESTART_GAME_3']: 
+        elif aux_current_event in ['RESTART_GAME_2', 'RESTART_GAME_3', 'ENTER_STATIC_COMBAT']: 
             press_single_button(controller, 'A')
         elif aux_current_event == 'MOVE_PLAYER': move_player_wild_macro(controller)
         elif aux_current_event == 'ESCAPE_COMBAT_2': escape_combat_macro(controller)
@@ -142,12 +143,14 @@ if __name__ == "__main__":
     def main_menu():
         print('\n' + COLOR_str.MENU.replace('{module}', 'Shiny Hunter'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Start wild shiny hunter'))
+        print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Start static shiny hunter'))
 
-        # option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Shiny Hunter'))
-        option = str(1)
+        option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Shiny Hunter'))
+        # option = str(1)
 
         menu_options = {
-            '1': wild_shiny_hunter,
+            '1': shiny_hunter,
+            '2': shiny_hunter,
         }
 
         if option in menu_options: menu_options[option](option)
@@ -155,11 +158,13 @@ if __name__ == "__main__":
 
     #######################################################################################################################
 
-    def wild_shiny_hunter(option):
+    def shiny_hunter(option):
+        if option == '1': action = 'wild'
+        elif option == '2': action = 'static'
         print('\n' + COLOR_str.SELECTED_OPTION
             .replace('{module}', 'Shiny Hunter')
             .replace('{option}', f"{option}")
-            .replace('{action}', f"Starting wild shiny hunter...")
+            .replace('{action}', f"Starting {action} shiny hunter...")
             .replace('{path}', '')
         )
 
@@ -180,7 +185,14 @@ if __name__ == "__main__":
         shutdown_event = Event()
 
         threads = []
-        threads.append(Thread(target=lambda: GUI_control(FPS, Controller, Image_Queue, shutdown_event), daemon=True))
+        if option == '1': 
+            threads.append(
+                Thread(target=lambda: GUI_control('WILD', FPS, Controller, Image_Queue, shutdown_event), daemon=True)
+            )
+        elif option == '2':
+            threads.append(
+                Thread(target=lambda: GUI_control('STATIC', FPS, Controller, Image_Queue, shutdown_event), daemon=True)
+            )
         threads.append(Thread(target=lambda: FPS.get_memory_usage(shutdown_event), daemon=True))
         threads.append(Thread(target=lambda: controller_control(Controller, shutdown_event), daemon=True))
         for thread in threads: thread.start()

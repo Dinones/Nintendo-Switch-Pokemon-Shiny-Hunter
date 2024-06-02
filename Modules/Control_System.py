@@ -127,6 +127,92 @@ def search_wild_pokemon(image, state):
     return state
 
 ###########################################################################################################################
+
+def static_encounter(image, state):
+    if not state: return 'WAIT_HOME_SCREEN'
+
+    # Nintendo Switch pairing controller menu
+    elif state == 'WAIT_HOME_SCREEN':
+        if all(pixel_value == CONST.PAIRING_MENU_COLOR for pixel_value in image.check_pixel_color()):
+            return 'FAST_RESTART_GAME'
+
+    # Nintendo Switch pairing controller menu
+    elif state == 'FAST_RESTART_GAME':
+        if not all(pixel_value == CONST.HOME_MENU_COLOR for pixel_value in image.check_pixel_color()):
+            return 'ENTER_STATIC_COMBAT'
+
+    # Stuck screen (only used when the bot gets stuck in one state)
+    elif state == 'RESTART_GAME_0':
+        if all(pixel_value == CONST.HOME_MENU_COLOR for pixel_value in image.check_pixel_color()):
+            return 'RESTART_GAME_1'
+
+    # Nintendo Switch main menu
+    elif state == 'RESTART_GAME_1':
+        if all(pixel_value == CONST.GAME_LOAD_SCREEN_BLACK_COLOR for pixel_value in image.check_pixel_color()):
+            return 'RESTART_GAME_2'
+
+    # Game main loadscreen (Full black screen)
+    elif state == 'RESTART_GAME_2':
+        if all(pixel_value != CONST.GAME_LOAD_SCREEN_BLACK_COLOR for pixel_value in image.check_pixel_color()):
+            return 'RESTART_GAME_3'
+
+    # Game main loadscreen (Dialga / Palkia)
+    elif state == 'RESTART_GAME_3':
+        if all(pixel_value == CONST.GAME_LOAD_SCREEN_BLACK_COLOR for pixel_value in image.check_pixel_color()):
+            return 'RESTART_GAME_4'
+
+    # Game main loadscreen (Full black screen)
+    elif state == 'RESTART_GAME_4':
+        if all(pixel_value != CONST.GAME_LOAD_SCREEN_BLACK_COLOR for pixel_value in image.check_pixel_color()):
+            return 'ENTER_STATIC_COMBAT'
+
+    # Game loaded, player in the overworld
+    elif state == 'ENTER_STATIC_COMBAT':
+        if image.check_multiple_pixel_colors(
+            [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
+            [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
+        ):
+            return 'ENTER_COMBAT_1'
+
+    # Combat loadscreen (Full white screen)
+    elif state == 'ENTER_COMBAT_1':
+        if not image.check_multiple_pixel_colors(
+            [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
+            [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
+        ):
+            return 'ENTER_COMBAT_2'
+
+    # Combat loadscreen (Grass/Rock/Water animation)
+    elif state == 'ENTER_COMBAT_2':
+        if image.check_multiple_pixel_colors(
+            [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
+            [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
+        ):
+            return 'ENTER_COMBAT_3'
+
+    # Combat loaded (Wild Pokémon appeared)
+    elif state == 'ENTER_COMBAT_3':
+        if not image.check_multiple_pixel_colors(
+            [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
+            [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
+        ):
+            cv2.imwrite(f'./{CONST.IMAGES_FOLDER_PATH}{str(int(time()))}.png', image.original_image) 
+            return 'CHECK_SHINY'
+
+    # Combat loaded (Wild Pokémon stars)
+    elif state == 'CHECK_SHINY':
+        if image.check_multiple_pixel_colors(
+            [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
+            [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
+        ):
+            return 'RESTART_GAME_1'
+
+        if image.shiny_detection_time and time() - image.shiny_detection_time >= CONST.SHINY_DETECTION_TIME:
+            return 'SHINY_FOUND'
+
+    return state
+
+###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
 
