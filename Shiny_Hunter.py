@@ -46,6 +46,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, pr
     switch_controller_image.draw_button()
     
     with open(f'./{CONST.ENCOUNTERS_TXT_PATH}', 'r') as file: encounter_counter = int(file.read())
+    local_encounter_count = encounter_counter
 
     stuck_timer = time()
     initial_time = time()
@@ -100,7 +101,8 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, pr
                 'image': image,
                 'current_state': Controller.current_event,
                 'shutdown_event': shutdown_event,
-                'encounter_count': encounter_counter,
+                'global_encounter_count': encounter_counter,
+                'local_encounter_count': encounter_counter - local_encounter_count,
                 'memory_usage': FPS.memory_usage,
                 'switch_controller_image': switch_controller_image,
                 'clock': int(time() - initial_time),
