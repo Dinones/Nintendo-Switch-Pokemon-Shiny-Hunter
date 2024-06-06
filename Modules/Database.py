@@ -110,7 +110,7 @@ def get_all_data(db_file = f'./{CONST.DATABASE_PATH}'):
 if __name__ == '__main__':
     print()
     initialize_database(f'../{CONST.DATABASE_PATH}')
-    # add_or_update_encounter({'name':'Arceus', 'shiny':False}, 15843, f'../{CONST.DATABASE_PATH}')
+    add_or_update_encounter({'name':'Arceus', 'shiny':False}, 15843, f'../{CONST.DATABASE_PATH}')
     data = get_all_data(f'../{CONST.DATABASE_PATH}')
 
     hours = int(data['global_playtime']//3600)
@@ -119,15 +119,15 @@ if __name__ == '__main__':
 
     print(COLOR_str.DATABASE_INFO)
     print(COLOR_str.DATABASE_STAT_VALUE
-        .replace('{stat}', '[+] Global Encounters')
+        .replace('{stat}', '· Global Encounters')
         .replace('{value}', str(data['global_encounters']))
     )
     print(COLOR_str.DATABASE_STAT_VALUE
-        .replace('{stat}', '[+] Global Playtime')
+        .replace('{stat}', '· Global Playtime')
         .replace('{value}', f"{hours}h {minutes}min {seconds}s")
     )
     print(COLOR_str.DATABASE_STAT_VALUE
-        .replace('{stat}', '[+] Encounters')
+        .replace('{stat}', '· Encounters')
         .replace('{value}', "")
     )
     for index, encounter in enumerate(data['encounters']):
