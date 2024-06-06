@@ -24,6 +24,7 @@ from time import sleep, time
 from threading import Thread, Event
 
 from Macros import *
+from Database import *
 import Constants as CONST
 from Control_System import *
 import Colored_Strings as COLOR_str
@@ -45,12 +46,18 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, pr
     switch_controller_image.resize_image(CONST.SWITCH_CONTROLLER_FRAME_SIZE)
     switch_controller_image.draw_button()
     
-    with open(f'./{CONST.ENCOUNTERS_TXT_PATH}', 'r') as file: encounter_counter = int(file.read())
-    local_encounter_count = encounter_counter
+    # with open(f'./{CONST.ENCOUNTERS_TXT_PATH}', 'r') as file: encounter_counter = int(file.read())
+    # local_encounter_count = encounter_counter
 
     stuck_timer = time()
     initial_time = time()
+    encounter_playtime = time()
     shiny_detection_time = 0
+
+    database_data = get_all_data()
+    local_encounters = database_data['global_encounters']
+    global_encounters = database_data['global_encounters']
+    last_shiny_encounter = database_data['last_shiny_encounter']
 
     while not shutdown_event.is_set():
         image = Image_Processing(Video_Capture.read_frame())
@@ -68,14 +75,17 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, pr
             previous_button = Controller.current_button_pressed
 
         with Controller.event_lock: 
+            # Check if the pokemon is shiny
             if Controller.current_event == "CHECK_SHINY":
-                # Only resets the first time it enters to the state
+                # Only reset the first time it enters to the state
                 if time() - shiny_detection_time >= CONST.SHINY_DETECTION_TIME: shiny_detection_time = time()
                 image.shiny_detection_time = shiny_detection_time
 
+            # Refresh the event
             if Encounter_Type == 'WILD': Controller.current_event = search_wild_pokemon(image, Controller.current_event)
             elif Encounter_Type == 'STATIC': Controller.current_event = static_encounter(image, Controller.current_event)
 
+            # Check if the program got stuck in some event
             if Controller.current_event not in ["MOVE_PLAYER", "WAIT_HOME_SCREEN", "SHINY_FOUND"] and \
                 Controller.current_event == Controller.previous_event and \
                 time() - stuck_timer > CONST.STUCK_TIMER_SECONDS:
@@ -85,30 +95,48 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, pr
                     Controller.current_event = "RESTART_GAME_1"
             elif Controller.current_event != Controller.previous_event: stuck_timer = time()
 
-            # Take a screenshot of the wild pokémon
-            if Controller.current_event == "ENTER_COMBAT_1" and Controller.current_event != Controller.previous_event:
-                Controller.previous_event = Controller.current_event
-                encounter_counter += 1 
-                with open(f'./{CONST.ENCOUNTERS_TXT_PATH}', 'w') as file: file.write(str(encounter_counter))
-                Video_Capture.save_video()
-                Video_Capture.start_recording()
+            # Update the database and save the video
+            # if Controller.current_event == "ENTER_COMBAT_1" and Controller.current_event != Controller.previous_event:
+            #     Controller.previous_event = Controller.current_event
+            #     encounter_counter += 1 
+            #     with open(f'./{CONST.ENCOUNTERS_TXT_PATH}', 'w') as file: file.write(str(encounter_counter))
+            #     Video_Capture.save_video()
+            #     Video_Capture.start_recording()
 
+            # Start recording a new video
+            if Controller.current_event in ["ESCAPE_COMBAT_1", "RESTART_GAME_1"] \
+                and Controller.current_event != Controller.previous_event:
+                    Video_Capture.save_video()
+                    Video_Capture.start_recording()
+
+            # Update the database
+            elif Controller.current_event == "ENTER_COMBAT_3": pokemon_image = image
+            elif Controller.current_event == "CHECK_SHINY" and type(pokemon_image) != type(None): 
+                pokemon_name = pokemon_image.recognize_pokemon()
+                pokemon_image = None
+                pokemon = {'name': pokemon_name, 'shiny': False}
+                add_or_update_encounter(pokemon, int(time() - encounter_playtime))
+                global_encounters += 1
+                encounter_playtime = time()
+
+            # Wait some seconds to save the video of the shiny encounter
             elif Controller.current_event == "SHINY_FOUND":
                 if time() - stuck_timer > CONST.SHINY_RECORDING_SECONDS:
+                    pokemon = {'name': pokemon_name, 'shiny': True}
+                    add_or_update_encounter(pokemon, int(time() - encounter_playtime))
                     Video_Capture.save_video()
 
             update_items = {
                 'image': image,
                 'current_state': Controller.current_event,
                 'shutdown_event': shutdown_event,
-                'global_encounter_count': encounter_counter,
-                'local_encounter_count': encounter_counter - local_encounter_count,
+                'global_encounter_count': global_encounters - last_shiny_encounter,
+                'local_encounter_count': global_encounters - local_encounters,
                 'memory_usage': FPS.memory_usage,
                 'switch_controller_image': switch_controller_image,
                 'clock': int(time() - initial_time),
             }
 
-            # print(Controller.current_event, image.original_image[0][0])
             Image_Queue.put(update_items)
 
 ###########################################################################################################################
@@ -183,6 +211,7 @@ if __name__ == "__main__":
         from queue import Queue
         Image_Queue = Queue()
         Controller = Switch_Controller()
+        initialize_database()
 
         shutdown_event = Event()
 

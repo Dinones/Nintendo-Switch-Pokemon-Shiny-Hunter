@@ -109,16 +109,19 @@ class Image_Processing():
 
     # Read the pokémon name
     def recognize_pokemon(self):
-        # Wild Pokémon: [27:43, 535:650] | Player Pokémon: [y1:y2, x1:x2]
-        name_image = self.resized_image[27:43, 535:650]
+        # [y1:y2, x1:x2] | Wild Pokémon: [27:43, 535:650] | Player Pokémon: [y1:y2, x1:x2]
+        # Text Box: [333:365, 50:670]
+        name_image = self.resized_image[333:365, 50:670]
         name_image = cv2.cvtColor(name_image, cv2.COLOR_BGR2GRAY)
 
         # --oem 1: Faster and use less resources
         # --psm 6: Assume a single uniform block of text
         custom_config = '--oem 1 --psm 6'
         text = pytesseract.image_to_string(name_image, config=custom_config)
-        # The male/female symbols are detected as random characters
-        for character in ("@", "(", ")", "<", ">"): text = text.replace(character, '')
+        # Text: "You encountered a wild .......!" is different in all languages
+        if CONST.LANGUAGE == 'EN': text = text.split(' ')[-1]
+        elif CONST.LANGUAGE in ('ES, EN, DE, FR, IT'): text = text.split(' ')[-2]
+        text = text.replace('!', '').strip()
 
         return text
 
@@ -165,7 +168,8 @@ if __name__ == "__main__":
         if isinstance(image.original_image, type(None)): return
 
         image.resize_image()
-        print(image.recognize_pokemon())
+        # cv2.rectangle(image.resized_image, (50, 333), (670, 365), (255, 255, 0), 1)
+        # print(image.recognize_pokemon())
 
         print(COLOR_str.PRESS_KEY_TO_INSTRUCTION
             .replace('{module}', 'Image Processing')

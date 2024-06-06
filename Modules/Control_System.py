@@ -86,7 +86,7 @@ def search_wild_pokemon(image, state):
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
         ):
-            cv2.imwrite(f'./{CONST.IMAGES_FOLDER_PATH}{str(int(time()))}.png', image.original_image) 
+            if CONST.SAVE_IMAGES: cv2.imwrite(f'./{CONST.IMAGES_FOLDER_PATH}{str(int(time()))}.png', image.original_image) 
             return 'CHECK_SHINY'
 
     # Combat loaded (Wild Pokémon stars)
@@ -196,7 +196,7 @@ def static_encounter(image, state):
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
         ):
-            cv2.imwrite(f'./{CONST.IMAGES_FOLDER_PATH}{str(int(time()))}.png', image.original_image) 
+            if CONST.SAVE_IMAGES: cv2.imwrite(f'./{CONST.IMAGES_FOLDER_PATH}{str(int(time()))}.png', image.original_image) 
             return 'CHECK_SHINY'
 
     # Combat loaded (Wild Pokémon stars)

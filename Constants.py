@@ -15,6 +15,9 @@ SHINY_RECORDING_SECONDS = 60
 #################################################     IMAGE PROCESSING     ################################################
 ###########################################################################################################################
 
+# Sopported languages: ES, EN, DE, FR and IT
+# Not supported languages: KO, ZH-CN and ZH-TW (Program will work, but database will do weird things)
+LANGUAGE = 'EN'
 # [PIXELS] Nintendo Switch captured frames' size 
 ORIGINAL_FRAME_SIZE = (1920, 1080)
 TEXT_PARAMS = {
@@ -27,6 +30,7 @@ TEXT_PARAMS = {
     'star_num_color': (0, 0, 255)
 }
 PRESSED_BUTTON_COLOR = (255, 0, 200)
+SAVE_IMAGES = False
 IMAGES_FOLDER_PATH = 'Media/Images/'
 
 ###########################################################################################################################
@@ -93,6 +97,7 @@ DATABASE_PATH = 'Media/Database.db'
 ###########################################################################################################################
 
 TESTING = True
-TESTING_VIDEO_PATH = 'Media/Tests/Shiny Abomasnow.mp4'
-TESTING_IMAGE_PATH = 'Media/Tests/Test.png'
+TESTING_VIDEO_PATH = 'Media/Videos/Video.avi'
+TESTING_IMAGE_PATH = 'Media/Tests/Drifloon.png'
 SAVING_FRAMES_PATH = 'Media/Tests/Results'
+TEST_DATABASE_PATH = 'Media/Test_Database.db'
