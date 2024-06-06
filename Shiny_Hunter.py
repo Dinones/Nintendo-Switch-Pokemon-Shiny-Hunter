@@ -50,6 +50,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, pr
     # local_encounter_count = encounter_counter
 
     stuck_timer = time()
+    shiny_timer = time()
     initial_time = time()
     encounter_playtime = time()
     shiny_detection_time = 0
@@ -86,7 +87,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, pr
             elif Encounter_Type == 'STATIC': Controller.current_event = static_encounter(image, Controller.current_event)
 
             # Check if the program got stuck in some event
-            if Controller.current_event not in ["MOVE_PLAYER", "WAIT_HOME_SCREEN", "SHINY_FOUND"] and \
+            if Controller.current_event not in ["MOVE_PLAYER", "WAIT_HOME_SCREEN", "SHINY_FOUND", "STOP"] and \
                 Controller.current_event == Controller.previous_event and \
                 time() - stuck_timer > CONST.STUCK_TIMER_SECONDS:
                     stuck_timer = time()
@@ -94,14 +95,6 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, pr
                     Controller.previous_event = None
                     Controller.current_event = "RESTART_GAME_1"
             elif Controller.current_event != Controller.previous_event: stuck_timer = time()
-
-            # Update the database and save the video
-            # if Controller.current_event == "ENTER_COMBAT_1" and Controller.current_event != Controller.previous_event:
-            #     Controller.previous_event = Controller.current_event
-            #     encounter_counter += 1 
-            #     with open(f'./{CONST.ENCOUNTERS_TXT_PATH}', 'w') as file: file.write(str(encounter_counter))
-            #     Video_Capture.save_video()
-            #     Video_Capture.start_recording()
 
             # Start recording a new video
             if Controller.current_event in ["ESCAPE_COMBAT_1", "RESTART_GAME_1"] \
@@ -121,10 +114,12 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, pr
 
             # Wait some seconds to save the video of the shiny encounter
             elif Controller.current_event == "SHINY_FOUND":
-                if time() - stuck_timer > CONST.SHINY_RECORDING_SECONDS:
+                if time() - shiny_timer > CONST.SHINY_RECORDING_SECONDS:
                     pokemon = {'name': pokemon_name, 'shiny': True}
                     add_or_update_encounter(pokemon, int(time() - encounter_playtime))
                     Video_Capture.save_video()
+                    Controller.current_event = "STOP"
+            else: shiny_timer = time()
 
             update_items = {
                 'image': image,

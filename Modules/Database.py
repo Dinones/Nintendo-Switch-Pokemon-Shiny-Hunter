@@ -67,10 +67,10 @@ def add_or_update_encounter(pokemon_data, local_playtime, db_file = f'./{CONST.D
     encounters = cursor.fetchone()
     global_encounters, last_shiny_encounter = encounters[0], encounters[1]
     cursor.execute("""
-        UPDATE General SET global_encounters = global_encounters + 1, global_playtime = global_playtime + ?,
+        UPDATE General SET global_encounters = global_encounters + ?, global_playtime = global_playtime + ?,
         last_shiny_encounter = ?, global_shinies_found = global_shinies_found + ?
-    """, (local_playtime, global_encounters + 1 if pokemon_data['shiny'] else last_shiny_encounter, 
-        1 if pokemon_data['shiny'] else 0
+    """, (0 if pokemon_data['shiny'] else 1, local_playtime, global_encounters if 
+        pokemon_data['shiny'] else last_shiny_encounter, 1 if pokemon_data['shiny'] else 0
     ))
     
     # Update specific pokemon stats

@@ -98,6 +98,6 @@ DATABASE_PATH = 'Media/Database.db'
 
 TESTING = True
 TESTING_VIDEO_PATH = 'Media/Videos/Video.avi'
-TESTING_IMAGE_PATH = 'Media/Tests/Drifloon.png'
+TESTING_IMAGE_PATH = 'Media/Tests/Mesprit.png'
 SAVING_FRAMES_PATH = 'Media/Tests/Results'
 TEST_DATABASE_PATH = 'Media/Test_Database.db'
