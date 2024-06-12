@@ -127,7 +127,8 @@ class GUI(pyqt_w.QWidget):
         self.items['switch_controller_image_label'].setPixmap(update_items['switch_controller_image'].pyqt_image)
 
         # Update text boxes
-        bad_luck = (1 - 1/4096)**update_items['global_encounter_count'] if update_items['global_encounter_count'] else 100
+        bad_luck = (1 - 1/4096)**update_items['global_encounter_count']*100 if \
+            update_items['global_encounter_count'] else 100
         hours = update_items['clock']//3600
         minutes = (update_items['clock'] - hours*3600)//60
         seconds = update_items['clock'] - hours*3600 - minutes*60

@@ -30,7 +30,7 @@ TEXT_PARAMS = {
     'star_num_color': (0, 0, 255)
 }
 PRESSED_BUTTON_COLOR = (255, 0, 200)
-SAVE_IMAGES = False
+SAVE_IMAGES = True
 IMAGES_FOLDER_PATH = 'Media/Images/'
 
 ###########################################################################################################################
