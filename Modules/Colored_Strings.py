@@ -219,6 +219,22 @@ CURRENT_EXTRACTED_FRAMES = \
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}m frames \033[0;m'+\
     f'\033[{COLORS["Blue"]}m({"{percentage}"}%)\033[0;m'
 
+DELETE_IMAGES_QUESTION = \
+    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Image Processing] "}\033[0;m'+\
+    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mDo you want to delete all the images [Y/n]? \033[0;m'
+
+DELETING_IMAGES = \
+    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Image Processing] "}\033[0;m'+\
+    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mDeleting \033[0;m'+\
+    f'\033[{COLORS["Blue"]}m{"{images}"}\033[0;m'+\
+    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}m images...\033[0;m'
+
+SUCCESSFULLY_DELETED_IMAGES = \
+    f'{CORRECT}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Image Processing] "}\033[0;m'+\
+    f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}mSuccessfully deleted \033[0;m'+\
+    f'\033[{COLORS["Green"]}m{"{images}"}\033[0;m'+\
+    f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}m images!\n\033[0;m'
+
 ###########################################################################################################################
 #####################################################     DATABASE     ####################################################
 ###########################################################################################################################

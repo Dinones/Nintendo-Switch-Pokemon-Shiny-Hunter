@@ -164,7 +164,13 @@ if __name__ == "__main__":
             .replace('{path}', f"'../{CONST.TESTING_IMAGE_PATH}'")
         )
 
-        image = Image_Processing(f'../{CONST.TESTING_IMAGE_PATH}' )
+        if not os.path.exists(f'../{CONST.TESTING_IMAGE_PATH}'):
+            return print(COLOR_str.INVALID_PATH_ERROR
+                .replace('{module}', 'Image Processing')
+                .replace('{path}', f"'../{CONST.TESTING_IMAGE_PATH}'") + '\n'
+            )
+
+        image = Image_Processing(f'../{CONST.TESTING_IMAGE_PATH}')
         if isinstance(image.original_image, type(None)): return
 
         image.resize_image()
@@ -365,10 +371,10 @@ if __name__ == "__main__":
         index = 0
         pause = False
         timer = time.time()
-        second_text_position = [CONST.TEXT_PARAMS['position'][0], CONST.TEXT_PARAMS['position'][1] + 20]
+        second_text_position = [CONST.TEXT_PARAMS['position'][0], CONST.TEXT_PARAMS['position'][1] + 20]            
 
         while True and (index + 1) != len(images):
-            if time.time() - timer >= 0.3:
+            if time.time() - timer >= 0.1:
                 if pause: index -= 1
                 image = Image_Processing(f'../{CONST.IMAGES_FOLDER_PATH}/{images[index]}')
                 image.resize_image()
@@ -396,5 +402,11 @@ if __name__ == "__main__":
             .replace('{module}', 'Image Processing')
             .replace('{reason}', f'Successfully checked {index + 1}/{len(images)} images!') + '\n'
         )
+
+        delete = input(COLOR_str.DELETE_IMAGES_QUESTION)
+        if delete.lower() in ('', 'y', 'yes'): 
+            print(COLOR_str.DELETING_IMAGES.replace('{images}', str(len(images))))
+            for image in images: os.remove(f'../{CONST.IMAGES_FOLDER_PATH}/{image}')
+            print(COLOR_str.SUCCESSFULLY_DELETED_IMAGES.replace('{images}', str(len(images))))
 
     main_menu()

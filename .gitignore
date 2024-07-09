@@ -1,9 +1,6 @@
 __pycache__
 
-/OLD
 /Media/Tests
 /Media/Images
-# /Media/Videos/
-# !/Media/Videos/.gitkeep
+/Media/Videos/
 *.db
-/Media/Encounters.txt
