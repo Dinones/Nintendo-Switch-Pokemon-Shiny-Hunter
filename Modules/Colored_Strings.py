@@ -235,6 +235,15 @@ DATABASE_STAT_VALUE = \
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}m\t{"{stat}"}: \033[0;m'+\
     f'\033[{COLORS["Blue"]}m{"{value}"}\033[0;m'
 
+SELECT_POKEMON_TO_DELETE = \
+    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Database] "}\033[0;m'+\
+    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mWrite the pokémon you want to delete from the database: \033[0;m'
+
+COULD_NOT_DELETE_POKEMON = \
+    f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Database] "}\033[0;m'+\
+    f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}mCould not delete pokémon: \033[0;m'+\
+    f'\033[{COLORS["Red"]}m{"{pokemon}"}\033[0;m'
+
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################

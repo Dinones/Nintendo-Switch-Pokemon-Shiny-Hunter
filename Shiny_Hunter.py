@@ -45,9 +45,6 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, pr
     switch_controller_image = Image_Processing(CONST.SWITCH_CONTROLLER_IMAGE_PATH)
     switch_controller_image.resize_image(CONST.SWITCH_CONTROLLER_FRAME_SIZE)
     switch_controller_image.draw_button()
-    
-    # with open(f'./{CONST.ENCOUNTERS_TXT_PATH}', 'r') as file: encounter_counter = int(file.read())
-    # local_encounter_count = encounter_counter
 
     stuck_timer = time()
     shiny_timer = time()
@@ -171,7 +168,6 @@ if __name__ == "__main__":
         print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Start static shiny hunter'))
 
         option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Shiny Hunter'))
-        # option = str(1)
 
         menu_options = {
             '1': shiny_hunter,

@@ -3,6 +3,7 @@ __pycache__
 /OLD
 /Media/Tests
 /Media/Images
-/Media/Videos
+# /Media/Videos/
+# !/Media/Videos/.gitkeep
 *.db
 /Media/Encounters.txt
