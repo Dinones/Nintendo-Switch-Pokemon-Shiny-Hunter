@@ -174,6 +174,11 @@ if __name__ == "__main__":
             '2': shiny_hunter,
         }
 
+        # Set XDG_RUNTIME_DIR environment variable (avoid unnecessary warnings)
+        os.environ['XDG_RUNTIME_DIR'] = "/tmp/runtime-root"
+        os.makedirs(os.environ['XDG_RUNTIME_DIR'], exist_ok=True)
+        os.chmod(os.environ['XDG_RUNTIME_DIR'], 0o700)
+
         if option in menu_options: menu_options[option](option)
         else: print(COLOR_str.INVALID_OPTION.replace('{module}', 'Shiny Hunter') + '\n')
 
