@@ -119,14 +119,13 @@ def move_player_wild_macro(controller):
 
 # Escape from the combat
 def escape_combat_macro(controller):
-    if controller.previous_event == controller.current_event: return
+    if controller.previous_event != controller.current_event: 
+        controller.current_button_pressed = 'UP'
+        controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.DPAD_UP])
+    else:
+        controller.current_button_pressed = 'A'
+        controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A]); sleep(0.1)
     
-    controller.current_button_pressed = 'UP'
-    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.DPAD_UP]); sleep(0.5)
-    controller.current_button_pressed = 'A'
-    for _ in range(5): controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A]); sleep(0.1)
-    
-
 ###########################################################################################################################
 
 # Go to home menu
