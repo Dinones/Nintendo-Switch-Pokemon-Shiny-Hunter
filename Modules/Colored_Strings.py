@@ -143,7 +143,7 @@ SELECTED_OPTION = \
 
 INVALID_VIDEO_CAPTURE = \
     f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Game Capture] "}\033[0;m'+\
-    f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}mCould not access to the video capture \033[0;m'+\
+    f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}mCould not access video capture \033[0;m'+\
     f'\033[{COLORS["Red"]}m{"{video_capture}"}\033[0;m'
 
 AVAILABLE_CAPTURE_DEVICES = \
@@ -160,6 +160,14 @@ IMAGE_SAVED = \
     f'{CORRECT}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Game Capture] "}\033[0;m'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}mImage saved: \033[0;m'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Italics"]}m{"{path}"}\033[0;m'
+
+USING_DIFFERENT_CAPTURE_CARD = \
+    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Game Capture] "}\033[0;m'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mCould not access video capture \033[0;m'+\
+    f'\033[{COLORS["Yellow"]}mnº{"{old_video_capture}"}\033[0;m'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}m. Connecting to video capture \033[0;m'+\
+    f'\033[{COLORS["Yellow"]}mnº{"{new_video_capture} "}\033[0;m'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}minstead...\033[0;m'
 
 ###########################################################################################################################
 ################################################     SWITCH CONTROLLER     ################################################

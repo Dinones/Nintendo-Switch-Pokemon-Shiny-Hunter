@@ -10,6 +10,7 @@ MAX_VIDEO_DEVICES_ANALIZED = 5
 VIDEO_FPS = 27
 OUTPUT_VIDEO_PATH = 'Media/Videos/Video.avi'
 SHINY_RECORDING_SECONDS = 60
+SKIPPED_FRAMES_TO_RECONNECT = 3
 
 ###########################################################################################################################
 #################################################     IMAGE PROCESSING     ################################################

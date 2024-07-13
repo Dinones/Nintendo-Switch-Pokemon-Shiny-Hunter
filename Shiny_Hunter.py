@@ -40,8 +40,7 @@ from Switch_Controller import Switch_Controller
 
 def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, previous_button = None):
     Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
-    return
-    if isinstance(Video_Capture.frame, type(None)): 
+    if not Video_Capture.video_capture.isOpened(): 
         Video_Capture.stop()
         print(COLOR_str.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{CONST.VIDEO_CAPTURE_INDEX}'"))
         return
@@ -64,7 +63,17 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, pr
 
     while not shutdown_event.is_set():
         image = Image_Processing(Video_Capture.read_frame())
-        if isinstance(image.original_image, type(None)): sleep(0.1); continue
+        if isinstance(image.original_image, type(None)): 
+            if Video_Capture.skipped_frames < CONST.SKIPPED_FRAMES_TO_RECONNECT - 1: 
+                Video_Capture.skipped_frames += 1
+                sleep(0.1); continue
+            Video_Capture.stop()
+            Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
+            if not Video_Capture.video_capture.isOpened(): 
+                Video_Capture.stop()
+                print(COLOR_str.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{CONST.VIDEO_CAPTURE_INDEX}'"))
+                return
+            continue
 
         image.resize_image()
         FPS.get_FPS()
@@ -283,10 +292,10 @@ if __name__ == "__main__":
             'function': 'get_memory_usage',
             'thread': Thread(target=lambda: FPS.get_memory_usage(shutdown_event), daemon=True)
         })
-        threads.append({
-            'function': 'controller_control',
-            'thread': Thread(target=lambda: controller_control(Controller, shutdown_event), daemon=True)
-        })
+        # threads.append({
+        #     'function': 'controller_control',
+        #     'thread': Thread(target=lambda: controller_control(Controller, shutdown_event), daemon=True)
+        # })
         threads.append({
             'function': 'check_threads',
             'thread': Thread(target=lambda: check_threads(threads, shutdown_event), daemon=True)
