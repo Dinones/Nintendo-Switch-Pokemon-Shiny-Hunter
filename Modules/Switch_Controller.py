@@ -85,6 +85,7 @@ class Switch_Controller():
 ###########################################################################################################################
 
 if __name__ == '__main__':
+    import time
     from threading import Thread, Event
     import PyQt5.QtWidgets as pyqt_w
     
@@ -119,15 +120,23 @@ if __name__ == '__main__':
             .replace('{path}', '')
         )
 
-        Image_Queue = DllistQueue(maxsize = 2)
-        Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
+        # Set XDG_RUNTIME_DIR environment variable (avoid unnecessary warnings)
+        os.environ['XDG_RUNTIME_DIR'] = "/tmp/runtime-root"
+        os.makedirs(os.environ['XDG_RUNTIME_DIR'], exist_ok=True)
+        os.chmod(os.environ['XDG_RUNTIME_DIR'], 0o700)
+
         FPS = FPS_Counter()
+        initial_time = time.time()
+        Image_Queue = DllistQueue(maxsize = 2)
+        Controller = Switch_Controller()
         shutdown_event = Event()
+        Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
+
         switch_controller_image = Image_Processing(f'../{CONST.SWITCH_CONTROLLER_IMAGE_PATH}')
         switch_controller_image.resize_image(CONST.SWITCH_CONTROLLER_FRAME_SIZE)
-        Controller = Switch_Controller()
-        
-        def test_GUI_control(shutdown_event = None, previous_button = None):
+        switch_controller_image.draw_button()
+
+        def test_GUI_control(shutdown_event = None):
             if isinstance(shutdown_event, type(None)): return
 
             while not shutdown_event.is_set():
@@ -137,36 +146,34 @@ if __name__ == '__main__':
                 image.resize_image()
                 FPS.get_FPS()
                 image.draw_FPS(FPS.FPS)
-                image.get_mask()
-                n_contours = image.get_rectangles()
 
                 update_items = {
                     'image': image,
                     'current_state': None,
                     'shutdown_event': shutdown_event,
-                    'encounter_count': 0,
+                    'global_encounter_count': 0,
+                    'local_encounter_count': 0,
                     'memory_usage': FPS.memory_usage,
                     'switch_controller_image': switch_controller_image,
+                    'clock': int(time.time() - initial_time),
                 }
-
-                if Controller.current_button_pressed != previous_button:
-                    switch_controller_image.draw_button(Controller.current_button_pressed)
-                    previous_button = Controller.current_button_pressed
 
                 Image_Queue.put(update_items)
 
-        def test_controller():
-            Controller.connect_controller()
-            test_macro(Controller)
+        def run_test_controller(controller, shutdown_event):
+            controller.connect_controller()
+            test_macro(controller)
+            controller.disconnect_controller()
+            shutdown_event.set()
 
         threads = []
         threads.append(Thread(target=lambda: test_GUI_control(shutdown_event), daemon=True))
         threads.append(Thread(target=lambda: FPS.get_memory_usage(shutdown_event), daemon=True))
-        threads.append(Thread(target=test_controller, daemon=True))
+        threads.append(Thread(target=lambda: run_test_controller(Controller, shutdown_event), daemon=True))
         for thread in threads: thread.start()
 
         GUI_App = App()
-        gui = GUI(Image_Queue)
+        gui = GUI(Image_Queue, shutdown_event)
         # Blocking function until the GUI is closed
         GUI_App.exec_()
         
@@ -175,11 +182,7 @@ if __name__ == '__main__':
         print(COLOR_str.RELEASING_THREADS
             .replace('{module}', 'Switch Controller')
             .replace('{threads}', str(len(threads))) + '\n'
-        ) 
-
-        Controller.disconnect_controller()
-        sleep(5)
-        os.system('sudo pkill -9 python')
+        )
 
     #######################################################################################################################
 

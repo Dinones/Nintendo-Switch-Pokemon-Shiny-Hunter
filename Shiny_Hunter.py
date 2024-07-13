@@ -309,8 +309,10 @@ if __name__ == "__main__":
         GUI_App.exec_()
         shutdown_event.set()
 
-        print(COLOR_str.RELEASING_THREADS.replace('{module}', 'Shiny Hunter').replace('{threads}',
-            str(len(threads))) + '\n')
+        print(COLOR_str.RELEASING_THREADS
+            .replace('{module}', 'Shiny Hunter')
+            .replace('{threads}', str(len(threads))) + '\n'
+        )
 
     #######################################################################################################################
 

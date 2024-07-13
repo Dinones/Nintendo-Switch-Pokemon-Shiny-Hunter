@@ -204,7 +204,8 @@ if __name__ == "__main__":
                     'image': image,
                     'current_state': None,
                     'shutdown_event': shutdown_event,
-                    'encounter_count': 0,
+                    'global_encounter_count': 0,
+                    'local_encounter_count': 0,
                     'memory_usage': FPS.memory_usage,
                     'switch_controller_image': switch_controller_image,
                     'clock': int(time.time() - initial_time),
@@ -218,7 +219,7 @@ if __name__ == "__main__":
         for thread in threads: thread.start()
 
         GUI_App = App()
-        gui = GUI(Image_Queue)
+        gui = GUI(Image_Queue, shutdown_event)
         # Blocking function until the GUI is closed
         GUI_App.exec_()
 

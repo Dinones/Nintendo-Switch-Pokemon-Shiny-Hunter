@@ -290,7 +290,7 @@ if __name__ == "__main__":
         state = search_wild_pokemon(image, state)
         print(state)
 
-        if not isinstance(image.contours_image, type(None)): image.FPS_image = np.copy(image.contours_image)
+        if not isinstance(image.resized_image, type(None)): image.FPS_image = np.copy(image.resized_image)
         cv2.imshow(f'{CONST.BOT_NAME} - Image', image.FPS_image)
 
         key = cv2.waitKey(1)
