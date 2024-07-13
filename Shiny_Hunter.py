@@ -105,6 +105,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, pr
                     # If stuck in "RESTART_GAME_1", it would be stuck forever
                     Controller.previous_event = None
                     Controller.current_event = "RESTART_GAME_1"
+                    if CONST.TESTING: Video_Capture.save_video(f'Error - {time()}')
             elif Controller.current_event != Controller.previous_event: stuck_timer = time()
 
             # Start recording a new video
@@ -139,7 +140,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, pr
                 if time() - shiny_timer > CONST.SHINY_RECORDING_SECONDS:
                     pokemon = {'name': pokemon_name, 'shiny': True}
                     add_or_update_encounter(pokemon, int(time() - encounter_playtime))
-                    Video_Capture.save_video()
+                    Video_Capture.save_video(f'Shiny {pokemon_name} - {time()}')
                     Controller.current_event = "STOP"
             else: shiny_timer = time()
 
@@ -292,10 +293,10 @@ if __name__ == "__main__":
             'function': 'get_memory_usage',
             'thread': Thread(target=lambda: FPS.get_memory_usage(shutdown_event), daemon=True)
         })
-        # threads.append({
-        #     'function': 'controller_control',
-        #     'thread': Thread(target=lambda: controller_control(Controller, shutdown_event), daemon=True)
-        # })
+        threads.append({
+            'function': 'controller_control',
+            'thread': Thread(target=lambda: controller_control(Controller, shutdown_event), daemon=True)
+        })
         threads.append({
             'function': 'check_threads',
             'thread': Thread(target=lambda: check_threads(threads, shutdown_event), daemon=True)

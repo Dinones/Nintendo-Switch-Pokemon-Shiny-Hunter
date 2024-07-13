@@ -23,7 +23,7 @@ import Constants as CONST
 class Game_Capture():
     def __init__(self, video_capture_index = CONST.VIDEO_CAPTURE_INDEX):
         self.video_capture = cv2.VideoCapture(video_capture_index)
-        
+
         if not self.video_capture.isOpened():
             video_captures = self.find_available_video_captures()
             if not any(video_captures): return
@@ -80,9 +80,10 @@ class Game_Capture():
     #######################################################################################################################
 
     # Save the current video and start recording the next one
-    def save_video(self):
+    def save_video(self, special_name = ''):
         self.video_recorder.release()
-
+        if special_name: os.rename(f'./{CONST.OUTPUT_VIDEO_PATH}', f'./Media/Videos/{special_name}.avi')
+        
     #######################################################################################################################
 
     # Add a frame to the video
