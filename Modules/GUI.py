@@ -46,7 +46,7 @@ class App(pyqt_w.QApplication):
 ###########################################################################################################################
 
 class GUI(pyqt_w.QWidget):
-    def __init__(self, queue):
+    def __init__(self, queue, shutdown_event):
         # Initializes the clas a QWidget object
         super().__init__()
 
@@ -107,14 +107,16 @@ class GUI(pyqt_w.QWidget):
 
         # QTimer automatically calls the function when finishes the previous execution
         self.timer = pyqt_c.QTimer(self)
-        self.timer.timeout.connect(self.update_GUI)
+        self.timer.timeout.connect(lambda: self.update_GUI(shutdown_event))
+        # Setting it to 16ms provides a maximum of 60FPS to not overload the program
         self.timer.start(16)
 
         self.show()
 
     #######################################################################################################################
 
-    def update_GUI(self):
+    def update_GUI(self, shutdown_event):
+        if shutdown_event.is_set(): self.close()
         try: update_items = self.queue.get(block=True, timeout=1)
         except: return
 

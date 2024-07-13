@@ -40,6 +40,11 @@ from Switch_Controller import Switch_Controller
 
 def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, previous_button = None):
     Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
+    return
+    if isinstance(Video_Capture.frame, type(None)): 
+        Video_Capture.stop()
+        print(COLOR_str.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{CONST.VIDEO_CAPTURE_INDEX}'"))
+        return
     Video_Capture.start_recording()
 
     switch_controller_image = Image_Processing(CONST.SWITCH_CONTROLLER_IMAGE_PATH)
@@ -103,6 +108,17 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, pr
             elif Controller.current_event == "ENTER_COMBAT_3": pokemon_image = image
             elif Controller.current_event == "CHECK_SHINY" and type(pokemon_image) != type(None): 
                 pokemon_name = pokemon_image.recognize_pokemon()
+                if CONST.SAVE_IMAGES: 
+                    pokemon_image.save_image(pokemon_name)
+                    # Check if the computer is running out of space
+                    system_space = FPS.get_system_available_space()
+                    if system_space['available_no_format'] < CONST.CRITICAL_AVAILABLE_SPACE:
+                        print(COLOR_str.RUNNING_OUT_OF_SPACE
+                            .replace('{module}', 'Shiny Hunter')
+                            .replace('{available_space}', system_space['available'])
+                        )
+                        # I'm changing the value of a constant. I know, I deserve to die!
+                        CONST.SAVE_IMAGES = False
                 pokemon_image = None
                 pokemon = {'name': pokemon_name, 'shiny': False}
                 add_or_update_encounter(pokemon, int(time() - encounter_playtime))
@@ -134,7 +150,8 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, pr
 ###########################################################################################################################
 
 def controller_control(controller, shutdown_event):
-    controller.connect_controller()
+    try: controller.connect_controller()
+    except: return
 
     while not shutdown_event.is_set(): 
         # Prevent the main execution from being blocked
@@ -156,6 +173,23 @@ def controller_control(controller, shutdown_event):
         controller.previous_event = controller.current_event
         controller.current_button_pressed = ''
         sleep(0.1)
+
+    try: controller.disconnect_controller()
+    except: return
+
+###########################################################################################################################
+
+# Check if all threads are alive or if they have raised an error
+def check_threads(threads, shutdown_event):
+    while not shutdown_event.is_set():
+        for thread in threads:
+            if not thread['thread'].is_alive():
+                print(COLOR_str.THREAD_DIED_ERROR
+                    .replace('{module}', 'Shiny Hunter')
+                    .replace('{thread}', thread['function'])
+                )
+                shutdown_event.set()
+        sleep(5)
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
@@ -194,15 +228,41 @@ if __name__ == "__main__":
             .replace('{path}', '')
         )
 
-        # Saving images constantly can cause to run out of memory
+        FPS = FPS_Counter()
+        # Constantly saving images can cause to run out of space
+        images_folder_size = FPS.get_directory_size(CONST.IMAGES_FOLDER_PATH)
         if len(os.listdir(f'./{CONST.IMAGES_FOLDER_PATH}')) - 1 > CONST.IMAGES_COUNT_WARNING:
             print(COLOR_str.IMAGES_COUNT_WARNING
                 .replace('{module}', 'Shiny Hunter')
                 .replace('{images}', str(len(os.listdir(f'./{CONST.IMAGES_FOLDER_PATH}')) - 1))
                 .replace('{path}', f'./{CONST.IMAGES_FOLDER_PATH}')
+                .replace('{size}', images_folder_size)
             )
+        system_space = FPS.get_system_available_space()
+        if system_space['available_no_format'] < CONST.CRITICAL_AVAILABLE_SPACE:
+            print(COLOR_str.AVAILABLE_SPACE_ERROR
+                .replace('{module}', 'Shiny Hunter')
+                .replace('{available_space}',
+                    f"{FPS.format_space_size(CONST.CRITICAL_AVAILABLE_SPACE)} ({system_space['available']})")
+            )
+            delete = input(COLOR_str.DELETE_IMAGES_QUESTION)
+            if delete.lower().strip() in ('', 'y', 'yes'): 
+                images = sorted([image for image in sorted(os.listdir(f'./{CONST.IMAGES_FOLDER_PATH}')) 
+                    if image.lower().endswith(('.png', '.jpg', 'jpeg'))])
+                print(COLOR_str.DELETING_IMAGES.replace('{images}', str(len(images))))
+                for image in images: os.remove(f'./{CONST.IMAGES_FOLDER_PATH}/{image}')
+                print(COLOR_str.SUCCESSFULLY_DELETED_IMAGES.replace('{images}', str(len(images))))
 
-        FPS = FPS_Counter()
+                system_space = FPS.get_system_available_space()
+                if system_space['available_no_format'] < CONST.CRITICAL_AVAILABLE_SPACE: 
+                    print(COLOR_str.AVAILABLE_SPACE_ERROR
+                        .replace('{module}', 'Shiny Hunter')
+                        .replace('{available_space}',
+                            f"{FPS.format_space_size(CONST.CRITICAL_AVAILABLE_SPACE)} ({system_space['available']})")
+                    )
+                    return
+            else: return print()
+
         # Image_Queue = DllistQueue(maxsize = 2)
         from queue import Queue
         Image_Queue = Queue()
@@ -212,30 +272,35 @@ if __name__ == "__main__":
         shutdown_event = Event()
 
         threads = []
-        if option == '1': 
-            threads.append(
-                Thread(target=lambda: GUI_control('WILD', FPS, Controller, Image_Queue, shutdown_event), daemon=True)
-            )
-        elif option == '2':
-            threads.append(
-                Thread(target=lambda: GUI_control('STATIC', FPS, Controller, Image_Queue, shutdown_event), daemon=True)
-            )
-        threads.append(Thread(target=lambda: FPS.get_memory_usage(shutdown_event), daemon=True))
-        threads.append(Thread(target=lambda: controller_control(Controller, shutdown_event), daemon=True))
-        for thread in threads: thread.start()
+        if option == '1': encounter_type = 'WILD'
+        if option == '2': encounter_type = 'STATIC'
+        threads.append({
+            'function': 'GUI_control',
+            'thread': Thread(target=lambda: 
+                GUI_control(encounter_type, FPS, Controller, Image_Queue, shutdown_event), daemon=True)
+        })
+        threads.append({
+            'function': 'get_memory_usage',
+            'thread': Thread(target=lambda: FPS.get_memory_usage(shutdown_event), daemon=True)
+        })
+        threads.append({
+            'function': 'controller_control',
+            'thread': Thread(target=lambda: controller_control(Controller, shutdown_event), daemon=True)
+        })
+        threads.append({
+            'function': 'check_threads',
+            'thread': Thread(target=lambda: check_threads(threads, shutdown_event), daemon=True)
+        })
+        for thread in threads: thread['thread'].start()
 
         GUI_App = App()
-        User_Interface = GUI(Image_Queue)
+        User_Interface = GUI(Image_Queue, shutdown_event)
         # Blocking function until the GUI is closed
         GUI_App.exec_()
         shutdown_event.set()
 
         print(COLOR_str.RELEASING_THREADS.replace('{module}', 'Shiny Hunter').replace('{threads}',
             str(len(threads))) + '\n')
-
-        Controller.disconnect_controller()
-        sleep(5)
-        os.system('sudo pkill -9 python')
 
     #######################################################################################################################
 

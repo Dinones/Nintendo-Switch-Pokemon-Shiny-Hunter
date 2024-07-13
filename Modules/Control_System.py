@@ -89,8 +89,7 @@ def search_wild_pokemon(image, state):
         if not image.check_multiple_pixel_colors(
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
-        ):
-            if CONST.SAVE_IMAGES: cv2.imwrite(f'./{CONST.IMAGES_FOLDER_PATH}{str(int(time()))}.png', image.original_image) 
+        ): 
             return 'CHECK_SHINY'
 
     # Combat loaded (Wild Pokémon stars)
@@ -251,7 +250,6 @@ def static_encounter(image, state):
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
         ):
-            if CONST.SAVE_IMAGES: cv2.imwrite(f'./{CONST.IMAGES_FOLDER_PATH}{str(int(time()))}.png', image.original_image) 
             return 'CHECK_SHINY'
 
     # Combat loaded (Wild Pokémon stars)
@@ -293,7 +291,7 @@ if __name__ == "__main__":
         print(state)
 
         if not isinstance(image.contours_image, type(None)): image.FPS_image = np.copy(image.contours_image)
-        cv2.imshow('Image', image.FPS_image)
+        cv2.imshow(f'{CONST.BOT_NAME} - Image', image.FPS_image)
 
         key = cv2.waitKey(1)
         if key == ord('q') or key == ord('Q'): break

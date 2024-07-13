@@ -9,6 +9,8 @@ if __name__ == '__main__':
     except: pass
     
 import cv2
+# Disable warning messages
+cv2.setLogLevel(0)
 
 import sys; sys.path.append('..')
 import Colored_Strings as COLOR_str
@@ -21,19 +23,15 @@ import Constants as CONST
 class Game_Capture():
     def __init__(self, video_capture_index = 0):
         self.video_capture = cv2.VideoCapture(video_capture_index)
+        return
         self.video_capture.set(cv2.CAP_PROP_FRAME_WIDTH, CONST.ORIGINAL_FRAME_SIZE[0])
         self.video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, CONST.ORIGINAL_FRAME_SIZE[1])
         
         self.video_recorder = None
-
         self.frame = None
 
-        # Check if the capture card is working properly
+        # Used to check if the capture card is working properly. Will be None if not
         self.read_frame()
-        if isinstance(self.frame, type(None)): 
-            self.stop()
-            print(COLOR_str.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{video_capture_index}'") + '\n')
-            exit()
 
     #######################################################################################################################
 
@@ -90,8 +88,6 @@ if __name__ == "__main__":
     from time import time
     from FPS_Counter import FPS_Counter
     from Image_Processing import Image_Processing
-    # Disable warning messages
-    cv2.setLogLevel(0)
 
     #######################################################################################################################
 
@@ -134,6 +130,10 @@ if __name__ == "__main__":
         )
 
         Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
+        if isinstance(Video_Capture.frame, type(None)): 
+            Video_Capture.stop()
+            print(COLOR_str.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{CONST.VIDEO_CAPTURE_INDEX}'") + '\n')
+            return
         FPS = FPS_Counter()
 
         print(COLOR_str.PRESS_KEY_TO_INSTRUCTION

@@ -4,3 +4,6 @@ __pycache__
 /Media/Images
 /Media/Videos/
 *.db
+
+Test.py
+Changelog.txt

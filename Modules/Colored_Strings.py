@@ -84,8 +84,30 @@ IMAGES_COUNT_WARNING = \
     f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}\033[0;m'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mDetected {"{images}"} images inside \033[0;m'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}m"{"{path}"}"\033[0;m'+\
+    f'\033[{COLORS["Yellow"]}m ({"{size}"})\033[0;m'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}m: \033[0;m'+\
     f'\033[{COLORS["Yellow"]}mPlease, consider checking and deleting them...\033[0;m'
+
+AVAILABLE_SPACE_ERROR = \
+    f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}\033[0;m'+\
+    f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}mSystem\'s available space is less than \033[0;m'+\
+    f'\033[{COLORS["Red"]}m{"{available_space}"}\033[0;m'+\
+    f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}m: \033[0;m'+\
+    f'\033[{COLORS["Red"]}mPlease, free some space before continuing...\033[0;m'
+
+RUNNING_OUT_OF_SPACE = \
+    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}\033[0;m'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mThere\'s only \033[0;m'+\
+    f'\033[{COLORS["Yellow"]}m{"{available_space}"}\033[0;m'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}m of space left in the system: \033[0;m'+\
+    f'\033[{COLORS["Yellow"]}mNo longer saving screenshots of the encounters...\033[0;m'
+
+THREAD_DIED_ERROR = \
+    f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}\033[0;m'+\
+    f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}mThead \033[0;m'+\
+    f'\033[{COLORS["Red"]};{SPECIAL["Italics"]}m{"{thread}"}\033[0;m'+\
+    f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}m died: \033[0;m'+\
+    f'\033[{COLORS["Red"]}mShutting down program...\033[0;m'
 
 ###########################################################################################################################
 ######################################################     MENU     #######################################################
@@ -185,6 +207,22 @@ FPS_COUNTER = \
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mRAM Usage: \033[0;m'+\
     f'\033[{COLORS["Blue"]}m{"{memory_usage} MB"}     \033[0;m'
 
+SYSTEM_AVAILABLE_SPACE = \
+    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[FPS Counter] "}\033[0;m'+\
+    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mTotal system space: \033[0;m'+\
+    f'\033[{COLORS["Blue"]}m{"{total_space}"}     \033[0;m'+\
+    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mUsed System Space: \033[0;m'+\
+    f'\033[{COLORS["Blue"]}m{"{used_space}"}     \033[0;m'+\
+    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mAvailable System Space: \033[0;m'+\
+    f'\033[{COLORS["Blue"]}m{"{available_space}"}     \033[0;m'
+
+DIRECTORY_SIZE = \
+    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[FPS Counter] "}\033[0;m'+\
+    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mSize of \033[0;m'+\
+    f'\033[{COLORS["Blue"]};{SPECIAL["Italics"]}m{"{directory}"}\033[0;m'+\
+    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}m: \033[0;m'+\
+    f'\033[{COLORS["Blue"]}m{"{size}"}\033[0;m'
+
 ###########################################################################################################################
 #################################################     IMAGE PROCESSING     ################################################
 ###########################################################################################################################
@@ -233,7 +271,12 @@ SUCCESSFULLY_DELETED_IMAGES = \
     f'{CORRECT}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Image Processing] "}\033[0;m'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}mSuccessfully deleted \033[0;m'+\
     f'\033[{COLORS["Green"]}m{"{images}"}\033[0;m'+\
-    f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}m images!\n\033[0;m'
+    f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}m images!\033[0;m'
+
+COULD_NOT_LOAD_IMAGES = \
+    f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Image Processing] "}\033[0;m'+\
+    f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}mCould not find any image on: \033[0;m'+\
+    f'\033[{COLORS["Red"]};{SPECIAL["Italics"]}m{"{path}"}\033[0;m'
 
 ###########################################################################################################################
 #####################################################     DATABASE     ####################################################

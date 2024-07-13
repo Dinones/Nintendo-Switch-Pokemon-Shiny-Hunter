@@ -56,6 +56,44 @@ class FPS_Counter():
             self.memory_usage = mem_info.rss / (1024 * 1024)
             sleep(1)
 
+    #######################################################################################################################
+
+    def get_directory_size(self, path):
+        total_size = 0
+        for dirpath, dirnames, filenames in os.walk(path):
+            for filename in filenames:
+                file_path = os.path.join(dirpath, filename)
+                try: total_size += os.path.getsize(file_path)
+                # File not found (it might have been removed during the walk)
+                except FileNotFoundError: pass
+                # Permission error
+                except PermissionError: pass
+        return self.format_space_size(total_size)
+
+    #######################################################################################################################
+
+    def get_system_available_space(self):
+        statvfs = os.statvfs('/')
+
+        total_space = statvfs.f_frsize * statvfs.f_blocks
+        available_space = statvfs.f_frsize * statvfs.f_bavail
+        used_space = total_space - available_space
+
+        return {
+            'total': self.format_space_size(total_space),
+            'used': self.format_space_size(used_space),
+            'available': self.format_space_size(available_space),
+            'available_no_format': available_space
+        }
+    
+    #######################################################################################################################
+
+    @staticmethod
+    def format_space_size(size):
+        for unit in ['B', 'KB', 'MB', 'GB']:
+            if size < 1024: return f"{size:.2f}{unit}"
+            size /= 1024
+
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
@@ -73,7 +111,18 @@ if __name__ == '__main__':
 
     Thread(target=lambda: FPS_Counter.get_memory_usage(Event()), daemon=True).start()
 
-    print()
+    system_space = FPS_Counter.get_system_available_space()
+    print('\n' + COLOR_str.SYSTEM_AVAILABLE_SPACE
+        .replace('{total_space}', system_space['total'])
+        .replace('{used_space}', system_space['used'])
+        .replace('{available_space}', system_space['available'])
+    )
+    media_folder_size = FPS_Counter.get_directory_size(f'../{CONST.IMAGES_FOLDER_PATH}')
+    print(COLOR_str.DIRECTORY_SIZE
+        .replace('{directory}', f"'../{CONST.IMAGES_FOLDER_PATH}'")
+        .replace('{size}', media_folder_size)
+    )
+
     while True:
         FPS_Counter.get_FPS()
 

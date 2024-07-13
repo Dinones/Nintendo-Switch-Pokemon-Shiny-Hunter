@@ -11,6 +11,7 @@ if __name__ == '__main__':
 import cv2
 import pytesseract
 import numpy as np
+from time import time
 import PyQt5.QtGui as pyqt_g
 from PIL import Image, ImageTk
 
@@ -77,15 +78,19 @@ class Image_Processing():
         if not isinstance(button, str): return
 
         self.FPS_image = np.copy(self.resized_image)
-        if button == 'A': cv2.circle(self.FPS_image, (307, 80), 9, CONST.PRESSED_BUTTON_COLOR, -1)
-        elif button == 'B': cv2.circle(self.FPS_image, (288, 99), 9, CONST.PRESSED_BUTTON_COLOR, -1)
-        elif button == 'Y': cv2.circle(self.FPS_image, (269, 80), 9, CONST.PRESSED_BUTTON_COLOR, -1)
-        elif button == 'X': cv2.circle(self.FPS_image, (288, 61), 9, CONST.PRESSED_BUTTON_COLOR, -1)
-        elif button == 'HOME': cv2.circle(self.FPS_image, (275, 195), 9, CONST.PRESSED_BUTTON_COLOR, -1)
-        elif button == 'UP': cv2.circle(self.FPS_image, (62, 129), 9, CONST.PRESSED_BUTTON_COLOR, -1)
-        elif button == 'DOWN': cv2.circle(self.FPS_image, (61, 167), 9, CONST.PRESSED_BUTTON_COLOR, -1)
-        elif button == 'RIGHT': cv2.circle(self.FPS_image, (81, 148), 9, CONST.PRESSED_BUTTON_COLOR, -1)
-        elif button == 'LEFT': cv2.circle(self.FPS_image, (43, 148), 9, CONST.PRESSED_BUTTON_COLOR, -1)
+        button_coordinates = {
+            'A': (307, 80), 
+            'B': (288, 99),
+            'Y': (269, 80),
+            'X': (288, 61),
+            'HOME': (275, 195),
+            'UP': (62, 129),
+            'DOWN': (61, 167),
+            'RIGHT': (81, 148),
+            'LEFT': (43, 148)
+        }
+        if button in button_coordinates.keys(): 
+            cv2.circle(self.FPS_image, button_coordinates[button], 9, CONST.PRESSED_BUTTON_COLOR, -1)
 
     #######################################################################################################################
 
@@ -125,6 +130,12 @@ class Image_Processing():
 
         return text
 
+    #######################################################################################################################
+
+    def save_image(self, pokemon_name = ''):
+        file_name = f'{pokemon_name}_{str(int(time()))}' if pokemon_name else str(int(time()))
+        cv2.imwrite(f'./{CONST.IMAGES_FOLDER_PATH}{file_name}.png', self.original_image) 
+            
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
@@ -352,9 +363,13 @@ if __name__ == "__main__":
                 .replace('{module}', 'Image Processing')
                 .replace('{path}', f"'../{CONST.IMAGES_FOLDER_PATH}'") + '\n'
         )
-
+        
         images = sorted([image for image in sorted(os.listdir(f'../{CONST.IMAGES_FOLDER_PATH}')) 
-            if image.lower().endswith(('.png', '.jpg', 'jpeg'))], key = lambda x: int(x.split('.')[0]))
+            if image.lower().endswith(('.png', '.jpg', 'jpeg'))])
+
+        if not len(images):
+            print(COLOR_str.COULD_NOT_LOAD_IMAGES.replace('{path}', f"'../{CONST.IMAGES_FOLDER_PATH}'") + '\n')
+            return
 
         # Instructions
         print(COLOR_str.SUCCESSFULLY_LOADED_IMAGES.replace('{images}', str(len(images))))
@@ -378,13 +393,13 @@ if __name__ == "__main__":
                 if pause: index -= 1
                 image = Image_Processing(f'../{CONST.IMAGES_FOLDER_PATH}/{images[index]}')
                 image.resize_image()
-                cv2.putText(image.resized_image, f'Count: {index}/{len(images)}', CONST.TEXT_PARAMS['position'], 
+                cv2.putText(image.resized_image, f'Count: {index + 1}/{len(images)}', CONST.TEXT_PARAMS['position'], 
                     cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'],
                     CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
                 cv2.putText(image.resized_image, f'{images[index]}', second_text_position, 
                     cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'],
                     CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
-                cv2.imshow('Lost Shiny Checker', image.resized_image)
+                cv2.imshow(f'{CONST.BOT_NAME} - Lost Shiny Checker', image.resized_image)
 
                 index += 1
                 timer = time.time()
@@ -400,13 +415,14 @@ if __name__ == "__main__":
 
         print(COLOR_str.SUCCESS_EXIT_PROGRAM
             .replace('{module}', 'Image Processing')
-            .replace('{reason}', f'Successfully checked {index + 1}/{len(images)} images!') + '\n'
+            .replace('{reason}', f'Successfully checked {index + 1}/{len(images)} images!')
         )
 
+        cv2.destroyAllWindows()
         delete = input(COLOR_str.DELETE_IMAGES_QUESTION)
-        if delete.lower() in ('', 'y', 'yes'): 
+        if delete.lower().strip() in ('', 'y', 'yes'): 
             print(COLOR_str.DELETING_IMAGES.replace('{images}', str(len(images))))
             for image in images: os.remove(f'../{CONST.IMAGES_FOLDER_PATH}/{image}')
-            print(COLOR_str.SUCCESSFULLY_DELETED_IMAGES.replace('{images}', str(len(images))))
+            print(COLOR_str.SUCCESSFULLY_DELETED_IMAGES.replace('{images}', str(len(images))) + '\n')
 
     main_menu()
