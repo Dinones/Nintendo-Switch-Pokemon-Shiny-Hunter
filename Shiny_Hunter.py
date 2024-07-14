@@ -38,7 +38,7 @@ from Switch_Controller import Switch_Controller
 #################################################     INITIALIZATIONS     #################################################
 ###########################################################################################################################
 
-def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, previous_button = None):
+def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event):
     Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
     if not Video_Capture.video_capture.isOpened(): 
         Video_Capture.stop()
@@ -55,6 +55,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, pr
     initial_time = time()
     encounter_playtime = time()
     shiny_detection_time = 0
+    previous_button = None
 
     database_data = get_all_data()
     local_encounters = database_data['global_encounters']
@@ -144,6 +145,11 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, pr
                     Controller.current_event = "STOP"
             else: shiny_timer = time()
 
+            # Stop button has been pressed
+            if Controller.current_event == "STOP_2": 
+                Video_Capture.save_video()
+                shutdown_event.set()
+
             update_items = {
                 'image': image,
                 'current_state': Controller.current_event,
@@ -158,8 +164,9 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, pr
             Image_Queue.put(update_items)
 
 ###########################################################################################################################
+###########################################################################################################################
 
-def controller_control(controller, shutdown_event):
+def controller_control(controller, shutdown_event, stop_event):
     try: controller.connect_controller()
     except: return
 
@@ -178,15 +185,21 @@ def controller_control(controller, shutdown_event):
             sleep(CONST.SHINY_RECORDING_SECONDS + 15)
             stop_macro(controller)
             shutdown_event.set()
+        elif aux_current_event == 'STOP_1': stop_macro(controller)
 
         # Don't care about race conditions here
         controller.previous_event = controller.current_event
         controller.current_button_pressed = ''
+
+        # Stop button has been pressed
+        if stop_event.is_set() and controller.current_event not in ["STOP_1", "STOP_2"]:
+            controller.current_event = "STOP_1"
         sleep(0.1)
 
     try: controller.disconnect_controller()
     except: return
 
+###########################################################################################################################
 ###########################################################################################################################
 
 # Check if all threads are alive or if they have raised an error
@@ -226,6 +239,7 @@ if __name__ == "__main__":
         if option in menu_options: menu_options[option](option)
         else: print(COLOR_str.INVALID_OPTION.replace('{module}', 'Shiny Hunter') + '\n')
 
+    
     #######################################################################################################################
 
     def shiny_hunter(option):
@@ -296,7 +310,7 @@ if __name__ == "__main__":
         })
         threads.append({
             'function': 'controller_control',
-            'thread': Thread(target=lambda: controller_control(Controller, shutdown_event), daemon=True)
+            'thread': Thread(target=lambda: controller_control(Controller, shutdown_event, stop_event), daemon=True)
         })
         threads.append({
             'function': 'check_threads',

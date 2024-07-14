@@ -173,9 +173,16 @@ def search_wild_pokemon(image, state):
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
         ):
             return 'ESCAPE_COMBAT_3'
+    
+    # Stopping program
+    elif state == 'STOP_1':
+        # Look for the pairing controller screen
+        if all(image.check_pixel_color((20, 20)) == [139, 138, 128]): 
+            return 'STOP_2'
 
     return state
 
+###########################################################################################################################
 ###########################################################################################################################
 
 def static_encounter(image, state):
@@ -264,6 +271,12 @@ def static_encounter(image, state):
         # Check the elapsed time
         if image.shiny_detection_time and time() - image.shiny_detection_time >= CONST.SHINY_DETECTION_TIME:
             return 'SHINY_FOUND'
+
+    # Stopping program
+    elif state == 'STOP_1':
+        # Look for the pairing controller screen
+        if all(image.check_pixel_color((20, 20)) == [139, 138, 128]): 
+            return 'STOP_2'
 
     return state
 

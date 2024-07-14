@@ -26,6 +26,11 @@ image_label_style = "background-color: #000; border: 1px solid #aaa;"
 text_label_style = "background-color: #222; border: 1px solid #aaa;"
 text_style = "background-color: #222; border: 1px solid #aaa; color: #aaa; font-size: 13pt; font-family: Arial;"
 clock_style = "background-color: #222; border: 1px solid #aaa; color: #aaa; font-size: 30pt; font-family: Arial;"
+button_style = "background-color: #222; border: 1px solid #aaa; color: #aaa; font-size: 10pt; font-family: Arial;"
+button_style = """
+    QPushButton {background-color: #222; border: 1px solid #aaa; color: #aaa; font-size: 25pt; font-family: Arial;} 
+    QPushButton:pressed {background-color: #555; border: 1px solid #fff; color: #fff;}
+"""
 
 ###########################################################################################################################
 
@@ -38,7 +43,7 @@ class DllistQueue(Queue):
 
 class App(pyqt_w.QApplication):
     def __init__(self):
-        # Initializes the clas a QApplication object
+        # Initialize the class QApplication object
         super().__init__([])
 
         self.setStyleSheet("QWidget { background-color: #333; }")
@@ -46,8 +51,8 @@ class App(pyqt_w.QApplication):
 ###########################################################################################################################
 
 class GUI(pyqt_w.QWidget):
-    def __init__(self, queue, shutdown_event):
-        # Initializes the clas a QWidget object
+    def __init__(self, queue, shutdown_event, stop_event):
+        # Initialize the class QWidget object
         super().__init__()
 
         # Used to share object between threads
@@ -63,6 +68,7 @@ class GUI(pyqt_w.QWidget):
             'main_image_label': pyqt_w.QLabel(self),
             'clock_label': pyqt_w.QLabel(self),
             'switch_controller_image_label': pyqt_w.QLabel(self),
+            'stop_button': pyqt_w.QPushButton(self),
 
             'RAM_usage_label': pyqt_w.QLabel(self),
             'current_state_label': pyqt_w.QLabel(self),
@@ -79,13 +85,21 @@ class GUI(pyqt_w.QWidget):
             .setFixedSize(CONST.SWITCH_CONTROLLER_FRAME_SIZE[0], CONST.SWITCH_CONTROLLER_FRAME_SIZE[1])
         self.items['switch_controller_image_label'].setStyleSheet(image_label_style)
         self.items['switch_controller_image_label'].move(CONST.MAIN_FRAME_SIZE[0] + 20, CONST.CLOCK_FRAME_SIZE[1] + 20)
-        
+
         ##### TIME COUNTER #####
         self.items['clock_label'].setFixedSize(CONST.CLOCK_FRAME_SIZE[0], CONST.CLOCK_FRAME_SIZE[1])
         self.items['clock_label'].setStyleSheet(clock_style)
         self.items['clock_label'].move(CONST.MAIN_FRAME_SIZE[0] + 20, 10)
         self.items['clock_label'].setAlignment(pyqt_c.Qt.AlignCenter)
         self.items['clock_label'].setText("00 : 00 : 00")
+
+        ##### STOP BUTTON #####
+        self.items['stop_button'].setFixedSize(CONST.BUTTON_FRAME_SIZE[0], CONST.BUTTON_FRAME_SIZE[1])
+        self.items['stop_button'].setStyleSheet(button_style)
+        self.items['stop_button'].move(CONST.MAIN_FRAME_SIZE[0] + 20, 
+            CONST.CLOCK_FRAME_SIZE[1] + CONST.SWITCH_CONTROLLER_FRAME_SIZE[1] + 30)
+        self.items['stop_button'].setText("STOP")
+        self.items['stop_button'].clicked.connect(stop_event.set)
 
         ##### RAM USAGE #####
         self.items['RAM_usage_label'].setFixedSize(2*CONST.MAIN_FRAME_SIZE[0]//3 - 10, CONST.TEXT_FRAME_SIZE[1])
@@ -160,7 +174,8 @@ if __name__ == "__main__":
         print('\n' + COLOR_str.MENU.replace('{module}', 'GUI'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Open GUI using capture card'))
 
-        option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'GUI'))
+        # option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'GUI'))
+        option = '1'
 
         menu_options = {
             '1': test_GUI,
@@ -183,18 +198,32 @@ if __name__ == "__main__":
         initial_time = time.time()
         Image_Queue = DllistQueue(maxsize = 2)
         shutdown_event = Event()
-        Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
 
         switch_controller_image = Image_Processing(f'../{CONST.SWITCH_CONTROLLER_IMAGE_PATH}')
         switch_controller_image.resize_image(CONST.SWITCH_CONTROLLER_FRAME_SIZE)
         switch_controller_image.draw_button()
 
-        def test_GUI_control(shutdown_event = None):
-            if isinstance(shutdown_event, type(None)): return
+        def test_GUI_control(shutdown_event):
+            Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
+            if not Video_Capture.video_capture.isOpened(): 
+                Video_Capture.stop()
+                print(COLOR_str.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{CONST.VIDEO_CAPTURE_INDEX}'"))
+                shutdown_event.set()
+                return
 
             while not shutdown_event.is_set():
                 image = Image_Processing(Video_Capture.read_frame())
-                if isinstance(image.original_image, type(None)): continue
+                if isinstance(image.original_image, type(None)): 
+                    if Video_Capture.skipped_frames < CONST.SKIPPED_FRAMES_TO_RECONNECT - 1: 
+                        Video_Capture.skipped_frames += 1
+                        time.sleep(0.1); continue
+                    Video_Capture.stop()
+                    Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
+                    if not Video_Capture.video_capture.isOpened(): 
+                        Video_Capture.stop()
+                        print(COLOR_str.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{CONST.VIDEO_CAPTURE_INDEX}'"))
+                        shutdown_event.set()
+                    continue
 
                 image.resize_image()
                 FPS.get_FPS()
@@ -219,11 +248,10 @@ if __name__ == "__main__":
         for thread in threads: thread.start()
 
         GUI_App = App()
-        gui = GUI(Image_Queue, shutdown_event)
+        gui = GUI(Image_Queue, shutdown_event, shutdown_event)
         # Blocking function until the GUI is closed
         GUI_App.exec_()
 
-        # Kill all secondary threads
         shutdown_event.set()
         print(COLOR_str.RELEASING_THREADS.replace('{module}', 'GUI').replace('{threads}', str(len(threads))) + '\n')        
 

@@ -135,6 +135,12 @@ class Image_Processing():
     def save_image(self, pokemon_name = ''):
         file_name = f'{pokemon_name}_{str(int(time()))}' if pokemon_name else str(int(time()))
         cv2.imwrite(f'./{CONST.IMAGES_FOLDER_PATH}{file_name}.png', self.original_image) 
+
+    #######################################################################################################################
+
+    def replace_pixels(self, pixel_color):
+        mask = np.all(self.original_image == pixel_color, axis=-1)
+        self.original_image[mask] = CONST.REPLACEMENT_COLOR
             
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
@@ -184,6 +190,10 @@ if __name__ == "__main__":
         image = Image_Processing(f'../{CONST.TESTING_IMAGE_PATH}')
         if isinstance(image.original_image, type(None)): return
 
+        # image.replace_pixels([141, 140, 130])
+        # image.original_image[5][5] = [0,0,255]
+        print(image.check_pixel_color([20,20]))
+        # cv2.circle(image.original_image, (5,5), 9, CONST.PRESSED_BUTTON_COLOR, -1)
         image.resize_image()
         # cv2.rectangle(image.resized_image, (50, 333), (670, 365), (255, 255, 0), 1)
         # print(image.recognize_pokemon())
@@ -194,7 +204,8 @@ if __name__ == "__main__":
             .replace('{instruction}', 'exit the program')
         )
 
-        cv2.imshow(f'{CONST.BOT_NAME} - Resized', image.resized_image)
+        # cv2.imshow(f'{CONST.BOT_NAME} - Resized', image.original_image[0:20])
+        cv2.imshow(f'{CONST.BOT_NAME} - Resized', image.original_image[0:500])
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 

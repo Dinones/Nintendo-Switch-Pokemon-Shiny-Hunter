@@ -31,6 +31,7 @@ TEXT_PARAMS = {
     'star_num_color': (0, 0, 255)
 }
 PRESSED_BUTTON_COLOR = (255, 0, 200)
+REPLACEMENT_COLOR = (0, 0, 255)
 SAVE_IMAGES = True
 IMAGES_FOLDER_PATH = 'Media/Images/'
 # [BYTES] 1GB = 1073741824B
@@ -49,6 +50,7 @@ MAIN_FRAME_SIZE = (720, 405)
 SWITCH_CONTROLLER_FRAME_SIZE = (350, 280)
 CLOCK_FRAME_SIZE = (350, 115)
 TEXT_FRAME_SIZE = (200, 39)
+BUTTON_FRAME_SIZE = (350, 50)
 SWITCH_CONTROLLER_IMAGE_PATH = 'Media/Interface/Switch Controller.png'
 
 ###########################################################################################################################
@@ -100,7 +102,7 @@ DATABASE_PATH = 'Media/Database.db'
 ###########################################################################################################################
 
 TESTING = True
-TESTING_VIDEO_PATH = 'Media/Videos/Video.avi'
-TESTING_IMAGE_PATH = 'Media/Tests/Mesprit.png'
-SAVING_FRAMES_PATH = 'Media/Tests/Results'
+TESTING_VIDEO_PATH = 'Media/Videos/Shiny.mp4'
+TESTING_IMAGE_PATH = 'Media/Tests/Pairing Screen.png'
+SAVING_FRAMES_PATH = 'Media/Tests'
 TEST_DATABASE_PATH = 'Media/Test_Database.db'
