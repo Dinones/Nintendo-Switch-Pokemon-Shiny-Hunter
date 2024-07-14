@@ -141,7 +141,7 @@ class Image_Processing():
     def replace_pixels(self, pixel_color):
         mask = np.all(self.original_image == pixel_color, axis=-1)
         self.original_image[mask] = CONST.REPLACEMENT_COLOR
-            
+           
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
@@ -191,11 +191,11 @@ if __name__ == "__main__":
         if isinstance(image.original_image, type(None)): return
 
         # image.replace_pixels([141, 140, 130])
-        # image.original_image[5][5] = [0,0,255]
-        print(image.check_pixel_color([20,20]))
-        # cv2.circle(image.original_image, (5,5), 9, CONST.PRESSED_BUTTON_COLOR, -1)
+        # print(image.check_pixel_color())
+        # cv2.circle(image.original_image, (20, 20), 9, CONST.PRESSED_BUTTON_COLOR, -1)
+        cv2.rectangle(image.resized_image, (50, 333), (670, 365), (255, 255, 0), 1)
+
         image.resize_image()
-        # cv2.rectangle(image.resized_image, (50, 333), (670, 365), (255, 255, 0), 1)
         # print(image.recognize_pokemon())
 
         print(COLOR_str.PRESS_KEY_TO_INSTRUCTION
@@ -204,8 +204,8 @@ if __name__ == "__main__":
             .replace('{instruction}', 'exit the program')
         )
 
-        # cv2.imshow(f'{CONST.BOT_NAME} - Resized', image.original_image[0:20])
-        cv2.imshow(f'{CONST.BOT_NAME} - Resized', image.original_image[0:500])
+        # cv2.imshow(f'{CONST.BOT_NAME} - Resized', image.original_image[0:500])
+        cv2.imshow(f'{CONST.BOT_NAME} - Resized', image.resized_image)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
@@ -214,6 +214,7 @@ if __name__ == "__main__":
             .replace('{reason}', 'Successfully processed the image!') + '\n'
         )
 
+    #######################################################################################################################
     #######################################################################################################################
 
     def extract_frames_from_video(option): 
@@ -261,6 +262,7 @@ if __name__ == "__main__":
         Video_Capture.stop()
         print(COLOR_str.SUCCESSFULLY_EXTRACTED_FRAMES.replace('{frames}', str(frame_index)) + '\n')
 
+    #######################################################################################################################
     #######################################################################################################################
 
     def process_video(option):
@@ -360,6 +362,7 @@ if __name__ == "__main__":
         )
 
     #######################################################################################################################
+    #######################################################################################################################
 
     def check_lost_shiny(option):
         print('\n' + COLOR_str.SELECTED_OPTION
@@ -435,5 +438,8 @@ if __name__ == "__main__":
             print(COLOR_str.DELETING_IMAGES.replace('{images}', str(len(images))))
             for image in images: os.remove(f'../{CONST.IMAGES_FOLDER_PATH}/{image}')
             print(COLOR_str.SUCCESSFULLY_DELETED_IMAGES.replace('{images}', str(len(images))) + '\n')
+
+    #######################################################################################################################
+    #######################################################################################################################
 
     main_menu()
