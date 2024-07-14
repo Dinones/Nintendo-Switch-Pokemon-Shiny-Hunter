@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
 import copy
 from time import sleep, time
-from threading import Thread, Event
+from threading import Thread, Event, Timer
 
 from Macros import *
 from Database import *
@@ -38,7 +38,7 @@ from Switch_Controller import Switch_Controller
 #################################################     INITIALIZATIONS     #################################################
 ###########################################################################################################################
 
-def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event):
+def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, stop_event):
     Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
     if not Video_Capture.video_capture.isOpened(): 
         Video_Capture.stop()
@@ -99,7 +99,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event):
             elif Encounter_Type == 'STATIC': Controller.current_event = static_encounter(image, Controller.current_event)
 
             # Check if the program got stuck in some event
-            if Controller.current_event not in ["MOVE_PLAYER", "WAIT_HOME_SCREEN", "SHINY_FOUND", "STOP"] and \
+            if Controller.current_event not in ["MOVE_PLAYER", "WAIT_HOME_SCREEN", "SHINY_FOUND"] and \
                 Controller.current_event == Controller.previous_event and \
                 time() - stuck_timer > CONST.STUCK_TIMER_SECONDS:
                     stuck_timer = time()
@@ -142,13 +142,18 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event):
                     pokemon = {'name': pokemon_name, 'shiny': True}
                     add_or_update_encounter(pokemon, int(time() - encounter_playtime))
                     Video_Capture.save_video(f'Shiny {pokemon_name} - {time()}')
-                    Controller.current_event = "STOP"
+                    stop_event.set()
             else: shiny_timer = time()
 
-            # Stop button has been pressed
-            if Controller.current_event == "STOP_2": 
-                Video_Capture.save_video()
-                shutdown_event.set()
+            # Stop program execution (shiny found or stop button pressed)
+            if stop_event.is_set() and Controller.current_event not in ["STOP_1", "STOP_2", "STOP_3"]:
+                Controller.current_event = "STOP_1"
+            elif Controller.current_event == "STOP_2":
+                def _stop_execution(Video_Capture, shutdown_event):
+                    Video_Capture.save_video()
+                    shutdown_event.set()
+                Timer(3, lambda: _stop_execution(Video_Capture, shutdown_event)).start()
+                Controller.current_event == "STOP_3"
 
             update_items = {
                 'image': image,
@@ -166,7 +171,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event):
 ###########################################################################################################################
 ###########################################################################################################################
 
-def controller_control(controller, shutdown_event, stop_event):
+def controller_control(controller, shutdown_event):
     try: controller.connect_controller()
     except: return
 
@@ -180,20 +185,11 @@ def controller_control(controller, shutdown_event, stop_event):
             press_single_button(controller, 'A')
         elif aux_current_event == 'MOVE_PLAYER': move_player_wild_macro(controller)
         elif aux_current_event == 'ESCAPE_COMBAT_2': escape_combat_macro(controller)
-        elif aux_current_event == 'SHINY_FOUND': 
-            # Give some time to save the video before killing the bot
-            sleep(CONST.SHINY_RECORDING_SECONDS + 15)
-            stop_macro(controller)
-            shutdown_event.set()
         elif aux_current_event == 'STOP_1': stop_macro(controller)
 
         # Don't care about race conditions here
-        controller.previous_event = controller.current_event
+        controller.previous_event = aux_current_event
         controller.current_button_pressed = ''
-
-        # Stop button has been pressed
-        if stop_event.is_set() and controller.current_event not in ["STOP_1", "STOP_2"]:
-            controller.current_event = "STOP_1"
         sleep(0.1)
 
     try: controller.disconnect_controller()
@@ -302,7 +298,7 @@ if __name__ == "__main__":
         threads.append({
             'function': 'GUI_control',
             'thread': Thread(target=lambda: 
-                GUI_control(encounter_type, FPS, Controller, Image_Queue, shutdown_event), daemon=True)
+                GUI_control(encounter_type, FPS, Controller, Image_Queue, shutdown_event, stop_event), daemon=True)
         })
         threads.append({
             'function': 'get_memory_usage',
@@ -310,7 +306,7 @@ if __name__ == "__main__":
         })
         threads.append({
             'function': 'controller_control',
-            'thread': Thread(target=lambda: controller_control(Controller, shutdown_event, stop_event), daemon=True)
+            'thread': Thread(target=lambda: controller_control(Controller, shutdown_event), daemon=True)
         })
         threads.append({
             'function': 'check_threads',
