@@ -161,9 +161,11 @@ if __name__ == '__main__':
                 Image_Queue.put(update_items)
 
         def run_test_controller(controller, shutdown_event):
-            controller.connect_controller()
-            test_macro(controller)
-            controller.disconnect_controller()
+            try: 
+                controller.connect_controller()
+                test_macro(controller)
+                controller.disconnect_controller()
+            except: pass
             shutdown_event.set()
 
         threads = []
@@ -173,7 +175,7 @@ if __name__ == '__main__':
         for thread in threads: thread.start()
 
         GUI_App = App()
-        gui = GUI(Image_Queue, shutdown_event)
+        gui = GUI(Image_Queue, shutdown_event, shutdown_event)
         # Blocking function until the GUI is closed
         GUI_App.exec_()
         

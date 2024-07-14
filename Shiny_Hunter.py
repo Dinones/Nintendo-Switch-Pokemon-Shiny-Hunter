@@ -90,7 +90,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, pr
             # Check if the pokemon is shiny
             if Controller.current_event == "CHECK_SHINY":
                 # Only reset the first time it enters to the state
-                if time() - shiny_detection_time >= CONST.SHINY_DETECTION_TIME: shiny_detection_time = time()
+                if time() - shiny_detection_time >= 10: shiny_detection_time = time()
                 image.shiny_detection_time = shiny_detection_time
 
             # Refresh the event
@@ -280,6 +280,7 @@ if __name__ == "__main__":
         initialize_database()
 
         shutdown_event = Event()
+        stop_event = Event()
 
         threads = []
         if option == '1': encounter_type = 'WILD'
@@ -304,7 +305,7 @@ if __name__ == "__main__":
         for thread in threads: thread['thread'].start()
 
         GUI_App = App()
-        User_Interface = GUI(Image_Queue, shutdown_event)
+        User_Interface = GUI(Image_Queue, shutdown_event, stop_event)
         # Blocking function until the GUI is closed
         GUI_App.exec_()
         shutdown_event.set()

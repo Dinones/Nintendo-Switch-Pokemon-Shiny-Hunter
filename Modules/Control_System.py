@@ -277,11 +277,11 @@ if __name__ == "__main__":
     from Image_Processing import Image_Processing
     from Game_Capture import Game_Capture
 
-    Game_Capture = Game_Capture()
+    Game_Capture = Game_Capture(f'../{CONST.TESTING_VIDEO_PATH}')
     state = 'MOVE_PLAYER'
 
     while True:
-        sleep(0.01)
+        sleep(0.02)
         image = Image_Processing(Game_Capture.read_frame())
         image.resize_image()
         image.FPS_image = np.copy(image.resized_image)

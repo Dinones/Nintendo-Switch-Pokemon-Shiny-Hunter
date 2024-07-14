@@ -82,7 +82,9 @@ class Game_Capture():
     # Save the current video and start recording the next one
     def save_video(self, special_name = ''):
         self.video_recorder.release()
-        if special_name: os.rename(f'./{CONST.OUTPUT_VIDEO_PATH}', f'./Media/Videos/{special_name}.avi')
+        try: 
+            if special_name: os.rename(f'./{CONST.OUTPUT_VIDEO_PATH}', f'./Media/Videos/{special_name}.avi')
+        except: pass
         
     #######################################################################################################################
 
