@@ -73,22 +73,20 @@ WILD_WALKING_DIRECTION = 'EW'
 # How long has the bot been stuck in the same state before restarting the game
 STUCK_TIMER_SECONDS = 30
 SHINY_DETECTION_TIME = 1
-HOME_MENU_COLOR = 255
-PAIRING_MENU_COLOR = 240
-PAIRING_MENU_COLOR_2 = [139, 138, 128]
-ESCAPE_COMBAT_BLACK_COLOR = 7
-GAME_LOAD_SCREEN_BLACK_COLOR = 8
+HOME_MENU_COLOR = (241, 241, 241)
+PAIRING_MENU_COLOR = (139, 138, 128)
+LOAD_SCREEN_BLACK_COLOR = (7, 7, 7)
 TEXT_BOX_LINE = {
     'x': int(MAIN_FRAME_SIZE[0] // 16 * 1.2),
     'y1': int(MAIN_FRAME_SIZE[1] // 16 * 1),
     'y2': int(MAIN_FRAME_SIZE[1] // 16 * 2), 
-    'color': 255
+    'color': (255, 255, 255)
 }
 LIFE_BOX_LINE = {
     'x': int(MAIN_FRAME_SIZE[0] // 96 * 1),
     'y1': int(MAIN_FRAME_SIZE[1] // 16 * 2),
     'y2': int(MAIN_FRAME_SIZE[1] // 16 * 2.6),
-    'color': 250
+    'color': (250, 250, 250)
 }
 
 ###########################################################################################################################
@@ -102,6 +100,7 @@ DATABASE_PATH = 'Media/Database.db'
 ###########################################################################################################################
 
 TESTING = True
+TESTING_COLOR = (255, 0, 255)
 TESTING_VIDEO_PATH = 'Media/Videos/Shiny.mp4'
 TESTING_IMAGE_PATH = 'Media/Tests/Pairing Screen.png'
 SAVING_FRAMES_PATH = 'Media/Tests'

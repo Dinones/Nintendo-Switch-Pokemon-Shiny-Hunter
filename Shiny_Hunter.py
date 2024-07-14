@@ -150,10 +150,11 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                 Controller.current_event = "STOP_1"
             elif Controller.current_event == "STOP_2":
                 def _stop_execution(Video_Capture, shutdown_event):
-                    Video_Capture.save_video()
+                    try: Video_Capture.save_video()
+                    except: pass
                     shutdown_event.set()
                 Timer(3, lambda: _stop_execution(Video_Capture, shutdown_event)).start()
-                Controller.current_event == "STOP_3"
+                Controller.current_event = "STOP_3"
 
             update_items = {
                 'image': image,

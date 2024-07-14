@@ -19,16 +19,18 @@ import Constants as CONST
 ###########################################################################################################################
 
 def search_wild_pokemon(image, state):
-    if not state: return 'WAIT_HOME_SCREEN'
+    if not state: return 'WAIT_PAIRING_SCREEN'
 
     # Nintendo Switch pairing controller menu
-    elif state == 'FAST_RESTART_GAME':
-        if not all(pixel_value == CONST.HOME_MENU_COLOR for pixel_value in image.check_pixel_color()):
+    elif state == 'WAIT_HOME_SCREEN':
+        # Look for the top-left nintendo switch main menu pixel
+        if image.check_pixel_color(CONST.HOME_MENU_COLOR):
             return 'MOVE_PLAYER'
 
     # Game main loadscreen (Full black screen)
     elif state == 'RESTART_GAME_4':
-        if all(pixel_value != CONST.GAME_LOAD_SCREEN_BLACK_COLOR for pixel_value in image.check_pixel_color()):
+        # Look for the top-left load screen pixel
+        if image.check_pixel_color(CONST.LOAD_SCREEN_BLACK_COLOR):
             return 'MOVE_PLAYER'
 
     # Game loaded, player in the overworld
@@ -85,7 +87,7 @@ def search_wild_pokemon(image, state):
         # Look for the black screen
         if image.check_multiple_pixel_colors(
             [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y1']],
-            [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y2']], CONST.ESCAPE_COMBAT_BLACK_COLOR
+            [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y2']], CONST.LOAD_SCREEN_BLACK_COLOR
         ):
             return 'ESCAPE_COMBAT_5'
         # Look for the life box (Escape has failed)
@@ -100,7 +102,7 @@ def search_wild_pokemon(image, state):
         # Check if the black screen has ended
         if not image.check_multiple_pixel_colors(
             [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y1']],
-            [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y2']], CONST.ESCAPE_COMBAT_BLACK_COLOR
+            [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y2']], CONST.LOAD_SCREEN_BLACK_COLOR
         ):
             return 'MOVE_PLAYER'
 
@@ -130,15 +132,20 @@ def search_wild_pokemon(image, state):
 ###########################################################################################################################
 
 def static_encounter(image, state):
-    if not state: return 'WAIT_HOME_SCREEN'
+    if not state: return 'WAIT_PAIRING_SCREEN'
 
     # Nintendo Switch pairing controller menu
-    elif state == 'FAST_RESTART_GAME':
-        if not all(pixel_value == CONST.HOME_MENU_COLOR for pixel_value in image.check_pixel_color()):
+    elif state == 'WAIT_HOME_SCREEN':
+        # Look for the top-left nintendo switch main menu pixel
+        if image.check_pixel_color(CONST.HOME_MENU_COLOR):
             return 'ENTER_STATIC_COMBAT'
 
     elif state == 'RESTART_GAME_4':
-        if all(pixel_value != CONST.GAME_LOAD_SCREEN_BLACK_COLOR for pixel_value in image.check_pixel_color()):
+        # Check if the black screen has ended
+        if not image.check_multiple_pixel_colors(
+            [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y1']],
+            [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y2']], CONST.LOAD_SCREEN_BLACK_COLOR
+        ):
             return 'ENTER_STATIC_COMBAT'
 
     # Game loaded, player in the overworld
@@ -172,28 +179,39 @@ def static_encounter(image, state):
 
 def _check_common_states(image, state):
     # Nintendo Switch pairing controller menu
-    if state == 'WAIT_HOME_SCREEN':
-        if all(pixel_value == CONST.PAIRING_MENU_COLOR for pixel_value in image.check_pixel_color()):
-            return 'FAST_RESTART_GAME'
+    if state == 'WAIT_PAIRING_SCREEN':
+        # Look for the pairing controller screen
+        if image.check_pixel_color(CONST.PAIRING_MENU_COLOR):
+            return 'WAIT_HOME_SCREEN'
 
     # Stuck screen (only used when the bot gets stuck in one state)
-    elif state == 'RESTART_GAME_0':
-        if all(pixel_value == CONST.HOME_MENU_COLOR for pixel_value in image.check_pixel_color()):
+    if state == 'RESTART_GAME_0':
+        # Look for the top-left nintendo switch main menu pixel
+        if image.check_pixel_color(CONST.HOME_MENU_COLOR):
             return 'RESTART_GAME_1'
 
     # Nintendo Switch main menu
     elif state == 'RESTART_GAME_1':
-        if all(pixel_value == CONST.GAME_LOAD_SCREEN_BLACK_COLOR for pixel_value in image.check_pixel_color()):
+        if image.check_multiple_pixel_colors(
+            [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y1']],
+            [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y2']], CONST.LOAD_SCREEN_BLACK_COLOR
+        ):
             return 'RESTART_GAME_2'
 
     # Game main loadscreen (Full black screen)
     elif state == 'RESTART_GAME_2':
-        if all(pixel_value != CONST.GAME_LOAD_SCREEN_BLACK_COLOR for pixel_value in image.check_pixel_color()):
+        if not image.check_multiple_pixel_colors(
+            [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y1']],
+            [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y2']], CONST.LOAD_SCREEN_BLACK_COLOR
+        ):
             return 'RESTART_GAME_3'
 
     # Game main loadscreen (Dialga / Palkia)
     elif state == 'RESTART_GAME_3':
-        if all(pixel_value == CONST.GAME_LOAD_SCREEN_BLACK_COLOR for pixel_value in image.check_pixel_color()):
+        if image.check_multiple_pixel_colors(
+            [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y1']],
+            [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y2']], CONST.LOAD_SCREEN_BLACK_COLOR
+        ):
             return 'RESTART_GAME_4'
 
     # Combat loadscreen (Full white screen)
@@ -226,7 +244,7 @@ def _check_common_states(image, state):
     # Stopping program
     elif state == 'STOP_1':
         # Look for the pairing controller screen
-        if all(image.check_pixel_color((20, 20)) == [139, 138, 128]):
+        if image.check_pixel_color(CONST.PAIRING_MENU_COLOR):
             return 'STOP_2'
 
     return state
@@ -242,8 +260,9 @@ if __name__ == "__main__":
     from Image_Processing import Image_Processing
     from Game_Capture import Game_Capture
 
-    Game_Capture = Game_Capture(f'../{CONST.TESTING_VIDEO_PATH}')
-    state = 'MOVE_PLAYER'
+    # Game_Capture = Game_Capture(f'../{CONST.TESTING_VIDEO_PATH}')
+    Game_Capture = Game_Capture()
+    state = ''
 
     while True:
         sleep(0.02)

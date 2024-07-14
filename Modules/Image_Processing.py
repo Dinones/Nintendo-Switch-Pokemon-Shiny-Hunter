@@ -95,19 +95,25 @@ class Image_Processing():
     #######################################################################################################################
 
     # Return the requested pixel color. Default: top-left corner pixel
-    def check_pixel_color(self, pixel = (5, 5)): return self.original_image[pixel[0]][pixel[1]]
+    def get_pixel_color(self, pixel = (20, 20)): return self.original_image[pixel[0]][pixel[1]]
 
     #######################################################################################################################
 
-    # Return whether all the pixels of the specifiead row are white
-    def check_multiple_pixel_colors(self, start, end, color = 255):
+    # Return if the pixel is of the specified color
+    def check_pixel_color(self, color, pixel = (20, 20)): 
+        return all(self.original_image[pixel[0]][pixel[1]] == color)
+
+    #######################################################################################################################
+
+    # Return if all the pixels of the specifiead row are of the specified color
+    def check_multiple_pixel_colors(self, start, end, color):
         pixels = []
         for index in range(start[1], end[1]):
-            if all(pixel_value == color for pixel_value in self.resized_image[-index][start[0]]): pixels.append(True)
+            if all(self.resized_image[-index][start[0]] == color): pixels.append(True)
             # If one False is found, there is no need to check the other pixels
             else: pixels.append(False); break
         if CONST.TESTING: 
-            for index in range(start[1], end[1]): self.FPS_image[-index][start[0]] = [255, 0, 255]
+            for index in range(start[1], end[1]): self.FPS_image[-index][start[0]] = CONST.TESTING_COLOR
         return all(pixels)
 
     #######################################################################################################################
