@@ -21,6 +21,7 @@ if __name__ == '__main__':
 
 import copy
 from time import sleep, time
+from playsound import playsound
 from threading import Thread, Event, Timer
 
 from Macros import *
@@ -47,6 +48,12 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
     Video_Capture.start_recording()
 
     switch_controller_image = Image_Processing(CONST.SWITCH_CONTROLLER_IMAGE_PATH)
+    if isinstance(switch_controller_image.original_image, type(None)):
+        print(COLOR_str.INVALID_PATH_ERROR
+            .replace('{module}', 'Shiny Hunter')
+            .replace('{path}', f'../{CONST.SWITCH_CONTROLLER_IMAGE_PATH}')
+        )
+        return
     switch_controller_image.resize_image(CONST.SWITCH_CONTROLLER_FRAME_SIZE)
     switch_controller_image.draw_button()
 
@@ -117,7 +124,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
 
             # Update the database
             elif Controller.current_event == "ENTER_COMBAT_3": pokemon_image = image
-            elif Controller.current_event == "CHECK_SHINY" and type(pokemon_image) != type(None): 
+            elif Controller.current_event == "CHECK_SHINY" and type(pokemon_image) != type(None):
                 pokemon_name = pokemon_image.recognize_pokemon()
                 if CONST.SAVE_IMAGES: 
                     pokemon_image.save_image(pokemon_name)
@@ -128,7 +135,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                             .replace('{module}', 'Shiny Hunter')
                             .replace('{available_space}', system_space['available'])
                         )
-                        # I'm changing the value of a constant. I know, I deserve to die!
+                        # I'm editing the value of a constant. I know, I deserve to die!
                         CONST.SAVE_IMAGES = False
                 pokemon_image = None
                 pokemon = {'name': pokemon_name, 'shiny': False}
@@ -142,6 +149,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                     pokemon = {'name': pokemon_name, 'shiny': True}
                     add_or_update_encounter(pokemon, int(time() - encounter_playtime))
                     Video_Capture.save_video(f'Shiny {pokemon_name} - {time()}')
+                    Thread(target=lambda: play_sound(f'./{CONST.SHINY_SOUND_PATH}'), daemon=True).start()
                     stop_event.set()
             else: shiny_timer = time()
 
@@ -163,6 +171,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                 'global_encounter_count': global_encounters - last_shiny_encounter,
                 'local_encounter_count': global_encounters - local_encounters,
                 'memory_usage': FPS.memory_usage,
+                'cpu_usage': FPS.cpu_usage,
                 'switch_controller_image': switch_controller_image,
                 'clock': int(time() - initial_time),
             }
@@ -212,6 +221,34 @@ def check_threads(threads, shutdown_event):
         sleep(5)
 
 ###########################################################################################################################
+###########################################################################################################################
+
+def play_sound(path): 
+    def restore_std(original_stderr_fd, saved_stderr_fd):
+        sys.stderr.flush()
+        os.dup2(saved_stderr_fd, original_stderr_fd)
+
+    if CONST.PLAY_SHINY_SOUND:
+        # Disable playsound messages. It prints SO MANY of logging messages
+        original_stderr_fd = sys.stderr.fileno()
+        saved_stderr_fd = os.dup(original_stderr_fd)
+        devnull = os.open(os.devnull, os.O_WRONLY)
+        sys.stderr.flush()
+        os.dup2(devnull, sys.stderr.fileno())
+
+        try: playsound(path, block=False)
+        except: 
+            sleep(0.1)
+            restore_std(original_stderr_fd, saved_stderr_fd)
+            print(COLOR_str.COULD_NOT_PLAY_SOUND
+                .replace('{module}', 'Shiny Hunter')
+                .replace('{path}', path)
+            )
+        else: 
+            sleep(0.1)
+            restore_std(original_stderr_fd, saved_stderr_fd)
+
+###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
 
@@ -228,15 +265,17 @@ if __name__ == "__main__":
             '2': shiny_hunter,
         }
 
-        # Set XDG_RUNTIME_DIR environment variable (avoid unnecessary warnings)
+        # Set XDG_RUNTIME_DIR and ALSOFT_LOGLEVEL environment variable (avoid unnecessary warnings)
         os.environ['XDG_RUNTIME_DIR'] = "/tmp/runtime-root"
         os.makedirs(os.environ['XDG_RUNTIME_DIR'], exist_ok=True)
         os.chmod(os.environ['XDG_RUNTIME_DIR'], 0o700)
+        os.environ['ALSOFT_LOGLEVEL'] = '0'
 
         if option in menu_options: menu_options[option](option)
         else: print(COLOR_str.INVALID_OPTION.replace('{module}', 'Shiny Hunter') + '\n')
 
     
+    #######################################################################################################################
     #######################################################################################################################
 
     def shiny_hunter(option):
@@ -326,6 +365,7 @@ if __name__ == "__main__":
             .replace('{threads}', str(len(threads))) + '\n'
         )
 
+    #######################################################################################################################
     #######################################################################################################################
 
     main_menu()

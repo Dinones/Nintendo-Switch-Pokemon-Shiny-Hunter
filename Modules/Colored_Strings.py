@@ -104,10 +104,15 @@ RUNNING_OUT_OF_SPACE = \
 
 THREAD_DIED_ERROR = \
     f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}\033[0;m'+\
-    f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}mThead \033[0;m'+\
+    f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}mThread \033[0;m'+\
     f'\033[{COLORS["Red"]};{SPECIAL["Italics"]}m{"{thread}"}\033[0;m'+\
     f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}m died: \033[0;m'+\
     f'\033[{COLORS["Red"]}mShutting down program...\033[0;m'
+
+COULD_NOT_PLAY_SOUND = \
+    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}\033[0;m'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mCould not play sound: \033[0;m'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}m{"{path}"}\033[0;m'
 
 ###########################################################################################################################
 ######################################################     MENU     #######################################################
@@ -310,6 +315,15 @@ COULD_NOT_DELETE_POKEMON = \
     f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Database] "}\033[0;m'+\
     f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}mCould not delete pokémon: \033[0;m'+\
     f'\033[{COLORS["Red"]}m{"{pokemon}"}\033[0;m'
+
+###########################################################################################################################
+#######################################################     GUI     #######################################################
+###########################################################################################################################
+
+COULD_NOT_LOAD_IMAGE = \
+    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[GUI] "}\033[0;m'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mCould not load image: \033[0;m'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}m{"{path}"}\033[0;m'
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################

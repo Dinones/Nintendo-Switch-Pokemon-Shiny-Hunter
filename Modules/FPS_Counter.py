@@ -24,9 +24,10 @@ class FPS_Counter():
         self.frame_count = 0
         self.FPS = 0
 
-        # RAM memory usage
         self.process = psutil.Process(os.getpid())
-        self.memory_usage = 0
+        self.memory_usage = 0 # RAM
+        self.cpu_usage = 0 
+        self.cores = psutil.cpu_count()
 
     #######################################################################################################################
     
@@ -52,9 +53,9 @@ class FPS_Counter():
         if isinstance(shutdown_event, type(None)): return
 
         while not shutdown_event.is_set():
-            mem_info = self.process.memory_info()
-            self.memory_usage = mem_info.rss / (1024 * 1024)
-            sleep(1)
+            self.memory_usage = self.process.memory_info().rss / (1024 * 1024)
+            # Dividing by the number of cores avoids obtaining a higher CPU usage than 100%
+            self.cpu_usage = self.process.cpu_percent(interval=1) / self.cores
 
     #######################################################################################################################
 

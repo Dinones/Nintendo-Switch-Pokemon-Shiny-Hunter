@@ -153,7 +153,7 @@ class Image_Processing():
 ###########################################################################################################################
 
 if __name__ == "__main__":
-    import time
+    from time import sleep
     from Game_Capture import Game_Capture
     
     #######################################################################################################################
@@ -344,7 +344,7 @@ if __name__ == "__main__":
                         continue
 
                 # Reduce workload
-                time.sleep(0.05)
+                sleep(0.05)
                 continue
 
             process_single_frame(image)
@@ -358,7 +358,7 @@ if __name__ == "__main__":
             if key == ord(' '): pause = not pause
 
             counter += 1
-            time.sleep(0.016)
+            sleep(0.016)
 
         Video_Capture.stop()
 
@@ -405,11 +405,11 @@ if __name__ == "__main__":
 
         index = 0
         pause = False
-        timer = time.time()
+        timer = time()
         second_text_position = [CONST.TEXT_PARAMS['position'][0], CONST.TEXT_PARAMS['position'][1] + 20]            
 
         while True and (index + 1) != len(images):
-            if time.time() - timer >= 0.1:
+            if time() - timer >= 0.1:
                 if pause: index -= 1
                 image = Image_Processing(f'../{CONST.IMAGES_FOLDER_PATH}/{images[index]}')
                 image.resize_image()
@@ -422,7 +422,7 @@ if __name__ == "__main__":
                 cv2.imshow(f'{CONST.BOT_NAME} - Lost Shiny Checker', image.resized_image)
 
                 index += 1
-                timer = time.time()
+                timer = time()
 
             # Press 'SPACE' to resume the execution
             # Press 'a' or 'd' to move between frames
@@ -433,6 +433,7 @@ if __name__ == "__main__":
             elif pause and key in [ord('a'), ord('A')]: index -= 1
             elif pause and key in [ord('d'), ord('D')]: index += 1 
 
+        sleep(1)
         print(COLOR_str.SUCCESS_EXIT_PROGRAM
             .replace('{module}', 'Image Processing')
             .replace('{reason}', f'Successfully checked {index + 1}/{len(images)} images!')

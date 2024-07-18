@@ -45,13 +45,19 @@ CRITICAL_AVAILABLE_SPACE = 1*1073741824
 BOT_NAME = "FB Pokemon Shiny Hunter by @Dinones"
 SPAWN_POSITION = (300, 200)
 # [PIXELS] GUI size
-BOT_WINDOW_SIZE = (1104, 718)
+BOT_WINDOW_SIZE = (1100, 570)
 MAIN_FRAME_SIZE = (720, 405)
 SWITCH_CONTROLLER_FRAME_SIZE = (350, 280)
 CLOCK_FRAME_SIZE = (350, 115)
-TEXT_FRAME_SIZE = (200, 39)
-BUTTON_FRAME_SIZE = (350, 50)
+TEXT_FRAME_SIZE = (355, 39)
+STOP_BUTTON_FRAME_SIZE = (350, 63)
+SOCIAL_BUTTON_FRAME_SIZE = (350, 63)
 SWITCH_CONTROLLER_IMAGE_PATH = 'Media/Interface/Switch Controller.png'
+TEMPLATE_IMAGE_PATH = 'Media/Interface/Background Template.png'
+PLAY_SHINY_SOUND = True
+SOUND_ON_IMAGE_PATH = 'Media/Interface/Sound On.png'
+SOUND_OFF_IMAGE_PATH = 'Media/Interface/Sound Off.png'
+SHINY_SOUND_PATH = 'Media/Interface/Shiny.mp3'
 
 ###########################################################################################################################
 ################################################     SWITCH CONTROLLER     ################################################
