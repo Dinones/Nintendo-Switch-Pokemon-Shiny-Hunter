@@ -58,6 +58,12 @@ PLAY_SHINY_SOUND = True
 SOUND_ON_IMAGE_PATH = 'Media/Interface/Sound On.png'
 SOUND_OFF_IMAGE_PATH = 'Media/Interface/Sound Off.png'
 SHINY_SOUND_PATH = 'Media/Interface/Shiny.mp3'
+DINONES_IMAGE_PATH = 'Media/Interface/Dinones.png'
+DISCORD_IMAGE_PATH = 'Media/Interface/Discord.png'
+GITHUB_IMAGE_PATH = 'Media/Interface/Github.png'
+DINONES_URL = 'https://www.youtube.com/@DinoDinones'
+DISCORD_URL = 'https://discordapp.com/users/330983876367482880'
+GITHUB_URL = 'https://github.com/Dinones'
 
 ###########################################################################################################################
 ################################################     SWITCH CONTROLLER     ################################################

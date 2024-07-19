@@ -12,6 +12,7 @@ import PyQt5.QtWidgets as pyqt_w
 import PyQt5.QtCore as pyqt_c
 import PyQt5.QtGui as pyqt_g
 
+import subprocess
 from queue import Queue
 from cllist import dllist
 
@@ -73,7 +74,7 @@ class GUI(pyqt_w.QWidget):
             'music_button': pyqt_w.QPushButton(self),
             'discord_button': pyqt_w.QPushButton(self),
             'github_button': pyqt_w.QPushButton(self),
-            'logo_button': pyqt_w.QPushButton(self),
+            'dinones_button': pyqt_w.QPushButton(self),
 
             'RAM_usage_label': pyqt_w.QLabel(self),
             'CPU_usage_label': pyqt_w.QLabel(self),
@@ -128,8 +129,7 @@ class GUI(pyqt_w.QWidget):
         self.items['music_button'].setFixedSize(CONST.STOP_BUTTON_FRAME_SIZE[1], CONST.STOP_BUTTON_FRAME_SIZE[1])
         self.items['music_button'].setStyleSheet(stop_button_style)
         self.items['music_button'].setIconSize(
-            pyqt_c.QSize(CONST.STOP_BUTTON_FRAME_SIZE[1] - 15, CONST.STOP_BUTTON_FRAME_SIZE[1] - 15)
-        )
+            pyqt_c.QSize(CONST.STOP_BUTTON_FRAME_SIZE[1] - 15, CONST.STOP_BUTTON_FRAME_SIZE[1] - 15))
         self.items['music_button'].move(CONST.MAIN_FRAME_SIZE[0] + 20, 
             CONST.CLOCK_FRAME_SIZE[1] + CONST.SWITCH_CONTROLLER_FRAME_SIZE[1] + CONST.STOP_BUTTON_FRAME_SIZE[1] + 41)
         self.items['music_button'].clicked.connect(lambda: toggle_sound(not CONST.PLAY_SHINY_SOUND))
@@ -138,27 +138,54 @@ class GUI(pyqt_w.QWidget):
         ##### DISCORD BUTTON #####
         self.items['discord_button'].setFixedSize(97, CONST.STOP_BUTTON_FRAME_SIZE[1])
         self.items['discord_button'].setStyleSheet(stop_button_style)
+        self.items['discord_button'].setIconSize(
+            pyqt_c.QSize(CONST.STOP_BUTTON_FRAME_SIZE[1] - 21, CONST.STOP_BUTTON_FRAME_SIZE[1] - 21))
         self.items['discord_button'].move(CONST.MAIN_FRAME_SIZE[0] + 30 + 63, 
             CONST.CLOCK_FRAME_SIZE[1] + CONST.SWITCH_CONTROLLER_FRAME_SIZE[1] + CONST.STOP_BUTTON_FRAME_SIZE[1] + 41)
-        self.items['discord_button'].setText("Discord")
-        self.items['discord_button'].clicked.connect(stop_event.set)
+        self.items['discord_button'].clicked.connect(lambda: self.open_webpage(CONST.DISCORD_URL))
+
+        relative_path = '..' if __name__ == "__main__" else '.'
+        relative_path += f'/{CONST.DISCORD_IMAGE_PATH}'
+        image = pyqt_g.QIcon(relative_path)
+        if not image.pixmap(2, 2).isNull(): self.items['discord_button'].setIcon(image)
+        else: 
+            print(COLOR_str.COULD_NOT_LOAD_IMAGE.replace('{path}', relative_path))
+            self.items['discord_button'].setText("Discord")
 
         ##### GITHUB BUTTON #####
         self.items['github_button'].setFixedSize(97, CONST.STOP_BUTTON_FRAME_SIZE[1])
         self.items['github_button'].setStyleSheet(stop_button_style)
+        self.items['github_button'].setIconSize(
+            pyqt_c.QSize(CONST.STOP_BUTTON_FRAME_SIZE[1] - 21, CONST.STOP_BUTTON_FRAME_SIZE[1] - 21))
         self.items['github_button'].move(CONST.MAIN_FRAME_SIZE[0] + 40 + 160, 
             CONST.CLOCK_FRAME_SIZE[1] + CONST.SWITCH_CONTROLLER_FRAME_SIZE[1] + CONST.STOP_BUTTON_FRAME_SIZE[1] + 41)
-        self.items['github_button'].setText("GitHub")
-        self.items['github_button'].clicked.connect(stop_event.set)
+        self.items['github_button'].clicked.connect(lambda: self.open_webpage(CONST.GITHUB_URL))
+
+        relative_path = '..' if __name__ == "__main__" else '.'
+        relative_path += f'/{CONST.GITHUB_IMAGE_PATH}'
+        image = pyqt_g.QIcon(relative_path)
+        if not image.pixmap(2, 2).isNull(): self.items['github_button'].setIcon(image)
+        else: 
+            print(COLOR_str.COULD_NOT_LOAD_IMAGE.replace('{path}', relative_path))
+            self.items['github_button'].setText("GitHub")
 
         ##### LOGO BUTTON #####
-        self.items['logo_button'].setFixedSize(CONST.STOP_BUTTON_FRAME_SIZE[1], CONST.STOP_BUTTON_FRAME_SIZE[1])
-        self.items['logo_button'].setStyleSheet(stop_button_style)
-        self.items['logo_button'].move(CONST.MAIN_FRAME_SIZE[0] + 50 + 257, 
+        self.items['dinones_button'].setFixedSize(CONST.STOP_BUTTON_FRAME_SIZE[1], CONST.STOP_BUTTON_FRAME_SIZE[1])
+        self.items['dinones_button'].setStyleSheet(stop_button_style)
+        self.items['dinones_button'].setIconSize(
+            pyqt_c.QSize(CONST.STOP_BUTTON_FRAME_SIZE[1] - 25, CONST.STOP_BUTTON_FRAME_SIZE[1] - 25))
+        self.items['dinones_button'].move(CONST.MAIN_FRAME_SIZE[0] + 50 + 257, 
             CONST.CLOCK_FRAME_SIZE[1] + CONST.SWITCH_CONTROLLER_FRAME_SIZE[1] + CONST.STOP_BUTTON_FRAME_SIZE[1] + 41)
-        self.items['logo_button'].setText("Logo")
-        self.items['logo_button'].clicked.connect(stop_event.set)
-
+        self.items['dinones_button'].clicked.connect(lambda: self.open_webpage(CONST.DINONES_URL))
+        
+        relative_path = '..' if __name__ == "__main__" else '.'
+        relative_path += f'/{CONST.DINONES_IMAGE_PATH}'
+        image = pyqt_g.QIcon(relative_path)
+        if not image.pixmap(2, 2).isNull(): self.items['dinones_button'].setIcon(image)
+        else: 
+            print(COLOR_str.COULD_NOT_LOAD_IMAGE.replace('{path}', relative_path))
+            self.items['dinones_button'].setText("D")
+            
         ##### RAM USAGE #####
         self.items['RAM_usage_label'].setFixedSize(CONST.TEXT_FRAME_SIZE[0], CONST.TEXT_FRAME_SIZE[1])
         self.items['RAM_usage_label'].setStyleSheet(text_style)
@@ -220,6 +247,15 @@ class GUI(pyqt_w.QWidget):
         self.items['encounter_count_label'].setText(f"  ★   Encounter Count: {update_items['global_encounter_count']}" + \
             f"   -   ({bad_luck:.2f}%)   -   {update_items['local_encounter_count']}")
         self.items['clock_label'].setText(f"{hours:02} : {minutes:02} : {seconds:02}")
+
+    #######################################################################################################################
+    #######################################################################################################################
+
+
+    def open_webpage(self, url): 
+        # Linux can't open browsers as sudo for security reasons
+        user = os.environ.get('SUDO_USER', os.environ['USER'])
+        subprocess.run(f"sudo -u {user} xdg-open {url}", shell=True)
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################

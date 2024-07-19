@@ -150,6 +150,10 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                     add_or_update_encounter(pokemon, int(time() - encounter_playtime))
                     Video_Capture.save_video(f'Shiny {pokemon_name} - {time()}')
                     Thread(target=lambda: play_sound(f'./{CONST.SHINY_SOUND_PATH}'), daemon=True).start()
+                    print(COLOR_str.SHINY_FOUND
+                        .replace('{module}', 'Shiny Hunter')
+                        .replace('{encounters}', str(global_encounters - last_shiny_encounter))
+                    )
                     stop_event.set()
             else: shiny_timer = time()
 
