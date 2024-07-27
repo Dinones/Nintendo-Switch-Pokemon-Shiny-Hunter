@@ -64,9 +64,10 @@ class Image_Processing():
     #######################################################################################################################
 
     # Write the spcified at the top-left corner
-    def write_text(self, text = ''):
-        cv2.putText(self.FPS_image, text, CONST.TEXT_PARAMS['position'], cv2.FONT_HERSHEY_SIMPLEX, 
-            CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'], CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
+    def write_text(self, text = '', position_offset = (0, 0)):
+        cv2.putText(self.FPS_image, text, tuple(a + b for a, b in zip(CONST.TEXT_PARAMS['position'], position_offset)), 
+            cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'], 
+            CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
 
     #######################################################################################################################
 

@@ -385,26 +385,81 @@ if __name__ == "__main__":
     import numpy as np
     from time import sleep
 
-    from Image_Processing import Image_Processing
+    from FPS_Counter import FPS_Counter
+    import Colored_Strings as COLOR_str
     from Game_Capture import Game_Capture
+    from Image_Processing import Image_Processing
 
-    # Game_Capture = Game_Capture(f'../{CONST.TESTING_VIDEO_PATH}')
-    Game_Capture = Game_Capture()
-    state = ''
+    #######################################################################################################################
 
-    while True:
-        sleep(0.02)
-        image = Image_Processing(Game_Capture.read_frame())
-        image.resize_image()
-        image.FPS_image = np.copy(image.resized_image)
+    def main_menu():
+        print('\n' + COLOR_str.MENU.replace('{module}', 'Control System'))
+        print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Check states from capture card'))
+        print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Check states from  video'))
 
-        # print(image.check_pixel_color())
-        state = starter_encounter(image, state)
-        image.write_text(state)
+        option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Control System'))
 
-        cv2.imshow(f'{CONST.BOT_NAME} - Image', image.FPS_image)
+        menu_options = {
+            '1': check_states,
+            '2': check_states,
+        }
 
-        key = cv2.waitKey(1)
-        if key == ord('q') or key == ord('Q'): break
+        if option in menu_options: menu_options[option](option)
+        else: print(COLOR_str.INVALID_OPTION.replace('{module}', 'Control System') + '\n')
 
-    Game_Capture.stop()
+    #######################################################################################################################
+    #######################################################################################################################
+
+    def check_states(option): 
+        if option == '1': tool = 'capture card'
+        elif option == '2': tool = 'video'
+        print('\n' + COLOR_str.SELECTED_OPTION
+            .replace('{module}', 'Control System')
+            .replace('{option}', f"{option}")
+            .replace('{action}', f"Checking states using {tool}...")
+            .replace('{path}', '')
+        )
+
+        if option == '1':
+            Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
+            if not Video_Capture.video_capture.isOpened(): 
+                Video_Capture.stop()
+                print(COLOR_str.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{CONST.VIDEO_CAPTURE_INDEX}'") + '\n')
+                return
+        elif option == '2':
+            if not os.path.exists(f'../{CONST.TESTING_VIDEO_PATH}'): 
+                return print(COLOR_str.INVALID_PATH_ERROR
+                    .replace('{module}', 'Image Processing')
+                    .replace('{path}', f"'../{CONST.TESTING_VIDEO_PATH}' or '../{CONST.SAVING_FRAMES_PATH}'") + '\n'
+                )
+            Video_Capture = Game_Capture(f'../{CONST.TESTING_VIDEO_PATH}')
+        
+        FPS = FPS_Counter()
+        state = ''
+
+        while True:
+            if option == '2': sleep(0.02)
+            
+            image = Image_Processing(Video_Capture.read_frame())
+            image.resize_image()
+            FPS.get_FPS()
+            image.draw_FPS(FPS.FPS)
+
+            state = starter_encounter(image, state)
+            image.write_text(state, (0, CONST.TEXT_PARAMS['position'][1] + 5))
+
+            cv2.imshow(f'{CONST.BOT_NAME} - Image', image.FPS_image)
+
+            key = cv2.waitKey(1)
+            if key == ord('q') or key == ord('Q'): break
+
+        Video_Capture.stop()
+        print(COLOR_str.SUCCESS_EXIT_PROGRAM
+            .replace('{module}', 'Control System')
+            .replace('{reason}', 'Successfully checked states!') + '\n'
+        )
+
+    #######################################################################################################################
+    #######################################################################################################################
+
+    main_menu()

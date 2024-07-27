@@ -124,8 +124,9 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                     Video_Capture.save_video()
                     Video_Capture.start_recording()
 
-            # Update the database
+            # Save the last frame where the name of the pokemon appears in the text box
             elif Controller.current_event in ['ENTER_COMBAT_3', 'ENTER_COMBAT_5']: pokemon_image = image
+            # Update the database
             elif Controller.current_event == "CHECK_SHINY" and type(pokemon_image) != type(None):
                 pokemon_name = pokemon_image.recognize_pokemon()
                 if CONST.pokemon_name: 
@@ -268,8 +269,7 @@ if __name__ == "__main__":
         print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Start static shiny hunter'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '3').replace('{option}', 'Start starter shiny hunter'))
 
-        # option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Shiny Hunter'))
-        option = '3'
+        option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Shiny Hunter'))
 
         menu_options = {
             '1': shiny_hunter,
