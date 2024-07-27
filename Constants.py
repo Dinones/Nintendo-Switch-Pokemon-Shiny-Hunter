@@ -9,6 +9,7 @@ REFRESH_FPS_TIME = 1
 MAX_VIDEO_DEVICES_ANALIZED = 5
 VIDEO_FPS = 27
 OUTPUT_VIDEO_PATH = 'Media/Videos/Video.avi'
+# Can't be greater than 110s!
 SHINY_RECORDING_SECONDS = 60
 SKIPPED_FRAMES_TO_RECONNECT = 3
 
@@ -31,8 +32,7 @@ TEXT_PARAMS = {
     'star_num_color': (0, 0, 255)
 }
 PRESSED_BUTTON_COLOR = (255, 0, 200)
-REPLACEMENT_COLOR = (0, 0, 255)
-SAVE_IMAGES = True
+SAVE_IMAGES = False
 IMAGES_FOLDER_PATH = 'Media/Images/'
 # [BYTES] 1GB = 1073741824B
 CRITICAL_AVAILABLE_SPACE = 1*1073741824
@@ -92,7 +92,8 @@ TEXT_BOX_LINE = {
     'x': int(MAIN_FRAME_SIZE[0] // 16 * 1.2),
     'y1': int(MAIN_FRAME_SIZE[1] // 16 * 1),
     'y2': int(MAIN_FRAME_SIZE[1] // 16 * 2), 
-    'color': (255, 255, 255)
+    'color': (255, 255, 255),
+    'overworld_x': int(MAIN_FRAME_SIZE[0] // 16 * 3.5),
 }
 LIFE_BOX_LINE = {
     'x': int(MAIN_FRAME_SIZE[0] // 96 * 1),
@@ -100,6 +101,14 @@ LIFE_BOX_LINE = {
     'y2': int(MAIN_FRAME_SIZE[1] // 16 * 2.6),
     'color': (250, 250, 250)
 }
+SELECTION_BOX_LINE = {
+    'x': int(MAIN_FRAME_SIZE[0] // 16 * 13),
+    'y1': int(MAIN_FRAME_SIZE[1] // 16 * 4),
+    'y2': int(MAIN_FRAME_SIZE[1] // 16 * 5),
+    'color': (255, 255, 255)
+}
+# 'L': Left | 'C': Center | 'R': Right 
+STARTER = 'C'
 
 ###########################################################################################################################
 #####################################################     DATABASE     ####################################################
@@ -113,7 +122,7 @@ DATABASE_PATH = 'Media/Database.db'
 
 TESTING = True
 TESTING_COLOR = (255, 0, 255)
-TESTING_VIDEO_PATH = 'Media/Videos/Shiny.mp4'
-TESTING_IMAGE_PATH = 'Media/Tests/Pairing Screen.png'
+TESTING_VIDEO_PATH = 'Media/Videos/Reset Game.mp4'
+TESTING_IMAGE_PATH = 'Media/Tests/12.png'
 SAVING_FRAMES_PATH = 'Media/Tests'
 TEST_DATABASE_PATH = 'Media/Test_Database.db'

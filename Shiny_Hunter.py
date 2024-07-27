@@ -20,18 +20,19 @@ if __name__ == '__main__':
         exit(os.system(f'sudo python3 {program_name}'))
 
 import copy
+from queue import Queue
 from time import sleep, time
 from playsound import playsound
 from threading import Thread, Event, Timer
 
 from Macros import *
 from Database import *
+from GUI import GUI, App
 import Constants as CONST
 from Control_System import *
 import Colored_Strings as COLOR_str
 from FPS_Counter import FPS_Counter
 from Game_Capture import Game_Capture
-from GUI import GUI, DllistQueue, App
 from Image_Processing import Image_Processing
 from Switch_Controller import Switch_Controller
 
@@ -104,11 +105,12 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
             # Refresh the event
             if Encounter_Type == 'WILD': Controller.current_event = search_wild_pokemon(image, Controller.current_event)
             elif Encounter_Type == 'STATIC': Controller.current_event = static_encounter(image, Controller.current_event)
+            elif Encounter_Type == 'STARTER': Controller.current_event = starter_encounter(image, Controller.current_event)
 
             # Check if the program got stuck in some event
-            if Controller.current_event not in ["MOVE_PLAYER", "WAIT_HOME_SCREEN", "SHINY_FOUND"] and \
+            if (Controller.current_event not in ["MOVE_PLAYER", "WAIT_HOME_SCREEN", "SHINY_FOUND", "ENTER_LAKE_4"] and \
                 Controller.current_event == Controller.previous_event and \
-                time() - stuck_timer > CONST.STUCK_TIMER_SECONDS:
+                time() - stuck_timer > CONST.STUCK_TIMER_SECONDS) or time() - stuck_timer > 120:
                     stuck_timer = time()
                     # If stuck in "RESTART_GAME_1", it would be stuck forever
                     Controller.previous_event = None
@@ -123,10 +125,10 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                     Video_Capture.start_recording()
 
             # Update the database
-            elif Controller.current_event == "ENTER_COMBAT_3": pokemon_image = image
+            elif Controller.current_event in ['ENTER_COMBAT_3', 'ENTER_COMBAT_5']: pokemon_image = image
             elif Controller.current_event == "CHECK_SHINY" and type(pokemon_image) != type(None):
                 pokemon_name = pokemon_image.recognize_pokemon()
-                if CONST.SAVE_IMAGES: 
+                if CONST.pokemon_name: 
                     pokemon_image.save_image(pokemon_name)
                     # Check if the computer is running out of space
                     system_space = FPS.get_system_available_space()
@@ -195,9 +197,12 @@ def controller_control(controller, shutdown_event):
 
         if aux_current_event == 'WAIT_HOME_SCREEN': fast_start_macro(controller)
         elif aux_current_event == 'RESTART_GAME_1': restart_game_macro(controller)
-        elif aux_current_event in ['RESTART_GAME_2', 'RESTART_GAME_3', 'ENTER_STATIC_COMBAT', 'ESCAPE_FAILED_2']: 
-            press_single_button(controller, 'A')
+        elif aux_current_event in ['RESTART_GAME_2', 'RESTART_GAME_3', 'ENTER_STATIC_COMBAT', 'ESCAPE_FAILED_2',
+            'ENTER_LAKE_2', 'ENTER_LAKE_4']: press_single_button(controller, 'A')
         elif aux_current_event == 'MOVE_PLAYER': move_player_wild_macro(controller)
+        elif aux_current_event == 'ENTER_LAKE_1': enter_lake_macro(controller)
+        elif aux_current_event == 'STARTER_SELECTION_2': select_starter_macro(controller)
+        elif aux_current_event == 'STARTER_SELECTION_3': accept_selection_box_macro(controller)
         elif aux_current_event == 'ESCAPE_COMBAT_2': escape_combat_macro(controller)
         elif aux_current_event == 'STOP_1': stop_macro(controller)
 
@@ -261,12 +266,15 @@ if __name__ == "__main__":
         print('\n' + COLOR_str.MENU.replace('{module}', 'Shiny Hunter'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Start wild shiny hunter'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Start static shiny hunter'))
+        print(COLOR_str.MENU_OPTION.replace('{index}', '3').replace('{option}', 'Start starter shiny hunter'))
 
-        option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Shiny Hunter'))
+        # option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Shiny Hunter'))
+        option = '3'
 
         menu_options = {
             '1': shiny_hunter,
             '2': shiny_hunter,
+            '3': shiny_hunter,
         }
 
         # Set XDG_RUNTIME_DIR and ALSOFT_LOGLEVEL environment variable (avoid unnecessary warnings)
@@ -285,6 +293,7 @@ if __name__ == "__main__":
     def shiny_hunter(option):
         if option == '1': action = 'wild'
         elif option == '2': action = 'static'
+        elif option == '3': action = 'starter'
         print('\n' + COLOR_str.SELECTED_OPTION
             .replace('{module}', 'Shiny Hunter')
             .replace('{option}', f"{option}")
@@ -327,8 +336,6 @@ if __name__ == "__main__":
                     return
             else: return print()
 
-        # Image_Queue = DllistQueue(maxsize = 2)
-        from queue import Queue
         Image_Queue = Queue()
         Controller = Switch_Controller()
         initialize_database()
@@ -336,9 +343,11 @@ if __name__ == "__main__":
         shutdown_event = Event()
         stop_event = Event()
 
-        threads = []
         if option == '1': encounter_type = 'WILD'
-        if option == '2': encounter_type = 'STATIC'
+        elif option == '2': encounter_type = 'STATIC'
+        elif option == '3': encounter_type = 'STARTER'
+
+        threads = []
         threads.append({
             'function': 'GUI_control',
             'thread': Thread(target=lambda: 

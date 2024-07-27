@@ -89,7 +89,7 @@ def restart_game_macro(controller):
 
 ###########################################################################################################################
 
-# The mplayer moves Up/Down or Right/Left
+# The player moves Up/Down or Right/Left
 def move_player_wild_macro(controller):
     global walking_direction
 
@@ -135,10 +135,55 @@ def home_macro(controller):
 
 ###########################################################################################################################
 
+# Selects the desired starter pokémon
+def select_starter_macro(controller):
+    if controller.previous_event == controller.current_event: return
+
+    wait_and_press_single_button(controller, 1, 'A'); sleep(0.5)
+    if CONST.STARTER == 'C': 
+        controller.current_button_pressed = 'RIGHT'
+        controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.DPAD_RIGHT]); sleep(0.2)
+    elif CONST.STARTER == 'R': 
+        controller.current_button_pressed = 'LEFT'
+        controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.DPAD_LEFT]); sleep(0.2)
+    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A])
+
+###########################################################################################################################
+
+# Selects the desired starter pokémon
+def accept_selection_box_macro(controller):
+    if controller.previous_event == controller.current_event: return
+
+    controller.current_button_pressed = 'UP'
+    for _ in range(2): controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.DPAD_UP])
+    for _ in range(2): 
+        controller.current_button_pressed = 'A'; sleep(0.2)
+        controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A])
+        controller.current_button_pressed = ''; sleep(0.1)
+
+###########################################################################################################################
+
+# Enter the lake
+def enter_lake_macro(controller):
+    controller.current_button_pressed = 'UP'
+    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.DPAD_UP], down=0.5)
+    controller.current_button_pressed = 'A'; sleep(0.2)
+    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A])
+    controller.current_button_pressed = ''; sleep(0.1)
+
+###########################################################################################################################
+
 # Press the specified button a single time
 def press_single_button(controller, button):
     controller.current_button_pressed = button
     controller.nxbt_manager.press_buttons(controller.controller_index, [getattr(Buttons, button)])
+
+###########################################################################################################################
+
+# Wait the specified time and press the button a single time
+def wait_and_press_single_button(controller, seconds, button):
+    sleep(seconds)
+    press_single_button(controller, button)
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################

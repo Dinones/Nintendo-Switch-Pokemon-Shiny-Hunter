@@ -35,7 +35,7 @@ def search_wild_pokemon(image, state):
 
     # Game loaded, player in the overworld
     elif state == 'MOVE_PLAYER':
-        # Look for the text box
+        # Look for the load combat white screen
         if image.check_multiple_pixel_colors(
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
@@ -177,6 +177,134 @@ def static_encounter(image, state):
 ###########################################################################################################################
 ###########################################################################################################################
 
+def starter_encounter(image, state):
+    if not state: return 'WAIT_PAIRING_SCREEN'
+
+    # Nintendo Switch pairing controller menu
+    elif state == 'WAIT_HOME_SCREEN':
+        # Look for the top-left nintendo switch main menu pixel
+        if image.check_pixel_color(CONST.HOME_MENU_COLOR):
+            return 'ENTER_LAKE_1'
+
+    elif state == 'RESTART_GAME_4':
+        # Check if the black screen has ended
+        if not image.check_multiple_pixel_colors(
+            [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y1']],
+            [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y2']], CONST.LOAD_SCREEN_BLACK_COLOR
+        ): 
+            return 'ENTER_LAKE_1'
+
+    # In front of the lake entrance
+    elif state == 'ENTER_LAKE_1':
+        # Look for the text box
+        if image.check_multiple_pixel_colors(
+            [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y1']],
+            [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
+        ):
+            return 'ENTER_LAKE_2'
+
+    # In front of the lake entrance
+    elif state == 'ENTER_LAKE_2':
+        # Look if the text box has disappeared
+        if not image.check_multiple_pixel_colors(
+            [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y1']],
+            [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
+        ):
+            return 'ENTER_LAKE_3'
+
+    # Inside the lake
+    elif state == 'ENTER_LAKE_3':
+        # Look for the text box
+        if image.check_multiple_pixel_colors(
+            [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y1']],
+            [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
+        ):
+            return 'ENTER_LAKE_4'
+
+    # Inside the lake
+    elif state == 'ENTER_LAKE_4':
+        # Look for the black screen
+        if image.check_multiple_pixel_colors(
+            [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y1']],
+            [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y2']], CONST.LOAD_SCREEN_BLACK_COLOR
+        ):
+            return 'STARTER_SELECTION_1'
+
+    # Opening briefcase
+    elif state == 'STARTER_SELECTION_1':
+        # Look for the text box
+        if image.check_multiple_pixel_colors(
+            [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y1']],
+            [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
+        ):
+            return 'STARTER_SELECTION_2'
+
+    # Briefcase is opened
+    elif state == 'STARTER_SELECTION_2':
+        # Look for the selection box: (Yes/No)
+        if image.check_multiple_pixel_colors(
+            [CONST.SELECTION_BOX_LINE['x'], CONST.SELECTION_BOX_LINE['y1']],
+            [CONST.SELECTION_BOX_LINE['x'], CONST.SELECTION_BOX_LINE['y2']], CONST.SELECTION_BOX_LINE['color']
+        ):
+            return 'STARTER_SELECTION_3'
+
+    # Starter has been selected
+    elif state == 'STARTER_SELECTION_3':
+        # Look for the text box
+        if not image.check_multiple_pixel_colors(
+            [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y1']],
+            [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
+        ):
+            return 'STARTER_SELECTION_4'
+
+    # Starter has been selected
+    elif state == 'STARTER_SELECTION_4':
+        # Look for the white load screen
+        if image.check_multiple_pixel_colors(
+            [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y1']],
+            [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
+        ):
+            return 'ENTER_COMBAT_1'
+
+    # Combat loaded (Wild Pokémon appeared)
+    elif state == 'ENTER_COMBAT_3B':
+        # Check if the text box has disappeared
+        if not image.check_multiple_pixel_colors(
+            [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
+            [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
+        ): 
+            return 'ENTER_COMBAT_4'
+
+    # Combat loaded (Starter Pokémon appeared)
+    elif state == 'ENTER_COMBAT_4':
+        # Look for the text box
+        if image.check_multiple_pixel_colors(
+            [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
+            [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
+        ):
+            return 'ENTER_COMBAT_5'
+
+    # Combat loaded (Wild Pokémon stars)
+    elif state == 'CHECK_SHINY':
+        # Look for the text box
+        if image.check_multiple_pixel_colors(
+            [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y1']],
+            [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y2']], CONST.LIFE_BOX_LINE['color']
+        ):
+            if image.shiny_detection_time and time() - image.shiny_detection_time >= CONST.SHINY_DETECTION_TIME:
+                return 'SHINY_FOUND'
+            else: return 'RESTART_GAME_1'
+
+    else: 
+        state = _check_common_states(image, state)
+        # We need to check the starter pokémon, not the wild one 
+        if state == 'ENTER_COMBAT_3': state = 'ENTER_COMBAT_3B'
+
+    return state
+
+###########################################################################################################################
+###########################################################################################################################
+
 def _check_common_states(image, state):
     # Nintendo Switch pairing controller menu
     if state == 'WAIT_PAIRING_SCREEN':
@@ -216,7 +344,7 @@ def _check_common_states(image, state):
 
     # Combat loadscreen (Full white screen)
     elif state == 'ENTER_COMBAT_1':
-        # Check if the text box has disappeared
+        # Check if the white load screen
         if not image.check_multiple_pixel_colors(
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
@@ -233,7 +361,7 @@ def _check_common_states(image, state):
             return 'ENTER_COMBAT_3'
 
     # Combat loaded (Wild Pokémon appeared)
-    elif state == 'ENTER_COMBAT_3':
+    elif state in ['ENTER_COMBAT_3', 'ENTER_COMBAT_5']:
         # Check if the text box has disappeared
         if not image.check_multiple_pixel_colors(
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
@@ -271,10 +399,9 @@ if __name__ == "__main__":
         image.FPS_image = np.copy(image.resized_image)
 
         # print(image.check_pixel_color())
-        state = search_wild_pokemon(image, state)
-        print(state)
+        state = starter_encounter(image, state)
+        image.write_text(state)
 
-        if not isinstance(image.resized_image, type(None)): image.FPS_image = np.copy(image.resized_image)
         cv2.imshow(f'{CONST.BOT_NAME} - Image', image.FPS_image)
 
         key = cv2.waitKey(1)

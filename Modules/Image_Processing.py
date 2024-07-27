@@ -38,6 +38,7 @@ class Image_Processing():
 
     #######################################################################################################################
 
+    # Resize the image
     def resize_image(self, desired_size = CONST.MAIN_FRAME_SIZE):
         if isinstance(self.original_image, type(None)): return
 
@@ -54,9 +55,17 @@ class Image_Processing():
 
     #######################################################################################################################
 
+    # Draw FPS at the top-left corner
     def draw_FPS(self, FPS = 0):
         self.FPS_image = np.copy(self.resized_image)
         cv2.putText(self.FPS_image, f'FPS: {FPS}', CONST.TEXT_PARAMS['position'], cv2.FONT_HERSHEY_SIMPLEX, 
+            CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'], CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
+
+    #######################################################################################################################
+
+    # Write the spcified at the top-left corner
+    def write_text(self, text = ''):
+        cv2.putText(self.FPS_image, text, CONST.TEXT_PARAMS['position'], cv2.FONT_HERSHEY_SIMPLEX, 
             CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'], CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
 
     #######################################################################################################################
@@ -107,21 +116,24 @@ class Image_Processing():
 
     # Return if all the pixels of the specifiead row are of the specified color
     def check_multiple_pixel_colors(self, start, end, color):
-        pixels = []
+        match_pixels = True
         for index in range(start[1], end[1]):
-            if all(self.resized_image[-index][start[0]] == color): pixels.append(True)
+            if all(self.resized_image[-index][start[0]] == color): continue
             # If one False is found, there is no need to check the other pixels
-            else: pixels.append(False); break
+            else: match_pixels = False; break
+
+        # Color all the pixels that are being checked
         if CONST.TESTING: 
             for index in range(start[1], end[1]): self.FPS_image[-index][start[0]] = CONST.TESTING_COLOR
-        return all(pixels)
+
+        return match_pixels
 
     #######################################################################################################################
 
     # Read the pokémon name
-    def recognize_pokemon(self):
-        # [y1:y2, x1:x2] | Wild Pokémon: [27:43, 535:650] | Player Pokémon: [y1:y2, x1:x2]
-        # Text Box: [333:365, 50:670]
+    def recognize_pokemon(self, encounter_type = "WILD"):
+        # Format: [y1:y2, x1:x2] 
+        # Wild Pokémon: [27:43, 535:650] | Player Pokémon: [y1:y2, x1:x2] | Text Box: [333:365, 50:670]
         name_image = self.resized_image[333:365, 50:670]
         name_image = cv2.cvtColor(name_image, cv2.COLOR_BGR2GRAY)
 
@@ -138,15 +150,17 @@ class Image_Processing():
 
     #######################################################################################################################
 
+    # Save the image
     def save_image(self, pokemon_name = ''):
         file_name = f'{pokemon_name}_{str(int(time()))}' if pokemon_name else str(int(time()))
         cv2.imwrite(f'./{CONST.IMAGES_FOLDER_PATH}{file_name}.png', self.original_image) 
 
     #######################################################################################################################
 
+    # Color the specified pixel of the original image
     def replace_pixels(self, pixel_color):
         mask = np.all(self.original_image == pixel_color, axis=-1)
-        self.original_image[mask] = CONST.REPLACEMENT_COLOR
+        self.original_image[mask] = CONST.TESTING_COLOR
            
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
@@ -160,16 +174,16 @@ if __name__ == "__main__":
 
     def main_menu():
         print('\n' + COLOR_str.MENU.replace('{module}', 'Image Processing'))
-        print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Process video'))
-        print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Process image'))
+        print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Process image'))
+        print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Process video'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '3').replace('{option}', 'Extract frames from video'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '4').replace('{option}', 'Check lost shiny'))
 
         option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Image Processing'))
 
         menu_options = {
-            '1': process_video,
-            '2': process_image,
+            '1': process_image,
+            '2': process_video,
             '3': extract_frames_from_video,
             '4': check_lost_shiny,
         }
@@ -177,6 +191,7 @@ if __name__ == "__main__":
         if option in menu_options: menu_options[option](option)
         else: print(COLOR_str.INVALID_OPTION.replace('{module}', 'Image Processing') + '\n')
 
+    #######################################################################################################################
     #######################################################################################################################
 
     def process_image(option): 
@@ -195,14 +210,20 @@ if __name__ == "__main__":
 
         image = Image_Processing(f'../{CONST.TESTING_IMAGE_PATH}')
         if isinstance(image.original_image, type(None)): return
+        image.resize_image()
+        # Linked images: If one image is edited, the other one is too
+        image.FPS_image = image.resized_image
 
         # image.replace_pixels([141, 140, 130])
         # print(image.check_pixel_color())
         # cv2.circle(image.original_image, (20, 20), 9, CONST.PRESSED_BUTTON_COLOR, -1)
-        cv2.rectangle(image.resized_image, (50, 333), (670, 365), (255, 255, 0), 1)
-
-        image.resize_image()
+        # cv2.rectangle(image.resized_image, (50, 333), (670, 365), (255, 255, 0), 1)
         # print(image.recognize_pokemon())
+        # print(image.check_multiple_pixel_colors(
+        #     [int(CONST.MAIN_FRAME_SIZE[0] // 16 * 13), int(CONST.MAIN_FRAME_SIZE[1] // 16 * 4)],
+        #     [int(CONST.MAIN_FRAME_SIZE[0] // 16 * 13), int(CONST.MAIN_FRAME_SIZE[1] // 16 * 5)], 
+        #     CONST.SELECTION_BOX_LINE['color']
+        # ))
 
         print(COLOR_str.PRESS_KEY_TO_INSTRUCTION
             .replace('{module}', 'Image Processing')
@@ -308,8 +329,13 @@ if __name__ == "__main__":
             .replace('{key}', "'D'")
             .replace('{instruction}', 'move a frame forward')
         )
+        print(COLOR_str.PRESS_KEY_TO_INSTRUCTION
+            .replace('{module}', 'Image Processing')
+            .replace('{key}', "'C'")
+            .replace('{instruction}', 'take a screenshot')
+        )
 
-        counter = 0
+        frame_index = 0
         pause = False
         total_video_frames = int(Video_Capture.video_capture.get(cv2.CAP_PROP_FRAME_COUNT))
 
@@ -333,15 +359,18 @@ if __name__ == "__main__":
                 if key == ord('q') or key == ord('Q'): break
                 elif key == ord(' '): pause = not pause
                 elif key == ord('a') or key == ord('A'): 
-                    if counter > 0: 
-                        counter = counter - 1
-                        process_single_frame(image, counter)
+                    if frame_index > 0: 
+                        frame_index = frame_index - 1
+                        process_single_frame(image, frame_index)
                         continue
                 elif key == ord('d') or key == ord('D'):
-                    if counter < total_video_frames:
-                        counter = counter + 1
-                        process_single_frame(image, counter)
+                    if frame_index < total_video_frames:
+                        frame_index = frame_index + 1
+                        process_single_frame(image, frame_index)
                         continue
+                elif key == ord('c') or key == ord('C'):
+                    cv2.imwrite(f'../{CONST.SAVING_FRAMES_PATH}/{frame_index}.png', image.original_image)
+                    print(COLOR_str.IMAGE_SAVED.replace('{path}', f"'../{CONST.SAVING_FRAMES_PATH}/{frame_index}.png'"))
 
                 # Reduce workload
                 sleep(0.05)
@@ -357,7 +386,7 @@ if __name__ == "__main__":
             if key == ord('q') or key == ord('Q'): break
             if key == ord(' '): pause = not pause
 
-            counter += 1
+            frame_index += 1
             sleep(0.016)
 
         Video_Capture.stop()
