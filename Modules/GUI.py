@@ -19,6 +19,7 @@ from cllist import dllist
 from playsound import playsound
 
 import sys; sys.path.append('..')
+import Colored_Strings as COLOR_str
 import Constants as CONST
 
 ###########################################################################################################################
@@ -115,7 +116,7 @@ class GUI(pyqt_w.QWidget):
             # I'm editing the value of a constant. I know, I deserve to die!
             CONST.PLAY_SOUNDS = value
             
-            relative_path = '..' if __name__ == "__main__" else '.'
+            relative_path = '.' if os.path.exists('./Media/') else '..'
             if CONST.PLAY_SOUNDS: 
                 if play_activation_sound:
                     shiny_sound = relative_path + f'/{CONST.SHINY_STARS_SOUND_PATH}'
@@ -150,7 +151,7 @@ class GUI(pyqt_w.QWidget):
             CONST.CLOCK_FRAME_SIZE[1] + CONST.SWITCH_CONTROLLER_FRAME_SIZE[1] + CONST.STOP_BUTTON_FRAME_SIZE[1] + 41)
         self.items['discord_button'].clicked.connect(lambda: self.open_webpage(CONST.DISCORD_URL))
 
-        relative_path = '..' if __name__ == "__main__" else '.'
+        relative_path = '.' if os.path.exists('./Media/') else '..'
         relative_path += f'/{CONST.DISCORD_IMAGE_PATH}'
         image = pyqt_g.QIcon(relative_path)
         if not image.pixmap(2, 2).isNull(): self.items['discord_button'].setIcon(image)
@@ -167,7 +168,7 @@ class GUI(pyqt_w.QWidget):
             CONST.CLOCK_FRAME_SIZE[1] + CONST.SWITCH_CONTROLLER_FRAME_SIZE[1] + CONST.STOP_BUTTON_FRAME_SIZE[1] + 41)
         self.items['github_button'].clicked.connect(lambda: self.open_webpage(CONST.GITHUB_URL))
 
-        relative_path = '..' if __name__ == "__main__" else '.'
+        relative_path = '.' if os.path.exists('./Media/') else '..'
         relative_path += f'/{CONST.GITHUB_IMAGE_PATH}'
         image = pyqt_g.QIcon(relative_path)
         if not image.pixmap(2, 2).isNull(): self.items['github_button'].setIcon(image)
@@ -184,7 +185,7 @@ class GUI(pyqt_w.QWidget):
             CONST.CLOCK_FRAME_SIZE[1] + CONST.SWITCH_CONTROLLER_FRAME_SIZE[1] + CONST.STOP_BUTTON_FRAME_SIZE[1] + 41)
         self.items['dinones_button'].clicked.connect(lambda: self.open_webpage(CONST.DINONES_URL))
         
-        relative_path = '..' if __name__ == "__main__" else '.'
+        relative_path = '.' if os.path.exists('./Media/') else '..'
         relative_path += f'/{CONST.DINONES_IMAGE_PATH}'
         image = pyqt_g.QIcon(relative_path)
         if not image.pixmap(2, 2).isNull(): self.items['dinones_button'].setIcon(image)
@@ -299,7 +300,6 @@ if __name__ == "__main__":
     import time
     from threading import Thread, Event
 
-    import Colored_Strings as COLOR_str
     from FPS_Counter import FPS_Counter
     from Game_Capture import Game_Capture
     from Image_Processing import Image_Processing
@@ -311,8 +311,7 @@ if __name__ == "__main__":
         print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Open GUI using capture card'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Open GUI using a template image'))
 
-        # option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'GUI'))
-        option = '2'
+        option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'GUI'))
 
         menu_options = {
             '1': test_GUI_capture_card,
@@ -381,6 +380,7 @@ if __name__ == "__main__":
                     'global_encounter_count': 0,
                     'local_encounter_count': 0,
                     'memory_usage': FPS.memory_usage,
+                    'cpu_usage': FPS.cpu_usage,
                     'switch_controller_image': switch_controller_image,
                     'clock': int(time.time() - initial_time),
                 }

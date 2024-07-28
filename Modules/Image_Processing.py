@@ -13,7 +13,6 @@ import pytesseract
 import numpy as np
 from time import time
 import PyQt5.QtGui as pyqt_g
-from PIL import Image, ImageTk
 
 import sys; sys.path.append('..')
 import Colored_Strings as COLOR_str

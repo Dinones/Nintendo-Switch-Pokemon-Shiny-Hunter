@@ -155,6 +155,7 @@ if __name__ == '__main__':
                     'global_encounter_count': 0,
                     'local_encounter_count': 0,
                     'memory_usage': FPS.memory_usage,
+                    'cpu_usage': FPS.cpu_usage,
                     'switch_controller_image': switch_controller_image,
                     'clock': int(time.time() - initial_time),
                 }

@@ -11,8 +11,8 @@ if __name__ == '__main__':
 import sqlite3
 
 import sys; sys.path.append('..')
-import Constants as CONST
 import Colored_Strings as COLOR_str
+import Constants as CONST
 
 ###########################################################################################################################
 #################################################     INITIALIZATIONS     #################################################
