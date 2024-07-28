@@ -82,16 +82,27 @@ RELEASING_THREADS = \
 
 IMAGES_COUNT_WARNING = \
     f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}\033[0;m'+\
-    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mDetected {"{images}"} images inside \033[0;m'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mDetected \033[0;m'+\
+    f'\033[{COLORS["Yellow"]}m{"{images}"}\033[0;m'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}m images inside \033[0;m'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}m"{"{path}"}"\033[0;m'+\
     f'\033[{COLORS["Yellow"]}m ({"{size}"})\033[0;m'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}m: \033[0;m'+\
     f'\033[{COLORS["Yellow"]}mPlease, consider checking and deleting them...\033[0;m'
 
+USED_SPACE_WARNING = \
+    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}\033[0;m'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mSpace in \033[0;m'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}m{"{path}"}\033[0;m'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}m is greater than \033[0;m'+\
+    f'\033[{COLORS["Yellow"]}m{"1.00GB ({used_space})"}\033[0;m'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}m: \033[0;m'+\
+    f'\033[{COLORS["Yellow"]}mPlease, consider freeing some space...\033[0;m'
+
 AVAILABLE_SPACE_ERROR = \
     f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}\033[0;m'+\
     f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}mSystem\'s available space is less than \033[0;m'+\
-    f'\033[{COLORS["Red"]}m{"{available_space}"}\033[0;m'+\
+    f'\033[{COLORS["Red"]}m{"{threshold} ({available_space})"}\033[0;m'+\
     f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}m: \033[0;m'+\
     f'\033[{COLORS["Red"]}mPlease, free some space before continuing...\033[0;m'
 
@@ -116,7 +127,9 @@ COULD_NOT_PLAY_SOUND = \
 
 SHINY_FOUND = \
     f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}\033[0;m'+\
-    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mShiny found after \033[0;m'+\
+    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mShiny \033[0;m'+\
+    f'\033[{COLORS["Blue"]}m{"{pokemon}"}\033[0;m'+\
+    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}m found after \033[0;m'+\
     f'\033[{COLORS["Blue"]}m{"{encounters}"}\033[0;m'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}m encounters!\033[0;m'
 

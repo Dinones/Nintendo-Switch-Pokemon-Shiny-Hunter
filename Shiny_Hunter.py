@@ -154,6 +154,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                     Thread(target=lambda: play_sound(f'./{CONST.SHINY_SOUND_PATH}'), daemon=True).start()
                     print(COLOR_str.SHINY_FOUND
                         .replace('{module}', 'Shiny Hunter')
+                        .replace('{pokemon}', pokemon_name)
                         .replace('{encounters}', str(global_encounters - last_shiny_encounter))
                     )
                     stop_event.set()
@@ -273,22 +274,39 @@ if __name__ == "__main__":
             .replace('{path}', '')
         )
 
+        ###################################################################################################################
+        ###################################################################################################################
+        
+        # Check system's available space. Constantly saving images can cause to run out of space
+
         FPS = FPS_Counter()
-        # Constantly saving images can cause to run out of space
-        images_folder_size = FPS.get_directory_size(CONST.IMAGES_FOLDER_PATH)
+
+        # Check the Media/Images/ folder
+        media_folder_size = FPS.get_directory_size(CONST.IMAGES_FOLDER_PATH)
         if len(os.listdir(f'./{CONST.IMAGES_FOLDER_PATH}')) - 1 > CONST.IMAGES_COUNT_WARNING:
             print(COLOR_str.IMAGES_COUNT_WARNING
                 .replace('{module}', 'Shiny Hunter')
                 .replace('{images}', str(len(os.listdir(f'./{CONST.IMAGES_FOLDER_PATH}')) - 1))
                 .replace('{path}', f'./{CONST.IMAGES_FOLDER_PATH}')
-                .replace('{size}', images_folder_size)
+                .replace('{size}', media_folder_size)
             )
+
+        # Check if the recycle bin size is greater than 1GB 
+        recycle_bin_size = FPS.get_directory_size(os.path.expanduser('~/.local/share/Trash/files'))
+        if recycle_bin_size[-2:] == 'GB':
+            print(COLOR_str.USED_SPACE_WARNING
+                .replace('{module}', 'Shiny Hunter')
+                .replace('{path}', f"Recycle Bin")
+                .replace('{used_space}', recycle_bin_size)
+            )
+
+        # Check whole system available space
         system_space = FPS.get_system_available_space()
         if system_space['available_no_format'] < CONST.CRITICAL_AVAILABLE_SPACE:
             print(COLOR_str.AVAILABLE_SPACE_ERROR
                 .replace('{module}', 'Shiny Hunter')
-                .replace('{available_space}',
-                    f"{FPS.format_space_size(CONST.CRITICAL_AVAILABLE_SPACE)} ({system_space['available']})")
+                .replace('{threshold}', FPS.format_space_size(CONST.CRITICAL_AVAILABLE_SPACE))
+                .replace('{available_space}', f"{system_space['available']}")
             )
             delete = input(COLOR_str.DELETE_IMAGES_QUESTION)
             if delete.lower().strip() in ('', 'y', 'yes'): 
@@ -302,11 +320,14 @@ if __name__ == "__main__":
                 if system_space['available_no_format'] < CONST.CRITICAL_AVAILABLE_SPACE: 
                     print(COLOR_str.AVAILABLE_SPACE_ERROR
                         .replace('{module}', 'Shiny Hunter')
-                        .replace('{available_space}',
-                            f"{FPS.format_space_size(CONST.CRITICAL_AVAILABLE_SPACE)} ({system_space['available']})")
+                        .replace('{threshold}', FPS.format_space_size(CONST.CRITICAL_AVAILABLE_SPACE))
+                        .replace('{available_space}', f"{system_space['available']}")
                     )
                     return
             else: return print()
+
+        ###################################################################################################################
+        ###################################################################################################################
 
         Image_Queue = Queue()
         Controller = Switch_Controller()

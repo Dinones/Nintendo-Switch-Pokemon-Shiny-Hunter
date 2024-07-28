@@ -92,7 +92,7 @@ class FPS_Counter():
     @staticmethod
     def format_space_size(size):
         for unit in ['B', 'KB', 'MB', 'GB']:
-            if size < 1024: return f"{size:.2f}{unit}"
+            if size < 1024 or unit == 'GB': return f"{size:.2f}{unit}"
             size /= 1024
 
 ###########################################################################################################################
@@ -118,10 +118,15 @@ if __name__ == '__main__':
         .replace('{used_space}', system_space['used'])
         .replace('{available_space}', system_space['available'])
     )
-    media_folder_size = FPS_Counter.get_directory_size(f'../{CONST.IMAGES_FOLDER_PATH}')
+    media_folder_size = FPS_Counter.get_directory_size(f'../Media/')
     print(COLOR_str.DIRECTORY_SIZE
-        .replace('{directory}', f"'../{CONST.IMAGES_FOLDER_PATH}'")
+        .replace('{directory}', f"'../Media/'")
         .replace('{size}', media_folder_size)
+    )
+    recycle_bin_size = FPS_Counter.get_directory_size(os.path.expanduser('~/.local/share/Trash/files'))
+    print(COLOR_str.DIRECTORY_SIZE
+        .replace('{directory}', f"'{os.path.expanduser('~/.local/share/Trash/files')}'")
+        .replace('{size}', recycle_bin_size)
     )
 
     while True:
