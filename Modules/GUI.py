@@ -13,8 +13,10 @@ import PyQt5.QtCore as pyqt_c
 import PyQt5.QtGui as pyqt_g
 
 import subprocess
+from time import sleep
 from queue import Queue
 from cllist import dllist
+from playsound import playsound
 
 import sys; sys.path.append('..')
 import Constants as CONST
@@ -109,12 +111,16 @@ class GUI(pyqt_w.QWidget):
         self.items['stop_button'].clicked.connect(stop_event.set)
 
         ##### MUSIC BUTTON #####
-        def toggle_sound(value):
+        def toggle_sound(value, play_activation_sound = True):
             # I'm editing the value of a constant. I know, I deserve to die!
-            CONST.PLAY_SHINY_SOUND = value
+            CONST.PLAY_SOUNDS = value
             
             relative_path = '..' if __name__ == "__main__" else '.'
-            if CONST.PLAY_SHINY_SOUND: relative_path += f'/{CONST.SOUND_ON_IMAGE_PATH}'
+            if CONST.PLAY_SOUNDS: 
+                if play_activation_sound:
+                    shiny_sound = relative_path + f'/{CONST.SHINY_STARS_SOUND_PATH}'
+                    play_sound(shiny_sound)
+                relative_path += f'/{CONST.SOUND_ON_IMAGE_PATH}'
             else: relative_path += f'/{CONST.SOUND_OFF_IMAGE_PATH}'
             image = pyqt_g.QIcon(relative_path)
 
@@ -124,7 +130,7 @@ class GUI(pyqt_w.QWidget):
             else: 
                 print(COLOR_str.COULD_NOT_LOAD_IMAGE.replace('{path}', relative_path))
                 self.items['music_button'].setIcon(pyqt_g.QIcon())
-                self.items['music_button'].setText("M" if CONST.PLAY_SHINY_SOUND else "!M")
+                self.items['music_button'].setText("M" if CONST.PLAY_SOUNDS else "!M")
 
         self.items['music_button'].setFixedSize(CONST.STOP_BUTTON_FRAME_SIZE[1], CONST.STOP_BUTTON_FRAME_SIZE[1])
         self.items['music_button'].setStyleSheet(stop_button_style)
@@ -132,8 +138,8 @@ class GUI(pyqt_w.QWidget):
             pyqt_c.QSize(CONST.STOP_BUTTON_FRAME_SIZE[1] - 15, CONST.STOP_BUTTON_FRAME_SIZE[1] - 15))
         self.items['music_button'].move(CONST.MAIN_FRAME_SIZE[0] + 20, 
             CONST.CLOCK_FRAME_SIZE[1] + CONST.SWITCH_CONTROLLER_FRAME_SIZE[1] + CONST.STOP_BUTTON_FRAME_SIZE[1] + 41)
-        self.items['music_button'].clicked.connect(lambda: toggle_sound(not CONST.PLAY_SHINY_SOUND))
-        toggle_sound(CONST.PLAY_SHINY_SOUND)
+        self.items['music_button'].clicked.connect(lambda: toggle_sound(not CONST.PLAY_SOUNDS))
+        toggle_sound(CONST.PLAY_SOUNDS, play_activation_sound = False)
 
         ##### DISCORD BUTTON #####
         self.items['discord_button'].setFixedSize(97, CONST.STOP_BUTTON_FRAME_SIZE[1])
@@ -256,6 +262,34 @@ class GUI(pyqt_w.QWidget):
         # Linux can't open browsers as sudo for security reasons
         user = os.environ.get('SUDO_USER', os.environ['USER'])
         subprocess.run(f"sudo -u {user} xdg-open {url}", shell=True)
+
+###########################################################################################################################
+###########################################################################################################################
+
+def play_sound(path): 
+    def restore_std(original_stderr_fd, saved_stderr_fd):
+        sys.stderr.flush()
+        os.dup2(saved_stderr_fd, original_stderr_fd)
+
+    if CONST.PLAY_SOUNDS:
+        # Disable playsound messages. It prints SO MANY of logging messages
+        original_stderr_fd = sys.stderr.fileno()
+        saved_stderr_fd = os.dup(original_stderr_fd)
+        devnull = os.open(os.devnull, os.O_WRONLY)
+        sys.stderr.flush()
+        os.dup2(devnull, sys.stderr.fileno())
+
+        try: playsound(path, block=False)
+        except: 
+            sleep(0.1)
+            restore_std(original_stderr_fd, saved_stderr_fd)
+            print(COLOR_str.COULD_NOT_PLAY_SOUND
+                .replace('{module}', 'Shiny Hunter')
+                .replace('{path}', path)
+            )
+        else: 
+            sleep(0.1)
+            restore_std(original_stderr_fd, saved_stderr_fd)
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################

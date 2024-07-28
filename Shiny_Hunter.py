@@ -22,16 +22,15 @@ if __name__ == '__main__':
 import copy
 from queue import Queue
 from time import sleep, time
-from playsound import playsound
 from threading import Thread, Event, Timer
 
 from Macros import *
 from Database import *
-from GUI import GUI, App
 import Constants as CONST
 from Control_System import *
 import Colored_Strings as COLOR_str
 from FPS_Counter import FPS_Counter
+from GUI import GUI, App, play_sound
 from Game_Capture import Game_Capture
 from Image_Processing import Image_Processing
 from Switch_Controller import Switch_Controller
@@ -115,7 +114,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                     # If stuck in "RESTART_GAME_1", it would be stuck forever
                     Controller.previous_event = None
                     Controller.current_event = "RESTART_GAME_1"
-                    if CONST.TESTING: Video_Capture.save_video(f'Error - {time()}')
+                    if CONST.SAVE_ERROR_VIDEOS: Video_Capture.save_video(f'Error - {time()}')
             elif Controller.current_event != Controller.previous_event: stuck_timer = time()
 
             # Start recording a new video
@@ -129,7 +128,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
             # Update the database
             elif Controller.current_event == "CHECK_SHINY" and type(pokemon_image) != type(None):
                 pokemon_name = pokemon_image.recognize_pokemon()
-                if CONST.pokemon_name: 
+                if CONST.SAVE_IMAGES: 
                     pokemon_image.save_image(pokemon_name)
                     # Check if the computer is running out of space
                     system_space = FPS.get_system_available_space()
@@ -139,7 +138,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                             .replace('{available_space}', system_space['available'])
                         )
                         # I'm editing the value of a constant. I know, I deserve to die!
-                        CONST.SAVE_IMAGES = False
+                        CONST.SAVE_IMAGES = False; CONST.SAVE_ERROR_VIDEOS = False
                 pokemon_image = None
                 pokemon = {'name': pokemon_name, 'shiny': False}
                 add_or_update_encounter(pokemon, int(time() - encounter_playtime))
@@ -223,40 +222,13 @@ def check_threads(threads, shutdown_event):
     while not shutdown_event.is_set():
         for thread in threads:
             if not thread['thread'].is_alive():
+                play_sound(f'./{CONST.ERROR_SOUND_PATH}')
                 print(COLOR_str.THREAD_DIED_ERROR
                     .replace('{module}', 'Shiny Hunter')
                     .replace('{thread}', thread['function'])
                 )
                 shutdown_event.set()
         sleep(5)
-
-###########################################################################################################################
-###########################################################################################################################
-
-def play_sound(path): 
-    def restore_std(original_stderr_fd, saved_stderr_fd):
-        sys.stderr.flush()
-        os.dup2(saved_stderr_fd, original_stderr_fd)
-
-    if CONST.PLAY_SHINY_SOUND:
-        # Disable playsound messages. It prints SO MANY of logging messages
-        original_stderr_fd = sys.stderr.fileno()
-        saved_stderr_fd = os.dup(original_stderr_fd)
-        devnull = os.open(os.devnull, os.O_WRONLY)
-        sys.stderr.flush()
-        os.dup2(devnull, sys.stderr.fileno())
-
-        try: playsound(path, block=False)
-        except: 
-            sleep(0.1)
-            restore_std(original_stderr_fd, saved_stderr_fd)
-            print(COLOR_str.COULD_NOT_PLAY_SOUND
-                .replace('{module}', 'Shiny Hunter')
-                .replace('{path}', path)
-            )
-        else: 
-            sleep(0.1)
-            restore_std(original_stderr_fd, saved_stderr_fd)
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################

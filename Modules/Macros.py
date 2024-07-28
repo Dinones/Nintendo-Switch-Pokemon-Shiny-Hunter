@@ -139,7 +139,7 @@ def home_macro(controller):
 def select_starter_macro(controller):
     if controller.previous_event == controller.current_event: return
 
-    wait_and_press_single_button(controller, 1, 'A'); sleep(0.5)
+    wait_and_press_single_button(controller, 1, 'A'); sleep(1)
     if CONST.STARTER == 'C': 
         controller.current_button_pressed = 'RIGHT'
         controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.DPAD_RIGHT]); sleep(0.2)

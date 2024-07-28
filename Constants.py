@@ -32,7 +32,7 @@ TEXT_PARAMS = {
     'star_num_color': (0, 0, 255)
 }
 PRESSED_BUTTON_COLOR = (255, 0, 200)
-SAVE_IMAGES = False
+SAVE_IMAGES = True
 IMAGES_FOLDER_PATH = 'Media/Images/'
 # [BYTES] 1GB = 1073741824B
 CRITICAL_AVAILABLE_SPACE = 1*1073741824
@@ -52,15 +52,20 @@ CLOCK_FRAME_SIZE = (350, 115)
 TEXT_FRAME_SIZE = (355, 39)
 STOP_BUTTON_FRAME_SIZE = (350, 63)
 SOCIAL_BUTTON_FRAME_SIZE = (350, 63)
+
 SWITCH_CONTROLLER_IMAGE_PATH = 'Media/Interface/Switch Controller.png'
 TEMPLATE_IMAGE_PATH = 'Media/Interface/Background Template.png'
-PLAY_SHINY_SOUND = True
 SOUND_ON_IMAGE_PATH = 'Media/Interface/Sound On.png'
 SOUND_OFF_IMAGE_PATH = 'Media/Interface/Sound Off.png'
-SHINY_SOUND_PATH = 'Media/Interface/Shiny.mp3'
 DINONES_IMAGE_PATH = 'Media/Interface/Dinones.png'
 DISCORD_IMAGE_PATH = 'Media/Interface/Discord.png'
 GITHUB_IMAGE_PATH = 'Media/Interface/Github.png'
+
+PLAY_SOUNDS = True
+SHINY_SOUND_PATH = 'Media/Interface/Shiny.mp3'
+SHINY_STARS_SOUND_PATH = 'Media/Interface/Shiny Stars.mp3'
+ERROR_SOUND_PATH = 'Media/Interface/Error.mp3'
+
 DINONES_URL = 'https://www.youtube.com/@DinoDinones'
 DISCORD_URL = 'https://discordapp.com/users/330983876367482880'
 GITHUB_URL = 'https://github.com/Dinones'
@@ -121,6 +126,7 @@ DATABASE_PATH = 'Media/Database.db'
 ###########################################################################################################################
 
 TESTING = True
+SAVE_ERROR_VIDEOS = False
 TESTING_COLOR = (255, 0, 255)
 TESTING_VIDEO_PATH = 'Media/Videos/Reset Game.mp4'
 TESTING_IMAGE_PATH = 'Media/Tests/12.png'
