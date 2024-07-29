@@ -47,6 +47,9 @@
     <p>
         &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Camera.svg" width="20px" align="top"/>⠀ Automatically saves a video of the shiny encounter. <br>
     </p> 
+    <p>
+        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Music.svg" width="20px" align="top"/>⠀ Plays a sound whenever a shiny Pokémon is found. <br>
+    </p> 
 </p>
 
 <!-- #################### INSTALLATION #################### -->
@@ -112,8 +115,6 @@ Place the Nintendo Switch into the Dock. Connect the dock to the official Ninten
     <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Warning.svg" width="17px" align="left"/><span><strong>NOTE:</strong>  The program will always open the first game slot. Make sure the pokémon game you want to run is in the first position. If it's not, you can simply start the game and it'll move to the beginning.</span>
 </p>
 
-Once in the home screen, go to "<i>Controllers</i>" > "<i>Change Grip/Order Menu</i>". Plug in both controllers to the Nintendo Switch and if not, make sure they're not connected via Bluetooth. (See steps <a href="./Media/Docs/Change%20Grip%20Menu.md">here</a>).<br>
-
 <!-- #################### RUNNING SHINY HUNTER #################### -->
 ⠀
 <h2>
@@ -121,13 +122,17 @@ Once in the home screen, go to "<i>Controllers</i>" > "<i>Change Grip/Order Menu
     ⠀Running the Shiny Hunter
 </h2>
 
-Writing instructions...
+<img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Warning.svg" width="17px" align="left"/><span><strong>IMPORTANT:</strong> Before running the Shiny Hunter, there are a few variables of the **Constants.py** file that need to be mentioned. You will need to edit them in order to use the program. (See constants [here](./Media/Docs/Constants.md)).
 
-<!-- **NOTE:** If your player needs to move forward some steps before entering the combat, change the `WALK_FORWARD_BEFORE_COMBAT` option to `True` in the `Constants.py` file.
+Now, you must change the game configuration as follows:
 
-Execute the `Shiny_Hunter.py` file. The controller should connect in a few seconds and the program will start it execution. For every combat, it will save an screenshot of the pokémon in `/Media/Results/` folder, just in case it missdetects the shiny pokémon you could check why. It will also save a video for each encounter in `/Media/` folder, **it always ovewrites the old video file**, don't worry about your disk space. If you want to disable these features, change the `SAVE_SCREENSHOTS` and `RECORD_VIDEO` options to `False` in the `Constants.py` file.
+<ul>
+    <li><p><b>Text Speed:</b> Fast.</p></li>
+    <li><p><b>Battle Effects:</b> Off.</p></li>
+    <li><p><b>Autosave:</b> Off.</p></li>
+</ul>
 
-If you find a shiny pokémon and you want to search for another one, you must reset the number of the `/Media/Attempts.txt` file to zero, to keep track of the current resets for the new pokémon. It's also recomendable to delete all the images generated in the `/Media/Results/` folder. -->
+Finally, enter the game and place the player on the grass/water for a wild encounter; in front of the Pokémon for the static encounter; and one step before entering the lake for the starter encounter. See an example of the positions [here](./Media/Docs/Starting%20Positions.md). Once there, go to the home screen (leave the game as idle, don't close it); then, go to "<i>Controllers</i>" > "<i>Change Grip/Order Menu</i>". Plug in both controllers to the Nintendo Switch and if not, make sure they're not connected via Bluetooth. (See steps <a href="./Media/Docs/Change%20Grip%20Menu.md">here</a>).
 
 <!-- #################### TROUBLESHOOTING #################### -->
 ⠀

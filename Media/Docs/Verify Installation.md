@@ -46,6 +46,7 @@ If the device is not the correct one, please change the Constants.py configurati
 
 
 
+⠀
 <!-- #################### GUI #################### -->
 
 <h2>
@@ -63,7 +64,21 @@ Select any "<i>Open GUI using capture card</i>" or "<i>Open GUI using a template
     <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/GUI%20Verification.png" width="70%" style="border-radius: 5px;">
 </h6>
 
+⠀
+<!-- #################### DATABASE #################### -->
 
+<h2>
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Database.svg" width="30px" align="top"/>
+    ⠀Initialize the Database
+</h2>
+
+<p>Open a terminal in the <i>/Modules/</i> folder and run the following command:</p>
+
+<pre><code>python3 Database.py</code></pre>
+
+Select the "<i>Print database</i>" option. It should print an empty database, which will automatically store all the encounters and data related to your game. For example, how many Pokémon have you encountered, the total time running the program or the shiny count. You can check it whenever you want, as it may be interesting to you.
+
+⠀
 <!-- #################### SWITCH CONTROLLER #################### -->
 
 <h2>
@@ -91,9 +106,12 @@ Select the "<i>Test Switch Controller</i>" option. It should appear a pairing re
 
 After accepting it, the program should run a testing macro, which will go to the home menu and return to the pairing screen. It may not be working at the beginning, try restarting the **whole** computer (not just the Virtual Machine) and Bluetooth systems. If you are not able to connect your computer to the Nintendo, please, report it to [NXBT](https://github.com/Brikwerk/nxbt).
 
+⠀
+<!-- #################### SAVESTATE #################### -->
+
 <h2>
     <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/VBox%20Instructions/SVG/Gear.svg" width="30px" align="top"/>
     Save the Virtual Machine's State
 </h2>
 
-If everything worked, I highly recommend saving the state of the machine so you can recover it from this point if it is messed up. Please, visit the section "<b>Save Virtual Machine State</b>" of [VM Setup](./VM%20Setup.md).
+If everything worked correctly, I highly recommend saving the state of the machine so you can recover it from this point if it is messed up. Please, visit the section "<b>Save Virtual Machine State</b>" of [VM Setup](./VM%20Setup.md).
