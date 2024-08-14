@@ -163,7 +163,7 @@ def static_encounter(image, state):
 
     # Game loaded, player in the overworld
     elif state == 'ENTER_STATIC_COMBAT_2':
-        # Look for the text box
+        # Look if the text box has disappeared
         if not image.check_multiple_pixel_colors(
             [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y1']],
             [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
@@ -172,6 +172,7 @@ def static_encounter(image, state):
             return 'ENTER_STATIC_COMBAT_3'
 
     # Game loaded, player in the overworld
+    # Some static encounters make a white screen flash before entering the combat
     elif state == 'ENTER_STATIC_COMBAT_3' and time() - state_timer >= 2:
         # Look for the text box
         if image.check_multiple_pixel_colors(
@@ -476,6 +477,12 @@ if __name__ == "__main__":
             image.resize_image()
             FPS.get_FPS()
             image.draw_FPS(FPS.FPS)
+
+            # Check if the pokemon is shiny
+            if Controller.current_event == "CHECK_SHINY":
+                # Only reset the first time it enters to the state
+                if time() - shiny_detection_time >= 10: shiny_detection_time = time()
+                image.shiny_detection_time = shiny_detection_time
 
             state = static_encounter(image, state)
             image.write_text(state, (0, CONST.TEXT_PARAMS['position'][1] + 5))
