@@ -18,6 +18,8 @@ import Constants as CONST
 #################################################     INITIALIZATIONS     #################################################
 ###########################################################################################################################
 
+state_timer = 0
+
 def search_wild_pokemon(image, state):
     if not state: return 'WAIT_PAIRING_SCREEN'
 
@@ -132,29 +134,51 @@ def search_wild_pokemon(image, state):
 ###########################################################################################################################
 
 def static_encounter(image, state):
+    global state_timer
     if not state: return 'WAIT_PAIRING_SCREEN'
 
     # Nintendo Switch pairing controller menu
     elif state == 'WAIT_HOME_SCREEN':
         # Look for the top-left nintendo switch main menu pixel
         if image.check_pixel_color(CONST.HOME_MENU_COLOR):
-            return 'ENTER_STATIC_COMBAT'
+            return 'ENTER_STATIC_COMBAT_1'
 
+    # Game loading, full black screen
     elif state == 'RESTART_GAME_4':
         # Check if the black screen has ended
         if not image.check_multiple_pixel_colors(
             [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y1']],
             [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y2']], CONST.LOAD_SCREEN_BLACK_COLOR
         ):
-            return 'ENTER_STATIC_COMBAT'
+            return 'ENTER_STATIC_COMBAT_1'
 
     # Game loaded, player in the overworld
-    elif state == 'ENTER_STATIC_COMBAT':
+    elif state == 'ENTER_STATIC_COMBAT_1':
+        # Look for the text box
+        if image.check_multiple_pixel_colors(
+            [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y1']],
+            [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
+        ):
+            return 'ENTER_STATIC_COMBAT_2'
+
+    # Game loaded, player in the overworld
+    elif state == 'ENTER_STATIC_COMBAT_2':
+        # Look for the text box
+        if not image.check_multiple_pixel_colors(
+            [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y1']],
+            [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
+        ):
+            state_timer = time()
+            return 'ENTER_STATIC_COMBAT_3'
+
+    # Game loaded, player in the overworld
+    elif state == 'ENTER_STATIC_COMBAT_3' and time() - state_timer >= 2:
         # Look for the text box
         if image.check_multiple_pixel_colors(
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
         ):
+            state_timer = time()
             return 'ENTER_COMBAT_1'
 
     # Combat loaded (Wild Pokémon stars)
@@ -178,6 +202,7 @@ def static_encounter(image, state):
 ###########################################################################################################################
 
 def starter_encounter(image, state):
+    global state_timer
     if not state: return 'WAIT_PAIRING_SCREEN'
 
     # Nintendo Switch pairing controller menu
@@ -344,14 +369,14 @@ def _check_common_states(image, state):
 
     # Combat loadscreen (Full white screen)
     elif state == 'ENTER_COMBAT_1':
-        # Check if the white load screen
+        # Check if the white load screen has ended
         if not image.check_multiple_pixel_colors(
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
         ):
             return 'ENTER_COMBAT_2'
 
-    # Combat loadscreen (Grass/Rock/Water animation)
+    # Combat loadscreen (Grass/Rock/Water animation, wild pokémon appearing)
     elif state == 'ENTER_COMBAT_2':
         # Look for the text box
         if image.check_multiple_pixel_colors(
@@ -395,7 +420,7 @@ if __name__ == "__main__":
     def main_menu():
         print('\n' + COLOR_str.MENU.replace('{module}', 'Control System'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Check states from capture card'))
-        print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Check states from  video'))
+        print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Check states from video'))
 
         option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Control System'))
 
@@ -435,23 +460,27 @@ if __name__ == "__main__":
             Video_Capture = Game_Capture(f'../{CONST.TESTING_VIDEO_PATH}')
         
         FPS = FPS_Counter()
-        state = ''
+        state = 'ENTER_STATIC_COMBAT_1'
 
+        pause = False
         while True:
+            key = cv2.waitKey(1)
+            if key == ord('q') or key == ord('Q'): break
+            elif key == ord(' '): pause = not pause
+
+            if pause: continue
             if option == '2': sleep(0.02)
             
             image = Image_Processing(Video_Capture.read_frame())
+            if type(image.original_image) == type(None): break
             image.resize_image()
             FPS.get_FPS()
             image.draw_FPS(FPS.FPS)
 
-            state = starter_encounter(image, state)
+            state = static_encounter(image, state)
             image.write_text(state, (0, CONST.TEXT_PARAMS['position'][1] + 5))
 
             cv2.imshow(f'{CONST.BOT_NAME} - Image', image.FPS_image)
-
-            key = cv2.waitKey(1)
-            if key == ord('q') or key == ord('Q'): break
 
         Video_Capture.stop()
         print(COLOR_str.SUCCESS_EXIT_PROGRAM

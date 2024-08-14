@@ -113,7 +113,7 @@ SELECTION_BOX_LINE = {
     'color': (255, 255, 255)
 }
 # 'L': Left | 'C': Center | 'R': Right 
-STARTER = 'C'
+STARTER = 'R'
 
 ###########################################################################################################################
 #####################################################     DATABASE     ####################################################
@@ -128,7 +128,7 @@ DATABASE_PATH = 'Media/Database.db'
 TESTING = True
 SAVE_ERROR_VIDEOS = False
 TESTING_COLOR = (255, 0, 255)
-TESTING_VIDEO_PATH = 'Media/Videos/Reset Game.mp4'
+TESTING_VIDEO_PATH = 'Media/Videos/Not Shiny 2.mp4'
 TESTING_IMAGE_PATH = 'Media/Tests/12.png'
 SAVING_FRAMES_PATH = 'Media/Tests'
 TEST_DATABASE_PATH = 'Media/Test_Database.db'

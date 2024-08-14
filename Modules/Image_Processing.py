@@ -439,7 +439,6 @@ if __name__ == "__main__":
 
         while True and (index + 1) != len(images):
             if time() - timer >= 0.1:
-                if pause: index -= 1
                 image = Image_Processing(f'../{CONST.IMAGES_FOLDER_PATH}/{images[index]}')
                 image.resize_image()
                 cv2.putText(image.resized_image, f'Count: {index + 1}/{len(images)}', CONST.TEXT_PARAMS['position'], 
@@ -450,7 +449,7 @@ if __name__ == "__main__":
                     CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
                 cv2.imshow(f'{CONST.BOT_NAME} - Lost Shiny Checker', image.resized_image)
 
-                index += 1
+                if not pause: index += 1
                 timer = time()
 
             # Press 'SPACE' to resume the execution
