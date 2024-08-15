@@ -462,8 +462,9 @@ if __name__ == "__main__":
         
         FPS = FPS_Counter()
         state = 'ENTER_STATIC_COMBAT_1'
-
         pause = False
+        shiny_detection_time = 0
+
         while True:
             key = cv2.waitKey(1)
             if key == ord('q') or key == ord('Q'): break
@@ -479,11 +480,11 @@ if __name__ == "__main__":
             image.draw_FPS(FPS.FPS)
 
             # Check if the pokemon is shiny
-            if Controller.current_event == "CHECK_SHINY":
+            if state == "CHECK_SHINY":
                 # Only reset the first time it enters to the state
                 if time() - shiny_detection_time >= 10: shiny_detection_time = time()
                 image.shiny_detection_time = shiny_detection_time
-
+            
             state = static_encounter(image, state)
             image.write_text(state, (0, CONST.TEXT_PARAMS['position'][1] + 5))
 

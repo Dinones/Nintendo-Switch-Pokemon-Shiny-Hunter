@@ -97,6 +97,7 @@ TEXT_BOX_LINE = {
     'x': int(MAIN_FRAME_SIZE[0] // 16 * 1.2),
     'y1': int(MAIN_FRAME_SIZE[1] // 16 * 1),
     'y2': int(MAIN_FRAME_SIZE[1] // 16 * 2), 
+    # [BGR]
     'color': (255, 255, 255),
     'overworld_x': int(MAIN_FRAME_SIZE[0] // 16 * 3.5),
 }
@@ -104,12 +105,14 @@ LIFE_BOX_LINE = {
     'x': int(MAIN_FRAME_SIZE[0] // 96 * 1),
     'y1': int(MAIN_FRAME_SIZE[1] // 16 * 2),
     'y2': int(MAIN_FRAME_SIZE[1] // 16 * 2.6),
+    # [BGR]
     'color': (250, 250, 250)
 }
 SELECTION_BOX_LINE = {
     'x': int(MAIN_FRAME_SIZE[0] // 16 * 13),
     'y1': int(MAIN_FRAME_SIZE[1] // 16 * 4),
     'y2': int(MAIN_FRAME_SIZE[1] // 16 * 5),
+    # [BGR]
     'color': (255, 255, 255)
 }
 # 'L': Left | 'C': Center | 'R': Right 
@@ -128,7 +131,7 @@ DATABASE_PATH = 'Media/Database.db'
 TESTING = True
 SAVE_ERROR_VIDEOS = False
 TESTING_COLOR = (255, 0, 255)
-TESTING_VIDEO_PATH = 'Media/Videos/Not Shiny 2.mp4'
+TESTING_VIDEO_PATH = 'Media/Videos/Shiny.mp4'
 TESTING_IMAGE_PATH = 'Media/Tests/12.png'
 SAVING_FRAMES_PATH = 'Media/Tests'
 TEST_DATABASE_PATH = 'Media/Test_Database.db'

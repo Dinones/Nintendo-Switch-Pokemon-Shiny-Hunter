@@ -23,6 +23,8 @@ import Constants as CONST
 class Game_Capture():
     def __init__(self, video_capture_index = CONST.VIDEO_CAPTURE_INDEX):
         self.video_capture = cv2.VideoCapture(video_capture_index)
+        # Highly increase the FPS using the MJPEG codec
+        self.video_capture.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
 
         if not self.video_capture.isOpened():
             video_captures = self.find_available_video_captures()
