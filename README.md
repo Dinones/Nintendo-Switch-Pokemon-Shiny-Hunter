@@ -8,9 +8,9 @@
 
 <div align="center">
     
-<!-- [![YouTube Channel Subscribers](https://img.shields.io/youtube/channel/subscribers/UCUDcDii2WU8SVoTCgYlQCiw?style=flat&logo=youtube&logoColor=ff0000&label=Youtube&color=ff0000)](https://www.youtube.com/watch?v=XE8Oeh71BQ4&ab_channel=Dinones) -->
-[![GitHub Repo Stars](https://img.shields.io/github/stars/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter?label=%E2%9C%A8%20Stars&color=ffff00)](https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter)
+<!-- [![GitHub Repo Stars](https://img.shields.io/github/stars/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter?label=%E2%9C%A8%20Stars&color=ff0000)](https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter) -->
 [![Discord](https://img.shields.io/badge/contact-Dinones-blue?logo=discord&label=Discord&logoColor=5865f2&color=5865f2)](https://discordapp.com/users/177131156028784640)
+[![YouTube Channel Subscribers](https://img.shields.io/youtube/channel/subscribers/UCUDcDii2WU8SVoTCgYlQCiw?style=flat&logo=youtube&logoColor=ff0000&label=Youtube&color=ff0000)](https://www.youtube.com/watch?v=XE8Oeh71BQ4&ab_channel=Dinones)
 
 </div>
 
@@ -26,7 +26,17 @@
     <br>
         <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/Shiny%20Pokemon%20Collection.png" width="80%" style="border-radius: 15px;">
     <br>
+    <p>ㅤ</p>
 </h1>
+
+<!-- #################### KEY FEATURES #################### -->
+⠀
+<h2 id="youtube">
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Youtube.svg" width="30px" align="top"/>
+    ⠀Creation Process
+</h2>
+
+<p>In my <a href="https://www.youtube.com/watch?v=84czUOAvNyk">Youtube Channel</a> you can follow the entire creation process of the project. Don’t miss it!</p>
 
 <!-- #################### KEY FEATURES #################### -->
 ⠀
