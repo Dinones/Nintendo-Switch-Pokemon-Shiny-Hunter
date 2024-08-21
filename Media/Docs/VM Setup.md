@@ -70,8 +70,9 @@
         <h6 align="center">
             <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/VBox%20Instructions/VBox%208.png" width="70%" style="border-radius: 5px;">
         </h6>
-        <p>To solve this issue, <i>Right Click</i> on the Desktop and select <i>Open in Terminal</i>. Run the following command:</p>
-        <pre><code>su && nano /etc/sudoers</code></pre>
+        <p>To solve this issue, <i>Right Click</i> on the Desktop and select <i>Open in Terminal</i>. Run the following commands one by one:</p>
+        <pre><code>su 
+nano /etc/sudoers</code></pre>
         <p>Add the following line changing <i>"dinones"</i> by your username:</p>
         <h6 align="center">
             <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/VBox%20Instructions/VBox%209.png" width="70%" style="border-radius: 5px;">
@@ -116,17 +117,16 @@
         </h6>
     </li>
     <li>
+        <p>Now, repeat the previous point with the capture card (<i>"Macrosilicon USB Video"</i> in my case, but yours will probably be different). You should have something similar to this:</p>
+        <h6 align="center">
+            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/VBox%20Instructions/VBox%2023.png" width="70%" style="border-radius: 5px;">
+        </h6>
+    </li>
+    <li>
         <p>Accept the changes and start the Virtual Machine. You should now be able to see the Bluetooth symbol in the top-right corner of the window.</p>
         <h6 align="center">
             <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/VBox%20Instructions/VBox%2014.png" width="50%" style="border-radius: 5px;">
         </h6>
-    </li>
-    <li>
-        <p>In order to connect the capture card, in the VBox top menu, click on <i>Devices</i> > <i>Webcams</i> > <i>USB Video</i>.</p>
-        <h6 align="center">
-            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/VBox%20Instructions/VBox%2015.png" width="60%" style="border-radius: 5px;">
-        </h6>
-        <p><img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Warning.svg" width="17px" align="left"/> <b>IMPORTANT:</b> You will have to do this step every time you start the Virtual Machine in order to connect the capture card. </p><p><i>I know it is possible to connect the capture card the same way as for the Bluetooth adapter to avoid repeating this step every time, but for some reason it lowers the FPS from 30 to 5. If you know the way to automate this step without losing FPS, please contact <a href="https://github.com/Dinones">me</a>.</i></p>
     </li>
 </ul>
 
