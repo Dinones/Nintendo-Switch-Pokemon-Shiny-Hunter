@@ -99,7 +99,7 @@ TEXT_BOX_LINE = {
     'y1': int(MAIN_FRAME_SIZE[1] // 16 * 1),
     'y2': int(MAIN_FRAME_SIZE[1] // 16 * 2), 
     # [BGR]
-    'color': (255, 255, 255),
+    'color': (250, 250, 250),
     'overworld_x': int(MAIN_FRAME_SIZE[0] // 16 * 3.5),
 }
 LIFE_BOX_LINE = {

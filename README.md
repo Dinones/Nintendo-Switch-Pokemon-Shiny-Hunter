@@ -47,7 +47,7 @@
 
 <p>
     <p>
-        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Raspberry.svg" width="20px" align="center"/>⠀ Use your computer or Raspberry Pi to automatically search for shiny pokémon. <br>
+        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Raspberry.svg" width="20px" align="center"/>⠀ Use your computer to <b>automatically</b> search for shiny pokémon. <br>
     </p><p>
         &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/NS%20Controller.svg" width="20px" align="center" style="margin-top:0px"/>⠀ Works on physical games running on a Nintendo Switch, <b>not emulators!</b> <br>
     </p>
@@ -76,7 +76,11 @@ Download or clone the repository. Open a terminal and run the following command:
 git clone https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter.git 
 ```
 
-### Linux and Raspberry Pi OS
+### Linux Distributions
+
+<p>
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Warning.svg" width="17px" align="left"/><span><strong>Warning:</strong>  This project is not compatible with Python 3.12 due to the removal of the <code>imp</code> module, which affects dependencies like <code>dbus-python</code>. Please use Python 3.11 or earlier to avoid issues. If you followed the VM installation guide, don't worry about this warning.</span>
+</p>
 
 Install the necessary libraries. Open a terminal in the project folder and run the following commands:
 
@@ -87,13 +91,11 @@ sudo apt-get install -y python3-pyqt5 tesseract-ocr libtesseract-dev
 sudo pip install -r Requirements.txt && pip install -r Requirements.txt 
 ```
 
-**Note:** NXBT needs root privileges to toggle the BlueZ Input plugin. If you don't feel comfortable running this program as root, you can disable the Input plugin manually, and install NXBT as a regular user. I've always run the program as root, so you may need to investigate how to adapt it (Visit [NXBT](https://github.com/Brikwerk/nxbt) repository to learn more).
-
-<img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Warning.svg" width="17px" align="left"/> **IMPORTANT:** Please, take a look at the configuration of the Virtual Machine mentioned in <a href="#windows-and-macos">Windows and MacOS</a>. Even if you know about Linux systems, there are some important things to do. If something fails, it is probably due to a misconfiguration. This configuration has been tested multiple times and following all the steps should never raise any error.
+Please, take a look at the configuration of the Virtual Machine mentioned in <a href="#windows-and-macos">Windows and MacOS</a>. Even if you know about Linux systems, there are some important things to do. If something fails, it is probably due to a misconfiguration. This configuration has been tested multiple times and following all the steps should never raise any error.
 
 ### Windows and MacOS
 
-Install a Linux Virtual Machine and follow the installation steps for <a href="#linux-and-raspberry-pi-os">Linux and Raspberry Pi OS</a>. The program has been tested using Raspberry Pi OS 11 (Bullseye) and Virtual Box with XUbuntu 22.04.3. You can find a step-by-step guide on how to setup the Virtual Machine [here](./Media/Docs/VM%20Setup.md).
+Install a Linux Virtual Machine and follow the installation steps for <a href="#linux-distributions">Linux Distributions</a>. The program has been tested using Virtual Box with XUbuntu 22.04.3. You can find a step-by-step guide on how to setup the Virtual Machine [here](./Media/Docs/VM%20Setup.md).
 
 ### Verify Installation
 
@@ -142,7 +144,13 @@ Now, you must change the game configuration as follows:
     <li><p><b>Autosave:</b> Off.</p></li>
 </ul>
 
-Finally, enter the game and place the player on the grass/water for a wild encounter; in front of the Pokémon for the static encounter; and one step before entering the lake for the starter encounter. See an example of the positions [here](./Media/Docs/Starting%20Positions.md). Once there, go to the home screen (leave the game as idle, don't close it); then, go to "<i>Controllers</i>" > "<i>Change Grip/Order Menu</i>". Plug in both controllers to the Nintendo Switch and if not, make sure they're not connected via Bluetooth. (See steps <a href="./Media/Docs/Change%20Grip%20Menu.md">here</a>).
+Finally, enter the game and place the player on the grass/water for a wild encounter; in front of the Pokémon for the static encounter; and one step before entering the lake for the starter encounter. See an example of the positions [here](./Media/Docs/Starting%20Positions.md). Once there, <b>save the game</b> and go to the home screen (leave the game as idle, don't close it); then, go to "<i>Controllers</i>" > "<i>Change Grip/Order Menu</i>". Plug in both controllers to the Nintendo Switch and if not, make sure they're not connected via Bluetooth. (See steps <a href="./Media/Docs/Change%20Grip%20Menu.md">here</a>).
+
+Finally, open a terminal in the project folder, run the following command, and follow the instructions that will appear:
+
+```bash
+sudo python3 Shiny_Hunter.py
+```
 
 <!-- #################### TROUBLESHOOTING #################### -->
 ⠀
@@ -151,21 +159,7 @@ Finally, enter the game and place the player on the grass/water for a wild encou
     ⠀Troubleshooting
 </h2>
 
-### Unable to install *`opencv-python`* library 
 
-In some Raspberry Pi OS versions and other operating systems, OpenCV may take forever to install, eventually raising an error. If this happens, force the installation of the version 4.5.3.56 by running the following command:
-
-```bash
-pip install opencv-python==4.5.3.56 --force-reinstall
-```
-
-### Error when installing the *`dbus-python`* package
-
-This error can occur due to missing dbus-related libraries on some Linux distributions. To fix this in most cases, `libdbus-glib-1-dev` and `libdbus-1-dev` need to be installed with your system's package manager:
-
-```bash
-sudo apt-get install libdbus-glib-1-dev libdbus-1-dev
-```
 
 <!-- #################### CREDITS #################### -->
 ⠀
