@@ -36,6 +36,7 @@ SAVE_IMAGES = True
 IMAGES_FOLDER_PATH = 'Media/Images/'
 # [BYTES] 1GB = 1073741824B
 CRITICAL_AVAILABLE_SPACE = 1*1073741824
+PIXEL_COLOR_DIFF_THRESHOLD = 5
 
 ###########################################################################################################################
 #######################################################     GUI     #######################################################
@@ -92,7 +93,7 @@ STUCK_TIMER_SECONDS = 30
 SHINY_DETECTION_TIME = 2
 HOME_MENU_COLOR = (241, 241, 241)
 PAIRING_MENU_COLOR = (139, 138, 128)
-LOAD_SCREEN_BLACK_COLOR = (7, 7, 7)
+LOAD_SCREEN_BLACK_COLOR = (5, 5, 5)
 TEXT_BOX_LINE = {
     'x': int(MAIN_FRAME_SIZE[0] // 16 * 1.2),
     'y1': int(MAIN_FRAME_SIZE[1] // 16 * 1),
