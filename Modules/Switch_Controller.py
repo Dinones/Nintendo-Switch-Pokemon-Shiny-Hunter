@@ -38,6 +38,7 @@ class Switch_Controller():
         self.current_event = None
         self.previous_event = None
         self.current_button_pressed = ''
+        self.previous_button_pressed = ''
 
     #######################################################################################################################
 

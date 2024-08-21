@@ -110,7 +110,10 @@ class Image_Processing():
 
     # Return if the pixel is of the specified color
     def check_pixel_color(self, color, pixel = (20, 20)): 
-        return all(self.original_image[pixel[0]][pixel[1]] == color)
+        # return all(self.original_image[pixel[0]][pixel[1]] == color)
+        differences = [abs(self.original_image[pixel[0]][pixel[1]][color_index] - color[color_index])
+            for color_index in range(3)]
+        return all(difference <= CONST.PIXEL_COLOR_DIFF_THRESHOLD for difference in differences)
 
     #######################################################################################################################
 
@@ -118,7 +121,10 @@ class Image_Processing():
     def check_multiple_pixel_colors(self, start, end, color):
         match_pixels = True
         for index in range(start[1], end[1]):
-            if all(self.resized_image[-index][start[0]] == color): continue
+            # if all(self.resized_image[-index][start[0]] == color): continue
+            differences = [abs(self.resized_image[-index][start[0]][color_index] - color[color_index])
+                for color_index in range(3)]
+            if all(difference <= CONST.PIXEL_COLOR_DIFF_THRESHOLD for difference in differences): continue
             # If one False is found, there is no need to check the other pixels
             else: match_pixels = False; break
 
@@ -437,7 +443,7 @@ if __name__ == "__main__":
         timer = time()
         second_text_position = [CONST.TEXT_PARAMS['position'][0], CONST.TEXT_PARAMS['position'][1] + 20]            
 
-        while True and (index + 1) != len(images):
+        while True and (index) != len(images):
             if time() - timer >= 0.1:
                 image = Image_Processing(f'../{CONST.IMAGES_FOLDER_PATH}/{images[index]}')
                 image.resize_image()
@@ -447,7 +453,8 @@ if __name__ == "__main__":
                 cv2.putText(image.resized_image, f'{images[index]}', second_text_position, 
                     cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'],
                     CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
-                cv2.imshow(f'{CONST.BOT_NAME} - Lost Shiny Checker', image.resized_image)
+                if type(image.resized_image) is not type(None):
+                    cv2.imshow(f'{CONST.BOT_NAME} - Lost Shiny Checker', image.resized_image)
 
                 if not pause: index += 1
                 timer = time()
@@ -464,7 +471,7 @@ if __name__ == "__main__":
         sleep(1)
         print(COLOR_str.SUCCESS_EXIT_PROGRAM
             .replace('{module}', 'Image Processing')
-            .replace('{reason}', f'Successfully checked {index + 1}/{len(images)} images!')
+            .replace('{reason}', f'Successfully checked {index}/{len(images)} images!')
         )
 
         cv2.destroyAllWindows()

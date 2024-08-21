@@ -174,12 +174,11 @@ def static_encounter(image, state):
     # Game loaded, player in the overworld
     # Some static encounters make a white screen flash before entering the combat
     elif state == 'ENTER_STATIC_COMBAT_3' and time() - state_timer >= 2:
-        # Look for the text box
+        # Look for the load combat white screen
         if image.check_multiple_pixel_colors(
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
         ):
-            state_timer = time()
             return 'ENTER_COMBAT_1'
 
     # Combat loaded (Wild Pokémon stars)
@@ -281,10 +280,12 @@ def starter_encounter(image, state):
             [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y1']],
             [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
         ):
+            state_timer = time()
             return 'STARTER_SELECTION_4'
 
     # Starter has been selected
-    elif state == 'STARTER_SELECTION_4':
+    # A white screen flashes before entering the combat
+    elif state == 'STARTER_SELECTION_4' and time() - state_timer >= 3.5:
         # Look for the white load screen
         if image.check_multiple_pixel_colors(
             [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y1']],

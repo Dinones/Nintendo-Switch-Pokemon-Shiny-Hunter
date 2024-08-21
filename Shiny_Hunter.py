@@ -62,7 +62,6 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
     initial_time = time()
     encounter_playtime = time()
     shiny_detection_time = 0
-    previous_button = None
 
     database_data = get_all_data()
     local_encounters = database_data['global_encounters']
@@ -90,9 +89,9 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
         Video_Capture.add_frame_to_video(image)
 
         # Don't care if any race condition
-        if Controller.current_button_pressed != previous_button:
+        if Controller.current_button_pressed != Controller.previous_button_pressed:
             switch_controller_image.draw_button(Controller.current_button_pressed)
-            previous_button = Controller.current_button_pressed
+            Controller.previous_button_pressed = Controller.current_button_pressed
 
         with Controller.event_lock: 
             # Check if the pokemon is shiny
