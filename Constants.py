@@ -92,7 +92,7 @@ WILD_WALKING_DIRECTION = 'EW'
 STUCK_TIMER_SECONDS = 30
 SHINY_DETECTION_TIME = 2
 HOME_MENU_COLOR = (241, 241, 241)
-PAIRING_MENU_COLOR = (139, 138, 128)
+PAIRING_MENU_COLOR = (135, 135, 125)
 LOAD_SCREEN_BLACK_COLOR = (5, 5, 5)
 TEXT_BOX_LINE = {
     'x': int(MAIN_FRAME_SIZE[0] // 16 * 1.2),
@@ -114,7 +114,7 @@ SELECTION_BOX_LINE = {
     'y1': int(MAIN_FRAME_SIZE[1] // 16 * 4),
     'y2': int(MAIN_FRAME_SIZE[1] // 16 * 5),
     # [BGR]
-    'color': (255, 255, 255)
+    'color': (250, 250, 250)
 }
 # 'L': Left | 'C': Center | 'R': Right 
 STARTER = 'R'
