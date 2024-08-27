@@ -173,6 +173,14 @@ def enter_lake_macro(controller):
 
 ###########################################################################################################################
 
+def enter_static_combat_macro(controller):
+    if CONST.MOVE_FORWARD_STATIC_ENCOUNTER:
+        controller.current_button_pressed = 'UP'
+        controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.DPAD_UP], down=0.5)
+    press_single_button(controller, 'A')
+
+###########################################################################################################################
+
 # Press the specified button a single time
 def press_single_button(controller, button):
     controller.current_button_pressed = button
