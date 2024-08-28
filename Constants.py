@@ -89,6 +89,7 @@ WILD_WALKING_SECONDS = 1
 # 'NS': Up/Down | 'EW': Right/Left
 WILD_WALKING_DIRECTION = 'EW'
 MOVE_FORWARD_STATIC_ENCOUNTER = False
+SKIP_UPDATING_GAME = False
 # How long has the bot been stuck in the same state before restarting the game
 STUCK_TIMER_SECONDS = 30
 SHINY_DETECTION_TIME = 2
