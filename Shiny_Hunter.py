@@ -147,7 +147,11 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
 
             # Wait some seconds to save the video of the shiny encounter
             elif Controller.current_event == "SHINY_FOUND":
-                if time() - shiny_timer > CONST.SHINY_RECORDING_SECONDS:
+                # It sometimes gets bugged and detects the Starly instead of the starter, which will raise always 
+                # a false positive due to the amount of time between the taxt boxes
+                if Encounter_Type == 'STARTER' and pokemon_name in ['Starly', 'Étourmi', 'Staralili']: 
+                    Controller.current_event = "RESTART_GAME_1"
+                elif time() - shiny_timer > CONST.SHINY_RECORDING_SECONDS:
                     pokemon = {'name': pokemon_name, 'shiny': True}
                     add_or_update_encounter(pokemon, int(time() - encounter_playtime))
                     Video_Capture.save_video(f'Shiny {pokemon_name} - {time()}')
