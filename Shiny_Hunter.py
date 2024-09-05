@@ -5,6 +5,7 @@
 import os
 import sys; sys.path.append('Modules')
 import Colored_Strings as COLOR_str
+import requests
 
 # NXBT is only compatible with Linux systems
 if os.name != 'posix': exit(f'\n{COLOR_str.NOT_LINUX_SYSTEM}\n')
@@ -156,6 +157,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                     add_or_update_encounter(pokemon, int(time() - encounter_playtime))
                     Video_Capture.save_video(f'Shiny {pokemon_name} - {time()}')
                     Thread(target=lambda: play_sound(f'./{CONST.SHINY_SOUND_PATH}'), daemon=True).start()
+                    requests.get(CONST.URL)
                     print(COLOR_str.SHINY_FOUND
                         .replace('{module}', 'Shiny Hunter')
                         .replace('{pokemon}', pokemon_name)

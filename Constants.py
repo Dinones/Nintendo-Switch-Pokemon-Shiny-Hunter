@@ -138,3 +138,12 @@ TESTING_VIDEO_PATH = 'Media/Videos/Shiny.mp4'
 TESTING_IMAGE_PATH = 'Media/Tests/12.png'
 SAVING_FRAMES_PATH = 'Media/Tests'
 TEST_DATABASE_PATH = 'Media/Test_Database.db'
+
+###########################################################################################################################
+####################################################     TELEGRAM     #####################################################
+###########################################################################################################################
+
+TOKEN = 'Bot token here'
+CHAT_ID = 'Bot Chat ID here'
+MESSAGE = 'A shiny pokemon has been found!'
+URL = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={CHAT_ID}&text={MESSAGE}"
