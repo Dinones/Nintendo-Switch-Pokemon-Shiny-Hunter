@@ -140,6 +140,11 @@ SHINY_FOUND = \
 MENU = \
     f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}\033[0;m'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mSelection Menu:\033[0;m'
+    
+DISCORD = \
+    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}\033[0;m'+\
+    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mSuccessfully send message to discord\033[0;m'
+    
 MENU_OPTION = \
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}m    [{"{index}"}] \033[0;m'+\
     f'\033[{COLORS["Blue"]}m{"{option}"}\033[0;m'
