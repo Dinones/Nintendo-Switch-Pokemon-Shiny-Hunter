@@ -147,9 +147,9 @@ class Image_Processing():
         # --psm 6: Assume a single uniform block of text
         custom_config = '--oem 1 --psm 6'
         text = pytesseract.image_to_string(name_image, config=custom_config)
-        
+
         # Text: "You encountered a wild .......!" is different in all languages
-        if encounter_type == 'STATIC' and CONST.LANGUAGE == 'EN':
+        if encounter_type == 'STATIC':
             # EN: Dialga appeared!
             # FR: Dialga apparaît !
             if CONST.LANGUAGE in ('EN', 'FR'):
