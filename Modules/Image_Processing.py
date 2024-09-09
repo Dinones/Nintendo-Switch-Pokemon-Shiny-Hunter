@@ -147,9 +147,22 @@ class Image_Processing():
         # --psm 6: Assume a single uniform block of text
         custom_config = '--oem 1 --psm 6'
         text = pytesseract.image_to_string(name_image, config=custom_config)
+        
         # Text: "You encountered a wild .......!" is different in all languages
-        if CONST.LANGUAGE == 'EN': text = text.split(' ')[-1]
+        if encounter_type == 'STATIC' and CONST.LANGUAGE == 'EN':
+            # EN: Dialga appeared!
+            # FR: Dialga apparaît !
+            if CONST.LANGUAGE in ('EN', 'FR'):
+                text = text.split(' ')[0]
+        elif encounter_type == 'WILD':
+            # FR: Un Baudrive sauvage apparaît !
+            if CONST.LANGUAGE == 'FR': text = text.split(' ')[1]
+        
+        # Fallback to default behavior
+        elif CONST.LANGUAGE == 'EN': text = text.split(' ')[-1]
         elif CONST.LANGUAGE in ('ES, EN, DE, FR, IT'): text = text.split(' ')[-2]
+        
+        # Remove the exclamation mark if it exists
         text = text.replace('!', '').strip()
 
         return text
