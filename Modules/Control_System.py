@@ -173,7 +173,7 @@ def static_encounter(image, state):
 
     # Game loaded, player in the overworld
     # Some static encounters make a white screen flash before entering the combat
-    elif state == 'ENTER_STATIC_COMBAT_3' and time() - state_timer >= 2:
+    elif state == 'ENTER_STATIC_COMBAT_3' and time() - state_timer >= CONST.STATIC_ENCOUNTERS_DELAY:
         # Look for the load combat white screen
         if image.check_multiple_pixel_colors(
             [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
