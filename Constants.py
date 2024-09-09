@@ -90,6 +90,9 @@ WILD_WALKING_SECONDS = 1
 WILD_WALKING_DIRECTION = 'EW'
 MOVE_FORWARD_STATIC_ENCOUNTER = False
 SKIP_UPDATING_GAME = False
+# Some static encounters make a white screen flash before entering the combat
+# Raise this value to 5 for Dialga and Palkia; default value is 2
+STATIC_ENCOUNTERS_DELAY = 2
 # How long has the bot been stuck in the same state before restarting the game
 STUCK_TIMER_SECONDS = 30
 SHINY_DETECTION_TIME = 2
