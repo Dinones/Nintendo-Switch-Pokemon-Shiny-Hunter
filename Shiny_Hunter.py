@@ -45,7 +45,9 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
         Video_Capture.stop()
         print(COLOR_str.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{CONST.VIDEO_CAPTURE_INDEX}'"))
         return
-    Video_Capture.start_recording()
+    
+    if CONST.ENABLE_VIDEO_RECORDING:
+        Video_Capture.start_recording()
 
     switch_controller_image = Image_Processing(CONST.SWITCH_CONTROLLER_IMAGE_PATH)
     if isinstance(switch_controller_image.original_image, type(None)):
@@ -86,7 +88,8 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
         FPS.get_FPS()
         image.draw_FPS(FPS.FPS)
 
-        Video_Capture.add_frame_to_video(image)
+        if CONST.ENABLE_VIDEO_RECORDING:
+            Video_Capture.add_frame_to_video(image)
 
         # Don't care if any race condition
         if Controller.current_button_pressed != Controller.previous_button_pressed:
@@ -114,11 +117,13 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                     # If stuck in "RESTART_GAME_1", it would be stuck forever
                     Controller.previous_event = None
                     Controller.current_event = "RESTART_GAME_1"
-                    if CONST.SAVE_ERROR_VIDEOS: Video_Capture.save_video(f'Error - {time()}')
+                    if CONST.SAVE_ERROR_VIDEOS and CONST.ENABLE_VIDEO_RECORDING:
+                        Video_Capture.save_video(f'Error - {time()}')
             elif Controller.current_event != Controller.previous_event: stuck_timer = time()
 
             # Start recording a new video
-            if Controller.current_event in ["ESCAPE_COMBAT_1", "RESTART_GAME_1"] \
+            if CONST.ENABLE_VIDEO_RECORDING and \
+                Controller.current_event in ["ESCAPE_COMBAT_1", "RESTART_GAME_1"] \
                 and Controller.current_event != Controller.previous_event:
                     Video_Capture.save_video()
                     Video_Capture.start_recording()
@@ -154,7 +159,10 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                 elif time() - shiny_timer > CONST.SHINY_RECORDING_SECONDS:
                     pokemon = {'name': pokemon_name, 'shiny': True}
                     add_or_update_encounter(pokemon, int(time() - encounter_playtime))
-                    Video_Capture.save_video(f'Shiny {pokemon_name} - {time()}')
+                    
+                    if CONST.ENABLE_VIDEO_RECORDING:
+                        Video_Capture.save_video(f'Shiny {pokemon_name} - {time()}')
+
                     Thread(target=lambda: play_sound(f'./{CONST.SHINY_SOUND_PATH}'), daemon=True).start()
                     print(COLOR_str.SHINY_FOUND
                         .replace('{module}', 'Shiny Hunter')
@@ -169,8 +177,9 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                 Controller.current_event = "STOP_1"
             elif Controller.current_event == "STOP_2":
                 def _stop_execution(Video_Capture, shutdown_event):
-                    try: Video_Capture.save_video()
-                    except: pass
+                    if CONST.ENABLE_VIDEO_RECORDING:
+                        try: Video_Capture.save_video()
+                        except: pass
                     shutdown_event.set()
                 Timer(3, lambda: _stop_execution(Video_Capture, shutdown_event)).start()
                 Controller.current_event = "STOP_3"
