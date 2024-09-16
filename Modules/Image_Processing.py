@@ -153,10 +153,19 @@ class Image_Processing():
             # EN: Dialga appeared!
             # FR: Dialga apparaît !
             if CONST.LANGUAGE in ('EN', 'FR'):
-                text = text.split(' ')[0]
+                # Found the first part that has an uppercase letter
+                for part in text.split(' '):
+                    if part[0].isupper(): text = part; break
+        
         elif encounter_type == 'WILD':
+            # EN: A wild Drifloon appeared!
+            # ES: ¡Ha aparecido un Drifloon salvaje!
             # FR: Un Baudrive sauvage apparaît !
-            if CONST.LANGUAGE == 'FR': text = text.split(' ')[1]
+            if CONST.LANGUAGE in ('FR', 'ES', 'EN'):
+                text_parts = text.split(' ')
+                # Found the last part that has an uppercase letter
+                for part in text_parts[::-1]:
+                    if part[0].isupper(): text = part; break
         
         # Fallback to default behavior
         elif CONST.LANGUAGE == 'EN': text = text.split(' ')[-1]
