@@ -170,7 +170,6 @@ if __name__ == "__main__":
             image = Image_Processing(Video_Capture.read_frame())
             if isinstance(image.original_image, type(None)): continue
 
-            image.resize_image()
             FPS.get_FPS()
             image.draw_FPS(FPS.FPS)
 

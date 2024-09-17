@@ -4,7 +4,7 @@
 
 import os
 import sys; sys.path.append('Modules')
-import Colored_Strings as COLOR_str
+from Modules import Colored_Strings as COLOR_str
 
 # NXBT is only compatible with Linux systems
 if os.name != 'posix': exit(f'\n{COLOR_str.NOT_LINUX_SYSTEM}\n')
@@ -32,7 +32,7 @@ import Colored_Strings as COLOR_str
 from FPS_Counter import FPS_Counter
 from GUI import GUI, App, play_sound
 from Game_Capture import Game_Capture
-from Image_Processing import Image_Processing
+from Modules import Image_Processing
 from Switch_Controller import Switch_Controller
 
 ###########################################################################################################################
@@ -82,7 +82,6 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                 return
             continue
 
-        image.resize_image()
         FPS.get_FPS()
         image.draw_FPS(FPS.FPS)
 

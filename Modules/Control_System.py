@@ -476,7 +476,6 @@ if __name__ == "__main__":
             
             image = Image_Processing(Video_Capture.read_frame())
             if type(image.original_image) == type(None): break
-            image.resize_image()
             FPS.get_FPS()
             image.draw_FPS(FPS.FPS)
 

@@ -7,3 +7,12 @@ __pycache__
 
 Test.py
 Changelog.txt
+
+# IDE specific files #
+.vscode/
+
+# Virtual Environment #
+.venv/
+
+# OS generated files #
+**/.DS_Store

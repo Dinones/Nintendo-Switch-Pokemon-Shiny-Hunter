@@ -369,7 +369,6 @@ if __name__ == "__main__":
                         shutdown_event.set()
                     continue
 
-                image.resize_image()
                 FPS.get_FPS()
                 image.draw_FPS(FPS.FPS)
 
@@ -433,7 +432,6 @@ if __name__ == "__main__":
                 .replace('{path}', f'../{CONST.TEMPLATE_IMAGE_PATH}') + '\n'
             )
             return
-        image.resize_image()
 
         def test_GUI_control(shutdown_event):
             while not shutdown_event.is_set():

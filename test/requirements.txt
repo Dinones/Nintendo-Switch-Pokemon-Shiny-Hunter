@@ -1,0 +1,3 @@
+# Test Requirements
+
+parameterized==0.9.0
