@@ -148,8 +148,9 @@ class Image_Processing():
         custom_config = '--oem 1 --psm 6'
         text = pytesseract.image_to_string(name_image, config=custom_config)
         # Text: "You encountered a wild .......!" is different in all languages
-        if CONST.LANGUAGE == 'EN': text = text.split(' ')[-1]
-        elif CONST.LANGUAGE in ('ES, EN, DE, FR, IT'): text = text.split(' ')[-2]
+        split = text.split(' ')
+        if CONST.LANGUAGE == 'EN' and len(split) > 0: text = split[-1]
+        elif CONST.LANGUAGE in ('ES, EN, DE, FR, IT') and len(split) > 1: text = split[-2]
         text = text.replace('!', '').strip()
 
         return text
