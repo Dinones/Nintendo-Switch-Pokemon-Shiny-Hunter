@@ -53,25 +53,30 @@ class Image_Processing():
         self.resized_image = cv2.resize(self.original_image, new_size)
 
 
-    def _get_resized_image(self):
+    def get_resized_image(self):
         # Resize the image if it hasn't been resized yet
         if self.resized_image is None and self.original_image is not None: self.resize_image()
 
         return self.resized_image
+
+    def get_fps_image(self):
+        if self.FPS_image is None and self.resized_image is not None:
+            self.FPS_image = np.copy(self.resized_image)
+
+        return self.FPS_image
     
     #######################################################################################################################
 
     # Draw FPS at the top-left corner
     def draw_FPS(self, FPS = 0):
-        self.FPS_image = np.copy(self._get_resized_image())
-        cv2.putText(self.FPS_image, f'FPS: {FPS}', CONST.TEXT_PARAMS['position'], cv2.FONT_HERSHEY_SIMPLEX, 
+        cv2.putText(self.get_fps_image(), f'FPS: {FPS}', CONST.TEXT_PARAMS['position'], cv2.FONT_HERSHEY_SIMPLEX,
             CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'], CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
 
     #######################################################################################################################
 
     # Write the spcified at the top-left corner
     def write_text(self, text = '', position_offset = (0, 0)):
-        cv2.putText(self.FPS_image, text, tuple(a + b for a, b in zip(CONST.TEXT_PARAMS['position'], position_offset)), 
+        cv2.putText(self.get_fps_image(), text, tuple(a + b for a, b in zip(CONST.TEXT_PARAMS['position'], position_offset)),
             cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'], 
             CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
 
@@ -93,7 +98,6 @@ class Image_Processing():
     def draw_button(self, button = ''):
         if not isinstance(button, str): return
 
-        self.FPS_image = np.copy(self._get_resized_image())
         button_coordinates = {
             'A': (307, 80), 
             'B': (288, 99),
@@ -106,19 +110,19 @@ class Image_Processing():
             'LEFT': (43, 148)
         }
         if button in button_coordinates.keys(): 
-            cv2.circle(self.FPS_image, button_coordinates[button], 9, CONST.PRESSED_BUTTON_COLOR, -1)
+            cv2.circle(self.get_fps_image(), button_coordinates[button], 9, CONST.PRESSED_BUTTON_COLOR, -1)
 
     #######################################################################################################################
 
     # Return the requested pixel color. Default: top-left corner pixel
-    def get_pixel_color(self, pixel = (20, 20)): return self.original_image[pixel[0]][pixel[1]]
+    def get_pixel_color(self, pixel = (13, 11)): return self.get_resized_image()[pixel[0]][pixel[1]]
 
     #######################################################################################################################
 
     # Return if the pixel is of the specified color
-    def check_pixel_color(self, color, pixel = (20, 20)): 
+    def check_pixel_color(self, color, pixel = (13, 11)): 
         # return all(self.original_image[pixel[0]][pixel[1]] == color)
-        differences = [abs(self.original_image[pixel[0]][pixel[1]][color_index] - color[color_index])
+        differences = [abs(self.get_resized_image()[pixel[0]][pixel[1]][color_index] - color[color_index])
             for color_index in range(3)]
         return all(difference <= CONST.PIXEL_COLOR_DIFF_THRESHOLD for difference in differences)
 
@@ -128,8 +132,8 @@ class Image_Processing():
     def check_multiple_pixel_colors(self, start, end, color):
         match_pixels = True
         for index in range(start[1], end[1]):
-            # if all(self._get_resized_image()[-index][start[0]] == color): continue
-            differences = [abs(self._get_resized_image()[-index][start[0]][color_index] - color[color_index])
+            # if all(self.get_resized_image()[-index][start[0]] == color): continue
+            differences = [abs(self.get_resized_image()[-index][start[0]][color_index] - color[color_index])
                 for color_index in range(3)]
             if all(difference <= CONST.PIXEL_COLOR_DIFF_THRESHOLD for difference in differences): continue
             # If one False is found, there is no need to check the other pixels
@@ -137,7 +141,7 @@ class Image_Processing():
 
         # Color all the pixels that are being checked
         if CONST.TESTING: 
-            for index in range(start[1], end[1]): self.FPS_image[-index][start[0]] = CONST.TESTING_COLOR
+            for index in range(start[1], end[1]): self.get_fps_image()[-index][start[0]] = CONST.TESTING_COLOR
 
         return match_pixels
 
@@ -148,7 +152,7 @@ class Image_Processing():
 
         # Format: [y1:y2, x1:x2] 
         # Wild Pokémon: [27:43, 535:650] | Player Pokémon: [y1:y2, x1:x2] | Text Box: [333:365, 50:670]
-        name_image = self._get_resized_image()[333:365, 50:670]
+        name_image = self.get_resized_image()[333:365, 50:670]
         name_image = cv2.cvtColor(name_image, cv2.COLOR_BGR2GRAY)
 
         # --oem 1: Faster and use less resources
@@ -161,8 +165,9 @@ class Image_Processing():
         text = self._extract_text_from_image()
 
         # Text: "You encountered a wild .......!" is different in all languages
-        if CONST.LANGUAGE == 'EN': text = text.split(' ')[-1]
-        elif CONST.LANGUAGE in ('ES, EN, DE, FR, IT'): text = text.split(' ')[-2]
+        split = text.split(' ')
+        if CONST.LANGUAGE == 'EN' and len(split) > 0: text = split[-1]
+        elif CONST.LANGUAGE in ('ES, EN, DE, FR, IT') and len(split) > 1: text = split[-2]
 
         # Remove the exclamation mark and spaces if they exist
         text = text.replace('!', '').strip()
@@ -231,14 +236,14 @@ if __name__ == "__main__":
 
         image = Image_Processing(f'../{CONST.TESTING_IMAGE_PATH}')
         if isinstance(image.original_image, type(None)): return
-        image.resize_image()
+
         # Linked images: If one image is edited, the other one is too
-        image.FPS_image = image._get_resized_image()
+        image.FPS_image = image.get_resized_image()
 
         # image.replace_pixels([141, 140, 130])
         # print(image.check_pixel_color())
         # cv2.circle(image.original_image, (20, 20), 9, CONST.PRESSED_BUTTON_COLOR, -1)
-        # cv2.rectangle(image._get_resized_image(), (50, 333), (670, 365), (255, 255, 0), 1)
+        # cv2.rectangle(image.get_resized_image(), (50, 333), (670, 365), (255, 255, 0), 1)
         # print(image.recognize_pokemon())
         # print(image.check_multiple_pixel_colors(
         #     [int(CONST.MAIN_FRAME_SIZE[0] // 16 * 13), int(CONST.MAIN_FRAME_SIZE[1] // 16 * 4)],
@@ -253,7 +258,7 @@ if __name__ == "__main__":
         )
 
         # cv2.imshow(f'{CONST.BOT_NAME} - Resized', image.original_image[0:500])
-        cv2.imshow(f'{CONST.BOT_NAME} - Resized', image._get_resized_image())
+        cv2.imshow(f'{CONST.BOT_NAME} - Resized', image.get_resized_image())
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
@@ -367,9 +372,7 @@ if __name__ == "__main__":
             # No more frames in the video
             if isinstance(image.original_image, type(None)): return
 
-            image.resize_image()
-
-            cv2.imshow(f'{CONST.BOT_NAME} - Resized', image._get_resized_image())
+            cv2.imshow(f'{CONST.BOT_NAME} - Resized', image.get_resized_image())
 
         while True:
             if pause: 
@@ -461,15 +464,14 @@ if __name__ == "__main__":
         while True and (index) != len(images):
             if time() - timer >= 0.1:
                 image = Image_Processing(f'../{CONST.IMAGES_FOLDER_PATH}/{images[index]}')
-                image.resize_image()
-                cv2.putText(image._get_resized_image(), f'Count: {index + 1}/{len(images)}', CONST.TEXT_PARAMS['position'], 
+                cv2.putText(image.get_resized_image(), f'Count: {index + 1}/{len(images)}', CONST.TEXT_PARAMS['position'], 
                     cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'],
                     CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
-                cv2.putText(image._get_resized_image(), f'{images[index]}', second_text_position, 
+                cv2.putText(image.get_resized_image(), f'{images[index]}', second_text_position, 
                     cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'],
                     CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
-                if type(image._get_resized_image()) is not type(None):
-                    cv2.imshow(f'{CONST.BOT_NAME} - Lost Shiny Checker', image._get_resized_image())
+                if type(image.get_resized_image()) is not type(None):
+                    cv2.imshow(f'{CONST.BOT_NAME} - Lost Shiny Checker', image.get_resized_image())
 
                 if not pause: index += 1
                 timer = time()

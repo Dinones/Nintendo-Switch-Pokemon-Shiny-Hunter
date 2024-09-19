@@ -234,8 +234,8 @@ class GUI(pyqt_w.QWidget):
         except: return
 
         # Convert images to a PyQt compatible format
-        update_items['image'].get_pyqt_image(update_items['image'].FPS_image)
-        update_items['switch_controller_image'].get_pyqt_image(update_items['switch_controller_image'].FPS_image)
+        update_items['image'].get_pyqt_image(update_items['image'].get_fps_image())
+        update_items['switch_controller_image'].get_pyqt_image(update_items['switch_controller_image'].get_fps_image())
 
         # Update images
         self.items['main_image_label'].setPixmap(update_items['image'].pyqt_image)

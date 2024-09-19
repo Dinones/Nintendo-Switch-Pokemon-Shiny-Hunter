@@ -173,7 +173,7 @@ if __name__ == "__main__":
             FPS.get_FPS()
             image.draw_FPS(FPS.FPS)
 
-            cv2.imshow(f'{CONST.BOT_NAME} - Device {CONST.VIDEO_CAPTURE_INDEX}', image.FPS_image)
+            cv2.imshow(f'{CONST.BOT_NAME} - Device {CONST.VIDEO_CAPTURE_INDEX}', image.get_fps_image())
 
             # Press 'q' to stop the program
             # Press 'c' to take a screenshot
