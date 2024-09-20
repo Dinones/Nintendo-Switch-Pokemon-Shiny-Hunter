@@ -149,27 +149,37 @@ class Image_Processing():
         text = pytesseract.image_to_string(name_image, config=custom_config)
 
         # Text: "You encountered a wild .......!" is different in all languages
+        split = text.split(' ')
         if encounter_type == 'STATIC':
             # EN: Dialga appeared!
             # FR: Dialga apparaît !
-            if CONST.LANGUAGE in ('EN', 'FR'):
+            # ES: ¡Es Dialga!
+            # IT: È apparso Dialga!
+            # DE: Dialga erscheint!
+
+            if CONST.LANGUAGE in ('EN', 'FR', 'IT', 'DE'):
                 # Found the first part that has an uppercase letter
-                for part in text.split(' '):
+                for part in split:
                     if part[0].isupper(): text = part; break
-        
+
+            elif CONST.LANGUAGE == 'ES' and len(split) > 0:
+                # Special case for Spanish
+                text = split[-1]
+
         elif encounter_type == 'WILD':
             # EN: A wild Drifloon appeared!
             # ES: ¡Ha aparecido un Drifloon salvaje!
             # FR: Un Baudrive sauvage apparaît !
-            if CONST.LANGUAGE in ('FR', 'ES', 'EN'):
-                text_parts = text.split(' ')
+            # IT: Ah! È apparso un Drifloon selvatico!
+            # DE: Ein Bidiza (wild) erscheint!
+            if CONST.LANGUAGE in ('FR', 'ES', 'EN', 'DE', 'IT'):
                 # Found the last part that has an uppercase letter
-                for part in text_parts[::-1]:
+                for part in split[::-1]:
                     if part[0].isupper(): text = part; break
         
         # Fallback to default behavior
-        elif CONST.LANGUAGE == 'EN': text = text.split(' ')[-1]
-        elif CONST.LANGUAGE in ('ES, EN, DE, FR, IT'): text = text.split(' ')[-2]
+        elif CONST.LANGUAGE == 'EN' and len(split) > 0: text = split[-1]
+        elif CONST.LANGUAGE in ('ES, EN, DE, FR, IT') and len(split) > 1: text = split[-2]
         
         # Remove the exclamation mark if it exists
         text = text.replace('!', '').strip()
