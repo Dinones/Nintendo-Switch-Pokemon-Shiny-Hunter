@@ -21,12 +21,13 @@ walking_direction = bool(0)
 #################################################     INITIALIZATIONS     #################################################
 ###########################################################################################################################
 
-# Go from "Change Grip/Order Menu" to the main menu and then go back to "Change Grip/Order Menu"
+# Go from "Change Grip/Order Menu" to the main menu and then go back to "Change Grip/Order Menu" 
 def test_macro(controller):
     controller.current_event = "Test"
     start_macro(controller)
     sleep(2); controller.current_button_pressed = 'HOME'
-    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME])
+    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME], down=0.05, up=0)
+    controller.current_button_pressed = ''
     sleep(1); stop_macro(controller)
 
 ###########################################################################################################################
@@ -38,7 +39,7 @@ def start_macro(controller):
     controller.current_button_pressed = 'B'; sleep(1)
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.B])
     sleep(1); controller.current_button_pressed = 'HOME'
-    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME])
+    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME], down=0.05, up=0)
 
 ###########################################################################################################################
 
@@ -49,7 +50,8 @@ def fast_start_macro(controller):
     controller.current_button_pressed = 'B'; sleep(1)
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.B])
     sleep(1); controller.current_button_pressed = 'HOME'
-    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME])
+    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME], down=0.05, up=0)
+    controller.current_button_pressed = ''
     sleep(2); controller.current_button_pressed = 'A'
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A])
 
@@ -60,7 +62,8 @@ def stop_macro(controller):
     if controller.previous_event == controller.current_event: return
 
     controller.current_button_pressed = 'HOME'
-    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME])
+    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME], down=0.05, up=0)
+    controller.current_button_pressed = ''
     sleep(1.5); controller.current_button_pressed = 'DOWN'
     for _ in range(2): controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.DPAD_DOWN])
     for _ in range(4): 
@@ -79,7 +82,8 @@ def restart_game_macro(controller):
     if controller.previous_event == controller.current_event: return
     
     controller.current_button_pressed = 'HOME'
-    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME])
+    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME], down=0.05, up=0)
+    controller.current_button_pressed = ''
     sleep(1.5); controller.current_button_pressed = 'X'
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.X]); sleep(0.5)
     if CONST.SKIP_UPDATING_GAME:
@@ -142,7 +146,8 @@ def escape_combat_macro(controller):
 # Go to home menu
 def home_macro(controller):
     controller.current_button_pressed = 'HOME'
-    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME]); sleep(1)
+    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME], down=0.05, up=0)
+    controller.current_button_pressed = ''; sleep(1)
 
 ###########################################################################################################################
 
