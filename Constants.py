@@ -23,7 +23,7 @@ LANGUAGE = 'EN'
 
 # [PIXELS] Nintendo Switch captured frames' possible sizes 1080p: (1920, 1080) | 720p: (1280, 720)
 # If you want to capture image and video in full HD, use 1080p, if you want better performance, use 720p.
-ORIGINAL_FRAME_SIZE = (1280, 720)
+ORIGINAL_FRAME_SIZE = (1920, 1080)
 
 TEXT_PARAMS = {
     'font_scale': 0.5,

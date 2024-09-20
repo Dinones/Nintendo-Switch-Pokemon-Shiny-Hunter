@@ -115,12 +115,12 @@ class Image_Processing():
     #######################################################################################################################
 
     # Return the requested pixel color. Default: top-left corner pixel
-    def get_pixel_color(self, pixel = (13, 11)): return self.get_resized_image()[pixel[0]][pixel[1]]
+    def get_pixel_color(self, pixel = (20, 20)): return self.get_resized_image()[pixel[0]][pixel[1]]
 
     #######################################################################################################################
 
     # Return if the pixel is of the specified color
-    def check_pixel_color(self, color, pixel = (13, 11)): 
+    def check_pixel_color(self, color, pixel = (20, 20)): 
         # return all(self.original_image[pixel[0]][pixel[1]] == color)
         differences = [abs(self.get_resized_image()[pixel[0]][pixel[1]][color_index] - color[color_index])
             for color_index in range(3)]
