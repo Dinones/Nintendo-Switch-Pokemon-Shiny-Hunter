@@ -127,7 +127,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
             elif Controller.current_event in ['ENTER_COMBAT_3', 'ENTER_COMBAT_5']: pokemon_image = image
             # Update the database
             elif Controller.current_event == "CHECK_SHINY" and type(pokemon_image) != type(None):
-                pokemon_name = pokemon_image.recognize_pokemon(Encounter_Type)
+                pokemon_name = pokemon_image.recognize_pokemon()
                 if CONST.SAVE_IMAGES: 
                     pokemon_image.save_image(pokemon_name)
                     # Check if the computer is running out of space

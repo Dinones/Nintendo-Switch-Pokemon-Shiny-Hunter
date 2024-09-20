@@ -137,7 +137,7 @@ class Image_Processing():
     #######################################################################################################################
 
     # Read the pokémon name
-    def recognize_pokemon(self, encounter_type = "WILD"):
+    def recognize_pokemon(self):
         # Format: [y1:y2, x1:x2] 
         # Wild Pokémon: [27:43, 535:650] | Player Pokémon: [y1:y2, x1:x2] | Text Box: [333:365, 50:670]
         name_image = self.resized_image[333:365, 50:670]
@@ -148,38 +148,20 @@ class Image_Processing():
         custom_config = '--oem 1 --psm 6'
         text = pytesseract.image_to_string(name_image, config=custom_config)
 
-        # Text: "You encountered a wild .......!" is different in all languages
+        # EN: Dialga appeared! | A wild Drifloon appeared! | Go! Chimchar!
+        # FR: Dialga apparaît! | Un Baudrive sauvage apparaît! | Ouisticram! Go!
+        # ES: ¡Es Dialga! | ¡Ha aparecido un Drifloon salvaje! | ¡Adelante, Chimchar!
+        # IT: È apparso Dialga! | Ah! È apparso un Drifloon selvatico! | Avanti, Chimchar!
+        # DE: Dialga erscheint! | Ein Driftlon (wild) erscheint! | Los, Panflam!
         split = text.split(' ')
-        if encounter_type == 'STATIC':
-            # EN: Dialga appeared!
-            # FR: Dialga apparaît !
-            # ES: ¡Es Dialga!
-            # IT: È apparso Dialga!
-            # DE: Dialga erscheint!
-
-            if CONST.LANGUAGE in ('EN', 'FR', 'IT', 'DE'):
-                # Found the first part that has an uppercase letter
-                for part in split:
-                    if part[0].isupper(): text = part; break
-
-            elif CONST.LANGUAGE == 'ES' and len(split) > 0:
-                # Special case for Spanish
-                text = split[-1]
-
-        elif encounter_type == 'WILD':
-            # EN: A wild Drifloon appeared!
-            # ES: ¡Ha aparecido un Drifloon salvaje!
-            # FR: Un Baudrive sauvage apparaît !
-            # IT: Ah! È apparso un Drifloon selvatico!
-            # DE: Ein Bidiza (wild) erscheint!
-            if CONST.LANGUAGE in ('FR', 'ES', 'EN', 'DE', 'IT'):
-                # Found the last part that has an uppercase letter
-                for part in split[::-1]:
-                    if part[0].isupper(): text = part; break
-        
-        # Fallback to default behavior
-        elif CONST.LANGUAGE == 'EN' and len(split) > 0: text = split[-1]
-        elif CONST.LANGUAGE in ('ES, EN, DE, FR, IT') and len(split) > 1: text = split[-2]
+        # For the KO, ZH-CN and ZH-TW cases, it will return the whole text line
+        if CONST.LANGUAGE in ('FR', 'ES', 'EN', 'DE', 'IT'):
+            # Replace '¡' and "Go!" for the Spanish and French cases. 
+            split = text.replace('¡', '').replace('Go!', '').split(' ')
+            for word in split[::-1]:
+                # Empty spaces ['Ouisticram!', ''] will make it crash
+                if word and word[0].isupper(): 
+                    text = word; break
         
         # Remove the exclamation mark if it exists
         text = text.replace('!', '').strip()
