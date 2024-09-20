@@ -26,7 +26,7 @@ def test_macro(controller):
     controller.current_event = "Test"
     start_macro(controller)
     sleep(2); controller.current_button_pressed = 'HOME'
-    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME], down=0.05, up=0)
+    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME])
     controller.current_button_pressed = ''
     sleep(1); stop_macro(controller)
 
@@ -39,7 +39,7 @@ def start_macro(controller):
     controller.current_button_pressed = 'B'; sleep(1)
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.B])
     sleep(1); controller.current_button_pressed = 'HOME'
-    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME], down=0.05, up=0)
+    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME])
 
 ###########################################################################################################################
 
@@ -50,7 +50,7 @@ def fast_start_macro(controller):
     controller.current_button_pressed = 'B'; sleep(1)
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.B])
     sleep(1); controller.current_button_pressed = 'HOME'
-    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME], down=0.05, up=0)
+    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME])
     controller.current_button_pressed = ''
     sleep(2); controller.current_button_pressed = 'A'
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A])
@@ -62,7 +62,7 @@ def stop_macro(controller):
     if controller.previous_event == controller.current_event: return
 
     controller.current_button_pressed = 'HOME'
-    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME], down=0.05, up=0)
+    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME])
     controller.current_button_pressed = ''
     sleep(1.5); controller.current_button_pressed = 'DOWN'
     for _ in range(2): controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.DPAD_DOWN])
@@ -72,8 +72,10 @@ def stop_macro(controller):
         controller.current_button_pressed = ''; sleep(0.1)
     sleep(0.5); controller.current_button_pressed = 'A'
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A])
-    sleep(2); controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A]); sleep(1)
     controller.current_button_pressed = ''
+    sleep(2); controller.current_button_pressed = 'A'
+    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A])
+    controller.current_button_pressed = ''; sleep(1)
 
 ###########################################################################################################################
 
