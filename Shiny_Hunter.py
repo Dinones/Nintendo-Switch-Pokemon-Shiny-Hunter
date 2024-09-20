@@ -32,8 +32,9 @@ import Colored_Strings as COLOR_str
 from FPS_Counter import FPS_Counter
 from GUI import GUI, App, play_sound
 from Game_Capture import Game_Capture
-from Image_Processing import Image_Processing
+from Modules.Image_Processing import Image_Processing
 from Switch_Controller import Switch_Controller
+from Modules.message.mail_sender import MailSender
 
 ###########################################################################################################################
 #################################################     INITIALIZATIONS     #################################################
@@ -105,6 +106,11 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
             elif Encounter_Type == 'STATIC': Controller.current_event = static_encounter(image, Controller.current_event)
             elif Encounter_Type == 'STARTER': Controller.current_event = starter_encounter(image, Controller.current_event)
 
+            # If no pokemon is found for too long, send a notification
+            if Controller.current_event != 'SHINY_FOUND' \
+                and time() - encounter_playtime > CONST.FAILURE_DETECTION_TIME:
+                    _send_failure_notification('No pokemon found for too long. Consider checking the program.')
+
             # Check if the program got stuck in some event
             if (Controller.current_event not in 
                 ["MOVE_PLAYER", "WAIT_PAIRING_SCREEN", "WAIT_HOME_SCREEN", "SHINY_FOUND", "ENTER_LAKE_4"] and \
@@ -161,6 +167,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                         .replace('{pokemon}', pokemon_name)
                         .replace('{encounters}', str(global_encounters - last_shiny_encounter))
                     )
+                    _send_shiny_notification(pokemon_name, image.last_saved_image)
                     stop_event.set()
             else: shiny_timer = time()
 
@@ -188,6 +195,18 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
             }
 
             Image_Queue.put(update_items)
+
+def _send_shiny_notification(pokemon_name, image_path):
+    if CONST.NOTIFICATION_TYPE == 'MAIL':
+        mail_sender = MailSender(CONST.MAIL_SETTINGS)
+        mail_sender.send_shiny_found(pokemon_name, image_path)
+    pass
+
+def _send_failure_notification(error_message):
+    if CONST.NOTIFICATION_TYPE == 'MAIL':
+        mail_sender = MailSender(CONST.MAIL_SETTINGS)
+        mail_sender.send_failure_detected(error_message)
+    pass
 
 ###########################################################################################################################
 ###########################################################################################################################

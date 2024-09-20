@@ -8,4 +8,8 @@ __pycache__
 Test.py
 Changelog.txt
 
-.DS_Store
+# Virtual Environment #
+.venv/
+
+# OS generated files #
+**/.DS_Store

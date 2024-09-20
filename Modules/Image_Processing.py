@@ -29,6 +29,7 @@ class Image_Processing():
         self.pyqt_image = None
         self.FPS_image = None
         self.shiny_detection_time = 0
+        self.last_saved_image: str = None
 
         # Load the image
         if isinstance(image, str): self.original_image = cv2.imread(image, cv2.IMREAD_UNCHANGED)
@@ -172,7 +173,8 @@ class Image_Processing():
     # Save the image
     def save_image(self, pokemon_name = ''):
         file_name = f'{pokemon_name}_{str(int(time()))}' if pokemon_name else str(int(time()))
-        cv2.imwrite(f'./{CONST.IMAGES_FOLDER_PATH}{file_name}.png', self.original_image) 
+        self.last_saved_image = f'./{CONST.IMAGES_FOLDER_PATH}{file_name}.png'
+        cv2.imwrite(self.last_saved_image, self.original_image) 
 
     #######################################################################################################################
 
