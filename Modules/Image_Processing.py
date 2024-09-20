@@ -153,19 +153,18 @@ class Image_Processing():
         # ES: ¡Es Dialga! | ¡Ha aparecido un Drifloon salvaje! | ¡Adelante, Chimchar!
         # IT: È apparso Dialga! | Ah! È apparso un Drifloon selvatico! | Avanti, Chimchar!
         # DE: Dialga erscheint! | Ein Driftlon (wild) erscheint! | Los, Panflam!
-        split = text.split(' ')
         # For the KO, ZH-CN and ZH-TW cases, it will return the whole text line
         if CONST.LANGUAGE in ('FR', 'ES', 'EN', 'DE', 'IT'):
             # Replace '¡' and "Go!" for the Spanish and French cases. 
-            split = text.replace('¡', '').replace('Go!', '').split(' ')
-            for word in split[::-1]:
+            pokemon_name = text
+            for part in ['Go!', '¡', '!']: pokemon_name = pokemon_name.replace(part, '')
+            pokemon_name = pokemon_name.split(' ')
+            for word in pokemon_name[::-1]:
                 # Empty spaces ['Ouisticram!', ''] will make it crash
                 if word and word[0].isupper(): 
                     text = word; break
         
-        # Remove the exclamation mark if it exists
-        text = text.replace('!', '').strip()
-
+        text = text.strip()
         return text
 
     #######################################################################################################################
