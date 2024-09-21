@@ -12,6 +12,8 @@ OUTPUT_VIDEO_PATH = 'Media/Videos/Video.avi'
 # Can't be greater than 110s!
 SHINY_RECORDING_SECONDS = 60
 SKIPPED_FRAMES_TO_RECONNECT = 3
+# Used to debug issues and to save the video of the encounter. Disable this if you have performance issues
+ENABLE_VIDEO_RECORDING = True
 
 ###########################################################################################################################
 #################################################     IMAGE PROCESSING     ################################################
@@ -90,6 +92,9 @@ WILD_WALKING_SECONDS = 1
 WILD_WALKING_DIRECTION = 'EW'
 MOVE_FORWARD_STATIC_ENCOUNTER = False
 SKIP_UPDATING_GAME = False
+# Some static encounters make a white screen flash before entering the combat
+# Raise this value to 4 for Dialga and Palkia; default value is 2
+STATIC_ENCOUNTERS_DELAY = 2
 # How long has the bot been stuck in the same state before restarting the game
 STUCK_TIMER_SECONDS = 30
 SHINY_DETECTION_TIME = 2

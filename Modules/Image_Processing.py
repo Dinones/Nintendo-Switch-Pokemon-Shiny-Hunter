@@ -137,7 +137,7 @@ class Image_Processing():
     #######################################################################################################################
 
     # Read the pokémon name
-    def recognize_pokemon(self, encounter_type = "WILD"):
+    def recognize_pokemon(self):
         # Format: [y1:y2, x1:x2] 
         # Wild Pokémon: [27:43, 535:650] | Player Pokémon: [y1:y2, x1:x2] | Text Box: [333:365, 50:670]
         name_image = self.resized_image[333:365, 50:670]
@@ -147,11 +147,24 @@ class Image_Processing():
         # --psm 6: Assume a single uniform block of text
         custom_config = '--oem 1 --psm 6'
         text = pytesseract.image_to_string(name_image, config=custom_config)
-        # Text: "You encountered a wild .......!" is different in all languages
-        if CONST.LANGUAGE == 'EN': text = text.split(' ')[-1]
-        elif CONST.LANGUAGE in ('ES, EN, DE, FR, IT'): text = text.split(' ')[-2]
-        text = text.replace('!', '').strip()
 
+        # EN: Dialga appeared! | A wild Drifloon appeared! | Go! Chimchar!
+        # FR: Dialga apparaît! | Un Baudrive sauvage apparaît! | Ouisticram! Go!
+        # ES: ¡Es Dialga! | ¡Ha aparecido un Drifloon salvaje! | ¡Adelante, Chimchar!
+        # IT: È apparso Dialga! | Ah! È apparso un Drifloon selvatico! | Avanti, Chimchar!
+        # DE: Dialga erscheint! | Ein Driftlon (wild) erscheint! | Los, Panflam!
+        # For the KO, ZH-CN and ZH-TW cases, it will return the whole text line
+        if CONST.LANGUAGE in ('FR', 'ES', 'EN', 'DE', 'IT'):
+            # Replace '¡' and "Go!" for the Spanish and French cases. 
+            pokemon_name = text
+            for part in ['Go!', '¡', '!']: pokemon_name = pokemon_name.replace(part, '')
+            pokemon_name = pokemon_name.split(' ')
+            for word in pokemon_name[::-1]:
+                # Empty spaces ['Ouisticram!', ''] will make it crash
+                if word and word[0].isupper(): 
+                    text = word; break
+        
+        text = text.strip()
         return text
 
     #######################################################################################################################
