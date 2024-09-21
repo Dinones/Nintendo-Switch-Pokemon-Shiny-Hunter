@@ -19,3 +19,14 @@ class MessageSender(ABC):
         Sends a message to the user that an error has been detected.
         """
         pass
+
+class DefaultMessageSender(MessageSender):
+    """
+    Class for sending messages to the console.
+    """
+
+    def send_shiny_found(self, pokemon_name: str, image_path: str):
+        print(f'Shiny {pokemon_name} found! Image saved at {image_path}')
+
+    def send_failure_detected(self, error_message: str):
+        print(f'Error detected: {error_message}')

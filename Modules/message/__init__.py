@@ -1,2 +1,2 @@
-from .message_sender import MessageSender
+from .message_sender import MessageSender, DefaultMessageSender
 from .mail_sender import MailSender
