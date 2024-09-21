@@ -1,4 +1,5 @@
 __pycache__
+.venv/
 
 /Media/Tests/
 /Media/Images/
@@ -7,3 +8,6 @@ __pycache__
 
 Test.py
 Changelog.txt
+
+# Hidden MacOS system file which is automatically created by MacOS systems
+**/.DS_Store
