@@ -71,6 +71,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
 
     message_sender = _build_message_sender()
     last_saved_image = None
+    has_failed = False
 
     while not shutdown_event.is_set():
         image = Image_Processing(Video_Capture.read_frame())
@@ -110,8 +111,9 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
             elif Encounter_Type == 'STARTER': Controller.current_event = starter_encounter(image, Controller.current_event)
 
             # If no pokemon is found for too long, send a notification
-            if Controller.current_event != 'SHINY_FOUND' \
+            if Controller.current_event != 'SHINY_FOUND' and has_failed == False \
                 and time() - encounter_playtime > CONST.FAILURE_DETECTION_TIME:
+                    has_failed = True
                     try:
                         message_sender.send_failure_detected('No pokemon found for too long. Consider checking the program.')
                     except: pass
