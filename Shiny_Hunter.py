@@ -116,7 +116,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                     has_failed = True
                     try:
                         message_sender.send_failure_detected('No pokemon found for too long. Consider checking the program.')
-                    except: pass
+                    except Exception as e: print(e)
 
             # Check if the program got stuck in some event
             if (Controller.current_event not in 
@@ -177,7 +177,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                     )
                     try:
                         message_sender.send_shiny_found(pokemon_name, last_saved_image)
-                    except: pass
+                    except Exception as e: print(e)
                     stop_event.set()
             else: shiny_timer = time()
 
