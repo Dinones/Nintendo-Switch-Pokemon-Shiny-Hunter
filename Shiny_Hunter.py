@@ -28,7 +28,6 @@ from Macros import *
 from Database import *
 import Constants as CONST
 from Control_System import *
-import Colored_Strings as COLOR_str
 from FPS_Counter import FPS_Counter
 from GUI import GUI, App, play_sound
 from Game_Capture import Game_Capture
