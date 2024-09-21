@@ -10,6 +10,8 @@ class MessageSender(ABC):
     def send_shiny_found(self, pokemon_name: str, image_path: str):
         """
         Sends a message to the user that a shiny Pokemon has been found.
+        param pokemon_name: The name of the shiny Pokemon.
+        param image_path: The path to the image of the shiny Pokemon. Can be None.
         """
         pass
 
