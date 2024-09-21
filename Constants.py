@@ -3,7 +3,7 @@
 ###########################################################################################################################
 
 # Define the notification type: 'NONE' or 'EMAIL'
-NOTIFICATION_TYPE = 'EMAIL'
+NOTIFICATION_TYPE = 'NONE'
 
 # If you have configured the email notifications, fill in the following fields
 MAIL_SETTINGS = {
