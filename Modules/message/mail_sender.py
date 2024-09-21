@@ -13,7 +13,7 @@ html = """\
     A shiny Pokemon has been found!<br>
     Have a nice day!<br>
 
-    <img src="cid:image1">.</p>
+    {image}</p>
 </body>
 </html>
 """
@@ -48,16 +48,22 @@ class MailSender(MessageSender):
 
     def send_shiny_found(self, pokemon_name: str, image_path: str):
 
-        message = self._create_message(f'Pokemon Hunter - Shiny {pokemon_name} found!', html)
+        if image_path is None:
+            content = html.format(image='')
+        else:
+            content = html.format(image='<img src="cid:image1">')
+        
+        message = self._create_message(f'Pokemon Hunter - Shiny {pokemon_name} found!', content)
 
-        # Open the image file in binary mode
-        with open(image_path, 'rb') as img:
-            # Attach the image file
-            msg_img = MIMEImage(img.read(), name=os.path.basename(image_path))
-            # Define the Content-ID header to use in the HTML body
-            msg_img.add_header('Content-ID', '<image1>')
-            # Attach the image to the message
-            message.attach(msg_img)
+        if image_path is not None:
+            # Open the image file in binary mode
+            with open(image_path, 'rb') as img:
+                # Attach the image file
+                msg_img = MIMEImage(img.read(), name=os.path.basename(image_path))
+                # Define the Content-ID header to use in the HTML body
+                msg_img.add_header('Content-ID', '<image1>')
+                # Attach the image to the message
+                message.attach(msg_img)
 
         # Send the email
         self._send_email(message)

@@ -70,6 +70,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
     last_shiny_encounter = database_data['last_shiny_encounter']
 
     message_sender = _build_message_sender()
+    last_saved_image = None
 
     while not shutdown_event.is_set():
         image = Image_Processing(Video_Capture.read_frame())
@@ -140,6 +141,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                 pokemon_name = pokemon_image.recognize_pokemon()
                 if CONST.SAVE_IMAGES: 
                     pokemon_image.save_image(pokemon_name)
+                    last_saved_image = pokemon_image.last_saved_image
                     # Check if the computer is running out of space
                     system_space = FPS.get_system_available_space()
                     if system_space['available_no_format'] < CONST.CRITICAL_AVAILABLE_SPACE:
@@ -172,7 +174,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                         .replace('{encounters}', str(global_encounters - last_shiny_encounter))
                     )
                     try:
-                        message_sender.send_shiny_found(pokemon_name, image.last_saved_image)
+                        message_sender.send_shiny_found(pokemon_name, last_saved_image)
                     except: pass
                     stop_event.set()
             else: shiny_timer = time()
@@ -203,7 +205,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
             Image_Queue.put(update_items)
 
 def _build_message_sender():
-    if CONST.NOTIFICATION_TYPE == 'MAIL':
+    if CONST.NOTIFICATION_TYPE == 'EMAIL':
         return MailSender(CONST.MAIL_SETTINGS)
     else:
         # Default implementation
