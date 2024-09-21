@@ -76,8 +76,8 @@ class MailSender(MessageSender):
         """
         # Create a multipart message and set headers
         message = MIMEMultipart()
-        message["From"] = self.__sender_mail
-        message["To"] = self.__receiver_mail
+        message["From"] = self.__sender_email
+        message["To"] = self.__receiver_email
         message["Subject"] = subject
 
         # Attach the HTML part
