@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shiny Pokémon Found!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            background-color: #ffcc00;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+        }
+        .header h1 {
+            margin: 0;
+            color: #4b4b4b;
+        }
+        .content {
+            text-align: center;
+            padding: 20px;
+        }
+        .shiny-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+            color: #999;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎉 Shiny Pokémon Found! 🎉</h1>
+        </div>
+        <div class="content">
+            <p>Hey Trainer, a shiny Pokémon has appeared!</p>
+            <!-- Pokémon Image Placeholder -->
+            <img class="shiny-image" src="cid:shiny_pokemon_image" alt="Shiny Pokémon Image" />
+            <p>Good luck catching it!</p>
+            <a href="https://www.pokemon.com" class="button">View on Pokémon</a>
+        </div>
+        <div class="footer">
+            <p>Dinones</p>
+        </div>
+    </div>
+</body>
+</html>

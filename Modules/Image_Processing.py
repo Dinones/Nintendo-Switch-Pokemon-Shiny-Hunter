@@ -31,6 +31,9 @@ class Image_Processing():
         self.FPS_image = None
         self.shiny_detection_time = 0
 
+        # Used to send a notification to the user
+        self.last_saved_image_path: str = ''
+
         # Load the image
         if isinstance(image, str): self.original_image = cv2.imread(image, cv2.IMREAD_UNCHANGED)
         else: self.original_image = image
@@ -187,7 +190,8 @@ class Image_Processing():
     # Save the image
     def save_image(self, pokemon_name = ''):
         file_name = f'{pokemon_name}_{str(int(time()))}' if pokemon_name else str(int(time()))
-        cv2.imwrite(f'./{CONST.IMAGES_FOLDER_PATH}{file_name}.png', self.original_image) 
+        self.last_saved_image_path = f'./{CONST.IMAGES_FOLDER_PATH}{file_name}.png'
+        cv2.imwrite(self.last_saved_image_path, self.original_image) 
 
     #######################################################################################################################
 

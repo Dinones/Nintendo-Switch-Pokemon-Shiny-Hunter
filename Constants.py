@@ -135,6 +135,26 @@ STARTER = 'R'
 DATABASE_PATH = 'Media/Database.db'
 
 ###########################################################################################################################
+#####################################################     MESSAGES     ####################################################
+###########################################################################################################################
+
+# You will receive mail notifications when a shiny is found or an error occurs
+MAIL_NOTIFICATIONS = True
+
+# If you have configured the email notifications, fill in the following fields
+MAIL_SETTINGS = {
+    'sender_email': 'foo@gmail.com',    # Sender email
+    'receiver_email': 'bar@gmail.com',  # Receiver email
+    'port': 587,                        # Port TLS: 587 | SSL: 465
+    'smtp_server': 'smtp.gmail.com',    # SMTP server
+    'login': 'foo',                     # Sender login
+    'password': '1234'                  # Sender password
+}
+
+# [SECONDS] Send a notification if no pokemon has been found in this time
+FAILURE_DETECTION_TIME = 5*60
+
+###########################################################################################################################
 ######################################################     TESTS     ######################################################
 ###########################################################################################################################
 
