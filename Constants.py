@@ -138,6 +138,7 @@ DATABASE_PATH = 'Media/Database.db'
 ######################################################     TESTS     ######################################################
 ###########################################################################################################################
 
+# Will color the pixels that are being used to detect the state
 TESTING = True
 SAVE_ERROR_VIDEOS = False
 TESTING_COLOR = (255, 0, 255)

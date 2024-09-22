@@ -14,7 +14,8 @@ import numpy as np
 from time import time
 import PyQt5.QtGui as pyqt_g
 
-import sys; sys.path.append('..')
+# import sys; sys.path.append('..')
+import sys; sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import Colored_Strings as COLOR_str
 import Constants as CONST
 
@@ -56,7 +57,10 @@ class Image_Processing():
 
     # Draw FPS at the top-left corner
     def draw_FPS(self, FPS = 0):
-        self.FPS_image = np.copy(self.resized_image)
+        if isinstance(self.FPS_image, type(None)): 
+            # Without copy() method, images would be linked, meaning that modifying one image would also alter the other 
+            self.FPS_image = np.copy(self.resized_image)
+
         cv2.putText(self.FPS_image, f'FPS: {FPS}', CONST.TEXT_PARAMS['position'], cv2.FONT_HERSHEY_SIMPLEX, 
             CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'], CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
 
@@ -64,6 +68,10 @@ class Image_Processing():
 
     # Write the spcified at the top-left corner
     def write_text(self, text = '', position_offset = (0, 0)):
+        if isinstance(self.FPS_image, type(None)): 
+            # Without copy() method, images would be linked, meaning that modifying one image would also alter the other 
+            self.FPS_image = np.copy(self.resized_image)
+
         cv2.putText(self.FPS_image, text, tuple(a + b for a, b in zip(CONST.TEXT_PARAMS['position'], position_offset)), 
             cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'], 
             CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
@@ -85,6 +93,9 @@ class Image_Processing():
     # Draw the pressed button in the switch controller image
     def draw_button(self, button = ''):
         if not isinstance(button, str): return
+        if isinstance(self.FPS_image, type(None)): 
+            # Without copy() method, images would be linked, meaning that modifying one image would also alter the other 
+            self.FPS_image = np.copy(self.resized_image)
 
         self.FPS_image = np.copy(self.resized_image)
         button_coordinates = {
@@ -119,6 +130,10 @@ class Image_Processing():
 
     # Return if all the pixels of the specifiead row are of the specified color
     def check_multiple_pixel_colors(self, start, end, color):
+        if isinstance(self.FPS_image, type(None)): 
+            # Without copy() method, images would be linked, meaning that modifying one image would also alter the other 
+            self.FPS_image = np.copy(self.resized_image)
+
         match_pixels = True
         for index in range(start[1], end[1]):
             # if all(self.resized_image[-index][start[0]] == color): continue

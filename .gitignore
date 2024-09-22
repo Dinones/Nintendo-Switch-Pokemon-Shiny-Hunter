@@ -1,5 +1,6 @@
 __pycache__
 .venv/
+.vscode/
 
 /Media/Tests/
 /Media/Images/
