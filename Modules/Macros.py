@@ -215,19 +215,24 @@ def wait_and_press_single_button(controller, seconds, button):
 # This macro is for static shaymin on bdsp. Walking down and then up reload the zone
 # and shaymin respawns. This is faster than closing and opening the game by about 20 seconds
 def walk_down_and_up_for_shaymin_respawn(controller):
-    #wait 2 seconds for the escape from combat animation to end
-    sleep(2)
-    #Press button A to close textbox just in case
+    #wait 1.5 seconds for the escape from combat animation to end
+    sleep(1.5)
+    #Press button A to close aftercombat textbox just in case
     controller.current_button_pressed = 'A'
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A], down=0.5)
+    #Get on the bike, Player must have enabled the fast gear beforehand
+    controller.current_button_pressed = 'PLUS'
+    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.PLUS], down=0.75)
+    #Bike down and up to respawn shaymin and interact with it
     controller.current_button_pressed = 'DOWN'
-    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.DPAD_DOWN, Buttons.B], down=4.5)
+    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.DPAD_DOWN], down=3.0)
     controller.current_button_pressed = 'UP'
-    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.DPAD_UP, Buttons.B], down=5.0)
+    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.DPAD_UP], down=3.5)
     controller.current_button_pressed = 'A'
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A], down=0.5)
+    #this short break allows shaymin textbox to appear
+    sleep(0.75)
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
-

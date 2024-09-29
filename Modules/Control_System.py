@@ -345,20 +345,19 @@ def shaymin_encounter(image, state):
             return 'ESCAPE_COMBAT_3'
     
     elif state == 'CLOSE_TEXT_BOX':
-        # After escaping from shaymin there is a text box we need to close
+        # After escaping from shaymin there is a text box we need to close. Not sure if this helps actually
         # Look for the text box
         if not is_text_box_visible(image):
             return 'WALK_DOWN_THEN_UP'
     
     elif state == 'WALK_DOWN_THEN_UP':
-        #After returning to the original position we start battling again
+        #After returning to the original position we begin the event again
         if is_text_box_visible(image):
             return 'ENTER_STATIC_COMBAT_1'
 
     else: return _check_common_states(image, state)
 
     return state
-
 
 ###########################################################################################################################
 ###########################################################################################################################
