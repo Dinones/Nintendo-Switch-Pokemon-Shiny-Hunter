@@ -1,21 +1,4 @@
 ###########################################################################################################################
-##################################################     USER CONFIG     ####################################################
-###########################################################################################################################
-
-# Define the notification type: 'NONE' or 'EMAIL'
-NOTIFICATION_TYPE = 'NONE'
-
-# If you have configured the email notifications, fill in the following fields
-MAIL_SETTINGS = {
-    'sender_email': 'foo@gmail.com', # Sender email
-    'receiver_email': 'bar@gmail.com', # Receiver email
-    'port': 587, # Port TLS: 587 | SSL: 465
-    'smtp_server': 'smtp.gmail.com', # SMTP server
-    'login': 'foo', # Sender login
-    'password': '1234' # Sender password
-}
-
-###########################################################################################################################
 ##################################################     VIDEO CAPTURE     ##################################################
 ###########################################################################################################################
 
@@ -116,8 +99,6 @@ SKIP_UPDATING_GAME = False
 STATIC_ENCOUNTERS_DELAY = 2
 # How long has the bot been stuck in the same state before restarting the game
 STUCK_TIMER_SECONDS = 30
-# Send a notification if no pokemon has been found in this time
-FAILURE_DETECTION_TIME = 5*60 # 5 minutes
 SHINY_DETECTION_TIME = 2
 HOME_MENU_COLOR = (237, 237, 237)
 PAIRING_MENU_COLOR = (135, 135, 125)

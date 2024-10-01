@@ -122,6 +122,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                 ["MOVE_PLAYER", "WAIT_PAIRING_SCREEN", "WAIT_HOME_SCREEN", "SHINY_FOUND", "ENTER_LAKE_4"] and \
                 Controller.current_event == Controller.previous_event and \
                 time() - stuck_timer > CONST.STUCK_TIMER_SECONDS) or time() - stuck_timer > 120:
+                    print(f'Stuck in the same state for too long. Current event: {Controller.current_event}')
                     stuck_timer = time()
                     # If stuck in "RESTART_GAME_1", it would be stuck forever
                     Controller.previous_event = None
@@ -206,7 +207,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
             Image_Queue.put(update_items)
 
 def _build_message_sender():
-    if CONST.NOTIFICATION_TYPE == 'EMAIL':
+    if CONST.MAIL_NOTIFICATIONS:
         return MailSender(CONST.MAIL_SETTINGS)
     else:
         # Default implementation
