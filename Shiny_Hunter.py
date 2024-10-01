@@ -69,7 +69,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
     last_shiny_encounter = database_data['last_shiny_encounter']
 
     message_sender = _build_message_sender()
-    last_saved_image = None
+    last_saved_image_path = None
     has_failed = False
 
     while not shutdown_event.is_set():
@@ -142,7 +142,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                 pokemon_name = pokemon_image.recognize_pokemon()
                 if CONST.SAVE_IMAGES: 
                     pokemon_image.save_image(pokemon_name)
-                    last_saved_image = pokemon_image.last_saved_image
+                    last_saved_image_path = pokemon_image.last_saved_image_path
                     # Check if the computer is running out of space
                     system_space = FPS.get_system_available_space()
                     if system_space['available_no_format'] < CONST.CRITICAL_AVAILABLE_SPACE:
@@ -175,7 +175,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                         .replace('{encounters}', str(global_encounters - last_shiny_encounter))
                     )
                     try:
-                        message_sender.send_shiny_found(pokemon_name, last_saved_image)
+                        message_sender.send_shiny_found(pokemon_name, last_saved_image_path)
                     except Exception as e: print(e)
                     stop_event.set()
             else: shiny_timer = time()
