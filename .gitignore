@@ -1,4 +1,6 @@
 __pycache__
+.venv/
+.pytest_cache
 
 /Media/Tests/
 /Media/Images/
@@ -8,8 +10,5 @@ __pycache__
 Test.py
 Changelog.txt
 
-# Virtual Environment #
-.venv/
-
-# OS generated files #
+# Hidden MacOS system file which is automatically created by MacOS systems
 **/.DS_Store
