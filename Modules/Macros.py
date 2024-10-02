@@ -82,44 +82,6 @@ def stop_macro(controller):
 
 ###########################################################################################################################
 
-def press_button(controller, buttons: Union[str, List[str]], wait_after_action=0.0, down=0.1, up=0.1, block=True):
-    """
-    Press the specified button(s) and wait the specified time after the action
-    :param controller: The controller object
-    :param buttons: The button(s) to press, can be a single string or a list of strings
-    :param wait_after_action: The time to wait after the action
-    
-    :param down: How long to hold the buttons down for in seconds, defaults to 0.1
-    :type down: float, optional
-
-    :param up: How long to release the button for in seconds, defaults to 0.1
-    :type up: float, optional
-
-    :param block: A boolean variable indicating whether or not to block until the macro completes,
-        defaults to True
-    :type block: bool, optional
-    """
-
-    if isinstance(buttons, str):
-        buttons = [buttons]
-
-    # TODO add support for multiple buttons
-    controller.current_button_pressed = buttons[0]
-
-    controller.nxbt_manager.press_buttons(
-        controller.controller_index,
-        # Convert the button string(s) to the corresponding button object(s)
-        list(map(lambda btn: getattr(Buttons, btn), buttons)),
-        down=down,
-        up=up,
-        block=block
-    )
-    controller.current_button_pressed = ''
-
-    if wait_after_action > 0:
-        sleep(wait_after_action)
-
-
 def restart_game_macro(controller):
     """
     Fully restart the game (Hard reset)
@@ -259,6 +221,45 @@ def press_single_button(controller, button):
 def wait_and_press_single_button(controller, seconds, button):
     sleep(seconds)
     press_single_button(controller, button)
+
+
+def press_button(controller, buttons: Union[str, List[str]], wait_after_action=0.0, down=0.1, up=0.1, block=True):
+    """
+    Press the specified button(s) and wait the specified time after the action
+    :param controller: The controller object
+    :param buttons: The button(s) to press, can be a single string or a list of strings
+    :param wait_after_action: The time to wait after the action
+    
+    :param down: How long to hold the buttons down for in seconds, defaults to 0.1
+    :type down: float, optional
+
+    :param up: How long to release the button for in seconds, defaults to 0.1
+    :type up: float, optional
+
+    :param block: A boolean variable indicating whether or not to block until the macro completes,
+        defaults to True
+    :type block: bool, optional
+    """
+
+    if isinstance(buttons, str):
+        buttons = [buttons]
+
+    # TODO add support for multiple buttons
+    controller.current_button_pressed = buttons[0]
+
+    controller.nxbt_manager.press_buttons(
+        controller.controller_index,
+        # Convert the button string(s) to the corresponding button object(s)
+        list(map(lambda btn: getattr(Buttons, btn), buttons)),
+        down=down,
+        up=up,
+        block=block
+    )
+    controller.current_button_pressed = ''
+
+    if wait_after_action > 0:
+        sleep(wait_after_action)
+
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
