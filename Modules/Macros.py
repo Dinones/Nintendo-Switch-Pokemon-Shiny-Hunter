@@ -4,6 +4,9 @@
 
 # Set the cwd to the one of the file
 import os
+
+from typing import List, Union
+
 if __name__ == '__main__':
     try: os.chdir(os.path.dirname(__file__))
     except: pass
@@ -79,30 +82,76 @@ def stop_macro(controller):
 
 ###########################################################################################################################
 
-# Fully restart the game (Hard reset)
-def restart_game_macro(controller):
-    if controller.previous_event == controller.current_event: return
+def press_button(controller, buttons: Union[str, List[str]], wait_after_action=0.0, down=0.1, up=0.1, block=True):
+    """
+    Press the specified button(s) and wait the specified time after the action
+    :param controller: The controller object
+    :param buttons: The button(s) to press, can be a single string or a list of strings
+    :param wait_after_action: The time to wait after the action
     
-    controller.current_button_pressed = 'HOME'
-    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME], down=0.05, up=0)
+    :param down: How long to hold the buttons down for in seconds, defaults to 0.1
+    :type down: float, optional
+
+    :param up: How long to release the button for in seconds, defaults to 0.1
+    :type up: float, optional
+
+    :param block: A boolean variable indicating whether or not to block until the macro completes,
+        defaults to True
+    :type block: bool, optional
+    """
+
+    if isinstance(buttons, str):
+        buttons = [buttons]
+
+    # TODO add support for multiple buttons
+    controller.current_button_pressed = buttons[0]
+
+    controller.nxbt_manager.press_buttons(
+        controller.controller_index,
+        # Convert the button string(s) to the corresponding button object(s)
+        list(map(lambda btn: getattr(Buttons, btn), buttons)),
+        down=down,
+        up=up,
+        block=block
+    )
     controller.current_button_pressed = ''
-    sleep(1.5); controller.current_button_pressed = 'X'
-    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.X]); sleep(0.5)
+
+    if wait_after_action > 0:
+        sleep(wait_after_action)
+
+
+def restart_game_macro(controller):
+    """
+    Fully restart the game (Hard reset)
+    """
+    # Run the macro only if the event has changed
+    if controller.previous_event == controller.current_event:
+        return
+
+    # Go to the home menu
+    press_button(controller, 'HOME', 0.2, down=0.05, up=0)
+
+    # In case of the sleep menu is opened by the HOME button, close it.
+    press_button(controller, 'B', 1.2)
+
+    # Close the game
+    press_button(controller, 'X', 0.5)
+
     if CONST.SKIP_UPDATING_GAME:
         sleep(0.5)
+
+        # Validate closing the game and open it again
         for _ in range(2):
-            controller.current_button_pressed = 'A'; sleep(0.2)
-            controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A])
-            controller.current_button_pressed = ''
-            sleep(0.8)
+            sleep(0.2)
+            press_button(controller, 'A', 0.8)
+
+        # In the update menu, press UP to select "Run without updating"
         for _ in range(3):
-            controller.current_button_pressed = 'UP'; sleep(0.1)
-            controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.DPAD_UP])
-            controller.current_button_pressed = ''
+            press_button(controller, 'UP', 0.1)
+
+    # Start the game
     for _ in range(10):
-        controller.current_button_pressed = 'A'; sleep(0.2)
-        controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A])
-        controller.current_button_pressed = ''; sleep(0.1)
+        press_button(controller, 'A', 0.3)
 
 ###########################################################################################################################
 
