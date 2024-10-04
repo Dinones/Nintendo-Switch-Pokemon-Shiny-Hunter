@@ -339,7 +339,7 @@ def is_black_screen_visible(image):
 
 ###########################################################################################################################
 
-def is_text_box_visible(image, x=CONST.TEXT_BOX_LINE['x']):
+def is_text_box_visible(image):
     """
     Checks if the text box is visible in the given image.
     Args:
@@ -348,10 +348,17 @@ def is_text_box_visible(image, x=CONST.TEXT_BOX_LINE['x']):
     Returns:
         bool: True if the text box is visible, False otherwise.
     """
-    return image.check_multiple_pixel_colors(
-        [x, CONST.TEXT_BOX_LINE['y1']],
-        [x, CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
-    )
+    text_box_left_visible = image.check_multiple_pixel_colors(
+        [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
+        [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']],
+        CONST.TEXT_BOX_LINE['color'])
+
+    text_box_right_visible = image.check_multiple_pixel_colors(
+        [CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
+        [CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']],
+        CONST.TEXT_BOX_LINE['color'])
+
+    return text_box_left_visible and text_box_right_visible
 
 ###########################################################################################################################
 
@@ -363,7 +370,10 @@ def is_overworld_visible(image):
     Returns:
         bool: True if the overworld is visible, False otherwise.
     """
-    return is_text_box_visible(image, CONST.TEXT_BOX_LINE['overworld_x'])
+    return image.check_multiple_pixel_colors(
+        [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y1']],
+        [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
+    )
 
 ###########################################################################################################################
 
@@ -375,7 +385,27 @@ def is_load_fight_white_screen(image):
     Returns:
         bool: True if the white screen is visible, False otherwise.
     """
-    return is_text_box_visible(image)
+    is_bottom_left_white = image.check_multiple_pixel_colors(
+        [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
+        [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']],
+        CONST.TEXT_BOX_LINE['color'])
+
+    is_bottom_right_white = image.check_multiple_pixel_colors(
+        [CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
+        [CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']],
+        CONST.TEXT_BOX_LINE['color'])
+
+    is_top_left_white = image.check_multiple_pixel_colors(
+        [CONST.TEXT_BOX_LINE['x'], CONST.MAIN_FRAME_SIZE[1] - CONST.TEXT_BOX_LINE['y2']],
+        [CONST.TEXT_BOX_LINE['x'], CONST.MAIN_FRAME_SIZE[1] - CONST.TEXT_BOX_LINE['y1']],
+        CONST.TEXT_BOX_LINE['color'])
+
+    is_top_right_white = image.check_multiple_pixel_colors(
+        [CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.MAIN_FRAME_SIZE[1] - CONST.TEXT_BOX_LINE['y2']],
+        [CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.MAIN_FRAME_SIZE[1] - CONST.TEXT_BOX_LINE['y1']],
+        CONST.TEXT_BOX_LINE['color'])
+
+    return is_bottom_left_white and is_bottom_right_white and is_top_left_white and is_top_right_white
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
