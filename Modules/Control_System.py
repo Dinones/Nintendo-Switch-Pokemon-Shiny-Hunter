@@ -44,7 +44,7 @@ def search_wild_pokemon(image, state):
     # Combat loaded (Wild Pokémon stars)
     elif state == 'CHECK_SHINY':
         # Look for the text box
-        if is_load_fight_white_screen(image):
+        if is_text_box_visible(image):
             return 'ESCAPE_COMBAT_1'
 
         # Check the elapsed time
@@ -60,13 +60,13 @@ def search_wild_pokemon(image, state):
     # Combat loaded (Escaping combat)
     elif state == 'ESCAPE_COMBAT_2':
         # Look for the text box
-        if is_load_fight_white_screen(image):
+        if is_text_box_visible(image):
             return 'ESCAPE_COMBAT_3'
 
     # Combat loaded (Escaping combat)
     elif state == 'ESCAPE_COMBAT_3':
         # Check if the text box has disappeared
-        if not is_load_fight_white_screen(image):
+        if not is_text_box_visible(image):
             return 'ESCAPE_COMBAT_4'
 
     # Combat loaded (Escaped combat / Failed escaping)
@@ -93,7 +93,7 @@ def search_wild_pokemon(image, state):
     # Failed escapping (Escaping combat)
     elif state == 'ESCAPE_FAILED_2':
         # Look for the text box
-        if is_load_fight_white_screen(image):
+        if is_text_box_visible(image):
             return 'ESCAPE_COMBAT_3'
     
     else: return _check_common_states(image, state)
@@ -136,7 +136,7 @@ def static_encounter(image, state):
     # Some static encounters make a white screen flash before entering the combat
     elif state == 'ENTER_STATIC_COMBAT_3' and time() - state_timer >= CONST.STATIC_ENCOUNTERS_DELAY:
         # Look for the load combat white screen
-        if is_text_box_visible(image):
+        if is_load_fight_white_screen(image):
             return 'ENTER_COMBAT_1'
 
     # Combat loaded (Wild Pokémon stars)
@@ -285,7 +285,7 @@ def _check_common_states(image, state):
     # Combat loadscreen (Full white screen)
     elif state == 'ENTER_COMBAT_1':
         # Check if the white load screen has ended
-        if not is_text_box_visible(image):
+        if not is_load_fight_white_screen(image):
             return 'ENTER_COMBAT_2'
 
     # Combat loadscreen (Grass/Rock/Water animation, wild pokémon appearing)
