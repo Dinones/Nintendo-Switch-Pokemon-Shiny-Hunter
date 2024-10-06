@@ -27,7 +27,7 @@ import Colored_Strings as COLOR_str
 #################################################     INITIALIZATIONS     #################################################
 ###########################################################################################################################
 
-ENV_FILE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), 
+ENV_FILE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__),
     f"../../{CONST.MAIL_SETTINGS.get('credentials_file_path')}"))
 SHINY_HTML_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), f'../../{CONST.SHINY_HTML_PATH}'))
 
@@ -51,7 +51,7 @@ class Email_Sender():
         self.__smtp_server = CONST.MAIL_SETTINGS.get('smtp_server')
 
     #######################################################################################################################
-    
+   
     def _create_message(self, subject: str, content: str, receivers: dict) -> MIMEMultipart:
 
         """
@@ -63,7 +63,7 @@ class Email_Sender():
             Output:
                 message (MIMEMultipart): Object containing all the email information
         """
-        
+       
         # Create a multipart message and set headers
         message = MIMEMultipart()
         message["From"] = self.__email_sender
@@ -93,7 +93,7 @@ class Email_Sender():
                 server.login(self.__email_sender, self.__password)
                 server.sendmail(self.__email_sender, receivers, message.as_string())
                 print(COLOR_str.EMAIL_SENT.replace('{email}', receivers[0]))
-        except Exception as error: 
+        except Exception as error:
             print(COLOR_str.COULD_NOT_SEND_EMAIL.replace('{email}', receivers[0]).replace('{error}', str(error)))
 
     #######################################################################################################################
@@ -109,7 +109,7 @@ class Email_Sender():
 
         for index, receiver in enumerate([self.__email_receiver, self.__email_receiver_2]):
             if not receiver: continue
-            
+
             content = ''
             if os.path.exists(SHINY_HTML_PATH):
                 with open(SHINY_HTML_PATH, 'r', encoding='utf-8') as file: content = file.read()
@@ -123,14 +123,14 @@ class Email_Sender():
             message = self._create_message(f'[Pokémon Shiny Hunter] Shiny {pokemon_name} found!', content, receivers)
 
             image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), f'../../Media/Images/{image_name}'))
-            if not os.path.exists(image_path): 
-                image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 
+            if not os.path.exists(image_path):
+                image_path = os.path.abspath(os.path.join(os.path.dirname(__file__),
                     f'../../{CONST.EMAIL_PLACEHOLDER_IMAGE}'))
 
             with open(image_path, 'rb') as image:
                 image = MIMEImage(image.read())
                 # Content-ID must match src in HTML
-                image.add_header('Content-ID', '<shiny_pokemon_image>')  
+                image.add_header('Content-ID', '<shiny_pokemon_image>') 
                 message.attach(image)
 
             receivers = receivers.get('Primary') + receivers.get('CC') + receivers.get('BCC')
