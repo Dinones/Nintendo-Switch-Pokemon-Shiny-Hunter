@@ -52,13 +52,14 @@ class Email_Sender():
 
     #######################################################################################################################
     
-    def _create_message(self, subject: str, content: str) -> MIMEMultipart:
+    def _create_message(self, subject: str, content: str, receivers: dict) -> MIMEMultipart:
 
         """
             Creates a multipart email message with the given subject and content.
             Args:
                 subject (str): Contains the subject of the email
                 content (str): Contains the content of the email
+                receivers (dict): Contains all the email receivers. {'Primary':[], 'CC':[], 'BCC':[]}
             Output:
                 message (MIMEMultipart): Object containing all the email information
         """
@@ -66,7 +67,8 @@ class Email_Sender():
         # Create a multipart message and set headers
         message = MIMEMultipart()
         message["From"] = self.__email_sender
-        message["To"] = self.__email_receiver
+        message["To"] = ', '.join(receivers.get('Primary'))
+        if receivers.get('CC'): message["Cc"] = ', '.join(receivers.get('CC'))
         message["Subject"] = subject
 
         # Attach the HTML part
@@ -76,18 +78,23 @@ class Email_Sender():
 
     #######################################################################################################################
 
-    def _send_email(self, message: MIMEMultipart) -> None:
+    def _send_email(self, message: MIMEMultipart, receivers: list) -> None:
 
         """
             Sends an email using the provided message.
             Args:
                 message (MIMEMultipart): Object containing all the email information
+                receivers (list): Contains all the email receivers [Primary + CC + BCC]
         """
 
-        with SMTP(self.__smtp_server, self.__port) as server:
-            server.starttls()
-            server.login(self.__email_sender, self.__password)
-            server.sendmail(self.__email_sender, self.__email_receiver, message.as_string())
+        try:
+            with SMTP(self.__smtp_server, self.__port) as server:
+                server.starttls()
+                server.login(self.__email_sender, self.__password)
+                server.sendmail(self.__email_sender, receivers, message.as_string())
+                print(COLOR_str.EMAIL_SENT.replace('{email}', receivers[0]))
+        except Exception as error: 
+            print(COLOR_str.COULD_NOT_SEND_EMAIL.replace('{email}', receivers[0]).replace('{error}', str(error)))
 
     #######################################################################################################################
 
@@ -100,27 +107,34 @@ class Email_Sender():
                 image_name (str): Contains the name of the image that is going to be attached
         """
 
-        content = ''
-        if os.path.exists(SHINY_HTML_PATH):
-            with open(SHINY_HTML_PATH, 'r', encoding='utf-8') as file: content = file.read()
-            content = content \
-                .replace('{Pokémon}', pokemon_name) \
-                .replace('{Trainer}', self.__email_receiver.split('@')[0].capitalize())
+        for index, receiver in enumerate([self.__email_receiver, self.__email_receiver_2]):
+            if not receiver: continue
+            
+            content = ''
+            if os.path.exists(SHINY_HTML_PATH):
+                with open(SHINY_HTML_PATH, 'r', encoding='utf-8') as file: content = file.read()
+                content = content \
+                    .replace('{Pokémon}', pokemon_name) \
+                    .replace('{Trainer}', receiver.split('@')[0].capitalize())
 
-        message = self._create_message(f'[Pokémon Shiny Hunter] Shiny {pokemon_name} found!', content)
+            receivers = {'Primary': [receiver], 'CC': [], 'BCC': []}
+            # Don't send duplicated copy mails to the sender
+            if index == 0: receivers['BCC'] = [self.__email_sender]
+            message = self._create_message(f'[Pokémon Shiny Hunter] Shiny {pokemon_name} found!', content, receivers)
 
-        image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), f'../../Media/Images/{image_name}'))
-        if not os.path.exists(image_path): 
-            image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 
-                f'../../{CONST.EMAIL_PLACEHOLDER_IMAGE}'))
-                
-        with open(image_path, 'rb') as image:
-            image = MIMEImage(image.read())
-            # Content-ID must match src in HTML
-            image.add_header('Content-ID', '<shiny_pokemon_image>')  
-            message.attach(image)
+            image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), f'../../Media/Images/{image_name}'))
+            if not os.path.exists(image_path): 
+                image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 
+                    f'../../{CONST.EMAIL_PLACEHOLDER_IMAGE}'))
 
-        self._send_email(message)
+            with open(image_path, 'rb') as image:
+                image = MIMEImage(image.read())
+                # Content-ID must match src in HTML
+                image.add_header('Content-ID', '<shiny_pokemon_image>')  
+                message.attach(image)
+
+            receivers = receivers.get('Primary') + receivers.get('CC') + receivers.get('BCC')
+            self._send_email(message, receivers)
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################

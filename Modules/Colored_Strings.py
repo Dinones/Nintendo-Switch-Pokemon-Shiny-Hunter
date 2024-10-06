@@ -354,10 +354,17 @@ HTML_NOT_FOUND = \
     f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}m{"{html}"}\033[0;m'
 
 EMAIL_SENT = \
-    f'{CORRECT}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Database] "}\033[0;m'+\
+    f'{CORRECT}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Mail] "}\033[0;m'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}mSuccessfully sent email to \033[0;m'+\
     f'\033[{COLORS["Green"]}m{"{email}"}\033[0;m'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}m!\033[0;m'
+
+COULD_NOT_SEND_EMAIL = \
+    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Mail] "}\033[0;m'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mCould not send email to \033[0;m'+\
+    f'\033[{COLORS["Yellow"]}m{"{email}"}\033[0;m'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}m: \033[0;m'+\
+    f'\033[{COLORS["Yellow"]}m{"{error}"}\033[0;m'
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
