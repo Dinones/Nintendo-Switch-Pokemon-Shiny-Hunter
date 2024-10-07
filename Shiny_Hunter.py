@@ -31,8 +31,9 @@ from Control_System import *
 from FPS_Counter import FPS_Counter
 from GUI import GUI, App, play_sound
 from Game_Capture import Game_Capture
-from Image_Processing import Image_Processing
+from Modules.Image_Processing import Image_Processing
 from Switch_Controller import Switch_Controller
+from Modules.message import MailSender, DefaultMessageSender
 
 ###########################################################################################################################
 #################################################     INITIALIZATIONS     #################################################
@@ -66,6 +67,10 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
     local_encounters = database_data['global_encounters']
     global_encounters = database_data['global_encounters']
     last_shiny_encounter = database_data['last_shiny_encounter']
+
+    message_sender = _build_message_sender()
+    last_saved_image_path = None
+    has_failed = False
 
     while not shutdown_event.is_set():
         image = Image_Processing(Video_Capture.read_frame())
@@ -104,11 +109,20 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
             elif Encounter_Type == 'STATIC': Controller.current_event = static_encounter(image, Controller.current_event)
             elif Encounter_Type == 'STARTER': Controller.current_event = starter_encounter(image, Controller.current_event)
 
+            # If no pokemon is found for too long, send a notification
+            if Controller.current_event != 'SHINY_FOUND' and has_failed == False \
+                and time() - encounter_playtime > CONST.FAILURE_DETECTION_TIME:
+                    has_failed = True
+                    try:
+                        message_sender.send_failure_detected('No pokemon found for too long. Consider checking the program.')
+                    except Exception as e: print(e)
+
             # Check if the program got stuck in some event
             if (Controller.current_event not in 
                 ["MOVE_PLAYER", "WAIT_PAIRING_SCREEN", "WAIT_HOME_SCREEN", "SHINY_FOUND", "ENTER_LAKE_4"] and \
                 Controller.current_event == Controller.previous_event and \
                 time() - stuck_timer > CONST.STUCK_TIMER_SECONDS) or time() - stuck_timer > 120:
+                    print(f'Stuck in the same state for too long. Current event: {Controller.current_event}')
                     stuck_timer = time()
                     # If stuck in "RESTART_GAME_1", it would be stuck forever
                     Controller.previous_event = None
@@ -129,6 +143,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                 pokemon_name = pokemon_image.recognize_pokemon()
                 if CONST.SAVE_IMAGES: 
                     pokemon_image.save_image(pokemon_name)
+                    last_saved_image_path = pokemon_image.last_saved_image_path
                     # Check if the computer is running out of space
                     system_space = FPS.get_system_available_space()
                     if system_space['available_no_format'] < CONST.CRITICAL_AVAILABLE_SPACE:
@@ -160,6 +175,9 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                         .replace('{pokemon}', pokemon_name)
                         .replace('{encounters}', str(global_encounters - last_shiny_encounter))
                     )
+                    try:
+                        message_sender.send_shiny_found(pokemon_name, last_saved_image_path)
+                    except Exception as e: print(e)
                     stop_event.set()
             else: shiny_timer = time()
 
@@ -187,6 +205,13 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
             }
 
             Image_Queue.put(update_items)
+
+def _build_message_sender():
+    if CONST.MAIL_NOTIFICATIONS:
+        return MailSender(CONST.MAIL_SETTINGS)
+    else:
+        # Default implementation
+        return DefaultMessageSender()
 
 ###########################################################################################################################
 ###########################################################################################################################
