@@ -86,7 +86,10 @@ def restart_game_macro(controller):
     controller.current_button_pressed = 'HOME'
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME], down=0.05, up=0)
     controller.current_button_pressed = ''
-    sleep(1.5); controller.current_button_pressed = 'X'
+    sleep(0.2); controller.current_button_pressed = 'B'
+    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.B])
+    controller.current_button_pressed = ''
+    sleep(1.3); controller.current_button_pressed = 'X'
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.X]); sleep(0.5)
     if CONST.SKIP_UPDATING_GAME:
         sleep(0.5)

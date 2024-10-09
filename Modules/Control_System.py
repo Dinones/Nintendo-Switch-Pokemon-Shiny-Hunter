@@ -95,7 +95,7 @@ def search_wild_pokemon(image, state):
         # Look for the text box
         if is_text_box_visible(image):
             return 'ESCAPE_COMBAT_3'
-    
+   
     else: return _check_common_states(image, state)
 
     return state
@@ -227,7 +227,7 @@ def starter_encounter(image, state):
     # Combat loaded (Wild Pokémon appeared)
     elif state == 'ENTER_COMBAT_3B':
         # Check if the text box has disappeared
-        if not is_text_box_visible(image): 
+        if not is_text_box_visible(image):
             return 'ENTER_COMBAT_4'
 
     # Combat loaded (Starter Pokémon appeared)
@@ -246,7 +246,7 @@ def starter_encounter(image, state):
 
     else:
         state = _check_common_states(image, state)
-        # We need to check the starter pokémon, not the wild one 
+        # We need to check the starter pokémon, not the wild one
         if state == 'ENTER_COMBAT_3': state = 'ENTER_COMBAT_3B'
 
     return state
@@ -452,7 +452,7 @@ if __name__ == "__main__":
 
         if option == '1':
             Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
-            if not Video_Capture.video_capture.isOpened(): 
+            if not Video_Capture.video_capture.isOpened():
                 Video_Capture.stop()
                 print(COLOR_str.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{CONST.VIDEO_CAPTURE_INDEX}'") + '\n')
                 return
@@ -476,7 +476,7 @@ if __name__ == "__main__":
 
             if pause: continue
             if option == '2': sleep(0.02)
-            
+           
             image = Image_Processing(Video_Capture.read_frame())
             if type(image.original_image) == type(None): break
             image.resize_image()
