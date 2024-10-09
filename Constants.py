@@ -138,8 +138,10 @@ DATABASE_PATH = 'Media/Database.db'
 #####################################################     MESSAGES     ####################################################
 ###########################################################################################################################
 
+LOG_NOTIFICATIONS = True
+
 # You will receive mail notifications when a shiny is found or an error occurs
-MAIL_NOTIFICATIONS = True
+MAIL_NOTIFICATIONS = False
 
 # If you have configured the email notifications, fill in the following fields
 MAIL_SETTINGS = {
@@ -150,6 +152,14 @@ MAIL_SETTINGS = {
     'login': 'foo',                     # Sender login
     'password': '1234'                  # Sender password
 }
+
+TELEGRAM_NOTIFICATIONS = False
+
+TELEGRAM_SETTINGS = {
+    'bot_token': 'YOUR_BOT_TOKEN',
+    'chat_id' : 'YOUR_CHAT_ID'
+}
+
 
 # [SECONDS] Send a notification if no pokemon has been found in this time
 FAILURE_DETECTION_TIME = 5*60

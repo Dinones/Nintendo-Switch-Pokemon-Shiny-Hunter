@@ -33,7 +33,7 @@ from GUI import GUI, App, play_sound
 from Game_Capture import Game_Capture
 from Modules.Image_Processing import Image_Processing
 from Switch_Controller import Switch_Controller
-from Modules.message import MailSender, DefaultMessageSender
+from Modules.message import MailSender, DefaultMessageSender, TelegramSender
 
 ###########################################################################################################################
 #################################################     INITIALIZATIONS     #################################################
@@ -68,7 +68,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
     global_encounters = database_data['global_encounters']
     last_shiny_encounter = database_data['last_shiny_encounter']
 
-    message_sender = _build_message_sender()
+    message_senders = _build_message_senders()
     last_saved_image_path = None
     has_failed = False
 
@@ -114,8 +114,10 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                 and time() - encounter_playtime > CONST.FAILURE_DETECTION_TIME:
                     has_failed = True
                     try:
-                        message_sender.send_failure_detected('No pokemon found for too long. Consider checking the program.')
-                    except Exception as e: print(e)
+                        for message_sender in message_senders:
+                            message_sender.send_failure_detected('No pokemon found for too long. Consider checking the program.')
+                    except Exception as e:
+                        print(e)
 
             # Check if the program got stuck in some event
             if (Controller.current_event not in 
@@ -176,8 +178,10 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                         .replace('{encounters}', str(global_encounters - last_shiny_encounter))
                     )
                     try:
-                        message_sender.send_shiny_found(pokemon_name, last_saved_image_path)
-                    except Exception as e: print(e)
+                        for message_sender in message_senders:
+                            message_sender.send_shiny_found(pokemon_name, last_saved_image_path)
+                    except Exception as e:
+                        print(e)
                     stop_event.set()
             else: shiny_timer = time()
 
@@ -206,12 +210,18 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
 
             Image_Queue.put(update_items)
 
-def _build_message_sender():
+def _build_message_senders():
+    message_senders = []
     if CONST.MAIL_NOTIFICATIONS:
-        return MailSender(CONST.MAIL_SETTINGS)
-    else:
-        # Default implementation
-        return DefaultMessageSender()
+        message_senders.append(MailSender(CONST.MAIL_SETTINGS))
+
+    if CONST.TELEGRAM_NOTIFICATIONS:
+        message_senders.append(TelegramSender(CONST.TELEGRAM_SETTINGS))
+
+    if CONST.LOG_NOTIFICATIONS:
+        message_senders.append(DefaultMessageSender())
+
+    return message_senders
 
 ###########################################################################################################################
 ###########################################################################################################################
