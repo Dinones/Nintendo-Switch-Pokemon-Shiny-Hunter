@@ -3,7 +3,9 @@
 ###########################################################################################################################
 
 import os
-import sys; sys.path.append('Modules')
+import sys; 
+folders = ['Modules', 'Modules/Mail']
+for folder in folders: sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), folder)))
 import Colored_Strings as COLOR_str
 
 # NXBT is only compatible with Linux systems
@@ -28,6 +30,7 @@ from Macros import *
 from Database import *
 import Constants as CONST
 from Control_System import *
+from Mail import Email_Sender
 from FPS_Counter import FPS_Counter
 from GUI import GUI, App, play_sound
 from Game_Capture import Game_Capture
@@ -66,6 +69,9 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
     local_encounters = database_data['global_encounters']
     global_encounters = database_data['global_encounters']
     last_shiny_encounter = database_data['last_shiny_encounter']
+
+    last_saved_image_path = str()
+    Email = Email_Sender()
 
     while not shutdown_event.is_set():
         image = Image_Processing(Video_Capture.read_frame())
@@ -129,6 +135,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                 pokemon_name = pokemon_image.recognize_pokemon()
                 if CONST.SAVE_IMAGES: 
                     pokemon_image.save_image(pokemon_name)
+                    last_saved_image_path = pokemon_image.saved_image_path
                     # Check if the computer is running out of space
                     system_space = FPS.get_system_available_space()
                     if system_space['available_no_format'] < CONST.CRITICAL_AVAILABLE_SPACE:
@@ -155,6 +162,9 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                     add_or_update_encounter(pokemon, int(time() - encounter_playtime))
                     Video_Capture.save_video(f'Shiny {pokemon_name} - {time()}')
                     Thread(target=lambda: play_sound(f'./{CONST.SHINY_SOUND_PATH}'), daemon=True).start()
+                    Thread(target=lambda: 
+                        Email.send_shiny_found(pokemon_name, last_saved_image_path), daemon=True
+                    ).start()
                     print(COLOR_str.SHINY_FOUND
                         .replace('{module}', 'Shiny Hunter')
                         .replace('{pokemon}', pokemon_name)
