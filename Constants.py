@@ -147,7 +147,8 @@ MAIL_SETTINGS = {
     'smtp_server': 'smtp.gmail.com',    # SMTP server
 
     'credentials_file_path': 'Modules/Mail/Email_Credentials.env',
-    'save_credentials_file_path': 'Modules/Mail/Credentials.env'
+    'save_credentials_file_path': 'Modules/Mail/Credentials.env',
+    'credentials_template_file_path': 'Media/Mail/Credentials_Template.env'
 }
 
 EMAIL_PLACEHOLDER_IMAGE = 'Media/Mail/Dinones.png'

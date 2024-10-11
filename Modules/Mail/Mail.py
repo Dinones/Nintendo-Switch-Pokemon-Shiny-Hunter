@@ -27,15 +27,9 @@ import Colored_Strings as COLOR_str
 #################################################     INITIALIZATIONS     #################################################
 ###########################################################################################################################
 
-ENV_FILE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__),
-    f"../../{CONST.MAIL_SETTINGS.get('credentials_file_path')}"))
 SAVE_ENV_FILE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__),
     f"../../{CONST.MAIL_SETTINGS.get('save_credentials_file_path')}"))
 SHINY_HTML_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), f'../../{CONST.SHINY_HTML_PATH}'))
-
-# This line will prevent credentials from being accidentally pushed
-# SAVE_ENV_FILE_PATH is included in the .gitignore file so it will never be pushed to the remothe GitHub repository
-if os.path.exists(ENV_FILE_PATH) and not os.path.exists(SAVE_ENV_FILE_PATH): os.rename(ENV_FILE_PATH, SAVE_ENV_FILE_PATH)
 
 ###########################################################################################################################
 
@@ -46,7 +40,9 @@ class Email_Sender():
             Initializes the Email_Sender and checks for errors.
         """
 
-        load_dotenv(SAVE_ENV_FILE_PATH)
+        self._protect_credentials()
+        # Will not raise an error if file not found
+        load_dotenv(SAVE_ENV_FILE_PATH + 'gfd')
 
         self.__email_sender = os.getenv("EMAIL_SENDER")
         self.__password = os.getenv('EMAIL_APP_PASSWORD')
@@ -56,8 +52,10 @@ class Email_Sender():
         self.__port = CONST.MAIL_SETTINGS.get('port')
         self.__smtp_server = CONST.MAIL_SETTINGS.get('smtp_server')
 
-        if not all(field != '' for field in [self.__email_sender, self.__password, self.__email_receiver]):
-            print(COLOR_str.EMPTY_CREDENTIALS.replace('{path}', SAVE_ENV_FILE_PATH))
+        # Will not raise any error if credentials are wrong or missing, it will just skip the email sending
+        if not all((isinstance(field, str) and field != '') 
+            for field in [self.__email_sender, self.__password, self.__email_receiver]):
+                print(COLOR_str.EMPTY_CREDENTIALS.replace('{path}', SAVE_ENV_FILE_PATH))
 
     #######################################################################################################################
    
@@ -104,6 +102,27 @@ class Email_Sender():
                 print(COLOR_str.EMAIL_SENT.replace('{email}', receivers[0]))
         except Exception as error:
             print(COLOR_str.COULD_NOT_SEND_EMAIL.replace('{email}', receivers[0]).replace('{error}', str(error)))
+
+    #######################################################################################################################
+
+    def _protect_credentials(self):
+
+        """
+            Prevent credentials from being accidentally pushed to the remote repository by renaming the credentials file
+        """
+
+        ENV_FILE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__),
+            f"../../{CONST.MAIL_SETTINGS.get('credentials_file_path')}"))
+        TEMPLATE_ENV_FILE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__),
+            f"../../{CONST.MAIL_SETTINGS.get('credentials_template_file_path')}"))
+
+        # SAVE_ENV_FILE_PATH is included in the .gitignore file so it will never be pushed to the remothe GitHub repository
+        if os.path.exists(ENV_FILE_PATH) and not os.path.exists(SAVE_ENV_FILE_PATH): 
+            os.rename(ENV_FILE_PATH, SAVE_ENV_FILE_PATH)
+        if os.path.exists(TEMPLATE_ENV_FILE_PATH) and not os.path.exists(ENV_FILE_PATH): 
+            with open(TEMPLATE_ENV_FILE_PATH, 'rb') as src_file:
+                with open(ENV_FILE_PATH, 'wb') as dest_file:
+                    dest_file.write(src_file.read())
 
     #######################################################################################################################
 
