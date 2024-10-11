@@ -29,7 +29,13 @@ import Colored_Strings as COLOR_str
 
 ENV_FILE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__),
     f"../../{CONST.MAIL_SETTINGS.get('credentials_file_path')}"))
+SAVE_ENV_FILE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__),
+    f"../../{CONST.MAIL_SETTINGS.get('save_credentials_file_path')}"))
 SHINY_HTML_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), f'../../{CONST.SHINY_HTML_PATH}'))
+
+# This line will prevent credentials from being accidentally pushed
+# SAVE_ENV_FILE_PATH is included in the .gitignore file so it will never be pushed to the remothe GitHub repository
+if os.path.exists(ENV_FILE_PATH) and not os.path.exists(SAVE_ENV_FILE_PATH): os.rename(ENV_FILE_PATH, SAVE_ENV_FILE_PATH)
 
 ###########################################################################################################################
 
@@ -40,7 +46,7 @@ class Email_Sender():
             Initializes the Email_Sender and checks for errors.
         """
 
-        load_dotenv(ENV_FILE_PATH)
+        load_dotenv(SAVE_ENV_FILE_PATH)
 
         self.__email_sender = os.getenv("EMAIL_SENDER")
         self.__password = os.getenv('EMAIL_APP_PASSWORD')
@@ -49,6 +55,9 @@ class Email_Sender():
 
         self.__port = CONST.MAIL_SETTINGS.get('port')
         self.__smtp_server = CONST.MAIL_SETTINGS.get('smtp_server')
+
+        if not all(field != '' for field in [self.__email_sender, self.__password, self.__email_receiver]):
+            print(COLOR_str.EMPTY_CREDENTIALS.replace('{path}', SAVE_ENV_FILE_PATH))
 
     #######################################################################################################################
    
@@ -116,6 +125,7 @@ class Email_Sender():
                 content = content \
                     .replace('{Pokémon}', pokemon_name) \
                     .replace('{Trainer}', receiver.split('@')[0].capitalize())
+            else: print(COLOR_str.HTML_NOT_FOUND.replace('{html}', SHINY_HTML_PATH))
 
             receivers = {'Primary': [receiver], 'CC': [], 'BCC': []}
             # Don't send duplicated copy mails to the sender
@@ -153,13 +163,13 @@ if __name__ == "__main__":
         }
 
         if option in menu_options: menu_options[option](option)
-        else: print(COLOR_str.INVALID_OPTION.replace('{module}', 'Email') + '\n')
+        else: print(COLOR_str.INVALID_OPTION.replace('{module}', 'Mail') + '\n')
 
     #######################################################################################################################
 
     def send_shiny_email(option):
         print('\n' + COLOR_str.SELECTED_OPTION
-            .replace('{module}', 'Email')
+            .replace('{module}', 'Mail')
             .replace('{option}', f"{option}")
             .replace('{action}', f"Sending shiny email")
             .replace('{path}', '')

@@ -366,6 +366,13 @@ COULD_NOT_SEND_EMAIL = \
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}m: \033[0;m'+\
     f'\033[{COLORS["Yellow"]}m{"{error}"}\033[0;m'
 
+EMPTY_CREDENTIALS = \
+    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Mail] "}\033[0;m'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mEmail notifications cannot be sent: \033[0;m'+\
+    f'\033[{COLORS["Yellow"]}mSome fields are missing in the \033[0;m'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}m{"{path}"}\033[0;m'+\
+    f'\033[{COLORS["Yellow"]}m file\033[0;m'
+
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
