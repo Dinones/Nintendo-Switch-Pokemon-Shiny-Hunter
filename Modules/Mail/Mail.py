@@ -135,6 +135,8 @@ class Email_Sender():
                 image_name (str): Contains the name of the image that is going to be attached
         """
 
+        if not CONST.MAIL_NOTIFICATIONS: return
+
         for index, receiver in enumerate([self.__email_receiver, self.__email_receiver_2]):
             if not receiver: continue
 
@@ -156,11 +158,13 @@ class Email_Sender():
                 image_path = os.path.abspath(os.path.join(os.path.dirname(__file__),
                     f'../../{CONST.EMAIL_PLACEHOLDER_IMAGE}'))
 
-            with open(image_path, 'rb') as image:
-                image = MIMEImage(image.read())
-                # Content-ID must match src in HTML
-                image.add_header('Content-ID', '<shiny_pokemon_image>') 
-                message.attach(image)
+            try:
+                with open(image_path, 'rb') as image:
+                    image = MIMEImage(image.read())
+                    # Content-ID must match src in HTML
+                    image.add_header('Content-ID', '<shiny_pokemon_image>') 
+                    message.attach(image)
+            except: pass
 
             receivers = receivers.get('Primary') + receivers.get('CC') + receivers.get('BCC')
             self._send_email(message, receivers)
