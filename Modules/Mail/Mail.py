@@ -42,7 +42,7 @@ class Email_Sender():
 
         self._protect_credentials()
         # Will not raise an error if file not found
-        load_dotenv(SAVE_ENV_FILE_PATH + 'gfd')
+        load_dotenv(SAVE_ENV_FILE_PATH)
 
         self.__email_sender = os.getenv("EMAIL_SENDER")
         self.__password = os.getenv('EMAIL_APP_PASSWORD')
@@ -151,7 +151,7 @@ class Email_Sender():
             if index == 0: receivers['BCC'] = [self.__email_sender]
             message = self._create_message(f'[Pokémon Shiny Hunter] Shiny {pokemon_name} found!', content, receivers)
 
-            image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), f'../../Media/Images/{image_name}'))
+            image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), f'../../{image_name}'))
             if not os.path.exists(image_path):
                 image_path = os.path.abspath(os.path.join(os.path.dirname(__file__),
                     f'../../{CONST.EMAIL_PLACEHOLDER_IMAGE}'))
