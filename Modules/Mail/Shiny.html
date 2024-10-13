@@ -22,16 +22,17 @@
         }
         .header {
             text-align: center;
-            background-color: #ffcc00;
+            background-color: #88cc22;
             padding: 20px;
-            border-radius: 8px 8px 0 0;
+            border-radius: 8px 8px 8px 8px;
         }
         .header h1 {
             margin: 0;
-            color: #4b4b4b;
+            color: #fff;
         }
         .content {
             text-align: center;
+            font-size: 16px;
             padding: 20px;
         }
         .shiny-image {
@@ -42,38 +43,25 @@
         }
         .footer {
             text-align: center;
-            padding: 20px;
+            padding: 10px;
             font-size: 14px;
             color: #999;
-        }
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-        .button:hover {
-            background-color: #218838;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎉 Shiny Pokémon Found! 🎉</h1>
+            <h1>🎉 Shiny {Pokémon} Found! 🎉</h1>
         </div>
         <div class="content">
-            <p>Hey Trainer, a shiny Pokémon has appeared!</p>
+            <p>Hey {Trainer}! A shiny <b>{Pokémon}</b> has appeared!</p>
             <!-- Pokémon Image Placeholder -->
             <img class="shiny-image" src="cid:shiny_pokemon_image" alt="Shiny Pokémon Image" />
-            <p>Good luck catching it!</p>
-            <a href="https://www.pokemon.com" class="button">View on Pokémon</a>
+            <p>Good luck catching it! 🍀</p>
         </div>
         <div class="footer">
-            <p>Dinones</p>
+            <p>By Dinones</p>
         </div>
     </div>
 </body>

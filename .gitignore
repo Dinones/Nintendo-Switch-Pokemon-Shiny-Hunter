@@ -7,6 +7,9 @@ __pycache__
 /Media/Videos/
 *.db
 
+# Prevent email credentials from being accidentally pushed to GitHub
+/Modules/Mail/Credentials.env
+
 Test.py
 Changelog.txt
 

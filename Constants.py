@@ -145,13 +145,18 @@ MAIL_NOTIFICATIONS = False
 
 # If you have configured the email notifications, fill in the following fields
 MAIL_SETTINGS = {
-    'sender_email': 'foo@gmail.com',    # Sender email
-    'receiver_email': 'bar@gmail.com',  # Receiver email
     'port': 587,                        # Port TLS: 587 | SSL: 465
     'smtp_server': 'smtp.gmail.com',    # SMTP server
-    'login': 'foo',                     # Sender login
-    'password': '1234'                  # Sender password
+
+    'credentials_file_path': 'Modules/Mail/Email_Credentials.env',
+    'save_credentials_file_path': 'Modules/Mail/Credentials.env',
+    'credentials_template_file_path': 'Media/Mail/Credentials_Template.env'
 }
+
+EMAIL_PLACEHOLDER_IMAGE = 'Media/Mail/Dinones.png'
+SHINY_HTML_PATH = 'Modules/Mail/Shiny.html'
+# [SECONDS] Send a notification if no pokemon has been found in this time
+FAILURE_DETECTION_TIME = 5*60
 
 TELEGRAM_NOTIFICATIONS = False
 
@@ -159,10 +164,6 @@ TELEGRAM_SETTINGS = {
     'bot_token': 'YOUR_BOT_TOKEN',
     'chat_id' : 'YOUR_CHAT_ID'
 }
-
-
-# [SECONDS] Send a notification if no pokemon has been found in this time
-FAILURE_DETECTION_TIME = 5*60
 
 ###########################################################################################################################
 ######################################################     TESTS     ######################################################
