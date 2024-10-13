@@ -34,9 +34,8 @@ from Mail import Email_Sender
 from FPS_Counter import FPS_Counter
 from GUI import GUI, App, play_sound
 from Game_Capture import Game_Capture
-from Modules.Image_Processing import Image_Processing
+from Image_Processing import Image_Processing
 from Switch_Controller import Switch_Controller
-from Modules.message import MailSender, DefaultMessageSender, TelegramSender
 
 ###########################################################################################################################
 #################################################     INITIALIZATIONS     #################################################
@@ -111,22 +110,17 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
             elif Encounter_Type == 'STATIC': Controller.current_event = static_encounter(image, Controller.current_event)
             elif Encounter_Type == 'STARTER': Controller.current_event = starter_encounter(image, Controller.current_event)
 
-            # If no pokemon is found for too long, send a notification
-            if Controller.current_event != 'SHINY_FOUND' and has_failed == False \
-                and time() - encounter_playtime > CONST.FAILURE_DETECTION_TIME:
-                    has_failed = True
-                    try:
-                        for message_sender in message_senders:
-                            message_sender.send_failure_detected('No pokemon found for too long. Consider checking the program.')
-                    except Exception as e:
-                        print(e)
+            # If no pokemon is found for too long, stop
+            if Controller.current_event != 'SHINY_FOUND' and time() - encounter_playtime > CONST.FAILURE_DETECTION_TIME:
+                    # Send telegram and email message
+                    stop_event.set()
 
             # Check if the program got stuck in some event
             if (Controller.current_event not in 
                 ["MOVE_PLAYER", "WAIT_PAIRING_SCREEN", "WAIT_HOME_SCREEN", "SHINY_FOUND", "ENTER_LAKE_4"] and \
                 Controller.current_event == Controller.previous_event and \
                 time() - stuck_timer > CONST.STUCK_TIMER_SECONDS) or time() - stuck_timer > 120:
-                    print(f'Stuck in the same state for too long. Current event: {Controller.current_event}')
+                    print(f'Stuck in the same state for too long. Current event: {Controller.current_event}') # TODO: Change by colored strings
                     stuck_timer = time()
                     # If stuck in "RESTART_GAME_1", it would be stuck forever
                     Controller.previous_event = None
@@ -183,11 +177,6 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                         .replace('{pokemon}', pokemon_name)
                         .replace('{encounters}', str(global_encounters - last_shiny_encounter))
                     )
-                    try:
-                        for message_sender in message_senders:
-                            message_sender.send_shiny_found(pokemon_name, last_saved_image_path)
-                    except Exception as e:
-                        print(e)
                     stop_event.set()
             else: shiny_timer = time()
 
@@ -215,19 +204,6 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
             }
 
             Image_Queue.put(update_items)
-
-def _build_message_senders():
-    message_senders = []
-    if CONST.MAIL_NOTIFICATIONS:
-        message_senders.append(MailSender(CONST.MAIL_SETTINGS))
-
-    if CONST.TELEGRAM_NOTIFICATIONS:
-        message_senders.append(TelegramSender(CONST.TELEGRAM_SETTINGS))
-
-    if CONST.LOG_NOTIFICATIONS:
-        message_senders.append(DefaultMessageSender())
-
-    return message_senders
 
 ###########################################################################################################################
 ###########################################################################################################################
