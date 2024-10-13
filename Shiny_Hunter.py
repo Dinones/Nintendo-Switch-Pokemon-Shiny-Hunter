@@ -112,15 +112,18 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
 
             # If no pokemon is found for too long, stop
             if Controller.current_event != 'SHINY_FOUND' and time() - encounter_playtime > CONST.FAILURE_DETECTION_TIME:
-                    # Send telegram and email message
-                    stop_event.set()
+                # Send telegram and email message
+                print(COLOR_str.STUCK_FOR_TOO_LONG
+                    .replace('{module}', 'Shiny Hunter')
+                    .replace('{event}', Controller.current_event)
+                )
+                shutdown_event.set()
 
             # Check if the program got stuck in some event
             if (Controller.current_event not in 
                 ["MOVE_PLAYER", "WAIT_PAIRING_SCREEN", "WAIT_HOME_SCREEN", "SHINY_FOUND", "ENTER_LAKE_4"] and \
                 Controller.current_event == Controller.previous_event and \
                 time() - stuck_timer > CONST.STUCK_TIMER_SECONDS) or time() - stuck_timer > 120:
-                    print(f'Stuck in the same state for too long. Current event: {Controller.current_event}') # TODO: Change by colored strings
                     stuck_timer = time()
                     # If stuck in "RESTART_GAME_1", it would be stuck forever
                     Controller.previous_event = None

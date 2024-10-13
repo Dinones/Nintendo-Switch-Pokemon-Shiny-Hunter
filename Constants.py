@@ -138,10 +138,8 @@ DATABASE_PATH = 'Media/Database.db'
 #####################################################     MESSAGES     ####################################################
 ###########################################################################################################################
 
-LOG_NOTIFICATIONS = True
-
 # You will receive mail notifications when a shiny is found or an error occurs
-MAIL_NOTIFICATIONS = False
+MAIL_NOTIFICATIONS = True
 
 # If you have configured the email notifications, fill in the following fields
 MAIL_SETTINGS = {
@@ -159,7 +157,6 @@ SHINY_HTML_PATH = 'Modules/Mail/Shiny.html'
 FAILURE_DETECTION_TIME = 5*60
 
 TELEGRAM_NOTIFICATIONS = False
-
 TELEGRAM_SETTINGS = {
     'bot_token': 'YOUR_BOT_TOKEN',
     'chat_id' : 'YOUR_CHAT_ID'
