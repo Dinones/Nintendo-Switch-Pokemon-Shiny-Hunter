@@ -152,6 +152,16 @@ Finally, open a terminal in the project folder, run the following command, and f
 sudo python3 Shiny_Hunter.py
 ```
 
+<!-- #################### Setting up Discord #################### -->
+
+1. You have to create the bot yourself at https://discord.com/developers/applications .After you have created your bot get the bot key and enter it in the Constands file
+2. add your Discord user id to the constands file https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID
+3. now your done with the setup just start the program as normal and you wil get a message from your bot when you encounter a shiny
+
+If you want to run the program without the addon then remove your discord id from the constant file so that it shows up as ""
+
+Showcase video: https://youtu.be/73BaFZFWARU
+
 <!-- #################### TROUBLESHOOTING #################### -->
 ⠀
 <h2 id="troubleshooting">
