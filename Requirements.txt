@@ -10,3 +10,4 @@ pytesseract==0.3.10
 playsound==1.3.0
 PyQt5==5.14.1
 python-dotenv==1.0.1
+pygobject==3.50.0
