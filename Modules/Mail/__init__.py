@@ -1,1 +1,1 @@
-from Mail import Mail
+from .Mail import Email_Sender

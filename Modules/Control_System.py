@@ -44,7 +44,7 @@ def search_wild_pokemon(image, state):
     # Combat loaded (Wild Pokémon stars)
     elif state == 'CHECK_SHINY':
         # Look for the text box
-        if is_load_fight_white_screen(image):
+        if is_text_box_visible(image):
             return 'ESCAPE_COMBAT_1'
 
         # Check the elapsed time
@@ -60,13 +60,13 @@ def search_wild_pokemon(image, state):
     # Combat loaded (Escaping combat)
     elif state == 'ESCAPE_COMBAT_2':
         # Look for the text box
-        if is_load_fight_white_screen(image):
+        if is_text_box_visible(image):
             return 'ESCAPE_COMBAT_3'
 
     # Combat loaded (Escaping combat)
     elif state == 'ESCAPE_COMBAT_3':
         # Check if the text box has disappeared
-        if not is_load_fight_white_screen(image):
+        if not is_text_box_visible(image):
             return 'ESCAPE_COMBAT_4'
 
     # Combat loaded (Escaped combat / Failed escaping)
@@ -93,9 +93,9 @@ def search_wild_pokemon(image, state):
     # Failed escapping (Escaping combat)
     elif state == 'ESCAPE_FAILED_2':
         # Look for the text box
-        if is_load_fight_white_screen(image):
+        if is_text_box_visible(image):
             return 'ESCAPE_COMBAT_3'
-    
+   
     else: return _check_common_states(image, state)
 
     return state
@@ -136,7 +136,7 @@ def static_encounter(image, state):
     # Some static encounters make a white screen flash before entering the combat
     elif state == 'ENTER_STATIC_COMBAT_3' and time() - state_timer >= CONST.STATIC_ENCOUNTERS_DELAY:
         # Look for the load combat white screen
-        if is_text_box_visible(image):
+        if is_load_fight_white_screen(image):
             return 'ENTER_COMBAT_1'
 
     # Combat loaded (Wild Pokémon stars)
@@ -227,7 +227,7 @@ def starter_encounter(image, state):
     # Combat loaded (Wild Pokémon appeared)
     elif state == 'ENTER_COMBAT_3B':
         # Check if the text box has disappeared
-        if not is_text_box_visible(image): 
+        if not is_text_box_visible(image):
             return 'ENTER_COMBAT_4'
 
     # Combat loaded (Starter Pokémon appeared)
@@ -246,7 +246,7 @@ def starter_encounter(image, state):
 
     else:
         state = _check_common_states(image, state)
-        # We need to check the starter pokémon, not the wild one 
+        # We need to check the starter pokémon, not the wild one
         if state == 'ENTER_COMBAT_3': state = 'ENTER_COMBAT_3B'
 
     return state
@@ -393,7 +393,7 @@ def _check_common_states(image, state):
     # Combat loadscreen (Full white screen)
     elif state == 'ENTER_COMBAT_1':
         # Check if the white load screen has ended
-        if not is_text_box_visible(image):
+        if not is_load_fight_white_screen(image):
             return 'ENTER_COMBAT_2'
 
     # Combat loadscreen (Grass/Rock/Water animation, wild pokémon appearing)
@@ -447,7 +447,7 @@ def is_black_screen_visible(image):
 
 ###########################################################################################################################
 
-def is_text_box_visible(image, x=CONST.TEXT_BOX_LINE['x']):
+def is_text_box_visible(image):
     """
     Checks if the text box is visible in the given image.
     Args:
@@ -456,10 +456,17 @@ def is_text_box_visible(image, x=CONST.TEXT_BOX_LINE['x']):
     Returns:
         bool: True if the text box is visible, False otherwise.
     """
-    return image.check_multiple_pixel_colors(
-        [x, CONST.TEXT_BOX_LINE['y1']],
-        [x, CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
-    )
+    text_box_left_visible = image.check_multiple_pixel_colors(
+        [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
+        [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']],
+        CONST.TEXT_BOX_LINE['color'])
+
+    text_box_right_visible = image.check_multiple_pixel_colors(
+        [CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
+        [CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']],
+        CONST.TEXT_BOX_LINE['color'])
+
+    return text_box_left_visible and text_box_right_visible
 
 ###########################################################################################################################
 
@@ -471,7 +478,10 @@ def is_overworld_visible(image):
     Returns:
         bool: True if the overworld is visible, False otherwise.
     """
-    return is_text_box_visible(image, CONST.TEXT_BOX_LINE['overworld_x'])
+    return image.check_multiple_pixel_colors(
+        [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y1']],
+        [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
+    )
 
 ###########################################################################################################################
 
@@ -483,7 +493,27 @@ def is_load_fight_white_screen(image):
     Returns:
         bool: True if the white screen is visible, False otherwise.
     """
-    return is_text_box_visible(image)
+    is_bottom_left_white = image.check_multiple_pixel_colors(
+        [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
+        [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']],
+        CONST.TEXT_BOX_LINE['color'])
+
+    is_bottom_right_white = image.check_multiple_pixel_colors(
+        [CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
+        [CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']],
+        CONST.TEXT_BOX_LINE['color'])
+
+    is_top_left_white = image.check_multiple_pixel_colors(
+        [CONST.TEXT_BOX_LINE['x'], CONST.MAIN_FRAME_SIZE[1] - CONST.TEXT_BOX_LINE['y2']],
+        [CONST.TEXT_BOX_LINE['x'], CONST.MAIN_FRAME_SIZE[1] - CONST.TEXT_BOX_LINE['y1']],
+        CONST.TEXT_BOX_LINE['color'])
+
+    is_top_right_white = image.check_multiple_pixel_colors(
+        [CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.MAIN_FRAME_SIZE[1] - CONST.TEXT_BOX_LINE['y2']],
+        [CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.MAIN_FRAME_SIZE[1] - CONST.TEXT_BOX_LINE['y1']],
+        CONST.TEXT_BOX_LINE['color'])
+
+    return is_bottom_left_white and is_bottom_right_white and is_top_left_white and is_top_right_white
 
 ###########################################################################################################################
 
@@ -534,7 +564,7 @@ if __name__ == "__main__":
 
         if option == '1':
             Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
-            if not Video_Capture.video_capture.isOpened(): 
+            if not Video_Capture.video_capture.isOpened():
                 Video_Capture.stop()
                 print(COLOR_str.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{CONST.VIDEO_CAPTURE_INDEX}'") + '\n')
                 return
@@ -558,7 +588,7 @@ if __name__ == "__main__":
 
             if pause: continue
             if option == '2': sleep(0.02)
-            
+           
             image = Image_Processing(Video_Capture.read_frame())
             if type(image.original_image) == type(None): break
             image.resize_image()

@@ -95,7 +95,7 @@ WILD_WALKING_DIRECTION = 'EW'
 MOVE_FORWARD_STATIC_ENCOUNTER = False
 SKIP_UPDATING_GAME = False
 # Some static encounters make a white screen flash before entering the combat
-# Raise this value to 4 for Dialga and Palkia; default value is 2
+# Raise this value to 4 for Dialga and Palkia, 6.5 for Arceus; default value is 2
 STATIC_ENCOUNTERS_DELAY = 2
 # How long has the bot been stuck in the same state before restarting the game
 STUCK_TIMER_SECONDS = 30
@@ -143,14 +143,16 @@ MAIL_NOTIFICATIONS = True
 
 # If you have configured the email notifications, fill in the following fields
 MAIL_SETTINGS = {
-    'sender_email': 'foo@gmail.com',    # Sender email
-    'receiver_email': 'bar@gmail.com',  # Receiver email
     'port': 587,                        # Port TLS: 587 | SSL: 465
     'smtp_server': 'smtp.gmail.com',    # SMTP server
-    'login': 'foo',                     # Sender login
-    'password': '1234'                  # Sender password
+
+    'credentials_file_path': 'Modules/Mail/Email_Credentials.env',
+    'save_credentials_file_path': 'Modules/Mail/Credentials.env',
+    'credentials_template_file_path': 'Media/Mail/Credentials_Template.env'
 }
 
+EMAIL_PLACEHOLDER_IMAGE = 'Media/Mail/Dinones.png'
+SHINY_HTML_PATH = 'Modules/Mail/Shiny.html'
 # [SECONDS] Send a notification if no pokemon has been found in this time
 FAILURE_DETECTION_TIME = 5*60
 
