@@ -16,3 +16,4 @@ Changelog.txt
 
 # Hidden MacOS system file which is automatically created by MacOS systems
 **/.DS_Store
+/.idea
