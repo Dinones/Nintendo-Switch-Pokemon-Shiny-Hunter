@@ -218,6 +218,13 @@ def wait_and_press_single_button(controller, seconds, button):
 # This macro is for static shaymin on bdsp. Walking down and then up reload the zone
 # and shaymin respawns. This is faster than closing and opening the game by about 20 seconds
 def walk_down_and_up_for_shaymin_respawn(controller):
+    macro_respawn_shaymin = """
+    1.5s\n A 0.5s\n PLUS 0.75s\n DPAD_DOWN 3.0s\n DPAD_UP 3.5s\n A 0.5s\n 0.75
+    """
+    macro_id = controller.nxbt_manager.macro(controller.controller_index, macro_respawn_shaymin, block=False)
+    controller.nxbt_manager.stop_macro(controller.controller_index, macro_id)
+
+    '''
     #wait 1.5 seconds for the escape from combat animation to end
     sleep(1.5)
     #Press button A to close aftercombat textbox just in case
@@ -235,6 +242,8 @@ def walk_down_and_up_for_shaymin_respawn(controller):
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A], down=0.5)
     #this short break allows shaymin textbox to appear as there is a short animation for the player to get off their bike
     sleep(0.75)
+    '''
+
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
