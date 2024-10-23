@@ -221,7 +221,7 @@ def walk_down_and_up_for_shaymin_respawn(controller):
     macro_respawn_shaymin = """
     1.5s\n A 0.5s\n PLUS 0.75s\n DPAD_DOWN 3.0s\n DPAD_UP 3.5s\n A 0.5s\n 0.75s
     """
-    macro_id = controller.nxbt_manager.macro(controller.controller_index, macro_respawn_shaymin, block=False)
+    macro_id = controller.nxbt_manager.macro(controller.controller_index, macro_respawn_shaymin, block=True)
     controller.nxbt_manager.stop_macro(controller.controller_index, macro_id)
 
     '''
