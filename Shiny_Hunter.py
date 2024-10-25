@@ -4,7 +4,7 @@
 
 import os
 import sys; 
-folders = ['Modules', 'Modules/Mail']
+folders = ['Modules', 'Modules/Mail', 'Modules/Telegram']
 for folder in folders: sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), folder)))
 import Colored_Strings as COLOR_str
 
@@ -32,6 +32,7 @@ import Constants as CONST
 from Control_System import *
 from Mail import Email_Sender
 from FPS_Counter import FPS_Counter
+from Telegram import Telegram_Sender
 from GUI import GUI, App, play_sound
 from Game_Capture import Game_Capture
 from Image_Processing import Image_Processing
@@ -72,6 +73,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
 
     last_saved_image_path = str()
     Email = Email_Sender()
+    Telegram = Telegram_Sender()
 
     while not shutdown_event.is_set():
         image = Image_Processing(Video_Capture.read_frame())
@@ -112,7 +114,10 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
 
             # If no pokemon is found for too long, stop
             if Controller.current_event != 'SHINY_FOUND' and time() - encounter_playtime > CONST.FAILURE_DETECTION_TIME:
-                # Send telegram and email message
+                # TODO: Send email message
+                Thread(target=lambda: 
+                    Telegram.send_error_detected(pokemon_name, last_saved_image_path), daemon=False
+                ).start()
                 print(COLOR_str.STUCK_FOR_TOO_LONG
                     .replace('{module}', 'Shiny Hunter')
                     .replace('{event}', Controller.current_event)
@@ -173,7 +178,10 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                     Video_Capture.save_video(f'Shiny {pokemon_name} - {time()}')
                     Thread(target=lambda: play_sound(f'./{CONST.SHINY_SOUND_PATH}'), daemon=True).start()
                     Thread(target=lambda: 
-                        Email.send_shiny_found(pokemon_name, last_saved_image_path), daemon=True
+                        Email.send_shiny_found(pokemon_name, last_saved_image_path), daemon=False
+                    ).start()
+                    Thread(target=lambda: 
+                        Telegram.send_shiny_found(pokemon_name, last_saved_image_path), daemon=False
                     ).start()
                     print(COLOR_str.SHINY_FOUND
                         .replace('{module}', 'Shiny Hunter')

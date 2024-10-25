@@ -372,11 +372,24 @@ COULD_NOT_SEND_EMAIL = \
     f'\033[{COLORS["Yellow"]}m{"{error}"}\033[0;m'
 
 EMPTY_CREDENTIALS = \
-    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Mail] "}\033[0;m'+\
-    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mEmail notifications cannot be sent: \033[0;m'+\
+    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}\033[0;m'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}m{"{module}"} notifications cannot be sent: \033[0;m'+\
     f'\033[{COLORS["Yellow"]}mSome fields are missing in the \033[0;m'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}m{"{path}"}\033[0;m'+\
     f'\033[{COLORS["Yellow"]}m file\033[0;m'
+
+TELEGRAM_SENT = \
+    f'{CORRECT}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Telegram] "}\033[0;m'+\
+    f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}mSuccessfully sent telegram to chat \033[0;m'+\
+    f'\033[{COLORS["Green"]}m{"{chat_id}"}\033[0;m'+\
+    f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}m!\033[0;m'
+
+COULD_NOT_SEND_TELEGRAM = \
+    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Telegram] "}\033[0;m'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mCould not send telegram to chat \033[0;m'+\
+    f'\033[{COLORS["Yellow"]}m{"{chat_id}"}\033[0;m'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}m: \033[0;m'+\
+    f'\033[{COLORS["Yellow"]}m{"{error}"}\033[0;m'
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################

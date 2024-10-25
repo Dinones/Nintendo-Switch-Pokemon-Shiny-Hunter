@@ -140,7 +140,6 @@ DATABASE_PATH = 'Media/Database.db'
 
 # You will receive mail notifications when a shiny is found or an error occurs
 MAIL_NOTIFICATIONS = True
-
 # If you have configured the email notifications, fill in the following fields
 MAIL_SETTINGS = {
     'port': 587,                        # Port TLS: 587 | SSL: 465
@@ -148,18 +147,20 @@ MAIL_SETTINGS = {
 
     'credentials_file_path': 'Modules/Mail/Email_Credentials.env',
     'save_credentials_file_path': 'Modules/Mail/Credentials.env',
-    'credentials_template_file_path': 'Media/Mail/Credentials_Template.env'
+    'credentials_template_file_path': 'Media/Messages/Email_Credentials_Template.env'
 }
 
-EMAIL_PLACEHOLDER_IMAGE = 'Media/Mail/Dinones.png'
+MESSAGES_PLACEHOLDER_IMAGE = 'Media/Messages/Dinones.png'
+MESSAGES_ERROR_IMAGE = 'Media/Messages/Dizzy Dinones.png'
 SHINY_HTML_PATH = 'Modules/Mail/Shiny.html'
 # [SECONDS] Send a notification if no pokemon has been found in this time
 FAILURE_DETECTION_TIME = 5*60
 
-TELEGRAM_NOTIFICATIONS = False
+TELEGRAM_NOTIFICATIONS = True
 TELEGRAM_SETTINGS = {
-    'bot_token': 'YOUR_BOT_TOKEN',
-    'chat_id' : 'YOUR_CHAT_ID'
+    'credentials_file_path': 'Modules/Telegram/Telegram_Credentials.env',
+    'save_credentials_file_path': 'Modules/Telegram/Credentials.env',
+    'credentials_template_file_path': 'Media/Messages/Telegram_Credentials_Template.env'
 }
 
 ###########################################################################################################################

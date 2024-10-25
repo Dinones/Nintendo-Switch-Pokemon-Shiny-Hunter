@@ -14,11 +14,10 @@ from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from smtplib import SMTP
-import os
 
 import sys
 folders = ['../', '../../']
-for folder in folders:  sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), folder)))
+for folder in folders: sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), folder)))
 
 import Constants as CONST
 import Colored_Strings as COLOR_str
@@ -37,8 +36,10 @@ class Email_Sender():
     def __init__(self) -> None:
 
         """
-            Initializes the Email_Sender and checks for errors.
+            Initializes the Email_Sender and checks for errors
         """
+
+        if not CONST.MAIL_NOTIFICATIONS: return
 
         self._protect_credentials()
         # Will not raise an error if file not found
@@ -55,14 +56,17 @@ class Email_Sender():
         # Will not raise any error if credentials are wrong or missing, it will just skip the email sending
         if not all((isinstance(field, str) and field != '') 
             for field in [self.__email_sender, self.__password, self.__email_receiver]):
-                print(COLOR_str.EMPTY_CREDENTIALS.replace('{path}', SAVE_ENV_FILE_PATH))
+                print(COLOR_str.EMPTY_CREDENTIALS
+                    .replace('{module}', 'Email')
+                    .replace('{path}', SAVE_ENV_FILE_PATH)
+                )
 
     #######################################################################################################################
    
     def _create_message(self, subject: str, content: str, receivers: dict) -> MIMEMultipart:
 
         """
-            Creates a multipart email message with the given subject and content.
+            Creates a multipart email message with the given subject and content
             Args:
                 subject (str): Contains the subject of the email
                 content (str): Contains the content of the email
@@ -88,7 +92,7 @@ class Email_Sender():
     def _send_email(self, message: MIMEMultipart, receivers: list) -> None:
 
         """
-            Sends an email using the provided message.
+            Sends an email using the provided message
             Args:
                 message (MIMEMultipart): Object containing all the email information
                 receivers (list): Contains all the email receivers [Primary + CC + BCC]
@@ -129,7 +133,7 @@ class Email_Sender():
     def send_shiny_found(self, pokemon_name: str, image_name: str):
 
         """
-            Sends shiny found email notification.
+            Sends shiny found email notification
             Args:
                 pokemon_name (str): Contains the pokémon name
                 image_name (str): Contains the name of the image that is going to be attached
@@ -141,6 +145,7 @@ class Email_Sender():
             if not receiver: continue
 
             content = ''
+            # If can't find the HTML, an empty email will be sent with the image attached to it
             if os.path.exists(SHINY_HTML_PATH):
                 with open(SHINY_HTML_PATH, 'r', encoding='utf-8') as file: content = file.read()
                 content = content \
@@ -154,9 +159,9 @@ class Email_Sender():
             message = self._create_message(f'[Pokémon Shiny Hunter] Shiny {pokemon_name} found!', content, receivers)
 
             image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), f'../../{image_name}'))
-            if not os.path.exists(image_path):
+            if not image_name or not os.path.exists(image_path):
                 image_path = os.path.abspath(os.path.join(os.path.dirname(__file__),
-                    f'../../{CONST.EMAIL_PLACEHOLDER_IMAGE}'))
+                    f'../../{CONST.MESSAGES_PLACEHOLDER_IMAGE}'))
 
             try:
                 with open(image_path, 'rb') as image:
@@ -176,10 +181,9 @@ class Email_Sender():
 if __name__ == "__main__":
     def main_menu():
         print('\n' + COLOR_str.MENU.replace('{module}', 'Mail'))
-        print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Send shiny email'))
+        print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Send shiny notification'))
 
-        # option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Game Capture'))
-        option = '1'
+        option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Mail'))
 
         menu_options = {
             '1': send_shiny_email,
@@ -194,12 +198,13 @@ if __name__ == "__main__":
         print('\n' + COLOR_str.SELECTED_OPTION
             .replace('{module}', 'Mail')
             .replace('{option}', f"{option}")
-            .replace('{action}', f"Sending shiny email")
+            .replace('{action}', f"Sending shiny notification")
             .replace('{path}', '')
         )
 
         Email = Email_Sender()
-        Email.send_shiny_found('Dinones', None)
+        Email.send_shiny_found('Dinones', str())
+        print()
 
     #######################################################################################################################
 
