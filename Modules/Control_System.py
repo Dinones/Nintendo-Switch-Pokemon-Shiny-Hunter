@@ -310,13 +310,13 @@ def shaymin_encounter(image, state):
     # Combat loaded (Escaping combat)
     elif state == 'ESCAPE_COMBAT_2':
         # Look for the text box
-        if is_load_fight_white_screen(image):
+        if is_text_box_visible(image):
             return 'ESCAPE_COMBAT_3'
 
     # Combat loaded (Escaping combat)
     elif state == 'ESCAPE_COMBAT_3':
         # Check if the text box has disappeared
-        if not is_load_fight_white_screen(image):
+        if not is_text_box_visible(image):
             return 'ESCAPE_COMBAT_4'
 
     # Combat loaded (Escaped combat / Failed escaping)
@@ -341,7 +341,7 @@ def shaymin_encounter(image, state):
     # Failed escapping (Escaping combat)
     elif state == 'ESCAPE_FAILED_2':
         # Look for the text box
-        if is_load_fight_white_screen(image):
+        if is_text_box_visible(image):
             return 'ESCAPE_COMBAT_3'
     
     elif state == 'CLOSE_TEXT_BOX':
