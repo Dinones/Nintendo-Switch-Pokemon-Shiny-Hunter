@@ -1,12 +1,27 @@
+<!-- #################### GENERAL #################### -->
+
+<h1 align="center">
+    <br><img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/Automatic%20Notifications/Gmail%20Telegram%20Discord.png" width="80%"></br>
+</h1>
+
+<b>Note:</b> I do not recommend activating all notifications simultaneously, as they perform similar functions and will increase resource consumption.
+
+<p align="center">
+    <a href="#gmail">Email</a> •
+    <a href="#telegram">Telegram</a> •
+    <a href="#discord">Discord</a>
+</p>
+
+⠀
 <!-- #################### GMAIL #################### -->
 
-<h2>
-    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Gmail.svg" width="30px" align="top"/>
+<h2 id="gmail">
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/Automatic%20Notifications/SVG/Gmail.svg" width="30px" align="top"/>
     ⠀Email Notifications
 </h2>
 
 <p>
-    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Warning.svg" width="17px" align="left"/><span><strong>IMPORTANT:</strong>  Please, <b>never</b> share your credentials with anyone!</span>
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/Automatic%20Notifications/SVG/Warning.svg" width="17px" align="left"/><span><strong>IMPORTANT:</strong>  Please, <b>never</b> share your credentials with anyone!</span>
 </p>
 
 This implementation only works with Google mail accounts <i>(gmail)</i>. I highly recommend using a completely new email instead of using any of your personal accounts.
@@ -19,7 +34,7 @@ This implementation only works with Google mail accounts <i>(gmail)</i>. I highl
 4. Enable it. This is a MUST; messaging API will not work if this option is not enabled.
     <h3 align="center">
         <br>
-            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/Gmail%20Automation/2MA.png" width="80%" style="border-radius: 15px;">
+            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/Automatic%20Notifications/2MA.png" width="80%" style="border-radius: 15px;">
         <br>
         <p>ㅤ</p>
     </h3>
@@ -30,7 +45,7 @@ This implementation only works with Google mail accounts <i>(gmail)</i>. I highl
 2. Create a new App and take note of the password: You will <b>NOT</b> be able to see it anymore. 
     <h3 align="center">
         <br>
-            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/Gmail%20Automation/App%20Password.png" width="60%" style="border-radius: 15px;">
+            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/Automatic%20Notifications/App%20Password.png" width="60%" style="border-radius: 15px;">
         <br>
         <p>ㅤ</p>
     </h3>
@@ -75,13 +90,13 @@ This implementation only works with Google mail accounts <i>(gmail)</i>. I highl
 ⠀
 <!-- #################### TELEGRAM #################### -->
 
-<h2>
-    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Telegram.svg" width="30px" align="top"/>
+<h2 id="telegram">
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/Automatic%20Notifications/SVG/Telegram.svg" width="30px" align="top"/>
     ⠀Telegram Notifications
 </h2>
 
 <p>
-    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Warning.svg" width="17px" align="left"/><span><strong>IMPORTANT:</strong>  Please, <b>never</b> share your credentials with anyone!</span>
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/Automatic%20Notifications/SVG/Warning.svg" width="17px" align="left"/><span><strong>IMPORTANT:</strong>  Please, <b>never</b> share your credentials with anyone!</span>
 </p>
 
 ## Create your Bot
@@ -91,7 +106,7 @@ This implementation only works with Google mail accounts <i>(gmail)</i>. I highl
 
     <h3 align="center">
         <br>
-            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/Telegram%20Automation/Create%20Bot.png" width="40%" style="border-radius: 15px;">
+            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/Automatic%20Notifications/Create%20Bot.png" width="40%" style="border-radius: 15px;">
         <br>
     </h3>
 3. Start a conversation with your bot by sending it any message you want: <i>you can remember him how cool it is</i>.
@@ -106,7 +121,7 @@ This implementation only works with Google mail accounts <i>(gmail)</i>. I highl
 3. Update the webpage, a text message will appear, there you can find your Chat ID.
     <h3 align="center">
         <br>
-            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/Telegram%20Automation/Get%20Chat%20ID.png" width="90%" style="border-radius: 15px;">
+            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/Automatic%20Notifications/Get%20Chat%20ID.png" width="90%" style="border-radius: 15px;">
         <br>
     </h3>
 
@@ -137,3 +152,11 @@ This implementation only works with Google mail accounts <i>(gmail)</i>. I highl
     ```bash
     TELEGRAM_NOTIFICATIONS = True
     ```
+
+⠀
+<!-- #################### DISCORD #################### -->
+
+<h2 id="discord">
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/Automatic%20Notifications/SVG/Discord.svg" width="30px" align="top"/>
+    ⠀Discord Notifications
+</h2>
