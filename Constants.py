@@ -91,7 +91,7 @@ IMAGES_COUNT_WARNING = 300
 # Time the player is moving in each direction
 WILD_WALKING_SECONDS = 1
 # 'NS': Up/Down | 'EW': Right/Left
-WILD_WALKING_DIRECTION = 'EW'
+WILD_WALKING_DIRECTION = 'NS'
 MOVE_FORWARD_STATIC_ENCOUNTER = False
 SKIP_UPDATING_GAME = False
 # Some static encounters make a white screen flash before entering the combat
@@ -99,7 +99,7 @@ SKIP_UPDATING_GAME = False
 STATIC_ENCOUNTERS_DELAY = 2
 # How long has the bot been stuck in the same state before restarting the game
 STUCK_TIMER_SECONDS = 30
-SHINY_DETECTION_TIME = 2
+SHINY_DETECTION_TIME = 2.5
 HOME_MENU_COLOR = (237, 237, 237)
 PAIRING_MENU_COLOR = (135, 135, 125)
 LOAD_SCREEN_BLACK_COLOR = (5, 5, 5)
@@ -139,7 +139,7 @@ DATABASE_PATH = 'Media/Database.db'
 ###########################################################################################################################
 
 # You will receive mail notifications when a shiny is found or an error occurs
-MAIL_NOTIFICATIONS = True
+MAIL_NOTIFICATIONS = False
 # If you have configured the email notifications, fill in the following fields
 MAIL_SETTINGS = {
     'port': 587,                        # Port TLS: 587 | SSL: 465
@@ -153,10 +153,11 @@ MAIL_SETTINGS = {
 MESSAGES_PLACEHOLDER_IMAGE = 'Media/Messages/Dinones.png'
 MESSAGES_ERROR_IMAGE = 'Media/Messages/Dizzy Dinones.png'
 SHINY_HTML_PATH = 'Modules/Mail/Shiny.html'
+ERROR_HTML_PATH = 'Modules/Mail/Error.html'
 # [SECONDS] Send a notification if no pokemon has been found in this time
 FAILURE_DETECTION_TIME = 5*60
 
-TELEGRAM_NOTIFICATIONS = True
+TELEGRAM_NOTIFICATIONS = False
 TELEGRAM_SETTINGS = {
     'credentials_file_path': 'Modules/Telegram/Telegram_Credentials.env',
     'save_credentials_file_path': 'Modules/Telegram/Credentials.env',

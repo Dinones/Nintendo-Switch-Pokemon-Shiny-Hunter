@@ -114,10 +114,8 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
 
             # If no pokemon is found for too long, stop
             if Controller.current_event != 'SHINY_FOUND' and time() - encounter_playtime > CONST.FAILURE_DETECTION_TIME:
-                # TODO: Send email message
-                Thread(target=lambda: 
-                    Telegram.send_error_detected(pokemon_name, last_saved_image_path), daemon=False
-                ).start()
+                Thread(target=lambda: Telegram.send_error_detected(), daemon=False).start()
+                Thread(target=lambda: Email.send_error_detected(), daemon=False).start()
                 print(COLOR_str.STUCK_FOR_TOO_LONG
                     .replace('{module}', 'Shiny Hunter')
                     .replace('{event}', Controller.current_event)

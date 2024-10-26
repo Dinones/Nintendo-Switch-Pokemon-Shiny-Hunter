@@ -18,7 +18,8 @@ import Colored_Strings as COLOR_str
 ###########################################################################################################################
 
 SHINY_FOUND_MESSAGE = "A shiny {pokemon_name} has been found!"
-ERROR_MESSAGE = "An error has been detected: {error_message}"
+ERROR_MESSAGE = \
+    f"Shiny Hunter has been more than {CONST.FAILURE_DETECTION_TIME//60} minutes without encountering any Pokémon."
 
 ###########################################################################################################################
 
@@ -118,12 +119,11 @@ class Telegram_Sender():
 
     #######################################################################################################################
 
-    def send_error_detected(self, error_message: str) -> None:
+    def send_error_detected(self) -> None:
         if not CONST.TELEGRAM_NOTIFICATIONS or not self._check_valid_credentials(): return
 
-        text = ERROR_MESSAGE.format(error_message=error_message)
         image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), f'../../{CONST.MESSAGES_ERROR_IMAGE}'))
-        self._send_telegram(text, image_path)
+        self._send_telegram(ERROR_MESSAGE, image_path)
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
@@ -159,7 +159,7 @@ if __name__ == "__main__":
 
         Telegram = Telegram_Sender()
         if option == '1': Telegram.send_shiny_found('Dinones', None)
-        if option == '2': Telegram.send_error_detected('Testing error')
+        if option == '2': Telegram.send_error_detected()
         print()
 
     #######################################################################################################################
