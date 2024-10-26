@@ -57,6 +57,9 @@
     <p>
         &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Music.svg" width="20px" align="top"/>⠀ Plays a sound whenever a shiny Pokémon is found. <br>
     </p> 
+    <p>
+        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Notification.svg" width="20px" align="top"/>⠀ Sends an email and/or Telegram <b>notification</b> when a shiny is found. <br>
+    </p> 
 </p>
 
 <p>⠀</p>
@@ -154,6 +157,8 @@ Place the Nintendo Switch into the Dock. Connect the dock to the official Ninten
 
 <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Warning.svg" width="17px" align="left"/><span><strong>IMPORTANT:</strong> Before running the Shiny Hunter, there are a few variables of the **Constants.py** file that need to be mentioned. You will need to edit them in order to use the program. (See constants [here](./Media/Docs/Constants.md)).
 
+<b>NOTE:</b> If you want to receive an email and/or Telegram notification whenever a shiny is found or an error occurs, you will have to set the notifications up as it is outlined in the [Notifications section](./Media/Docs/Notifications.md).
+
 Now, you <b>must</b> change the game configuration as follows:
 
 <ul>
@@ -164,7 +169,7 @@ Now, you <b>must</b> change the game configuration as follows:
 
 Finally, enter the game and place the player on the grass/water for a wild encounter; in front of the Pokémon for the static encounter; and one step before entering the lake for the starter encounter. See an example of the positions [here](./Media/Docs/Starting%20Positions.md). Once there, <b>save the game</b> and go to the home screen (leave the game as idle, don't close it); then, go to "<i>Controllers</i>" > "<i>Change Grip/Order Menu</i>". Plug in both controllers to the Nintendo Switch and if not, make sure they're not connected via Bluetooth. (See steps [here](./Media/Docs/Change%20Grip%20Menu.md)).
 
-Finally, open a terminal in the project folder, run the following command, and follow the instructions that will appear:
+Now, you are ready to go! Open a terminal in the project folder, run the following command, and follow the instructions that will appear:
 
 ```bash
 sudo python3 Shiny_Hunter.py
