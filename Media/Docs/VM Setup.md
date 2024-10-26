@@ -121,6 +121,7 @@ nano /etc/sudoers</code></pre>
         <h6 align="center">
             <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/VBox%20Instructions/VBox%2023.png" width="70%" style="border-radius: 5px;">
         </h6>
+        <p>If your capture card is not working or is not correctly detected, try using both USB options, 3.0 and 2.0.</p>
     </li>
     <li>
         <p>Accept the changes and start the Virtual Machine. You should now be able to see the Bluetooth symbol in the top-right corner of the window.</p>
@@ -177,18 +178,5 @@ The following configurations are completely optional, but highly recommended for
         <h6 align="center">
             <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/VBox%20Instructions/VBox%2020.png" width="70%" style="border-radius: 5px;">
         </h6>
-    </li>
-    <li>
-        <p><strong>Save Virtual Machine State</strong></p>
-        <p>After finishing any configuration of the Virtual Machine, it is a good idea to save its state, so if something is messed up, you can always recover it from this point.</p>
-        <p>Power off the VM. Open Oracle VM VirtualBox, select your VM and click the 3 dots next to its name and select "<i>Snapshots</i>".</p>
-        <h6 align="center">
-            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/VBox%20Instructions/VBox%2021.png" width="70%" style="border-radius: 5px;">
-        </h6>
-        <p>Now, click on "<i>Take a Snapshot</i>", write a name and save it.</p>
-        <h6 align="center">
-            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/VBox%20Instructions/VBox%2022.png" width="70%" style="border-radius: 5px;">
-        </h6>
-        <p>From now on, you can restore the Virtual Machine to this exact point by right-clicking the snapshot and selecting "<i>Restore</i>".</p>
     </li>
 </ul>
