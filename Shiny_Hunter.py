@@ -3,7 +3,7 @@
 ###########################################################################################################################
 
 import os
-import sys; 
+import sys
 folders = ['Modules', 'Modules/Mail', 'Modules/Telegram']
 for folder in folders: sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), folder)))
 import Colored_Strings as COLOR_str
@@ -228,7 +228,7 @@ def controller_control(controller, shutdown_event):
         if aux_current_event == 'WAIT_HOME_SCREEN': fast_start_macro(controller)
         elif aux_current_event == 'RESTART_GAME_1': restart_game_macro(controller)
         elif aux_current_event in ['RESTART_GAME_2', 'RESTART_GAME_3', 'ENTER_STATIC_COMBAT_2', 
-            'ESCAPE_FAILED_2', 'ENTER_LAKE_2', 'ENTER_LAKE_4']: press_single_button(controller, 'A')
+            'ESCAPE_FAILED_2', 'ENTER_LAKE_2', 'ENTER_LAKE_4', 'SWSH_ENTER_GIANTS_COMBAT_1']: press_single_button(controller, 'A')
         elif aux_current_event == 'ENTER_STATIC_COMBAT_1': enter_static_combat_macro(controller)
         elif aux_current_event == 'MOVE_PLAYER': move_player_wild_macro(controller)
         elif aux_current_event == 'ENTER_LAKE_1': enter_lake_macro(controller)

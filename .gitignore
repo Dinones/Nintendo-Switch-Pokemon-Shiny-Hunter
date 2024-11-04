@@ -1,6 +1,7 @@
 __pycache__
 .venv/
 .vscode/
+.idea/
 .pytest_cache
 
 /Media/Tests/

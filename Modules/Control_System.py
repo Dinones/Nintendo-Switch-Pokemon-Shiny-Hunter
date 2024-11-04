@@ -105,6 +105,81 @@ def search_wild_pokemon(image, state):
 ###########################################################################################################################
 ###########################################################################################################################
 
+def sword_shield_giants(image, state):
+    """
+    Control system for the Sword and Shield Giants encounters.
+    The Giants Pokémon are Regirock, Regice, Registeel, Regieleki, and Regidrago.
+    Regigigas is not included in this control system.
+    
+    The user should have the following settings:
+    - The game should be saved in front of the Giants Pokémon with the enigma solved.
+    
+    The shiny detection will work as follows:
+    - Start the game, press A until the combat text box to appear.
+    - Wait for the combat text box to disappear.
+    - Check if the Pokémon is shiny. The Pokémon is considered shiny
+      if the text box appears after a certain time (stars animation).
+    
+    The control system is based on the following states:
+    - WAIT_PAIRING_SCREEN: Waiting for the pairing controller screen.
+    - WAIT_HOME_SCREEN: Waiting for the Nintendo Switch main menu.
+    - RESTART_GAME_4: Waiting for the game to load.
+    - SWSH_ENTER_GIANTS_COMBAT_1: Waiting for combat text box to appear.
+    - SWSH_ENTER_GIANTS_COMBAT_2: Waiting for the combat text box to disappear.
+    - CHECK_SHINY: Checking if the Pokémon is shiny.
+    - common states: restarting the game, stopping the program.
+    
+    Args:
+        image: The image to process.
+        state: The current state of the control system.
+    Returns:
+        str: The next state of the control system.
+    """
+
+    # No state yet, waiting for the pairing controller screen
+    if not state:
+        return 'WAIT_PAIRING_SCREEN'
+
+    # Nintendo Switch pairing controller menu
+    if state == 'WAIT_HOME_SCREEN':
+        # Look for the top-left nintendo switch main menu pixel
+        if image.check_pixel_color(CONST.HOME_MENU_COLOR):
+            return 'SWSH_ENTER_GIANTS_COMBAT_1'
+
+    # Game loading, full black screen
+    elif state == 'RESTART_GAME_4':
+        # Check if the black screen has ended
+        if not is_black_screen_visible(image):
+            return 'SWSH_ENTER_GIANTS_COMBAT_1'
+
+    # Combat loaded (Wild Pokémon stars)
+    elif state == 'SWSH_ENTER_GIANTS_COMBAT_1':
+        # Look for the text box
+        if is_swsh_combat_text_box_visible(image):
+            return 'SWSH_ENTER_GIANTS_COMBAT_2'
+
+    # Combat loaded (Wild Pokémon appeared)
+    elif state == 'SWSH_ENTER_GIANTS_COMBAT_2':
+        # Check if the text box has disappeared
+        if not is_swsh_combat_text_box_visible(image):
+            return 'CHECK_SHINY'
+
+    # Combat loaded (Wild Pokémon stars)
+    elif state == 'CHECK_SHINY':
+        # Look for the text box
+        if is_swsh_combat_text_box_visible(image):
+            return 'RESTART_GAME_1'
+
+        # Check the elapsed time
+        if image.shiny_detection_time and time() - image.shiny_detection_time >= CONST.SHINY_DETECTION_TIME:
+            return 'SHINY_FOUND'
+
+    # Manage restarts and stops states
+    else: return _check_common_states(image, state)
+
+###########################################################################################################################
+###########################################################################################################################
+
 def static_encounter(image, state):
     global state_timer
     if not state: return 'WAIT_PAIRING_SCREEN'
@@ -345,6 +420,30 @@ def is_black_screen_visible(image):
     return is_life_box_visible(image, CONST.LOAD_SCREEN_BLACK_COLOR)
 
 ###########################################################################################################################
+
+def is_swsh_combat_text_box_visible(image):
+    combat_text_box_left_visible = image.check_multiple_pixel_colors(
+        [CONST.SWSH_COMBAT_BOX['x_black_grey'], CONST.SWSH_COMBAT_BOX['y1_black_grey']],
+        [CONST.SWSH_COMBAT_BOX['x_black_grey'], CONST.SWSH_COMBAT_BOX['y2_black_grey']],
+        CONST.SWSH_COMBAT_BOX['color_black_grey'])
+
+    combat_text_box_right_visible = image.check_multiple_pixel_colors(
+        [CONST.MAIN_FRAME_SIZE[0] - CONST.SWSH_COMBAT_BOX['x_black_grey'], CONST.SWSH_COMBAT_BOX['y1_black_grey']],
+        [CONST.MAIN_FRAME_SIZE[0] - CONST.SWSH_COMBAT_BOX['x_black_grey'], CONST.SWSH_COMBAT_BOX['y2_black_grey']],
+        CONST.SWSH_COMBAT_BOX['color_black_grey'])
+
+    combat_text_box_left2_visible = image.check_multiple_pixel_colors(
+        [CONST.SWSH_COMBAT_BOX['x_grey'], CONST.SWSH_COMBAT_BOX['y1_grey']],
+        [CONST.SWSH_COMBAT_BOX['x_grey'], CONST.SWSH_COMBAT_BOX['y2_grey']],
+        CONST.SWSH_COMBAT_BOX['color_grey'])
+
+    combat_text_box_right2_visible = image.check_multiple_pixel_colors(
+        [CONST.MAIN_FRAME_SIZE[0] - CONST.SWSH_COMBAT_BOX['x_grey'], CONST.SWSH_COMBAT_BOX['y1_grey']],
+        [CONST.MAIN_FRAME_SIZE[0] - CONST.SWSH_COMBAT_BOX['x_grey'], CONST.SWSH_COMBAT_BOX['y2_grey']],
+        CONST.SWSH_COMBAT_BOX['color_grey'])
+
+    return combat_text_box_left_visible and combat_text_box_right_visible and combat_text_box_left2_visible and combat_text_box_right2_visible
+
 
 def is_text_box_visible(image):
     """

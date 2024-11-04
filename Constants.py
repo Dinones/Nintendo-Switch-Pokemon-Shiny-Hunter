@@ -103,6 +103,16 @@ SHINY_DETECTION_TIME = 2.5
 HOME_MENU_COLOR = (237, 237, 237)
 PAIRING_MENU_COLOR = (135, 135, 125)
 LOAD_SCREEN_BLACK_COLOR = (5, 5, 5)
+SWSH_COMBAT_BOX = {
+    'x_black_grey': 20,
+    'y1_black_grey': 20,
+    'y2_black_grey': 45,
+    'color_black_grey': (38, 38, 38),
+    'x_grey': 65,
+    'y1_grey': 20,
+    'y2_grey': 45,
+    'color_grey': (51, 51, 51),
+}
 TEXT_BOX_LINE = {
     'x': int(MAIN_FRAME_SIZE[0] // 16 * 1.2),
     'y1': int(MAIN_FRAME_SIZE[1] // 16 * 1),
