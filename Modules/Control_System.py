@@ -84,13 +84,13 @@ def search_wild_pokemon(image, state):
         if not is_black_screen_visible(image):
             return 'MOVE_PLAYER'
 
-    # Failed escapping (Both Pokémon in the field)
+    # Failed escaping (Both Pokémon in the field)
     elif state == 'ESCAPE_FAILED_1':
         # Look for the life box
         if is_life_box_visible(image):
             return 'ESCAPE_FAILED_2'
 
-    # Failed escapping (Escaping combat)
+    # Failed escaping (Escaping combat)
     elif state == 'ESCAPE_FAILED_2':
         # Look for the text box
         if is_text_box_visible(image):
@@ -282,7 +282,8 @@ def shaymin_encounter(image, state):
     # Some static encounters make a white screen flash before entering the combat
     elif state == 'ENTER_STATIC_COMBAT_3' and time() - state_timer >= CONST.STATIC_ENCOUNTERS_DELAY:
         # Look for the load combat white screen
-        if is_text_box_visible(image):
+        if is_load_fight_white_screen(image):
+            state_timer = time()
             return 'ENTER_COMBAT_1'
     
     # Game loading, full black screen
@@ -338,7 +339,7 @@ def shaymin_encounter(image, state):
         if is_life_box_visible(image):
             return 'ESCAPE_FAILED_2'
 
-    # Failed escapping (Escaping combat)
+    # Failed escaping (Escaping combat)
     elif state == 'ESCAPE_FAILED_2':
         # Look for the text box
         if is_text_box_visible(image):
