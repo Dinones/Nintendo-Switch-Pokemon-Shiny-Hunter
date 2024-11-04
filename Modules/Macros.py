@@ -234,7 +234,7 @@ def walk_down_and_up_for_shaymin_respawn(controller):
     controller.current_button_pressed = 'A'
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A], down=0.5)
     #this short break allows shaymin textbox to appear as there is a short animation for the player to get off their bike
-    sleep(0.75)
+    sleep(3.0)
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
