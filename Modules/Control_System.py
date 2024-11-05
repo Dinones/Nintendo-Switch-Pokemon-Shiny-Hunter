@@ -176,7 +176,10 @@ def sword_shield_giants(image, state):
 
     # Manage restarts and stops states
     else:
-        return _check_common_states(image, state)
+        state = _check_common_states(image, state)
+        # Skip restart steps, only macro of 'RESTART_GAME_1' is needed
+        if state == 'RESTART_GAME_2':
+            state = 'SWSH_ENTER_GIANTS_COMBAT_1'
 
     return state
 
