@@ -105,7 +105,7 @@ HOME_MENU_COLOR = (237, 237, 237)
 PAIRING_MENU_COLOR = (135, 135, 125)
 LOAD_SCREEN_BLACK_COLOR = (5, 5, 5)
 SWSH_COMBAT_BOX = {
-    'x_black_grey': 20,
+    'x_black_grey': 10,
     'y1_black_grey': 20,
     'y2_black_grey': 45,
     'color_black_grey': (38, 38, 38),

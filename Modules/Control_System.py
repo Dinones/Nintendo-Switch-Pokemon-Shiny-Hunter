@@ -175,7 +175,10 @@ def sword_shield_giants(image, state):
             return 'SHINY_FOUND'
 
     # Manage restarts and stops states
-    else: return _check_common_states(image, state)
+    else:
+        return _check_common_states(image, state)
+
+    return state
 
 ###########################################################################################################################
 ###########################################################################################################################
