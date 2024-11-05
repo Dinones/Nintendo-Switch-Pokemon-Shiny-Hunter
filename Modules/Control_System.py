@@ -171,7 +171,7 @@ def sword_shield_giants(image, state):
             return 'RESTART_GAME_1'
 
         # Check the elapsed time
-        if image.shiny_detection_time and time() - image.shiny_detection_time >= CONST.SHINY_DETECTION_TIME:
+        if image.shiny_detection_time and time() - image.shiny_detection_time >= CONST.SWSH_SHINY_DETECTION_TIME:
             return 'SHINY_FOUND'
 
     # Manage restarts and stops states
