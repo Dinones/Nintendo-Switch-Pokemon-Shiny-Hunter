@@ -142,7 +142,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                     Video_Capture.start_recording()
 
             # Save the last frame where the name of the pokemon appears in the text box
-            elif Controller.current_event in ['ENTER_COMBAT_3', 'ENTER_COMBAT_5', 'SWSH_ENTER_GIANTS_COMBAT_2']:
+            elif Controller.current_event in ['ENTER_COMBAT_3', 'ENTER_COMBAT_5', 'SWSH_ENTER_GIANTS_COMBAT_1']:
                 pokemon_image = image
             # Update the database
             elif Controller.current_event == "CHECK_SHINY" and type(pokemon_image) != type(None):
