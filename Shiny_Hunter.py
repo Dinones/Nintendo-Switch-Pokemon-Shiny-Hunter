@@ -225,10 +225,14 @@ def controller_control(controller, shutdown_event):
         # Prevent the main execution from being blocked
         with controller.event_lock: aux_current_event = controller.current_event
 
+        # Macros that require A button press
+        # ENTER_STATIC_COMBAT_3 needs to press A to enter the combat for Regigigas, it has two dialog phases.
+        need_to_press_a_states = ['RESTART_GAME_2', 'RESTART_GAME_3', 'ENTER_STATIC_COMBAT_2', 'ENTER_STATIC_COMBAT_3',
+                  'ESCAPE_FAILED_2', 'ENTER_LAKE_2', 'ENTER_LAKE_4']
+
         if aux_current_event == 'WAIT_HOME_SCREEN': fast_start_macro(controller)
         elif aux_current_event == 'RESTART_GAME_1': restart_game_macro(controller)
-        elif aux_current_event in ['RESTART_GAME_2', 'RESTART_GAME_3', 'ENTER_STATIC_COMBAT_2', 
-            'ESCAPE_FAILED_2', 'ENTER_LAKE_2', 'ENTER_LAKE_4']: press_single_button(controller, 'A')
+        elif aux_current_event in need_to_press_a_states: press_single_button(controller, 'A')
         elif aux_current_event == 'ENTER_STATIC_COMBAT_1': enter_static_combat_macro(controller)
         elif aux_current_event == 'MOVE_PLAYER': move_player_wild_macro(controller)
         elif aux_current_event == 'ENTER_LAKE_1': enter_lake_macro(controller)
