@@ -100,7 +100,7 @@ SKIP_UPDATING_GAME = False
 # - Dialga and Palkia: 4
 # - Arceus: 6.5
 # - Uxie: 3
-# - Regigigas: 5.5
+# - Regigigas: 7
 STATIC_ENCOUNTERS_DELAY = 2
 
 # How long has the bot been stuck in the same state before restarting the game
