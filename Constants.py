@@ -13,7 +13,7 @@ OUTPUT_VIDEO_PATH = 'Media/Videos/Video.avi'
 SHINY_RECORDING_SECONDS = 60
 SKIPPED_FRAMES_TO_RECONNECT = 3
 # Used to debug issues and to save the video of the encounter. Disable this if you have performance issues
-ENABLE_VIDEO_RECORDING = True
+ENABLE_VIDEO_RECORDING = False
 
 ###########################################################################################################################
 #################################################     IMAGE PROCESSING     ################################################
@@ -21,7 +21,7 @@ ENABLE_VIDEO_RECORDING = True
 
 # Supported languages: ES, EN, DE, FR and IT
 # Not supported languages: KO, ZH-CN and ZH-TW (Program will work, but database will do weird things)
-LANGUAGE = 'EN'
+LANGUAGE = 'ES'
 # [PIXELS] Nintendo Switch captured frames' possible sizes 1080p: (1920, 1080) | 720p: (1280, 720)
 # If you want to capture image and video in full HD, use 1080p, if you want better performance, use 720p.
 ORIGINAL_FRAME_SIZE = (1920, 1080)
@@ -98,7 +98,7 @@ SKIP_UPDATING_GAME = False
 # Raise this value to 4 for Dialga and Palkia, 6.5 for Arceus; default value is 2
 STATIC_ENCOUNTERS_DELAY = 2
 # How long has the bot been stuck in the same state before restarting the game
-STUCK_TIMER_SECONDS = 30
+STUCK_TIMER_SECONDS = 20
 SHINY_DETECTION_TIME = 2
 HOME_MENU_COLOR = (237, 237, 237)
 PAIRING_MENU_COLOR = (135, 135, 125)

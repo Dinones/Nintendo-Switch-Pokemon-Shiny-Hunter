@@ -226,7 +226,7 @@ def walk_down_and_up_for_shaymin_respawn(controller):
     #Get on the bike, Player must have enabled the fast gear beforehand
     controller.current_button_pressed = 'PLUS'
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.PLUS], down=0.75)
-    #Bike down and up to respawn shaymin and interact with it
+    #Bike down and up to respawn shaymin, interact with it & close its textbox
     controller.current_button_pressed = 'DOWN'
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.DPAD_DOWN], down=3.0)
     controller.current_button_pressed = 'UP'
@@ -234,7 +234,9 @@ def walk_down_and_up_for_shaymin_respawn(controller):
     controller.current_button_pressed = 'A'
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A], down=0.5)
     #this short break allows shaymin textbox to appear as there is a short animation for the player to get off their bike
-    sleep(3.0)
+    sleep(2.0)
+    controller.current_button_pressed = 'A'
+    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A], down=0.5)
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
