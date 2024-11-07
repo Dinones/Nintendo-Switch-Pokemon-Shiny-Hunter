@@ -186,6 +186,7 @@ TELEGRAM_SETTINGS = {
 
 # Will color the pixels that are being used to detect the state
 TESTING = True
+LOG_LEVEL = 'INFO'
 SAVE_ERROR_VIDEOS = False
 TESTING_COLOR = (255, 0, 255)
 TESTING_VIDEO_PATH = 'Media/Videos/Shiny.mp4'
