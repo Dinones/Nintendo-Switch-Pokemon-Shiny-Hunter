@@ -94,9 +94,15 @@ WILD_WALKING_SECONDS = 1
 WILD_WALKING_DIRECTION = 'NS'
 MOVE_FORWARD_STATIC_ENCOUNTER = False
 SKIP_UPDATING_GAME = False
-# Some static encounters make a white screen flash before entering the combat
-# Raise this value to 4 for Dialga and Palkia, 6.5 for Arceus; default value is 2
+
+# Variable used to skip a white screen flash (some static encounters have two white screen flashes)
+# - Default value is 2
+# - Dialga and Palkia: 4
+# - Arceus: 6.5
+# - Uxie: 3
+# - Regigigas: 7
 STATIC_ENCOUNTERS_DELAY = 2
+
 # How long has the bot been stuck in the same state before restarting the game
 STUCK_TIMER_SECONDS = 30
 SHINY_DETECTION_TIME = 2.5
