@@ -236,6 +236,7 @@ def controller_control(controller, shutdown_event):
         if aux_current_event == 'WAIT_HOME_SCREEN': fast_start_macro(controller)
         elif aux_current_event == 'RESTART_GAME_1': restart_game_macro(controller)
         elif aux_current_event in need_to_press_a_states: press_single_button(controller, 'A')
+        elif aux_current_event == 'SWSH_ENTER_GIANTS_COMBAT_1': press_button(controller, 'A', 0.3)
         elif aux_current_event == 'ENTER_STATIC_COMBAT_1': enter_static_combat_macro(controller)
         elif aux_current_event == 'MOVE_PLAYER': move_player_wild_macro(controller)
         elif aux_current_event == 'ENTER_LAKE_1': enter_lake_macro(controller)

@@ -93,7 +93,6 @@ WILD_WALKING_SECONDS = 1
 # 'NS': Up/Down | 'EW': Right/Left
 WILD_WALKING_DIRECTION = 'NS'
 MOVE_FORWARD_STATIC_ENCOUNTER = False
-SKIP_UPDATING_GAME = False
 
 # Variable used to skip a white screen flash (some static encounters have two white screen flashes)
 # - Default value is 2
