@@ -93,14 +93,19 @@ class Image_Processing():
 
     #######################################################################################################################
 
-    # Draw the pressed button in the switch controller image
     def draw_button(self, button = ''):
-        if not isinstance(button, str): return
-        if isinstance(self.FPS_image, type(None)):
-            # Without copy() method, images would be linked, meaning that modifying one image would also alter the other
-            self.FPS_image = np.copy(self.resized_image)
+        """
+        Draw the pressed button in the switch controller image
+        The image is first copied from the original image to reset the states of the buttons.
 
+        :param button: The button to be drawn
+        """
+        if not isinstance(button, str): return
+
+        # We always copy the original image to reset the states of the buttons
+        # This method is called only one time per frame, so it's not a performance issue.
         self.FPS_image = np.copy(self.resized_image)
+
         button_coordinates = {
             'A': (307, 80),
             'B': (288, 99),
