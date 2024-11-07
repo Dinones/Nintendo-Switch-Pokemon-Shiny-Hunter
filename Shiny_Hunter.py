@@ -21,7 +21,7 @@ if __name__ == '__main__':
         program_name = __file__.split('/')[-1]
         exit(os.system(f'sudo python3 {program_name}'))
 
-import copy
+import logging
 from queue import Queue
 from time import sleep, time
 from threading import Thread, Event, Timer
@@ -100,7 +100,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
             switch_controller_image.draw_button(Controller.current_button_pressed)
             Controller.previous_button_pressed = Controller.current_button_pressed
 
-        with Controller.event_lock: 
+        with Controller.event_lock:
             # Check if the pokemon is shiny
             if Controller.current_event == "CHECK_SHINY":
                 # Only reset the first time it enters to the state
@@ -125,8 +125,8 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
 
             # Check if the program got stuck in some event
             if (Controller.current_event not in 
-                ["MOVE_PLAYER", "WAIT_PAIRING_SCREEN", "WAIT_HOME_SCREEN", "SHINY_FOUND", "ENTER_LAKE_4"] and \
-                Controller.current_event == Controller.previous_event and \
+                ["MOVE_PLAYER", "WAIT_PAIRING_SCREEN", "WAIT_HOME_SCREEN", "SHINY_FOUND", "ENTER_LAKE_4"] and
+                Controller.current_event == Controller.previous_event and
                 time() - stuck_timer > CONST.STUCK_TIMER_SECONDS) or time() - stuck_timer > 120:
                     stuck_timer = time()
                     # If stuck in "RESTART_GAME_1", it would be stuck forever
@@ -274,6 +274,12 @@ def check_threads(threads, shutdown_event):
 ###########################################################################################################################
 
 if __name__ == "__main__":
+
+    logging.basicConfig(
+        level=CONST.LOG_LEVEL,
+        format='%(asctime)s - %(levelname)s - %(message)s'
+    )
+
     def main_menu():
         print('\n' + COLOR_str.MENU.replace('{module}', 'Shiny Hunter'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Start wild shiny hunter'))

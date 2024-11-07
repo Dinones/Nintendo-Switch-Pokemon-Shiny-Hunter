@@ -3,7 +3,7 @@
 ###########################################################################################################################
 
 # Set the cwd to the one of the file
-import os
+import os, logging
 from typing import Union, List
 
 if __name__ == '__main__':
@@ -103,7 +103,7 @@ def restart_game_macro(controller):
     controller.current_button_pressed = ''
     sleep(0.8)
 
-    for _ in range(16):
+    for _ in range(12):
         controller.current_button_pressed = 'A'
         controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A])
         controller.current_button_pressed = ''
@@ -244,14 +244,19 @@ def press_button(controller, buttons: Union[str, List[str]], wait_after_action=0
     # TODO add support for multiple buttons
     controller.current_button_pressed = buttons[0]
 
-    controller.nxbt_manager.press_buttons(
-        controller.controller_index,
-        # Convert the button string(s) to the corresponding button object(s)
-        list(map(lambda btn: getattr(Buttons, btn), buttons)),
-        down=down,
-        up=up,
-        block=block
-    )
+    try:
+        controller.nxbt_manager.press_buttons(
+            controller.controller_index,
+            # Convert the button string(s) to the corresponding button object(s)
+            list(map(lambda btn: getattr(Buttons, btn), buttons)),
+            down=down,
+            up=up,
+            block=block
+        )
+    except Exception as e:
+        logging.error(f"Error while pressing button(s): {buttons}")
+        logging.error(e)
+
     controller.current_button_pressed = ''
 
     if wait_after_action > 0:
