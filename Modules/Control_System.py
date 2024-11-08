@@ -113,6 +113,8 @@ def sword_shield_giants(image, state):
     
     The user should have the following settings:
     - The game should be saved in front of the Giants Pokémon with the enigma solved.
+    - Airplane mode has to be enabled.
+    - Bluetooth has to be enabled after setting the airplane mode.
     
     The shiny detection will work as follows:
     - Start the game, press A until the combat text box to appear.
