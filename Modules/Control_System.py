@@ -428,6 +428,14 @@ def is_black_screen_visible(image):
 ###########################################################################################################################
 
 def is_swsh_combat_text_box_visible(image):
+    """
+    Checks if the combat text box is visible in the given image.
+    The combat text box is a gray rectangle at the bottom of the screen with both sides darker.
+    This function is specific for Pokémon Sword and Shield.
+
+    :param image: The image in which to check for the combat text box.
+    :return: True if the combat text box is visible, False otherwise.
+    """
     combat_text_box_left_visible = image.check_multiple_pixel_colors(
         [CONST.SWSH_COMBAT_BOX['x_black_grey'], CONST.SWSH_COMBAT_BOX['y1_black_grey']],
         [CONST.SWSH_COMBAT_BOX['x_black_grey'], CONST.SWSH_COMBAT_BOX['y2_black_grey']],

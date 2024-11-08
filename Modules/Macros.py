@@ -90,20 +90,20 @@ def restart_game_macro(controller):
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME], down=0.05, up=0)
     controller.current_button_pressed = ''
 
+    # In case the sleep menu is open press the B button, this will avoid entering the sleep mode by mistake.
     sleep(0.2); controller.current_button_pressed = 'B'
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.B])
     controller.current_button_pressed = ''
+
     sleep(1.3); controller.current_button_pressed = 'X'
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.X])
     controller.current_button_pressed = ''
     sleep(1)
 
-    controller.current_button_pressed = 'A'; sleep(0.2)
-    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A])
-    controller.current_button_pressed = ''
-    sleep(0.8)
-
-    for _ in range(12):
+    # Confirm the restart, press the A button until the game is restarted
+    # For Sword/Shield the game take longer to exit.
+    # 10 'A' presses are enough for BDSP but 15 for SWSH
+    for _ in range(15):
         controller.current_button_pressed = 'A'
         controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A])
         controller.current_button_pressed = ''
@@ -254,8 +254,7 @@ def press_button(controller, buttons: Union[str, List[str]], wait_after_action=0
             block=block
         )
     except Exception as e:
-        logging.error(f"Error while pressing button(s): {buttons}")
-        logging.error(e)
+        logging.error(f"Error while pressing button(s): {buttons}, {e}")
 
     controller.current_button_pressed = ''
 
