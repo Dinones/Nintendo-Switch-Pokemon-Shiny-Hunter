@@ -91,14 +91,20 @@ IMAGES_COUNT_WARNING = 300
 # Time the player is moving in each direction
 WILD_WALKING_SECONDS = 1
 # 'NS': Up/Down | 'EW': Right/Left
-WILD_WALKING_DIRECTION = 'EW'
+WILD_WALKING_DIRECTION = 'NS'
 MOVE_FORWARD_STATIC_ENCOUNTER = False
 SKIP_UPDATING_GAME = False
-# Some static encounters make a white screen flash before entering the combat
-# Raise this value to 4 for Dialga and Palkia, 6.5 for Arceus; default value is 2
+
+# Variable used to skip a white screen flash (some static encounters have two white screen flashes)
+# - Default value is 2
+# - Dialga and Palkia: 4
+# - Arceus: 6.5
+# - Uxie: 3
+# - Regigigas: 7
 STATIC_ENCOUNTERS_DELAY = 2
+
 # How long has the bot been stuck in the same state before restarting the game
-STUCK_TIMER_SECONDS = 20
+STUCK_TIMER_SECONDS = 25
 SHINY_DETECTION_TIME = 2
 HOME_MENU_COLOR = (237, 237, 237)
 PAIRING_MENU_COLOR = (135, 135, 125)
@@ -139,8 +145,7 @@ DATABASE_PATH = 'Media/Database.db'
 ###########################################################################################################################
 
 # You will receive mail notifications when a shiny is found or an error occurs
-MAIL_NOTIFICATIONS = True
-
+MAIL_NOTIFICATIONS = False
 # If you have configured the email notifications, fill in the following fields
 MAIL_SETTINGS = {
     'port': 587,                        # Port TLS: 587 | SSL: 465
@@ -148,13 +153,22 @@ MAIL_SETTINGS = {
 
     'credentials_file_path': 'Modules/Mail/Email_Credentials.env',
     'save_credentials_file_path': 'Modules/Mail/Credentials.env',
-    'credentials_template_file_path': 'Media/Mail/Credentials_Template.env'
+    'credentials_template_file_path': 'Media/Messages/Email_Credentials_Template.env'
 }
 
-EMAIL_PLACEHOLDER_IMAGE = 'Media/Mail/Dinones.png'
+MESSAGES_PLACEHOLDER_IMAGE = 'Media/Messages/Dinones.png'
+MESSAGES_ERROR_IMAGE = 'Media/Messages/Dizzy Dinones.png'
 SHINY_HTML_PATH = 'Modules/Mail/Shiny.html'
+ERROR_HTML_PATH = 'Modules/Mail/Error.html'
 # [SECONDS] Send a notification if no pokemon has been found in this time
 FAILURE_DETECTION_TIME = 5*60
+
+TELEGRAM_NOTIFICATIONS = False
+TELEGRAM_SETTINGS = {
+    'credentials_file_path': 'Modules/Telegram/Telegram_Credentials.env',
+    'save_credentials_file_path': 'Modules/Telegram/Credentials.env',
+    'credentials_template_file_path': 'Media/Messages/Telegram_Credentials_Template.env'
+}
 
 ###########################################################################################################################
 ######################################################     TESTS     ######################################################

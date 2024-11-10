@@ -17,35 +17,6 @@ Select the "<i>Print all available video devices</i>" option. You should obtain 
 
 If you obtained more than one <b>OK</b>, you can check what capture card is being used by running the previous command again and selecting the "<i>Check current capture device</i>" option. 
 
-
-
-
-
-
-
-
-
-
-
-<!-- # UISDYFUKDSHFDSJKFHDSUIFHDSUIFHDFHJKDSHFNFFCHDSKJFHDJKFDAKJFHDA FINISH THIIIIIIIIIIIIIIIIIIIIIIIIS!
-If the device is not the correct one, please change the Constants.py configuration. -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ⠀
 <!-- #################### GUI #################### -->
 
@@ -114,4 +85,14 @@ After accepting it, the program should run a testing macro, which will go to the
     Save the Virtual Machine's State
 </h2>
 
-If everything worked correctly, I highly recommend saving the state of the machine so you can recover it from this point if it is messed up. Please, visit the section "<b>Save Virtual Machine State</b>" of [VM Setup](./VM%20Setup.md).
+If everything worked correctly, I highly recommend saving the state of the machine so you can recover it from this point in case it is messed up.
+
+<p>Power off the VM. Open Oracle VM VirtualBox, select your VM, click the 3 dots next to its name and select "<i>Snapshots</i>".</p>
+<h6 align="center">
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/VBox%20Instructions/VBox%2021.png" width="70%" style="border-radius: 5px;">
+</h6>
+<p>Now, click on "<i>Take a Snapshot</i>", write a name and save it.</p>
+<h6 align="center">
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/VBox%20Instructions/VBox%2022.png" width="70%" style="border-radius: 5px;">
+</h6>
+<p>From now on, you can restore the Virtual Machine to this exact point by right-clicking the snapshot and selecting "<i>Restore</i>".</p>

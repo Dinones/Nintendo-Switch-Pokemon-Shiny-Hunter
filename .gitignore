@@ -16,6 +16,8 @@ Changelog.txt
 
 # Hidden MacOS system file which is automatically created by MacOS systems
 **/.DS_Store
+
+# JetBrains IDE files
 .idea/vcs.xml
 .idea/Dinones-Shiny-Hunter-Shaymin-Python3-11-10.iml
 .idea/inspectionProfiles/profiles_settings.xml

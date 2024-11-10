@@ -54,6 +54,7 @@ def fast_start_macro(controller):
     controller.current_button_pressed = ''
     sleep(2); controller.current_button_pressed = 'A'
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A])
+    sleep(1)
 
 ###########################################################################################################################
 
@@ -86,11 +87,13 @@ def restart_game_macro(controller):
     controller.current_button_pressed = 'HOME'
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME], down=0.05, up=0)
     controller.current_button_pressed = ''
+
     sleep(0.2); controller.current_button_pressed = 'B'
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.B])
     controller.current_button_pressed = ''
     sleep(1.3); controller.current_button_pressed = 'X'
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.X]); sleep(0.5)
+    
     if CONST.SKIP_UPDATING_GAME:
         sleep(0.5)
         for _ in range(2):
@@ -140,9 +143,11 @@ def move_player_wild_macro(controller):
 # Escape from the combat
 def escape_combat_macro(controller):
     if controller.previous_event != controller.current_event: 
+        sleep(0.5)
         controller.current_button_pressed = 'UP'
-        controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.DPAD_UP])
+        controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.DPAD_UP], down=0.3)
     else:
+        sleep(0.1)
         controller.current_button_pressed = 'A'
         controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A]); sleep(0.1)
     

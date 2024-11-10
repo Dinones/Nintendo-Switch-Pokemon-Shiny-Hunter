@@ -21,6 +21,7 @@ import Constants as CONST
 state_timer = 0
 
 def search_wild_pokemon(image, state):
+    global state_timer
     if not state: return 'WAIT_PAIRING_SCREEN'
 
     # Nintendo Switch pairing controller menu
@@ -39,6 +40,7 @@ def search_wild_pokemon(image, state):
     elif state == 'MOVE_PLAYER':
         # Look for the load combat white screen
         if is_load_fight_white_screen(image):
+            state_timer = time()
             return 'ENTER_COMBAT_1'
 
     # Combat loaded (Wild Pokémon stars)
@@ -137,6 +139,7 @@ def static_encounter(image, state):
     elif state == 'ENTER_STATIC_COMBAT_3' and time() - state_timer >= CONST.STATIC_ENCOUNTERS_DELAY:
         # Look for the load combat white screen
         if is_load_fight_white_screen(image):
+            state_timer = time()
             return 'ENTER_COMBAT_1'
 
     # Combat loaded (Wild Pokémon stars)
@@ -222,6 +225,7 @@ def starter_encounter(image, state):
     elif state == 'STARTER_SELECTION_4' and time() - state_timer >= 3.5:
         # Look for the white load screen
         if is_overworld_visible(image):
+            state_timer = time()
             return 'ENTER_COMBAT_1'
 
     # Combat loaded (Wild Pokémon appeared)
@@ -358,6 +362,8 @@ def shaymin_encounter(image, state):
 ###########################################################################################################################
 
 def _check_common_states(image, state):
+    global state_timer
+
     # Nintendo Switch pairing controller menu
     if state == 'WAIT_PAIRING_SCREEN':
         # Look for the pairing controller screen
@@ -386,7 +392,8 @@ def _check_common_states(image, state):
             return 'RESTART_GAME_4'
 
     # Combat loadscreen (Full white screen)
-    elif state == 'ENTER_COMBAT_1':
+    # Some wild encounters missdetect this state with the grass animation
+    elif state == 'ENTER_COMBAT_1' and time() - state_timer >= 0.5:
         # Check if the white load screen has ended
         if not is_load_fight_white_screen(image):
             return 'ENTER_COMBAT_2'

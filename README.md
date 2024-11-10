@@ -29,14 +29,14 @@
     <p>ㅤ</p>
 </h1>
 
-<!-- #################### KEY FEATURES #################### -->
+<!-- #################### CREATION PROCESS #################### -->
 ⠀
 <h2 id="youtube">
     <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Youtube.svg" width="30px" align="top"/>
     ⠀Creation Process
 </h2>
 
-<p>In my <a href="https://www.youtube.com/watch?v=84czUOAvNyk">Youtube Channel</a> you can follow the entire creation process of the project. Don’t miss it!</p>
+<p>In my <a href="https://www.youtube.com/@DinoDinones">Youtube Channel</a> you can follow the entire creation process of the project. Don’t miss it!</p>
 
 <!-- #################### KEY FEATURES #################### -->
 ⠀
@@ -49,18 +49,35 @@
     <p>
         &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Raspberry.svg" width="20px" align="center"/>⠀ Use your computer to <b>automatically</b> search for shiny pokémon. <br>
     </p><p>
-        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/NS%20Controller.svg" width="20px" align="center" style="margin-top:0px"/>⠀ Works on physical games running on a Nintendo Switch, <b>not emulators!</b> <br>
+        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/NS%20Controller.svg" width="20px" align="center" style="margin-top:0px"/>⠀ Works on physical games running on a Nintendo Switch, <b>not emulators</b>! <br>
     </p>
-    <!-- <p>
-        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Pokemon.svg" width="20px" align="top"/>⠀ Compatible with all games that have static encounters (<a href="./Media/Docs/Compatible%20Games.md">see compatible games</a>). <br>
-    </p> -->
     <p>
         &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Camera.svg" width="20px" align="top"/>⠀ Automatically saves a video of the shiny encounter. <br>
     </p> 
     <p>
         &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Music.svg" width="20px" align="top"/>⠀ Plays a sound whenever a shiny Pokémon is found. <br>
     </p> 
+    <p>
+        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Notification.svg" width="20px" align="top"/>⠀ Sends an email, Telegram and/or Discord <b>notification</b> when a shiny is found. <br>
+    </p> 
 </p>
+
+<p>⠀</p>
+
+<div align="center">
+
+| Feature             | BDSP |⠀⠀⠀⠀⠀⠀⠀⠀| Special Encounters   | BDSP |
+|---------------------|:----:|:--------:|:--------------------:|:----:|
+| Starters            | ✔️    |⠀⠀⠀⠀⠀⠀⠀⠀| Dialga & Palkia      | ✔️    |
+| Wild Pokémon        | ✔️    |⠀⠀⠀⠀⠀⠀⠀⠀| Arceus               | ✔️    |
+| Static Encounters   | ✔️    |⠀⠀⠀⠀⠀⠀⠀⠀| Shaymin              | ❌    |
+| Fishing             | ❌    |⠀⠀⠀⠀⠀⠀⠀⠀| Mesprit & Cresselia  | ❌    |
+| Pokéradar           | ❌    |⠀⠀⠀⠀⠀⠀⠀⠀| Happiny Egg          | ❌    |
+| Fossils             | ❌    |⠀⠀⠀⠀⠀⠀⠀⠀| Riolu Egg            | ❌    |
+| Eggs                | ❌    |⠀⠀⠀⠀⠀⠀⠀⠀|
+| Auto-catching       | ❌    |⠀⠀⠀⠀⠀⠀⠀⠀|
+
+</div>
 
 <!-- #################### INSTALLATION #################### -->
 ⠀
@@ -112,7 +129,7 @@ In order to verify if everything has been properly installed, follow [these step
 
 <p>
     &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/USB.svg" width="14px">
-    ⠀Capture card that converts HDMI input into USB output. <br>
+    ⠀Capture card that converts HDMI input into USB output. <i>Mine is just 7€ worth</i>.<br>
     &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Switch.svg" width="14px">
     ⠀Nintendo Switch Dock. <br>
     &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Cable.svg" width="14px">
@@ -121,10 +138,14 @@ In order to verify if everything has been properly installed, follow [these step
 
 ### Setting Up the Nintendo Switch
 
-Place the Nintendo Switch into the Dock. Connect the dock to the official Nintendo Switch charger. Connect the HDMI output of the Dock to the input of your capture card. Finally, connect your capture card to your computer / Raspberry via USB. If your game is not digital, insert the game card in the Nintendo. Set your Nintendo Switch to **light mode** and do **NOT** use any custom/animated theme.
+Place the Nintendo Switch into the Dock. Connect the dock to the official Nintendo Switch charger. Connect the HDMI output of the Dock to the input of your capture card. Finally, connect your capture card to your computer / Raspberry via USB. If your game is not digital, insert the game card in the Nintendo.
 
 <p>
-    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Warning.svg" width="17px" align="left"/><span><strong>NOTE:</strong>  The program will always open the first game slot. Make sure the pokémon game you want to run is in the first position. If it's not, you can simply start the game and it'll move to the beginning.</span>
+    <strong>NOTE:</strong>  The program will always open the first game slot. Make sure the pokémon game you want to run is in the first position. If it's not, you can simply start the game and it'll move to the beginning.</span>
+</p>
+
+<p>
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Warning.svg" width="17px" align="left"/><span><strong>IMPORTANT:</strong>  Set your Nintendo Switch to <b>light mode</b> and do <b>NOT</b> use any custom/animated theme.</span>
 </p>
 
 <!-- #################### RUNNING SHINY HUNTER #################### -->
@@ -136,7 +157,9 @@ Place the Nintendo Switch into the Dock. Connect the dock to the official Ninten
 
 <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Warning.svg" width="17px" align="left"/><span><strong>IMPORTANT:</strong> Before running the Shiny Hunter, there are a few variables of the **Constants.py** file that need to be mentioned. You will need to edit them in order to use the program. (See constants [here](./Media/Docs/Constants.md)).
 
-Now, you must change the game configuration as follows:
+<b>NOTE:</b> If you want to receive an email and/or Telegram notification whenever a shiny is found or an error occurs, you will have to set the notifications up as it is outlined in the [Notifications section](./Media/Docs/Notifications.md).
+
+Now, you <b>must</b> change the game configuration as follows:
 
 <ul>
     <li><p><b>Text Speed:</b> Fast.</p></li>
@@ -144,9 +167,9 @@ Now, you must change the game configuration as follows:
     <li><p><b>Autosave:</b> Off.</p></li>
 </ul>
 
-Finally, enter the game and place the player on the grass/water for a wild encounter; in front of the Pokémon for the static encounter; and one step before entering the lake for the starter encounter. See an example of the positions [here](./Media/Docs/Starting%20Positions.md). Once there, <b>save the game</b> and go to the home screen (leave the game as idle, don't close it); then, go to "<i>Controllers</i>" > "<i>Change Grip/Order Menu</i>". Plug in both controllers to the Nintendo Switch and if not, make sure they're not connected via Bluetooth. (See steps <a href="./Media/Docs/Change%20Grip%20Menu.md">here</a>).
+Finally, enter the game and place the player on the grass/water for a wild encounter; in front of the Pokémon for the static encounter; and one step before entering the lake for the starter encounter. See an example of the positions [here](./Media/Docs/Starting%20Positions.md). Once there, <b>save the game</b> and go to the home screen (leave the game as idle, don't close it); then, go to "<i>Controllers</i>" > "<i>Change Grip/Order Menu</i>". Plug in both controllers to the Nintendo Switch and if not, make sure they're not connected via Bluetooth. (See steps [here](./Media/Docs/Change%20Grip%20Menu.md)).
 
-Finally, open a terminal in the project folder, run the following command, and follow the instructions that will appear:
+Now, you are ready to go! Open a terminal in the project folder, run the following command, and follow the instructions that will appear:
 
 ```bash
 sudo python3 Shiny_Hunter.py
@@ -159,7 +182,18 @@ sudo python3 Shiny_Hunter.py
     ⠀Troubleshooting
 </h2>
 
+### Program is getting stuck in the Home screen
+<p>Try setting your Nintendo Switch to <b>light mode</b> and do <b>NOT</b> use any custom/animated theme. The program detects some specific pixels to determine if it is in the Home screen; therefore, using any custom/animated theme will break this feature.</p>
 
+<!-- #################### CONTRIBUTORS #################### -->
+⠀
+<h2 id="contributors">
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Developer.svg" width="30px" align="top"/>
+    ⠀Top Contributors
+</h2>
+
+- [@David34920](https://github.com/David34920) - General 
+- [@Gr33nBug](https://github.com/Gr33nBug) - Shaymin integration
 
 <!-- #################### CREDITS #################### -->
 ⠀
