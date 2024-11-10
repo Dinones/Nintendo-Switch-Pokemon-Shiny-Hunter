@@ -13,7 +13,7 @@ OUTPUT_VIDEO_PATH = 'Media/Videos/Video.avi'
 SHINY_RECORDING_SECONDS = 60
 SKIPPED_FRAMES_TO_RECONNECT = 3
 # Used to debug issues and to save the video of the encounter. Disable this if you have performance issues
-ENABLE_VIDEO_RECORDING = False
+ENABLE_VIDEO_RECORDING = True
 
 ###########################################################################################################################
 #################################################     IMAGE PROCESSING     ################################################
@@ -21,7 +21,7 @@ ENABLE_VIDEO_RECORDING = False
 
 # Supported languages: ES, EN, DE, FR and IT
 # Not supported languages: KO, ZH-CN and ZH-TW (Program will work, but database will do weird things)
-LANGUAGE = 'ES'
+LANGUAGE = 'EN'
 # [PIXELS] Nintendo Switch captured frames' possible sizes 1080p: (1920, 1080) | 720p: (1280, 720)
 # If you want to capture image and video in full HD, use 1080p, if you want better performance, use 720p.
 ORIGINAL_FRAME_SIZE = (1920, 1080)
