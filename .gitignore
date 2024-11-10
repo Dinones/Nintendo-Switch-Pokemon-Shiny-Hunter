@@ -1,7 +1,6 @@
 __pycache__
 .venv/
 .vscode/
-.idea/
 .pytest_cache
 
 /Media/Tests/
@@ -10,10 +9,16 @@ __pycache__
 *.db
 
 # Prevent email credentials from being accidentally pushed to GitHub
-Credentials.env
+/Modules/Mail/Credentials.env
 
 Test.py
 Changelog.txt
 
 # Hidden MacOS system file which is automatically created by MacOS systems
 **/.DS_Store
+
+# JetBrains IDE files
+.idea/vcs.xml
+.idea/Dinones-Shiny-Hunter-Shaymin-Python3-11-10.iml
+.idea/inspectionProfiles/profiles_settings.xml
+/.idea
