@@ -241,7 +241,7 @@ def controller_control(controller, shutdown_event):
         elif aux_current_event == 'STARTER_SELECTION_3': accept_selection_box_macro(controller)
         elif aux_current_event == 'ESCAPE_COMBAT_2': escape_combat_macro(controller)
         elif aux_current_event == 'STOP_1': stop_macro(controller)
-        elif aux_current_event == 'WALK_DOWN_THEN_UP': walk_down_and_up_for_shaymin_respawn(controller)
+        elif aux_current_event == 'RESPAWN_SHAYMIN': walk_down_and_up_for_shaymin_respawn(controller)
 
         # Don't care about race conditions here
         controller.previous_event = aux_current_event
@@ -277,7 +277,7 @@ if __name__ == "__main__":
         print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Start wild shiny hunter'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Start static shiny hunter'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '3').replace('{option}', 'Start starter shiny hunter'))
-        print(COLOR_str.MENU_OPTION.replace('{index}', '4').replace('{option}', 'Start static Shaymin shiny hunter'))
+        print(COLOR_str.MENU_OPTION.replace('{index}', '4').replace('{option}', 'Start Shaymin shiny hunter'))
 
         option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Shiny Hunter'))
 
@@ -305,7 +305,7 @@ if __name__ == "__main__":
         if option == '1': action = 'wild'
         elif option == '2': action = 'static'
         elif option == '3': action = 'starter'
-        elif option == '4': action = 'shaymin'
+        elif option == '4': action = 'Shaymin'
         print('\n' + COLOR_str.SELECTED_OPTION
             .replace('{module}', 'Shiny Hunter')
             .replace('{option}', f"{option}")
