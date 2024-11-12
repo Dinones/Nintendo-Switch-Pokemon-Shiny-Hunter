@@ -4,6 +4,7 @@
 
 # Set the cwd to the one of the file
 import os
+import logging
 if __name__ == '__main__':
     try: os.chdir(os.path.dirname(__file__))
     except: pass
@@ -170,6 +171,7 @@ class Image_Processing():
         # --psm 6: Assume a single uniform block of text
         custom_config = '--oem 1 --psm 6'
         text = pytesseract.image_to_string(name_image, config=custom_config)
+        logging.debug(f'Detected text: {text}')
 
         # EN: Dialga appeared! | A wild Drifloon appeared! | Go! Chimchar!
         # FR: Dialga apparaît! | Un Baudrive sauvage apparaît! | Ouisticram! Go!
@@ -196,7 +198,10 @@ class Image_Processing():
     def save_image(self, pokemon_name = ''):
         file_name = f'{pokemon_name}_{str(int(time()))}' if pokemon_name else str(int(time()))
         self.saved_image_path = f'./{CONST.IMAGES_FOLDER_PATH}{file_name}.png'
-        cv2.imwrite(self.saved_image_path, self.original_image)
+        if CONST.SAVED_IMAGE_SIZE == 'RESIZED':
+            cv2.imwrite(self.saved_image_path, self.resized_image)
+        else:
+            cv2.imwrite(self.saved_image_path, self.original_image)
 
     #######################################################################################################################
 
