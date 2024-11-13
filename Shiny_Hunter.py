@@ -111,6 +111,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
             if Encounter_Type == 'WILD': Controller.current_event = search_wild_pokemon(image, Controller.current_event)
             elif Encounter_Type == 'STATIC': Controller.current_event = static_encounter(image, Controller.current_event)
             elif Encounter_Type == 'STARTER': Controller.current_event = starter_encounter(image, Controller.current_event)
+            elif Encounter_Type == 'SHAYMIN': Controller.current_event = shaymin_encounter(image, Controller.current_event)
             elif Encounter_Type == 'SWSH_GIANTS': Controller.current_event = sword_shield_giants(image, Controller.current_event)
 
             # If no pokemon is found for too long, stop
@@ -245,6 +246,7 @@ def controller_control(controller, shutdown_event):
         elif aux_current_event == 'STARTER_SELECTION_3': accept_selection_box_macro(controller)
         elif aux_current_event == 'ESCAPE_COMBAT_2': escape_combat_macro(controller)
         elif aux_current_event == 'STOP_1': stop_macro(controller)
+        elif aux_current_event == 'RESPAWN_SHAYMIN': walk_down_and_up_for_shaymin_respawn(controller)
 
         # Don't care about race conditions here
         controller.previous_event = aux_current_event
@@ -286,7 +288,8 @@ if __name__ == "__main__":
         print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Start wild shiny hunter'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Start static shiny hunter'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '3').replace('{option}', 'Start starter shiny hunter'))
-        print(COLOR_str.MENU_OPTION.replace('{index}', '4').replace('{option}', 'Start Sword/Shield Giants shiny hunter'))
+        print(COLOR_str.MENU_OPTION.replace('{index}', '4').replace('{option}', 'Start Shaymin shiny hunter'))
+        print(COLOR_str.MENU_OPTION.replace('{index}', '5').replace('{option}', 'Start Sword/Shield Giants shiny hunter'))
 
         option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Shiny Hunter'))
 
@@ -295,6 +298,7 @@ if __name__ == "__main__":
             '2': shiny_hunter,
             '3': shiny_hunter,
             '4': shiny_hunter,
+            '5': shiny_hunter,
         }
 
         # Set XDG_RUNTIME_DIR and ALSOFT_LOGLEVEL environment variable (avoid unnecessary warnings)
@@ -314,7 +318,8 @@ if __name__ == "__main__":
         if option == '1': action = 'wild'
         elif option == '2': action = 'static'
         elif option == '3': action = 'starter'
-        elif option == '4': action = 'SWSH Giants'
+        elif option == '4': action = 'Shaymin'
+        elif option == '5': action = 'SWSH Giants'
         print('\n' + COLOR_str.SELECTED_OPTION
             .replace('{module}', 'Shiny Hunter')
             .replace('{option}', f"{option}")
@@ -387,7 +392,8 @@ if __name__ == "__main__":
         if option == '1': encounter_type = 'WILD'
         elif option == '2': encounter_type = 'STATIC'
         elif option == '3': encounter_type = 'STARTER'
-        elif option == '4': encounter_type = 'SWSH_GIANTS'
+        elif option == '4': encounter_type = 'SHAYMIN'
+        elif option == '5': encounter_type = 'SWSH_GIANTS'
 
         threads = []
         threads.append({

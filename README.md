@@ -70,7 +70,7 @@
 |---------------------|:----:|:--------:|:--------------------:|:----:|
 | Starters            | ✔️    |⠀⠀⠀⠀⠀⠀⠀⠀| Dialga & Palkia      | ✔️    |
 | Wild Pokémon        | ✔️    |⠀⠀⠀⠀⠀⠀⠀⠀| Arceus               | ✔️    |
-| Static Encounters   | ✔️    |⠀⠀⠀⠀⠀⠀⠀⠀| Shaymin              | ❌    |
+| Static Encounters   | ✔️    |⠀⠀⠀⠀⠀⠀⠀⠀| Shaymin              | ✔️    |
 | Fishing             | ❌    |⠀⠀⠀⠀⠀⠀⠀⠀| Mesprit & Cresselia  | ❌    |
 | Pokéradar           | ❌    |⠀⠀⠀⠀⠀⠀⠀⠀| Happiny Egg          | ❌    |
 | Fossils             | ❌    |⠀⠀⠀⠀⠀⠀⠀⠀| Riolu Egg            | ❌    |

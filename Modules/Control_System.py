@@ -86,13 +86,13 @@ def search_wild_pokemon(image, state):
         if not is_black_screen_visible(image):
             return 'MOVE_PLAYER'
 
-    # Failed escapping (Both Pokémon in the field)
+    # Failed escaping (Both Pokémon in the field)
     elif state == 'ESCAPE_FAILED_1':
         # Look for the life box
         if is_life_box_visible(image):
             return 'ESCAPE_FAILED_2'
 
-    # Failed escapping (Escaping combat)
+    # Failed escaping (Escaping combat)
     elif state == 'ESCAPE_FAILED_2':
         # Look for the text box
         if is_text_box_visible(image):
@@ -335,6 +335,109 @@ def starter_encounter(image, state):
         state = _check_common_states(image, state)
         # We need to check the starter pokémon, not the wild one
         if state == 'ENTER_COMBAT_3': state = 'ENTER_COMBAT_3B'
+
+    return state
+
+###########################################################################################################################
+###########################################################################################################################
+
+# This is a faster loop for static shaymin on BDSP as it does not close and open the game on each try
+def shaymin_encounter(image, state):
+    global state_timer
+    if not state: return 'WAIT_PAIRING_SCREEN'
+
+    # Nintendo Switch pairing controller menu
+    elif state == 'WAIT_HOME_SCREEN':
+        # Look for the top-left nintendo switch main menu pixel
+        if image.check_pixel_color(CONST.HOME_MENU_COLOR): 
+            return 'ENTER_STATIC_COMBAT_1'
+
+    # Game loaded, player in the overworld
+    elif state == 'ENTER_STATIC_COMBAT_1':
+        # Look for the text box
+        if is_overworld_visible(image):
+            return 'ENTER_STATIC_COMBAT_2'
+
+    # Game loaded, player in the overworld
+    elif state == 'ENTER_STATIC_COMBAT_2':
+        # Look if the text box has disappeared
+        if not is_overworld_visible(image):
+            state_timer = time()
+            return 'ENTER_STATIC_COMBAT_3'
+
+    # Game loaded, player in the overworld
+    # Some static encounters make a white screen flash before entering the combat
+    elif state == 'ENTER_STATIC_COMBAT_3' and time() - state_timer >= CONST.STATIC_ENCOUNTERS_DELAY:
+        # Look for the load combat white screen
+        if is_load_fight_white_screen(image):
+            state_timer = time()
+            return 'ENTER_COMBAT_1'
+    
+    # Game loading, full black screen
+    elif state == 'RESTART_GAME_4':
+        # Check if the black screen has ended
+        if not is_black_screen_visible(image):
+            return 'ENTER_STATIC_COMBAT_1'
+
+    # Combat loaded (Wild Pokémon stars)
+    elif state == 'CHECK_SHINY':
+        # Look for the text box
+        if is_text_box_visible(image):
+            return 'ESCAPE_COMBAT_1'
+
+        # Check the elapsed time
+        if image.shiny_detection_time and time() - image.shiny_detection_time >= CONST.SHINY_DETECTION_TIME:
+            return 'SHINY_FOUND'
+    
+    # Combat loaded (Both Pokémon in the field)
+    elif state == 'ESCAPE_COMBAT_1':
+        # Look for the life box
+        if is_life_box_visible(image):
+            return 'ESCAPE_COMBAT_2'
+
+    # Combat loaded (Escaping combat)
+    elif state == 'ESCAPE_COMBAT_2':
+        # Look for the text box
+        if is_text_box_visible(image):
+            return 'ESCAPE_COMBAT_3'
+
+    # Combat loaded (Escaping combat)
+    elif state == 'ESCAPE_COMBAT_3':
+        # Check if the text box has disappeared
+        if not is_text_box_visible(image):
+            return 'ESCAPE_COMBAT_4'
+
+    # Combat loaded (Escaped combat / Failed escaping)
+    elif state == 'ESCAPE_COMBAT_4':
+        # Look for the black screen
+        if is_black_screen_visible(image):
+            return 'ESCAPE_COMBAT_5'
+        # Look for the life box (Escape has failed)
+        elif is_life_box_visible(image):
+            return 'ESCAPE_FAILED_1'
+
+    elif state == 'ESCAPE_COMBAT_5':
+        # Check if the black screen has ended
+        if not is_black_screen_visible(image):
+            return 'WALK_DOWN_THEN_UP'
+
+    elif state == 'ESCAPE_FAILED_1':
+        # Look for the life box
+        if is_life_box_visible(image):
+            return 'ESCAPE_FAILED_2'
+
+    # Failed escaping (Escaping combat)
+    elif state == 'ESCAPE_FAILED_2':
+        # Look for the text box
+        if is_text_box_visible(image):
+            return 'ESCAPE_COMBAT_3'
+
+    elif state == 'WALK_DOWN_THEN_UP':
+        #After returning to the original position we begin the event again
+        if is_text_box_visible(image):
+            return 'ENTER_STATIC_COMBAT_1'
+
+    else: return _check_common_states(image, state)
 
     return state
 
