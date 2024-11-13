@@ -15,6 +15,10 @@ SKIPPED_FRAMES_TO_RECONNECT = 3
 # Used to debug issues and to save the video of the encounter. Disable this if you have performance issues
 ENABLE_VIDEO_RECORDING = True
 
+# Video size to save. ORIGINAL: Original size (ORIGINAL_FRAME_SIZE) | RESIZED: Resized size (MAIN_FRAME_SIZE)
+# If you have performance issues, use RESIZED
+SAVED_VIDEO_SIZE = 'ORIGINAL'
+
 ###########################################################################################################################
 #################################################     IMAGE PROCESSING     ################################################
 ###########################################################################################################################
@@ -38,8 +42,11 @@ TEXT_PARAMS = {
 PRESSED_BUTTON_COLOR = (255, 0, 200)
 SAVE_IMAGES = True
 IMAGES_FOLDER_PATH = 'Media/Images/'
+
 # Image size to save. ORIGINAL: Original size (ORIGINAL_FRAME_SIZE) | RESIZED: Resized size (MAIN_FRAME_SIZE)
+# If you have performance issues, use RESIZED
 SAVED_IMAGE_SIZE = 'ORIGINAL'
+
 # [BYTES] 1GB = 1073741824B
 CRITICAL_AVAILABLE_SPACE = 1*1073741824
 PIXEL_COLOR_DIFF_THRESHOLD = 7
@@ -107,7 +114,7 @@ STATIC_ENCOUNTERS_DELAY = 2
 # How long has the bot been stuck in the same state before restarting the game
 STUCK_TIMER_SECONDS = 30
 SHINY_DETECTION_TIME = 2.5
-SWSH_SHINY_DETECTION_TIME = 1.8
+SWSH_SHINY_DETECTION_TIME = 2
 HOME_MENU_COLOR = (237, 237, 237)
 PAIRING_MENU_COLOR = (135, 135, 125)
 LOAD_SCREEN_BLACK_COLOR = (5, 5, 5)
