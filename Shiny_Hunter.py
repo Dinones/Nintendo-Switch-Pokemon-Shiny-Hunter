@@ -241,7 +241,7 @@ def controller_control(controller, shutdown_event):
         elif aux_current_event == 'STARTER_SELECTION_3': accept_selection_box_macro(controller)
         elif aux_current_event == 'ESCAPE_COMBAT_2': escape_combat_macro(controller)
         elif aux_current_event == 'STOP_1': stop_macro(controller)
-        elif aux_current_event == 'RESPAWN_SHAYMIN': walk_down_and_up_for_shaymin_respawn(controller)
+        elif aux_current_event == 'RESPAWN_SHAYMIN': bdsp_respawn_shaymin(controller)
 
         # Don't care about race conditions here
         controller.previous_event = aux_current_event
