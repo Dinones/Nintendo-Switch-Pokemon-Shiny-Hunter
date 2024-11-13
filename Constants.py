@@ -113,8 +113,8 @@ STATIC_ENCOUNTERS_DELAY = 2
 
 # How long has the bot been stuck in the same state before restarting the game
 STUCK_TIMER_SECONDS = 25
+# Time to wait before detecting a shiny, used for BDSP and SWSH
 SHINY_DETECTION_TIME = 2
-SWSH_SHINY_DETECTION_TIME = 2
 HOME_MENU_COLOR = (237, 237, 237)
 PAIRING_MENU_COLOR = (135, 135, 125)
 LOAD_SCREEN_BLACK_COLOR = (5, 5, 5)
