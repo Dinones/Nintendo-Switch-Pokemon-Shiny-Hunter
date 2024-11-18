@@ -20,11 +20,13 @@ if __name__ == '__main__':
         print(f'\n{COLOR_str.NOT_SUDO}')
         program_name = __file__.split('/')[-1]
         exit(os.system(f'sudo python3 {program_name}'))
-
+        
+import discord
 import copy
 from queue import Queue
 from time import sleep, time
-from threading import Thread, Event, Timer
+from threading import Event, Timer, Thread
+import threading
 
 from Macros import *
 from Database import *
@@ -41,6 +43,12 @@ from Switch_Controller import Switch_Controller
 ###########################################################################################################################
 #################################################     INITIALIZATIONS     #################################################
 ###########################################################################################################################
+
+USER_ID = CONST.DISCORD_USER_ID
+
+# Create a global client instance
+client = discord.Client(intents=discord.Intents.default())
+
 
 def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, stop_event):
     Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
@@ -187,6 +195,9 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                         .replace('{pokemon}', pokemon_name)
                         .replace('{encounters}', str(global_encounters - last_shiny_encounter))
                     )
+                    #checks if pokemon_name is defined in the occasion that the progrem closes before setting the variable
+                    if CONST.DISCORD_USER_ID != "":
+                        StartBot()
                     stop_event.set()
             else: shiny_timer = time()
 
@@ -272,6 +283,21 @@ def check_threads(threads, shutdown_event):
 ###########################################################################################################################
 
 if __name__ == "__main__":
+    def StartBot():
+        print(" ")
+        client.run(CONST.DISCORD_BOT_KEY)
+    
+    @client.event
+    async def on_ready():	
+        print('\n' + COLOR_str.DISCORD.replace('{module}', 'Shiny Hunter'))
+        user = await client.fetch_user(USER_ID)
+        await user.send('A shiny has been found!')
+        print(" ")
+        await client.close()
+        
+    #######################################################################################################################
+    #######################################################################################################################
+
     def main_menu():
         print('\n' + COLOR_str.MENU.replace('{module}', 'Shiny Hunter'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Start wild shiny hunter'))
@@ -405,11 +431,10 @@ if __name__ == "__main__":
         # Blocking function until the GUI is closed
         GUI_App.exec_()
         shutdown_event.set()
-
+        
         print(COLOR_str.RELEASING_THREADS
-            .replace('{module}', 'Shiny Hunter')
-            .replace('{threads}', str(len(threads))) + '\n'
-        )
+        .replace('{module}', 'Shiny Hunter')
+        .replace('{threads}', str(len(threads))) + '\n')
 
     #######################################################################################################################
     #######################################################################################################################
