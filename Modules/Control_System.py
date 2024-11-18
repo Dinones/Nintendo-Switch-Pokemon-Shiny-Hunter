@@ -419,7 +419,7 @@ def shaymin_encounter(image, state):
     elif state == 'ESCAPE_COMBAT_5':
         # Check if the black screen has ended
         if not is_black_screen_visible(image):
-            return 'WALK_DOWN_THEN_UP'
+            return 'RESPAWN_SHAYMIN'
 
     elif state == 'ESCAPE_FAILED_1':
         # Look for the life box
@@ -432,7 +432,7 @@ def shaymin_encounter(image, state):
         if is_text_box_visible(image):
             return 'ESCAPE_COMBAT_3'
 
-    elif state == 'WALK_DOWN_THEN_UP':
+    elif state == 'RESPAWN_SHAYMIN':
         #After returning to the original position we begin the event again
         if is_text_box_visible(image):
             return 'ENTER_STATIC_COMBAT_1'

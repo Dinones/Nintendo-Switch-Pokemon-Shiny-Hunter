@@ -222,7 +222,7 @@ def wait_and_press_single_button(controller, seconds, button):
 
 # This macro is for static shaymin on bdsp. Walking down and then up reload the zone
 # and shaymin respawns. This is faster than closing and opening the game by about 20 seconds
-def walk_down_and_up_for_shaymin_respawn(controller):
+def bdsp_respawn_shaymin(controller):
     # Wait 1.5 seconds for the escape from combat animation to end
     sleep(1.5)
     # Press button A to close aftercombat textbox just in case
