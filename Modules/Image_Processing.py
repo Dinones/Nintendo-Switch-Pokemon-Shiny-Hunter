@@ -11,10 +11,9 @@ if __name__ == '__main__':
 import cv2
 import pytesseract
 import numpy as np
-from time import time
+from time import time, perf_counter
 import PyQt5.QtGui as pyqt_g
 
-# import sys; sys.path.append('..')
 import sys; sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import Colored_Strings as COLOR_str
 import Constants as CONST
@@ -438,11 +437,25 @@ if __name__ == "__main__":
     #######################################################################################################################
 
     def check_lost_shiny(option):
+        """
+        Display images one by one.
+        The user can pause/resume the processing using the space bar.
+        While paused, the user can navigate between images using the 'a' (previous) and 'd' (next) keys.
+        The user can quit the process using the 'q' key.
+
+        Key Presses:
+            - 'q' or 'Q': Quit the image processing loop.
+            - ' ' (space): Pause or resume the image processing.
+            - 'a' or 'A': Move to the previous image (while paused).
+            - 'd' or 'D': Move to the next image (while paused).
+            - If not paused, images will automatically progress.
+        """
+
         print('\n' + COLOR_str.SELECTED_OPTION
             .replace('{module}', 'Image Processing')
             .replace('{option}', f"{option}")
-            .replace('{action}', f"Checking lost shiny")
-            .replace('{path}', f"")
+            .replace('{action}', "Checking lost shiny")
+            .replace('{path}', "")
         )
 
         if not os.path.exists(f'../{CONST.IMAGES_FOLDER_PATH}'):
@@ -471,34 +484,60 @@ if __name__ == "__main__":
             .replace('{instruction}', 'stop the program'))
 
         index = 0
+        cached_index = -1
         pause = False
-        timer = time()
-        second_text_position = [CONST.TEXT_PARAMS['position'][0], CONST.TEXT_PARAMS['position'][1] + 20]           
+        second_text_position = [CONST.TEXT_PARAMS['position'][0], CONST.TEXT_PARAMS['position'][1] + 20]
 
-        while True and (index) != len(images):
-            if time() - timer >= 0.1:
-                image = Image_Processing(f'../{CONST.IMAGES_FOLDER_PATH}/{images[index]}')
-                image.resize_image()
-                cv2.putText(image.resized_image, f'Count: {index + 1}/{len(images)}', CONST.TEXT_PARAMS['position'],
-                    cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'],
-                    CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
-                cv2.putText(image.resized_image, f'{images[index]}', second_text_position,
-                    cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'],
-                    CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
-                if type(image.resized_image) is not type(None):
+        while index < len(images):
+            # Start measuring the iteration time
+            iteration_start = perf_counter()
+
+            # Process only if the index has changed
+            if index != cached_index:
+                try:
+                    # Load and process the image
+                    image = Image_Processing(f'../{CONST.IMAGES_FOLDER_PATH}/{images[index]}')
+                    image.resize_image()
+
+                    # Prepare text for overlay
+                    count_text = f'Count: {index + 1}/{len(images)}'
+                    image_name = images[index]
+
+                    # Add text to the image
+                    cv2.putText(image.resized_image, count_text, CONST.TEXT_PARAMS['position'],
+                                cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'],
+                                CONST.TEXT_PARAMS['font_color'], CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
+                    cv2.putText(image.resized_image, image_name, second_text_position,
+                                cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'],
+                                CONST.TEXT_PARAMS['font_color'], CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
+
+                    # Display the updated image
                     cv2.imshow(f'{CONST.BOT_NAME} - Lost Shiny Checker', image.resized_image)
 
-                if not pause: index += 1
-                timer = time()
+                    # Update cached index
+                    cached_index = index
+                except Exception as e:
+                    logging.error(f"Error processing image {images[index]}: {e}")
+                    # Automatically move to the next image on error
+                    index = min(index + 1, len(images) - 1)
+                    continue
 
-            # Press 'SPACE' to resume the execution
-            # Press 'a' or 'd' to move between frames
-            # Press 'q' to stop the program
-            key = cv2.waitKey(1)
-            if key in [ord('q'), ord('Q')]: break
-            elif key == ord(' '): pause = not pause
-            elif pause and key in [ord('a'), ord('A')]: index -= 1
-            elif pause and key in [ord('d'), ord('D')]: index += 1
+            # Calculate the remaining time for the iteration
+            iteration_duration = perf_counter() - iteration_start
+            remaining_time_ms = int(max(0.0, 0.1 - iteration_duration) * 1000)
+
+            # Handle keyboard inputs and wait
+            key = cv2.waitKey(remaining_time_ms)
+            if key in [ord('q'), ord('Q')]:  # Quit
+                break
+            elif key == ord(' '):  # Pause or resume
+                pause = not pause
+            elif pause and key in [ord('a'), ord('A')]:  # Previous image
+                index = max(0, index - 1)  # Ensure index is not negative
+            elif pause and key in [ord('d'), ord('D')]:  # Next image
+                index = min(len(images) - 1, index + 1)  # Ensure index stays in range
+            elif not pause:  # Automatically move to the next image
+                index += 1
 
         sleep(1)
         print(COLOR_str.SUCCESS_EXIT_PROGRAM
