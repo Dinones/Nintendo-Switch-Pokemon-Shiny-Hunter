@@ -526,7 +526,7 @@ if __name__ == "__main__":
 
             # Calculate the remaining time for the iteration
             iteration_duration = perf_counter() - iteration_start
-            remaining_time_ms = int(max(0.001, 0.1 - iteration_duration) * 1000)
+            remaining_time_ms = int(max(0.001, CONST.CHECK_LOST_SHINY_TIME - iteration_duration) * 1000)
 
             # Handle keyboard inputs and wait
             key = cv2.waitKey(remaining_time_ms)

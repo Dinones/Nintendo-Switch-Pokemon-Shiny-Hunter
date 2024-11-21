@@ -41,6 +41,8 @@ IMAGES_FOLDER_PATH = 'Media/Images/'
 # [BYTES] 1GB = 1073741824B
 CRITICAL_AVAILABLE_SPACE = 1*1073741824
 PIXEL_COLOR_DIFF_THRESHOLD = 7
+# [SECONDS] Time the program will take to switch between the images
+CHECK_LOST_SHINY_TIME=0.1
 
 ###########################################################################################################################
 #######################################################     GUI     #######################################################
