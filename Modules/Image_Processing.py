@@ -4,6 +4,8 @@
 
 # Set the cwd to the one of the file
 import os
+import logging
+
 if __name__ == '__main__':
     try: os.chdir(os.path.dirname(__file__))
     except: pass
@@ -517,14 +519,14 @@ if __name__ == "__main__":
                     # Update cached index
                     cached_index = index
                 except Exception as e:
-                    logging.error(f"Error processing image {images[index]}: {e}")
+                    logging.error(f"Error processing image %s: %s", images[index], e)
                     # Automatically move to the next image on error
                     index = min(index + 1, len(images) - 1)
                     continue
 
             # Calculate the remaining time for the iteration
             iteration_duration = perf_counter() - iteration_start
-            remaining_time_ms = int(max(0.0, 0.1 - iteration_duration) * 1000)
+            remaining_time_ms = int(max(0.001, 0.1 - iteration_duration) * 1000)
 
             # Handle keyboard inputs and wait
             key = cv2.waitKey(remaining_time_ms)
