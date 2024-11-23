@@ -16,7 +16,7 @@ import subprocess
 from time import sleep
 from queue import Queue
 from cllist import dllist
-from playsound import playsound
+from playsound3 import playsound
 
 import sys; sys.path.append('..')
 import Colored_Strings as COLOR_str

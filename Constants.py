@@ -93,7 +93,7 @@ IMAGES_COUNT_WARNING = 300
 # Time the player is moving in each direction
 WILD_WALKING_SECONDS = 1
 # 'NS': Up/Down | 'EW': Right/Left
-WILD_WALKING_DIRECTION = 'NS'
+WILD_WALKING_DIRECTION = 'EW'
 MOVE_FORWARD_STATIC_ENCOUNTER = False
 SKIP_UPDATING_GAME = False
 
@@ -105,8 +105,12 @@ SKIP_UPDATING_GAME = False
 # - Regigigas: 7
 STATIC_ENCOUNTERS_DELAY = 2
 
-# How long has the bot been stuck in the same state before restarting the game
+# [SECONDS] How long has the bot been stuck in the same state before trying to restart the game
 STUCK_TIMER_SECONDS = 25
+# [SECONDS] How long no pokemon has been found before completely stopping program (ERROR)
+FAILURE_DETECTION_TIME_WARN = 3*60
+# [SECONDS] How long no pokemon has been found before completely stopping program (ERROR)
+FAILURE_DETECTION_TIME_ERROR = 5*60
 SHINY_DETECTION_TIME = 2
 HOME_MENU_COLOR = (237, 237, 237)
 PAIRING_MENU_COLOR = (135, 135, 125)
@@ -162,8 +166,6 @@ MESSAGES_PLACEHOLDER_IMAGE = 'Media/Messages/Dinones.png'
 MESSAGES_ERROR_IMAGE = 'Media/Messages/Dizzy Dinones.png'
 SHINY_HTML_PATH = 'Modules/Mail/Shiny.html'
 ERROR_HTML_PATH = 'Modules/Mail/Error.html'
-# [SECONDS] Send a notification if no pokemon has been found in this time
-FAILURE_DETECTION_TIME = 5*60
 
 TELEGRAM_NOTIFICATIONS = False
 TELEGRAM_SETTINGS = {

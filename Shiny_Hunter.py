@@ -42,6 +42,11 @@ from Switch_Controller import Switch_Controller
 #################################################     INITIALIZATIONS     #################################################
 ###########################################################################################################################
 
+Email = Email_Sender()
+Telegram = Telegram_Sender()
+
+###########################################################################################################################
+
 def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, stop_event):
     Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
     if not Video_Capture.video_capture.isOpened(): 
@@ -72,8 +77,6 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
     last_shiny_encounter = database_data['last_shiny_encounter']
 
     last_saved_image_path = str()
-    Email = Email_Sender()
-    Telegram = Telegram_Sender()
 
     while not shutdown_event.is_set():
         image = Image_Processing(Video_Capture.read_frame())
@@ -113,26 +116,42 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
             elif Encounter_Type == 'STARTER': Controller.current_event = starter_encounter(image, Controller.current_event)
             elif Encounter_Type == 'SHAYMIN': Controller.current_event = shaymin_encounter(image, Controller.current_event)
 
-            # If no pokemon is found for too long, stop
-            if Controller.current_event != 'SHINY_FOUND' and time() - encounter_playtime > CONST.FAILURE_DETECTION_TIME:
-                Thread(target=lambda: Telegram.send_error_detected(), daemon=False).start()
-                Thread(target=lambda: Email.send_error_detected(), daemon=False).start()
-                print(COLOR_str.STUCK_FOR_TOO_LONG
-                    .replace('{module}', 'Shiny Hunter')
-                    .replace('{event}', Controller.current_event)
-                )
-                shutdown_event.set()
-
-            # Check if the program got stuck in some event
+            # If stuck in the same state for STUCK_TIMER_SECONDS, restart the game
             if (Controller.current_event not in 
                 ["MOVE_PLAYER", "WAIT_PAIRING_SCREEN", "WAIT_HOME_SCREEN", "SHINY_FOUND", "ENTER_LAKE_4"] and \
                 Controller.current_event == Controller.previous_event and \
-                time() - stuck_timer > CONST.STUCK_TIMER_SECONDS) or time() - stuck_timer > 120:
+                time() - stuck_timer > CONST.STUCK_TIMER_SECONDS):
+                    print(COLOR_str.STUCK_FOR_TOO_LONG_WARN_1
+                        .replace('{module}', 'Shiny Hunter')
+                        .replace('{event}', Controller.current_event)
+                        .replace('{seconds}', str(CONST.STUCK_TIMER_SECONDS))
+                    )
                     stuck_timer = time()
                     # If stuck in "RESTART_GAME_1", it would be stuck forever
                     Controller.previous_event = None
                     Controller.current_event = "RESTART_GAME_1"
-                    if CONST.SAVE_ERROR_VIDEOS: Video_Capture.save_video(f'Error - {time()}')
+                    if CONST.SAVE_ERROR_VIDEOS: Video_Capture.save_video(f'State Stuck Error - {time()}')
+            # If stuck in a loop where state changes, but no pokémon is found, restart the game
+            elif Controller.current_event not in \
+                ["RESTART_GAME_1", "WAIT_PAIRING_SCREEN", "WAIT_HOME_SCREEN", "SHINY_FOUND", "ENTER_LAKE_4"] and \
+                CONST.FAILURE_DETECTION_TIME_WARN < time() - encounter_playtime < CONST.FAILURE_DETECTION_TIME_WARN + 3:
+                    print(COLOR_str.STUCK_FOR_TOO_LONG_WARN_2
+                        .replace('{module}', 'Shiny Hunter')
+                        .replace('{minutes}', str(CONST.FAILURE_DETECTION_TIME_WARN//60))
+                    )
+                    stuck_timer = time()
+                    Controller.current_event = "RESTART_GAME_1"
+                    if CONST.SAVE_ERROR_VIDEOS: Video_Capture.save_video(f'Loop Stuck Error - {time()}')
+            # If no pokemon is found for FAILURE_DETECTION_TIME_ERROR, stop the program
+            elif Controller.current_event != 'SHINY_FOUND' and \
+                time() - encounter_playtime > CONST.FAILURE_DETECTION_TIME_ERROR:
+                    Thread(target=lambda: Telegram.send_error_detected('STUCK'), daemon=False).start()
+                    Thread(target=lambda: Email.send_error_detected('STUCK'), daemon=False).start()
+                    print(COLOR_str.STUCK_FOR_TOO_LONG_ERROR
+                        .replace('{module}', 'Shiny Hunter')
+                        .replace('{minutes}', str(CONST.FAILURE_DETECTION_TIME_ERROR//60))
+                    )
+                    shutdown_event.set()
             elif Controller.current_event != Controller.previous_event: stuck_timer = time()
 
             # Start recording a new video
@@ -143,6 +162,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
 
             # Save the last frame where the name of the pokemon appears in the text box
             elif Controller.current_event in ['ENTER_COMBAT_3', 'ENTER_COMBAT_5']: pokemon_image = image
+
             # Update the database
             elif Controller.current_event == "CHECK_SHINY" and type(pokemon_image) != type(None):
                 pokemon_name = pokemon_image.recognize_pokemon()
@@ -264,6 +284,10 @@ def check_threads(threads, shutdown_event):
                     .replace('{module}', 'Shiny Hunter')
                     .replace('{thread}', thread['function'])
                 )
+                Thread(
+                    target=lambda: Telegram.send_error_detected('THREAD_DIED', thread['function']), daemon=False
+                ).start()
+                Thread(target=lambda: Email.send_error_detected('THREAD_DIED', thread['function']), daemon=False).start()
                 shutdown_event.set()
         sleep(5)
 
