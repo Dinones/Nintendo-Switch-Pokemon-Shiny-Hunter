@@ -151,7 +151,7 @@ DATABASE_PATH = 'Media/Database.db'
 ###########################################################################################################################
 
 # You will receive mail notifications when a shiny is found or an error occurs
-MAIL_NOTIFICATIONS = True
+MAIL_NOTIFICATIONS = False
 # If you have configured the email notifications, fill in the following fields
 MAIL_SETTINGS = {
     'port': 587,                        # Port TLS: 587 | SSL: 465

@@ -197,10 +197,18 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                     Video_Capture.save_video(f'Shiny {pokemon_name} - {time()}')
                     Thread(target=lambda: play_sound(f'./{CONST.SHINY_SOUND_PATH}'), daemon=True).start()
                     Thread(target=lambda: 
-                        Email.send_shiny_found(pokemon_name, last_saved_image_path), daemon=False
+                        Email.send_shiny_found(
+                            pokemon_name, 
+                            last_saved_image_path, 
+                            global_encounters - last_shiny_encounter
+                        ), daemon=False
                     ).start()
                     Thread(target=lambda: 
-                        Telegram.send_shiny_found(pokemon_name, last_saved_image_path), daemon=False
+                        Telegram.send_shiny_found(
+                            pokemon_name, 
+                            last_saved_image_path, 
+                            global_encounters - last_shiny_encounter
+                        ), daemon=False
                     ).start()
                     print(COLOR_str.SHINY_FOUND
                         .replace('{module}', 'Shiny Hunter')

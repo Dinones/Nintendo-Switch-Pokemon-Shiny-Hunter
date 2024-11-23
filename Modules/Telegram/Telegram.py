@@ -17,7 +17,7 @@ import Colored_Strings as COLOR_str
 #################################################     INITIALIZATIONS     #################################################
 ###########################################################################################################################
 
-SHINY_FOUND_MESSAGE = "A shiny {pokemon_name} has been found!"
+SHINY_FOUND_MESSAGE = "A shiny <b>{pokemon_name}</b> has been found! It took <b>{n_encounters}</b> encounters to find it."
 
 ###########################################################################################################################
 
@@ -109,10 +109,10 @@ class Telegram_Sender():
 
     #######################################################################################################################
 
-    def send_shiny_found(self, pokemon_name: str, image_name: str) -> None:
+    def send_shiny_found(self, pokemon_name: str, image_name: str, n_encounters: int) -> None:
         if not CONST.TELEGRAM_NOTIFICATIONS or not self._check_valid_credentials(): return
 
-        text = SHINY_FOUND_MESSAGE.format(pokemon_name=pokemon_name)
+        text = SHINY_FOUND_MESSAGE.replace('{pokemon_name}', pokemon_name).replace('{n_encounters}', str(n_encounters))
         image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), f'../../{image_name}'))
         self._send_telegram(text, image_path)
 
@@ -147,6 +147,10 @@ class Telegram_Sender():
 ###########################################################################################################################
 
 if __name__ == "__main__":
+    from random import randint
+
+    #######################################################################################################################
+
     def main_menu():
         print('\n' + COLOR_str.MENU.replace('{module}', 'Telegram'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Send shiny notification'))
@@ -175,7 +179,7 @@ if __name__ == "__main__":
         )
 
         Telegram = Telegram_Sender()
-        if option == '1': Telegram.send_shiny_found('Dinones', None)
+        if option == '1': Telegram.send_shiny_found('Dinones', None, randint(1, 10000))
         if option == '2': 
             Telegram.send_error_detected('STUCK')
             Telegram.send_error_detected('THREAD_DIED', 'GUI_control')
