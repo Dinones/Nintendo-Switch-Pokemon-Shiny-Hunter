@@ -53,7 +53,7 @@ def fast_start_macro(controller):
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME])
     controller.current_button_pressed = ''
     sleep(2); controller.current_button_pressed = 'A'
-    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A])
+    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A], down=0.03)
     sleep(1)
 
 ###########################################################################################################################
@@ -145,7 +145,7 @@ def escape_combat_macro(controller):
     if controller.previous_event != controller.current_event: 
         sleep(0.5)
         controller.current_button_pressed = 'UP'
-        controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.DPAD_UP], down=0.3)
+        controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.DPAD_UP], down=0.2)
     else:
         sleep(0.1)
         controller.current_button_pressed = 'A'
