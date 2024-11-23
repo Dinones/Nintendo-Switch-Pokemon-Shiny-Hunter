@@ -434,12 +434,10 @@ if __name__ == "__main__":
             )
             return
         image.resize_image()
+        image.FPS_image = image.resized_image
 
         def test_GUI_control(shutdown_event):
             while not shutdown_event.is_set():
-                FPS.get_FPS()
-                image.draw_FPS(FPS.FPS)
-
                 update_items = {
                     'image': image,
                     'current_state': 'TESTING',
