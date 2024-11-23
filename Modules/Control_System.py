@@ -39,7 +39,7 @@ def search_wild_pokemon(image, state):
     # Game loaded, player in the overworld
     elif state == 'MOVE_PLAYER':
         # Look for the load combat white screen
-        if is_load_fight_white_screen(image):
+        if is_load_fight_white_screen_visible(image):
             state_timer = time()
             return 'ENTER_COMBAT_1'
 
@@ -138,7 +138,7 @@ def static_encounter(image, state):
     # Some static encounters make a white screen flash before entering the combat
     elif state == 'ENTER_STATIC_COMBAT_3' and time() - state_timer >= CONST.STATIC_ENCOUNTERS_DELAY:
         # Look for the load combat white screen
-        if is_load_fight_white_screen(image):
+        if is_load_fight_white_screen_visible(image):
             state_timer = time()
             return 'ENTER_COMBAT_1'
 
@@ -286,7 +286,7 @@ def shaymin_encounter(image, state):
     # Some static encounters make a white screen flash before entering the combat
     elif state == 'ENTER_STATIC_COMBAT_3' and time() - state_timer >= CONST.STATIC_ENCOUNTERS_DELAY:
         # Look for the load combat white screen
-        if is_load_fight_white_screen(image):
+        if is_load_fight_white_screen_visible(image):
             state_timer = time()
             return 'ENTER_COMBAT_1'
     
@@ -395,7 +395,7 @@ def _check_common_states(image, state):
     # Some wild encounters missdetect this state with the grass animation
     elif state == 'ENTER_COMBAT_1' and time() - state_timer >= 0.5:
         # Check if the white load screen has ended
-        if not is_load_fight_white_screen(image):
+        if not is_load_fight_white_screen_visible(image):
             return 'ENTER_COMBAT_2'
 
     # Combat loadscreen (Grass/Rock/Water animation, wild pokémon appearing)
@@ -445,7 +445,7 @@ def is_black_screen_visible(image):
     Returns:
         bool: True if the black screen is visible, False otherwise.
     """
-    return is_life_box_visible(image, CONST.LOAD_SCREEN_BLACK_COLOR)
+    return is_load_fight_white_screen_visible(image, CONST.LOAD_SCREEN_BLACK_COLOR)
 
 ###########################################################################################################################
 
@@ -487,7 +487,7 @@ def is_overworld_visible(image):
 
 ###########################################################################################################################
 
-def is_load_fight_white_screen(image):
+def is_load_fight_white_screen_visible(image, color=CONST.TEXT_BOX_LINE['color']):
     """
     Checks if the white screen is visible in the given image.
     Args:
@@ -498,22 +498,22 @@ def is_load_fight_white_screen(image):
     is_bottom_left_white = image.check_multiple_pixel_colors(
         [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
         [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']],
-        CONST.TEXT_BOX_LINE['color'])
+        color)
 
     is_bottom_right_white = image.check_multiple_pixel_colors(
         [CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
         [CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']],
-        CONST.TEXT_BOX_LINE['color'])
+        color)
 
     is_top_left_white = image.check_multiple_pixel_colors(
         [CONST.TEXT_BOX_LINE['x'], CONST.MAIN_FRAME_SIZE[1] - CONST.TEXT_BOX_LINE['y2']],
         [CONST.TEXT_BOX_LINE['x'], CONST.MAIN_FRAME_SIZE[1] - CONST.TEXT_BOX_LINE['y1']],
-        CONST.TEXT_BOX_LINE['color'])
+        color)
 
     is_top_right_white = image.check_multiple_pixel_colors(
         [CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.MAIN_FRAME_SIZE[1] - CONST.TEXT_BOX_LINE['y2']],
         [CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.MAIN_FRAME_SIZE[1] - CONST.TEXT_BOX_LINE['y1']],
-        CONST.TEXT_BOX_LINE['color'])
+        color)
 
     return is_bottom_left_white and is_bottom_right_white and is_top_left_white and is_top_right_white
 
