@@ -187,6 +187,7 @@ class Email_Sender():
             replace_info = {
                 'pokemon_name': pokemon_name,
                 'trainer': receiver.split('@')[0].capitalize(),
+                'error_message': str()
             }
             content = self._create_content_with_html(SHINY_HTML_PATH, replace_info)
 
