@@ -34,6 +34,11 @@ class Image_Processing():
 
         # Used to send a notification to the user
         self.saved_image_path: str = ''
+        # Used to reduce workload by only populating debug images when a stat has changed
+        self.debug_image_stats = {
+            'event': '',
+            'button': ''
+        }
 
         # Load the image
         if isinstance(image, str): self.original_image = cv2.imread(image, cv2.IMREAD_UNCHANGED)
@@ -200,7 +205,35 @@ class Image_Processing():
     def replace_pixels(self, pixel_color):
         mask = np.all(self.original_image == pixel_color, axis=-1)
         self.original_image[mask] = CONST.TESTING_COLOR
-          
+
+    #######################################################################################################################
+
+    def populate_debug_image(self, stats):
+        cv2.putText(
+            self.FPS_image, f'Button: {stats.get("button")} | State: {stats.get("event")}', 
+            CONST.DEBUG_IMAGE_TEXT_PARAMS['position'], cv2.FONT_HERSHEY_SIMPLEX, 
+            CONST.DEBUG_IMAGE_TEXT_PARAMS['font_scale'], CONST.DEBUG_IMAGE_TEXT_PARAMS['font_color'], 
+            CONST.DEBUG_IMAGE_TEXT_PARAMS['thickness'], cv2.LINE_AA
+        )
+
+###########################################################################################################################
+
+def create_debug_image(frame_size = CONST.DEBUG_FRAME_SIZE):
+    black_image = np.zeros((frame_size[1], frame_size[0], 4), dtype=np.uint8)
+
+    # Same color as for the GUI borders (#aaa)
+    border_color = [170, 170, 170, 255] 
+    border_thickness = 1
+    black_image[:border_thickness, :] = border_color  # Top
+    black_image[-border_thickness:, :] = border_color  # Bottom
+    black_image[:, :border_thickness] = border_color  # Left
+    black_image[:, -border_thickness:] = border_color  # Right
+
+    debug_image = Image_Processing(black_image)
+    debug_image.FPS_image = np.copy(debug_image.original_image)
+
+    return debug_image
+
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
@@ -222,14 +255,17 @@ if __name__ == "__main__":
         print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Process video'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '3').replace('{option}', 'Extract frames from video'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '4').replace('{option}', 'Check lost shiny'))
+        print(COLOR_str.MENU_OPTION.replace('{index}', '5').replace('{option}', 'Test debug video frame'))
 
-        option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Image Processing'))
+        # option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Image Processing'))
+        option = '5'
 
         menu_options = {
             '1': process_image,
             '2': process_video,
             '3': extract_frames_from_video,
             '4': check_lost_shiny,
+            '5': check_debug_video_frames,
         }
 
         if option in menu_options: menu_options[option](option)
@@ -271,7 +307,7 @@ if __name__ == "__main__":
 
         print(COLOR_str.PRESS_KEY_TO_INSTRUCTION
             .replace('{module}', 'Image Processing')
-            .replace('{key}', "'q'")
+            .replace('{key}', 'any key')
             .replace('{instruction}', 'exit the program')
         )
 
@@ -470,7 +506,7 @@ if __name__ == "__main__":
             return print(COLOR_str.INVALID_PATH_ERROR
                 .replace('{module}', 'Image Processing')
                 .replace('{path}', f"'../{CONST.IMAGES_FOLDER_PATH}'") + '\n'
-        )
+            )
        
         images = sorted([image for image in sorted(os.listdir(f'../{CONST.IMAGES_FOLDER_PATH}'))
             if image.lower().endswith(('.png', '.jpg', 'jpeg'))])
@@ -559,6 +595,50 @@ if __name__ == "__main__":
             print(COLOR_str.DELETING_IMAGES.replace('{images}', str(len(images))))
             for image in images: os.remove(f'../{CONST.IMAGES_FOLDER_PATH}/{image}')
             print(COLOR_str.SUCCESSFULLY_DELETED_IMAGES.replace('{images}', str(len(images))) + '\n')
+
+    #######################################################################################################################
+    #######################################################################################################################
+
+    def check_debug_video_frames(option):
+        print('\n' + COLOR_str.SELECTED_OPTION
+            .replace('{module}', 'Image Processing')
+            .replace('{option}', f"{option}")
+            .replace('{action}', "Testing debug video frame")
+            .replace('{path}', "")
+        )
+
+        if not os.path.exists(f'../{CONST.TESTING_IMAGE_PATH}'):
+            return print(COLOR_str.INVALID_PATH_ERROR
+                .replace('{module}', 'Image Processing')
+                .replace('{path}', f"'../{CONST.TESTING_IMAGE_PATH}'") + '\n'
+            )
+
+        image = Image_Processing(f'../{CONST.TESTING_IMAGE_PATH}')
+        image.resize_image()
+
+        debug_image = create_debug_image()
+        stats = {
+            'event': 'STATE_WITH_SUPER_LARGE_NAME',
+            'button': 'HOME'
+        }
+        debug_image.populate_debug_image(stats)
+
+        combined_image = np.vstack((debug_image.FPS_image, image.resized_image))
+
+        print(COLOR_str.PRESS_KEY_TO_INSTRUCTION
+            .replace('{module}', 'Image Processing')
+            .replace('{key}', 'any key')
+            .replace('{instruction}', 'exit the program')
+        )
+
+        cv2.imshow(f'{CONST.BOT_NAME} - Debug Frame', combined_image)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+
+        print(COLOR_str.SUCCESS_EXIT_PROGRAM
+            .replace('{module}', 'Image Processing')
+            .replace('{reason}', 'Successfully processed the image!') + '\n'
+        )
 
     #######################################################################################################################
     #######################################################################################################################

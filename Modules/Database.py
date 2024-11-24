@@ -184,12 +184,12 @@ if __name__ == "__main__":
         )
 
         print()
-        path = f'../{CONST.DATABASE_PATH}' if action == 'normal' else f'../{CONST.TEST_DATABASE_PATH}'
+        path = f'../{CONST.DATABASE_PATH}' if action == 'normal' else f'../{CONST.TESTING_DATABASE_PATH}'
         initialize_database(path)
         if action == 'test':
             # The shiny one doesn't add an encounter to the global encounters of the pokemon
             # because the main program would add the encounter twice
-            add_or_update_encounter({'name': 'Arceus', 'shiny': True}, 15843, f'../{CONST.TEST_DATABASE_PATH}')
+            add_or_update_encounter({'name': 'Arceus', 'shiny': True}, 15843, f'../{CONST.TESTING_DATABASE_PATH}')
         data = get_all_data(path)
 
         days = int(data['global_playtime']//86400)
