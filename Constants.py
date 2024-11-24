@@ -186,6 +186,7 @@ TESTING_VIDEO_PATH = 'Media/Tests/XXXX.mp4'
 TESTING_IMAGE_PATH = 'Media/Tests/XXXX.png'
 TESTING_DATABASE_PATH = 'Media/Tests/Test_Database.db'
 SAVING_FRAMES_PATH = 'Media/Tests'
+DEBUG_VIDEO = False
 DEBUG_FRAME_SIZE = (720, 40)
 DEBUG_IMAGE_TEXT_PARAMS = {
     'font_scale': 0.8,

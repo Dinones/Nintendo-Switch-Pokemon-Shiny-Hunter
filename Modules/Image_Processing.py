@@ -209,12 +209,23 @@ class Image_Processing():
     #######################################################################################################################
 
     def populate_debug_image(self, stats):
-        cv2.putText(
-            self.FPS_image, f'Button: {stats.get("button")} | State: {stats.get("event")}', 
-            CONST.DEBUG_IMAGE_TEXT_PARAMS['position'], cv2.FONT_HERSHEY_SIMPLEX, 
-            CONST.DEBUG_IMAGE_TEXT_PARAMS['font_scale'], CONST.DEBUG_IMAGE_TEXT_PARAMS['font_color'], 
-            CONST.DEBUG_IMAGE_TEXT_PARAMS['thickness'], cv2.LINE_AA
-        )
+        # Only populates if something has changed to reduce workload
+        for key in stats:
+            if stats.get(key) != self.debug_image_stats.get(key):
+                cv2.putText(
+                    self.FPS_image, f'Button: {stats.get("button")} | State: {stats.get("event")}', 
+                    CONST.DEBUG_IMAGE_TEXT_PARAMS['position'], cv2.FONT_HERSHEY_SIMPLEX, 
+                    CONST.DEBUG_IMAGE_TEXT_PARAMS['font_scale'], CONST.DEBUG_IMAGE_TEXT_PARAMS['font_color'], 
+                    CONST.DEBUG_IMAGE_TEXT_PARAMS['thickness'], cv2.LINE_AA
+                )
+                break
+
+    #######################################################################################################################
+
+    @staticmethod
+    def stack_images(image_1, image_2):
+        # Vertical stack. Image_1 Top - Image_2 - Bottom
+        return np.vstack((image_1, image_2))
 
 ###########################################################################################################################
 
@@ -257,8 +268,7 @@ if __name__ == "__main__":
         print(COLOR_str.MENU_OPTION.replace('{index}', '4').replace('{option}', 'Check lost shiny'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '5').replace('{option}', 'Test debug video frame'))
 
-        # option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Image Processing'))
-        option = '5'
+        option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Image Processing'))
 
         menu_options = {
             '1': process_image,
@@ -623,7 +633,7 @@ if __name__ == "__main__":
         }
         debug_image.populate_debug_image(stats)
 
-        combined_image = np.vstack((debug_image.FPS_image, image.resized_image))
+        combined_image = debug_image.stack_images(debug_image.FPS_image, image.resized_image)
 
         print(COLOR_str.PRESS_KEY_TO_INSTRUCTION
             .replace('{module}', 'Image Processing')
