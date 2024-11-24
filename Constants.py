@@ -178,11 +178,11 @@ TELEGRAM_SETTINGS = {
 ######################################################     TESTS     ######################################################
 ###########################################################################################################################
 
-# Will color the pixels that are being used to detect the state
+# Will color the pixels that are being used to detect the state. Videos will be recorded without colored pixels
 TESTING = True
 SAVE_ERROR_VIDEOS = False
 TESTING_COLOR = (255, 0, 255)
-TESTING_VIDEO_PATH = 'Media/Videos/Shiny.mp4'
-TESTING_IMAGE_PATH = 'Media/Tests/12.png'
+TESTING_VIDEO_PATH = 'Media/Videos/XXXX.mp4'
+TESTING_IMAGE_PATH = 'Media/Tests/XXXX.png'
 SAVING_FRAMES_PATH = 'Media/Tests'
 TEST_DATABASE_PATH = 'Media/Test_Database.db'

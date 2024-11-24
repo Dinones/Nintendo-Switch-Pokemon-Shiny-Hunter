@@ -208,6 +208,11 @@ class Image_Processing():
 if __name__ == "__main__":
     from time import sleep
     from Game_Capture import Game_Capture
+
+    #######################################################################################################################
+
+    LEFT_ARROW_KEY_VALUE = 65361
+    RIGHT_ARROW_KEY_VALUE = 65363
    
     #######################################################################################################################
 
@@ -392,22 +397,23 @@ if __name__ == "__main__":
         while True:
             if pause:
                 # Press 'SPACE' to resume the execution
-                # Press 'a' or 'd' to move between frames
+                # Press 'a' or '<' and 'd' or '>' to move between frames
+                # Press 'c' to take a sceenshot
                 # Press 'q' to stop the program
-                key = cv2.waitKey(1)
-                if key == ord('q') or key == ord('Q'): break
+                key = cv2.waitKeyEx(1)
+                if key in [ord('q'), ord('Q')]: break
                 elif key == ord(' '): pause = not pause
-                elif key == ord('a') or key == ord('A'):
+                elif key in [ord('a'), ord('A'), LEFT_ARROW_KEY_VALUE]:
                     if frame_index > 0:
                         frame_index = frame_index - 1
                         process_single_frame(image, frame_index)
                         continue
-                elif key == ord('d') or key == ord('D'):
+                elif key in [ord('d'), ord('D'), RIGHT_ARROW_KEY_VALUE]:
                     if frame_index < total_video_frames:
                         frame_index = frame_index + 1
                         process_single_frame(image, frame_index)
                         continue
-                elif key == ord('c') or key == ord('C'):
+                elif key in [ord('c'), ord('C')]:
                     cv2.imwrite(f'../{CONST.SAVING_FRAMES_PATH}/{frame_index}.png', image.original_image)
                     print(COLOR_str.IMAGE_SAVED.replace('{path}', f"'../{CONST.SAVING_FRAMES_PATH}/{frame_index}.png'"))
 
@@ -448,8 +454,8 @@ if __name__ == "__main__":
         Key Presses:
             - 'q' or 'Q': Quit the image processing loop.
             - ' ' (space): Pause or resume the image processing.
-            - 'a' or 'A': Move to the previous image (while paused).
-            - 'd' or 'D': Move to the next image (while paused).
+            - 'a', 'A' or '<' (left arrow): Move to the previous image (while paused).
+            - 'd', 'D' or '>' (right arrow): Move to the next image (while paused).
             - If not paused, images will automatically progress.
         """
 
@@ -478,7 +484,7 @@ if __name__ == "__main__":
         print(COLOR_str.PRESS_KEY_TO_INSTRUCTION.replace('{key}', "'SPACE'")
             .replace('{module}', 'Image Processing')
             .replace('{instruction}', 'pause the program'))
-        print(COLOR_str.PRESS_KEY_TO_INSTRUCTION.replace('{key}', "'A' or 'D'")
+        print(COLOR_str.PRESS_KEY_TO_INSTRUCTION.replace('{key}', "'A' or '<' and 'D' or '>'")
             .replace('{module}', 'Image Processing')
             .replace('{instruction}', 'go back / forward while in pause'))
         print(COLOR_str.PRESS_KEY_TO_INSTRUCTION.replace('{key}', "'Q'")
@@ -529,14 +535,14 @@ if __name__ == "__main__":
             remaining_time_ms = int(max(0.001, CONST.CHECK_LOST_SHINY_TIME - iteration_duration) * 1000)
 
             # Handle keyboard inputs and wait
-            key = cv2.waitKey(remaining_time_ms)
+            key = cv2.waitKeyEx(remaining_time_ms)
             if key in [ord('q'), ord('Q')]:  # Quit
                 break
             elif key == ord(' '):  # Pause or resume
                 pause = not pause
-            elif pause and key in [ord('a'), ord('A')]:  # Previous image
+            elif pause and key in [ord('a'), ord('A'), LEFT_ARROW_KEY_VALUE]:  # Previous image
                 index = max(0, index - 1)  # Ensure index is not negative
-            elif pause and key in [ord('d'), ord('D')]:  # Next image
+            elif pause and key in [ord('d'), ord('D'), RIGHT_ARROW_KEY_VALUE]:  # Next image
                 index = min(len(images) - 1, index + 1)  # Ensure index stays in range
             elif not pause:  # Automatically move to the next image
                 index += 1
