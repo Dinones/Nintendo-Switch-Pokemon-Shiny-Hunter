@@ -461,7 +461,8 @@ def _check_common_states(image, state):
 
     # Nintendo Switch main menu
     elif state == 'RESTART_GAME_1':
-        if is_black_screen_visible(image):
+        # is_black_screen_visible can't be used due to the loading Nintendo Switch logo
+        if is_life_box_visible(image, CONST.LOAD_SCREEN_BLACK_COLOR):
             return 'RESTART_GAME_2'
 
     # Game main loadscreen (Full black screen)
@@ -471,7 +472,8 @@ def _check_common_states(image, state):
 
     # Game main loadscreen (Dialga / Palkia)
     elif state == 'RESTART_GAME_3':
-        if is_black_screen_visible(image):
+        # is_black_screen_visible can't be used due to the loading Pokémon sprites
+        if is_life_box_visible(image, CONST.LOAD_SCREEN_BLACK_COLOR):
             return 'RESTART_GAME_4'
 
     # Combat loadscreen (Full white screen)
