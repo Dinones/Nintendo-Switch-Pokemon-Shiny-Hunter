@@ -467,7 +467,7 @@ def _check_common_states(image, state):
 
     # Game main loadscreen (Full black screen)
     elif state == 'RESTART_GAME_2':
-        if not is_black_screen_visible(image):
+        if not is_life_box_visible(image, CONST.LOAD_SCREEN_BLACK_COLOR):
             return 'RESTART_GAME_3'
 
     # Game main loadscreen (Dialga / Palkia)
