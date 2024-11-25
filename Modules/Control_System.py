@@ -39,7 +39,7 @@ def search_wild_pokemon(image, state):
     # Game loaded, player in the overworld
     elif state == 'MOVE_PLAYER':
         # Look for the load combat white screen
-        if is_load_fight_white_screen(image):
+        if is_load_fight_white_screen_visible(image):
             state_timer = time()
             return 'ENTER_COMBAT_1'
 
@@ -221,7 +221,7 @@ def static_encounter(image, state):
     # Some static encounters make a white screen flash before entering the combat
     elif state == 'ENTER_STATIC_COMBAT_3' and time() - state_timer >= CONST.STATIC_ENCOUNTERS_DELAY:
         # Look for the load combat white screen
-        if is_load_fight_white_screen(image):
+        if is_load_fight_white_screen_visible(image):
             state_timer = time()
             return 'ENTER_COMBAT_1'
 
@@ -369,7 +369,7 @@ def shaymin_encounter(image, state):
     # Some static encounters make a white screen flash before entering the combat
     elif state == 'ENTER_STATIC_COMBAT_3' and time() - state_timer >= CONST.STATIC_ENCOUNTERS_DELAY:
         # Look for the load combat white screen
-        if is_load_fight_white_screen(image):
+        if is_load_fight_white_screen_visible(image):
             state_timer = time()
             return 'ENTER_COMBAT_1'
     
@@ -478,7 +478,7 @@ def _check_common_states(image, state):
     # Some wild encounters missdetect this state with the grass animation
     elif state == 'ENTER_COMBAT_1' and time() - state_timer >= 0.5:
         # Check if the white load screen has ended
-        if not is_load_fight_white_screen(image):
+        if not is_load_fight_white_screen_visible(image):
             return 'ENTER_COMBAT_2'
 
     # Combat loadscreen (Grass/Rock/Water animation, wild pokémon appearing)
@@ -528,7 +528,7 @@ def is_black_screen_visible(image):
     Returns:
         bool: True if the black screen is visible, False otherwise.
     """
-    return is_life_box_visible(image, CONST.LOAD_SCREEN_BLACK_COLOR)
+    return is_load_fight_white_screen_visible(image, CONST.LOAD_SCREEN_BLACK_COLOR)
 
 ###########################################################################################################################
 
@@ -602,7 +602,7 @@ def is_overworld_visible(image):
 
 ###########################################################################################################################
 
-def is_load_fight_white_screen(image):
+def is_load_fight_white_screen_visible(image, color=CONST.TEXT_BOX_LINE['color']):
     """
     Checks if the white screen is visible in the given image.
     Args:
@@ -613,22 +613,22 @@ def is_load_fight_white_screen(image):
     is_bottom_left_white = image.check_multiple_pixel_colors(
         [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
         [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']],
-        CONST.TEXT_BOX_LINE['color'])
+        color)
 
     is_bottom_right_white = image.check_multiple_pixel_colors(
         [CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
         [CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']],
-        CONST.TEXT_BOX_LINE['color'])
+        color)
 
     is_top_left_white = image.check_multiple_pixel_colors(
         [CONST.TEXT_BOX_LINE['x'], CONST.MAIN_FRAME_SIZE[1] - CONST.TEXT_BOX_LINE['y2']],
         [CONST.TEXT_BOX_LINE['x'], CONST.MAIN_FRAME_SIZE[1] - CONST.TEXT_BOX_LINE['y1']],
-        CONST.TEXT_BOX_LINE['color'])
+        color)
 
     is_top_right_white = image.check_multiple_pixel_colors(
         [CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.MAIN_FRAME_SIZE[1] - CONST.TEXT_BOX_LINE['y2']],
         [CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.MAIN_FRAME_SIZE[1] - CONST.TEXT_BOX_LINE['y1']],
-        CONST.TEXT_BOX_LINE['color'])
+        color)
 
     return is_bottom_left_white and is_bottom_right_white and is_top_left_white and is_top_right_white
 
@@ -644,6 +644,11 @@ if __name__ == "__main__":
     import Colored_Strings as COLOR_str
     from Game_Capture import Game_Capture
     from Image_Processing import Image_Processing
+
+    #######################################################################################################################
+
+    LEFT_ARROW_KEY_VALUE = 65361
+    RIGHT_ARROW_KEY_VALUE = 65363
 
     #######################################################################################################################
 
@@ -690,17 +695,30 @@ if __name__ == "__main__":
             Video_Capture = Game_Capture(f'../{CONST.TESTING_VIDEO_PATH}')
 
         FPS = FPS_Counter()
-        state = 'ENTER_STATIC_COMBAT_1'
+        state = 'MOVE_PLAYER'
         pause = False
         shiny_detection_time = 0
+        total_frames = int(Video_Capture.video_capture.get(cv2.CAP_PROP_FRAME_COUNT))
+        current_frames = 0
+        force_load_frame = False
 
         while True:
-            key = cv2.waitKey(1)
-            if key == ord('q') or key == ord('Q'): break
+            # Function waitKeyEx() detect more keys than waitKey()
+            key = cv2.waitKeyEx(1)
+            if key in [ord('q'), ord('Q')]: break
             elif key == ord(' '): pause = not pause
+            elif pause and key in [ord('a'), ord('A'), LEFT_ARROW_KEY_VALUE]:
+                current_frames = max(0, current_frames - 2)
+                force_load_frame = True
+            elif pause and key in [ord('d'), ord('D'), RIGHT_ARROW_KEY_VALUE]:
+                force_load_frame = True
 
-            if pause: continue
-            if option == '2': sleep(0.02)
+            if pause and not force_load_frame: continue
+            if force_load_frame:
+                Video_Capture.video_capture.set(cv2.CAP_PROP_POS_FRAMES, current_frames)
+
+            # Adjust to match the FPS of the video 0.05s ~ 20 FPS
+            if option == '2' and not force_load_frame: sleep(0.05)
            
             image = Image_Processing(Video_Capture.read_frame())
             if type(image.original_image) == type(None): break
@@ -708,15 +726,17 @@ if __name__ == "__main__":
             FPS.get_FPS()
             image.draw_FPS(FPS.FPS)
 
-            # Check if the pokemon is shiny
+            # Needs to be here because this is controlled in the Shiny Hunter loop
             if state == "CHECK_SHINY":
                 # Only reset the first time it enters to the state
                 if time() - shiny_detection_time >= 10: shiny_detection_time = time()
                 image.shiny_detection_time = shiny_detection_time
 
-            state = static_encounter(image, state)
+            state = search_wild_pokemon(image, state)
             image.write_text(state, (0, CONST.TEXT_PARAMS['position'][1] + 5))
 
+            current_frames += 1
+            force_load_frame = False
             cv2.imshow(f'{CONST.BOT_NAME} - Image', image.FPS_image)
 
         Video_Capture.stop()

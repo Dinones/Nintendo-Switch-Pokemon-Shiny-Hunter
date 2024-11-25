@@ -114,10 +114,7 @@ class Email_Sender():
         # If can't find the HTML, an empty email will be sent with the image attached to it
         if os.path.exists(html_path):
             with open(html_path, 'r', encoding='utf-8') as file: content = file.read()
-            content = content \
-                .replace('{Pokémon}', replace_info.get('pokemon_name')) \
-                .replace('{Trainer}', replace_info.get('trainer')) \
-                .replace('{Stuck_Minutes}', str(CONST.FAILURE_DETECTION_TIME//60))
+            for key, text in replace_info.items(): content = content.replace(f'{{{key}}}', text)
         else: print(COLOR_str.HTML_NOT_FOUND.replace('{html}', html_path))
 
         return content
@@ -169,13 +166,14 @@ class Email_Sender():
 
     #######################################################################################################################
 
-    def send_shiny_found(self, pokemon_name: str, image_name: str) -> None:
+    def send_shiny_found(self, pokemon_name: str, image_name: str, n_encounters: int) -> None:
 
         """
             Sends shiny found email notification
             Args:
                 pokemon_name (str): Contains the pokémon name
                 image_name (str): Contains the name of the image that is going to be attached
+                n_encounters (int): Contains the number of encounters that it took to get the shiny
             Output: None
         """
 
@@ -187,6 +185,7 @@ class Email_Sender():
             replace_info = {
                 'pokemon_name': pokemon_name,
                 'trainer': receiver.split('@')[0].capitalize(),
+                'n_encounters': str(n_encounters)
             }
             content = self._create_content_with_html(SHINY_HTML_PATH, replace_info)
 
@@ -213,20 +212,29 @@ class Email_Sender():
 
     #######################################################################################################################
 
-    def send_error_detected(self) -> None:
+    def send_error_detected(self, error_type: str = str(), died_thread: str = str()) -> None:
 
         """
-            Sends an error email notification when the program has been for more than CONST.FAILURE_DETECTION_TIME
-                without finding any pokémon. This message is only sent to the primary recipient of the email
-            Args: None
+            Sends an error email notification when the program has encountered an error. This message is only sent to the 
+            primary recipient of the email
+            Args: 
+                error_type (Optional(str)): Can be "STUCK" or "THREAD_DIED"
+                died_thread (Optional(str)): Name of the thread that has died
             Output: None
         """
 
         if not CONST.MAIL_NOTIFICATIONS or not self._check_valid_credentials(): return
 
+        error_message = str()
+        if error_type == "STUCK":
+            error_message = f"Shiny Hunter has been more than <b>{str(CONST.FAILURE_DETECTION_TIME_ERROR//60)} " +\
+                "minutes</b> without encountering any Pokémon."
+        elif error_type == "THREAD_DIED":
+            error_message = f"Thread <b>{died_thread}</b> died."
+
         replace_info = {
-            'pokemon_name': '',
             'trainer': self.__email_receiver.split('@')[0].capitalize(),
+            'error_message': error_message
         }
         content = self._create_content_with_html(ERROR_HTML_PATH, replace_info)
 
@@ -251,10 +259,14 @@ class Email_Sender():
 ###########################################################################################################################
 
 if __name__ == "__main__":
+    from random import randint
+
+    #######################################################################################################################
+
     def main_menu():
         print('\n' + COLOR_str.MENU.replace('{module}', 'Mail'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Send shiny notification'))
-        print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Send error notification'))
+        print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Send error notifications'))
 
         option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Mail'))
 
@@ -274,13 +286,15 @@ if __name__ == "__main__":
         print('\n' + COLOR_str.SELECTED_OPTION
             .replace('{module}', 'Mail')
             .replace('{option}', f"{option}")
-            .replace('{action}', f"Sending {action} notification")
+            .replace('{action}', f"Sending {action} notifications")
             .replace('{path}', '')
         )
 
         Email = Email_Sender()
-        if option == '1': Email.send_shiny_found('Dinones', str())
-        if option == '2': Email.send_error_detected()
+        if option == '1': Email.send_shiny_found('Dinones', str(), randint(1, 10000))
+        if option == '2': 
+            Email.send_error_detected('STUCK',)
+            Email.send_error_detected('THREAD_DIED', 'controller_control')
         print()
 
     #######################################################################################################################

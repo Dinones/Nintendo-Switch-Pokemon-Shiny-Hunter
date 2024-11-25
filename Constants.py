@@ -50,6 +50,8 @@ SAVED_IMAGE_SIZE = 'ORIGINAL'
 # [BYTES] 1GB = 1073741824B
 CRITICAL_AVAILABLE_SPACE = 1*1073741824
 PIXEL_COLOR_DIFF_THRESHOLD = 7
+# [SECONDS] Time the program will take to switch between the images
+CHECK_LOST_SHINY_TIME = 0.15
 
 ###########################################################################################################################
 #######################################################     GUI     #######################################################
@@ -100,7 +102,7 @@ IMAGES_COUNT_WARNING = 300
 # Time the player is moving in each direction
 WILD_WALKING_SECONDS = 1
 # 'NS': Up/Down | 'EW': Right/Left
-WILD_WALKING_DIRECTION = 'NS'
+WILD_WALKING_DIRECTION = 'EW'
 MOVE_FORWARD_STATIC_ENCOUNTER = False
 
 # Variable used to skip a white screen flash (some static encounters have two white screen flashes)
@@ -111,8 +113,12 @@ MOVE_FORWARD_STATIC_ENCOUNTER = False
 # - Regigigas: 7
 STATIC_ENCOUNTERS_DELAY = 2
 
-# How long has the bot been stuck in the same state before restarting the game
+# [SECONDS] How long has the bot been stuck in the same state before trying to restart the game
 STUCK_TIMER_SECONDS = 25
+# [SECONDS] How long no pokemon has been found before completely stopping program (ERROR)
+FAILURE_DETECTION_TIME_WARN = 3*60
+# [SECONDS] How long no pokemon has been found before completely stopping program (ERROR)
+FAILURE_DETECTION_TIME_ERROR = 5*60
 # Time to wait before detecting a shiny, used for BDSP and SWSH
 SHINY_DETECTION_TIME = 2
 HOME_MENU_COLOR = (237, 237, 237)
@@ -179,8 +185,6 @@ MESSAGES_PLACEHOLDER_IMAGE = 'Media/Messages/Dinones.png'
 MESSAGES_ERROR_IMAGE = 'Media/Messages/Dizzy Dinones.png'
 SHINY_HTML_PATH = 'Modules/Mail/Shiny.html'
 ERROR_HTML_PATH = 'Modules/Mail/Error.html'
-# [SECONDS] Send a notification if no pokemon has been found in this time
-FAILURE_DETECTION_TIME = 5*60
 
 TELEGRAM_NOTIFICATIONS = False
 TELEGRAM_SETTINGS = {
@@ -193,12 +197,22 @@ TELEGRAM_SETTINGS = {
 ######################################################     TESTS     ######################################################
 ###########################################################################################################################
 
-# Will color the pixels that are being used to detect the state
+# Will color the pixels that are being used to detect the state. Videos will be recorded without colored pixels
 TESTING = True
 LOG_LEVEL = 'INFO'
 SAVE_ERROR_VIDEOS = False
 TESTING_COLOR = (255, 0, 255)
-TESTING_VIDEO_PATH = 'Media/Videos/Shiny.mp4'
-TESTING_IMAGE_PATH = 'Media/Tests/12.png'
+TESTING_VIDEO_PATH = 'Media/Tests/XXXX.mp4'
+TESTING_IMAGE_PATH = 'Media/Tests/XXXX.png'
+TESTING_DATABASE_PATH = 'Media/Tests/Test_Database.db'
 SAVING_FRAMES_PATH = 'Media/Tests'
-TEST_DATABASE_PATH = 'Media/Test_Database.db'
+DEBUG_FRAME_SIZE = (720, 40)
+DEBUG_IMAGE_TEXT_PARAMS = {
+    'font_scale': 0.8,
+    # [BGR]
+    'font_color': (255, 0, 125),
+    'thickness': 2,
+    # [PIXELS]
+    'position': (10, 28),
+    'star_num_color': (0, 0, 255)
+}

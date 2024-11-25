@@ -16,7 +16,7 @@ import subprocess
 from time import sleep
 from queue import Queue
 from cllist import dllist
-from playsound import playsound
+from playsound3 import playsound
 
 import sys; sys.path.append('..')
 import Colored_Strings as COLOR_str
@@ -434,12 +434,10 @@ if __name__ == "__main__":
             )
             return
         image.resize_image()
+        image.FPS_image = image.resized_image
 
         def test_GUI_control(shutdown_event):
             while not shutdown_event.is_set():
-                FPS.get_FPS()
-                image.draw_FPS(FPS.FPS)
-
                 update_items = {
                     'image': image,
                     'current_state': 'TESTING',

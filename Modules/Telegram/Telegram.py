@@ -17,9 +17,7 @@ import Colored_Strings as COLOR_str
 #################################################     INITIALIZATIONS     #################################################
 ###########################################################################################################################
 
-SHINY_FOUND_MESSAGE = "A shiny {pokemon_name} has been found!"
-ERROR_MESSAGE = \
-    f"Shiny Hunter has been more than {CONST.FAILURE_DETECTION_TIME//60} minutes without encountering any Pokémon."
+SHINY_FOUND_MESSAGE = "A shiny <b>{pokemon_name}</b> has been found! It took <b>{n_encounters}</b> encounters to find it."
 
 ###########################################################################################################################
 
@@ -84,7 +82,8 @@ class Telegram_Sender():
         payload = {
             'chat_id': self.__chat_id,
             'caption': text,
-            'text': text
+            'text': text,
+            'parse_mode': 'HTML'
         }
 
         files = {}
@@ -110,30 +109,52 @@ class Telegram_Sender():
 
     #######################################################################################################################
 
-    def send_shiny_found(self, pokemon_name: str, image_name: str) -> None:
+    def send_shiny_found(self, pokemon_name: str, image_name: str, n_encounters: int) -> None:
         if not CONST.TELEGRAM_NOTIFICATIONS or not self._check_valid_credentials(): return
 
-        text = SHINY_FOUND_MESSAGE.format(pokemon_name=pokemon_name)
+        text = SHINY_FOUND_MESSAGE.replace('{pokemon_name}', pokemon_name).replace('{n_encounters}', str(n_encounters))
         image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), f'../../{image_name}'))
         self._send_telegram(text, image_path)
 
     #######################################################################################################################
 
-    def send_error_detected(self) -> None:
+    def send_error_detected(self, error_type: str = str(), died_thread: str = str()) -> None:
+        """
+            Sends an error notification when the program has encountered an error. This message is only sent to the 
+            primary recipient of the email
+            Args: 
+                error_type (Optional(str)): Can be "STUCK" or "THREAD_DIED"
+                died_thread (Optional(str)): Name of the thread that has died
+            Output: None
+        """
         if not CONST.TELEGRAM_NOTIFICATIONS or not self._check_valid_credentials(): return
 
+        error_message = "<b>⚠️ Error Detected! ⚠️</b>\n\n"
+        if error_type == "STUCK":
+            error_message += f"Shiny Hunter has been more than <b>{str(CONST.FAILURE_DETECTION_TIME_ERROR//60)} " +\
+                "minutes</b> without encountering any Pokémon."
+        elif error_type == "THREAD_DIED":
+            error_message += f"Thread <b>{died_thread}</b> died."
+        error_message += '\n\nIf the error persists, please report it on <a href="https://github.com/Dinones/Nintendo-' +\
+            'Switch-Pokemon-Shiny-Hunter/issues">Github</a> or <a href="https://discordapp.com/users/177131156028784640 '+\
+            '">Discord</a>.'
+
         image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), f'../../{CONST.MESSAGES_ERROR_IMAGE}'))
-        self._send_telegram(ERROR_MESSAGE, image_path)
+        self._send_telegram(error_message, image_path)
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
 
 if __name__ == "__main__":
+    from random import randint
+
+    #######################################################################################################################
+
     def main_menu():
         print('\n' + COLOR_str.MENU.replace('{module}', 'Telegram'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Send shiny notification'))
-        print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Send error notification'))
+        print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Send error notifications'))
 
         option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Telegram'))
 
@@ -153,13 +174,15 @@ if __name__ == "__main__":
         print('\n' + COLOR_str.SELECTED_OPTION
             .replace('{module}', 'Telegram')
             .replace('{option}', f"{option}")
-            .replace('{action}', f"Sending {action} notification")
+            .replace('{action}', f"Sending {action} notifications")
             .replace('{path}', '')
         )
 
         Telegram = Telegram_Sender()
-        if option == '1': Telegram.send_shiny_found('Dinones', None)
-        if option == '2': Telegram.send_error_detected()
+        if option == '1': Telegram.send_shiny_found('Dinones', None, randint(1, 10000))
+        if option == '2': 
+            Telegram.send_error_detected('STUCK')
+            Telegram.send_error_detected('THREAD_DIED', 'GUI_control')
         print()
 
     #######################################################################################################################

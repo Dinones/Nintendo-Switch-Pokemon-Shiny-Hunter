@@ -5,6 +5,7 @@
 # Set the cwd to the one of the file
 import os
 import logging
+
 if __name__ == '__main__':
     try: os.chdir(os.path.dirname(__file__))
     except: pass
@@ -12,10 +13,9 @@ if __name__ == '__main__':
 import cv2
 import pytesseract
 import numpy as np
-from time import time
+from time import time, perf_counter
 import PyQt5.QtGui as pyqt_g
 
-# import sys; sys.path.append('..')
 import sys; sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import Colored_Strings as COLOR_str
 import Constants as CONST
@@ -34,6 +34,11 @@ class Image_Processing():
 
         # Used to send a notification to the user
         self.saved_image_path: str = ''
+        # Used to reduce workload by only populating debug images when a stat has changed
+        self.debug_image_stats = {
+            'event': '',
+            'button': ''
+        }
 
         # Load the image
         if isinstance(image, str): self.original_image = cv2.imread(image, cv2.IMREAD_UNCHANGED)
@@ -209,7 +214,35 @@ class Image_Processing():
     def replace_pixels(self, pixel_color):
         mask = np.all(self.original_image == pixel_color, axis=-1)
         self.original_image[mask] = CONST.TESTING_COLOR
-          
+
+    #######################################################################################################################
+
+    def populate_debug_image(self, stats):
+        cv2.putText(
+            self.FPS_image, f'Button: {stats.get("button")} | State: {stats.get("event")}',
+            CONST.DEBUG_IMAGE_TEXT_PARAMS['position'], cv2.FONT_HERSHEY_SIMPLEX,
+            CONST.DEBUG_IMAGE_TEXT_PARAMS['font_scale'], CONST.DEBUG_IMAGE_TEXT_PARAMS['font_color'],
+            CONST.DEBUG_IMAGE_TEXT_PARAMS['thickness'], cv2.LINE_AA
+        )
+
+###########################################################################################################################
+
+def create_debug_image(frame_size = CONST.DEBUG_FRAME_SIZE):
+    black_image = np.zeros((frame_size[1], frame_size[0], 4), dtype=np.uint8)
+
+    # Same color as for the GUI borders (#aaa)
+    border_color = [170, 170, 170, 255]
+    border_thickness = 1
+    black_image[:border_thickness, :] = border_color  # Top
+    black_image[-border_thickness:, :] = border_color  # Bottom
+    black_image[:, :border_thickness] = border_color  # Left
+    black_image[:, -border_thickness:] = border_color  # Right
+
+    debug_image = Image_Processing(black_image)
+    debug_image.FPS_image = np.copy(debug_image.original_image)
+
+    return debug_image
+
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
@@ -217,7 +250,12 @@ class Image_Processing():
 if __name__ == "__main__":
     from time import sleep
     from Game_Capture import Game_Capture
-   
+
+    #######################################################################################################################
+
+    LEFT_ARROW_KEY_VALUE = 65361
+    RIGHT_ARROW_KEY_VALUE = 65363
+
     #######################################################################################################################
 
     def main_menu():
@@ -226,14 +264,17 @@ if __name__ == "__main__":
         print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Process video'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '3').replace('{option}', 'Extract frames from video'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '4').replace('{option}', 'Check lost shiny'))
+        print(COLOR_str.MENU_OPTION.replace('{index}', '5').replace('{option}', 'Test debug video frame'))
 
-        option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Image Processing'))
+        # option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Image Processing'))
+        option = '5'
 
         menu_options = {
             '1': process_image,
             '2': process_video,
             '3': extract_frames_from_video,
             '4': check_lost_shiny,
+            '5': check_debug_video_frames,
         }
 
         if option in menu_options: menu_options[option](option)
@@ -275,7 +316,7 @@ if __name__ == "__main__":
 
         print(COLOR_str.PRESS_KEY_TO_INSTRUCTION
             .replace('{module}', 'Image Processing')
-            .replace('{key}', "'q'")
+            .replace('{key}', 'any key')
             .replace('{instruction}', 'exit the program')
         )
 
@@ -401,22 +442,23 @@ if __name__ == "__main__":
         while True:
             if pause:
                 # Press 'SPACE' to resume the execution
-                # Press 'a' or 'd' to move between frames
+                # Press 'a' or '<' and 'd' or '>' to move between frames
+                # Press 'c' to take a sceenshot
                 # Press 'q' to stop the program
-                key = cv2.waitKey(1)
-                if key == ord('q') or key == ord('Q'): break
+                key = cv2.waitKeyEx(1)
+                if key in [ord('q'), ord('Q')]: break
                 elif key == ord(' '): pause = not pause
-                elif key == ord('a') or key == ord('A'):
+                elif key in [ord('a'), ord('A'), LEFT_ARROW_KEY_VALUE]:
                     if frame_index > 0:
                         frame_index = frame_index - 1
                         process_single_frame(image, frame_index)
                         continue
-                elif key == ord('d') or key == ord('D'):
+                elif key in [ord('d'), ord('D'), RIGHT_ARROW_KEY_VALUE]:
                     if frame_index < total_video_frames:
                         frame_index = frame_index + 1
                         process_single_frame(image, frame_index)
                         continue
-                elif key == ord('c') or key == ord('C'):
+                elif key in [ord('c'), ord('C')]:
                     cv2.imwrite(f'../{CONST.SAVING_FRAMES_PATH}/{frame_index}.png', image.original_image)
                     print(COLOR_str.IMAGE_SAVED.replace('{path}', f"'../{CONST.SAVING_FRAMES_PATH}/{frame_index}.png'"))
 
@@ -448,18 +490,32 @@ if __name__ == "__main__":
     #######################################################################################################################
 
     def check_lost_shiny(option):
+        """
+        Display images one by one.
+        The user can pause/resume the processing using the space bar.
+        While paused, the user can navigate between images using the 'a' (previous) and 'd' (next) keys.
+        The user can quit the process using the 'q' key.
+
+        Key Presses:
+            - 'q' or 'Q': Quit the image processing loop.
+            - ' ' (space): Pause or resume the image processing.
+            - 'a', 'A' or '<' (left arrow): Move to the previous image (while paused).
+            - 'd', 'D' or '>' (right arrow): Move to the next image (while paused).
+            - If not paused, images will automatically progress.
+        """
+
         print('\n' + COLOR_str.SELECTED_OPTION
             .replace('{module}', 'Image Processing')
             .replace('{option}', f"{option}")
-            .replace('{action}', f"Checking lost shiny")
-            .replace('{path}', f"")
+            .replace('{action}', "Checking lost shiny")
+            .replace('{path}', "")
         )
 
         if not os.path.exists(f'../{CONST.IMAGES_FOLDER_PATH}'):
             return print(COLOR_str.INVALID_PATH_ERROR
                 .replace('{module}', 'Image Processing')
                 .replace('{path}', f"'../{CONST.IMAGES_FOLDER_PATH}'") + '\n'
-        )
+            )
        
         images = sorted([image for image in sorted(os.listdir(f'../{CONST.IMAGES_FOLDER_PATH}'))
             if image.lower().endswith(('.png', '.jpg', 'jpeg'))])
@@ -473,7 +529,7 @@ if __name__ == "__main__":
         print(COLOR_str.PRESS_KEY_TO_INSTRUCTION.replace('{key}', "'SPACE'")
             .replace('{module}', 'Image Processing')
             .replace('{instruction}', 'pause the program'))
-        print(COLOR_str.PRESS_KEY_TO_INSTRUCTION.replace('{key}', "'A' or 'D'")
+        print(COLOR_str.PRESS_KEY_TO_INSTRUCTION.replace('{key}', "'A' or '<' and 'D' or '>'")
             .replace('{module}', 'Image Processing')
             .replace('{instruction}', 'go back / forward while in pause'))
         print(COLOR_str.PRESS_KEY_TO_INSTRUCTION.replace('{key}', "'Q'")
@@ -481,34 +537,60 @@ if __name__ == "__main__":
             .replace('{instruction}', 'stop the program'))
 
         index = 0
+        cached_index = -1
         pause = False
-        timer = time()
-        second_text_position = [CONST.TEXT_PARAMS['position'][0], CONST.TEXT_PARAMS['position'][1] + 20]           
+        second_text_position = [CONST.TEXT_PARAMS['position'][0], CONST.TEXT_PARAMS['position'][1] + 20]
 
-        while True and (index) != len(images):
-            if time() - timer >= 0.1:
-                image = Image_Processing(f'../{CONST.IMAGES_FOLDER_PATH}/{images[index]}')
-                image.resize_image()
-                cv2.putText(image.resized_image, f'Count: {index + 1}/{len(images)}', CONST.TEXT_PARAMS['position'],
-                    cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'],
-                    CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
-                cv2.putText(image.resized_image, f'{images[index]}', second_text_position,
-                    cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'],
-                    CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
-                if type(image.resized_image) is not type(None):
+        while index < len(images):
+            # Start measuring the iteration time
+            iteration_start = perf_counter()
+
+            # Process only if the index has changed
+            if index != cached_index:
+                try:
+                    # Load and process the image
+                    image = Image_Processing(f'../{CONST.IMAGES_FOLDER_PATH}/{images[index]}')
+                    image.resize_image()
+
+                    # Prepare text for overlay
+                    count_text = f'Count: {index + 1}/{len(images)}'
+                    image_name = images[index]
+
+                    # Add text to the image
+                    cv2.putText(image.resized_image, count_text, CONST.TEXT_PARAMS['position'],
+                                cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'],
+                                CONST.TEXT_PARAMS['font_color'], CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
+                    cv2.putText(image.resized_image, image_name, second_text_position,
+                                cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'],
+                                CONST.TEXT_PARAMS['font_color'], CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
+
+                    # Display the updated image
                     cv2.imshow(f'{CONST.BOT_NAME} - Lost Shiny Checker', image.resized_image)
 
-                if not pause: index += 1
-                timer = time()
+                    # Update cached index
+                    cached_index = index
+                except Exception as e:
+                    logging.error(f"Error processing image %s: %s", images[index], e)
+                    # Automatically move to the next image on error
+                    index = min(index + 1, len(images) - 1)
+                    continue
 
-            # Press 'SPACE' to resume the execution
-            # Press 'a' or 'd' to move between frames
-            # Press 'q' to stop the program
-            key = cv2.waitKey(1)
-            if key in [ord('q'), ord('Q')]: break
-            elif key == ord(' '): pause = not pause
-            elif pause and key in [ord('a'), ord('A')]: index -= 1
-            elif pause and key in [ord('d'), ord('D')]: index += 1
+            # Calculate the remaining time for the iteration
+            iteration_duration = perf_counter() - iteration_start
+            remaining_time_ms = int(max(0.001, CONST.CHECK_LOST_SHINY_TIME - iteration_duration) * 1000)
+
+            # Handle keyboard inputs and wait
+            key = cv2.waitKeyEx(remaining_time_ms)
+            if key in [ord('q'), ord('Q')]:  # Quit
+                break
+            elif key == ord(' '):  # Pause or resume
+                pause = not pause
+            elif pause and key in [ord('a'), ord('A'), LEFT_ARROW_KEY_VALUE]:  # Previous image
+                index = max(0, index - 1)  # Ensure index is not negative
+            elif pause and key in [ord('d'), ord('D'), RIGHT_ARROW_KEY_VALUE]:  # Next image
+                index = min(len(images) - 1, index + 1)  # Ensure index stays in range
+            elif not pause:  # Automatically move to the next image
+                index += 1
 
         sleep(1)
         print(COLOR_str.SUCCESS_EXIT_PROGRAM
@@ -522,6 +604,50 @@ if __name__ == "__main__":
             print(COLOR_str.DELETING_IMAGES.replace('{images}', str(len(images))))
             for image in images: os.remove(f'../{CONST.IMAGES_FOLDER_PATH}/{image}')
             print(COLOR_str.SUCCESSFULLY_DELETED_IMAGES.replace('{images}', str(len(images))) + '\n')
+
+    #######################################################################################################################
+    #######################################################################################################################
+
+    def check_debug_video_frames(option):
+        print('\n' + COLOR_str.SELECTED_OPTION
+            .replace('{module}', 'Image Processing')
+            .replace('{option}', f"{option}")
+            .replace('{action}', "Testing debug video frame")
+            .replace('{path}', "")
+        )
+
+        if not os.path.exists(f'../{CONST.TESTING_IMAGE_PATH}'):
+            return print(COLOR_str.INVALID_PATH_ERROR
+                .replace('{module}', 'Image Processing')
+                .replace('{path}', f"'../{CONST.TESTING_IMAGE_PATH}'") + '\n'
+            )
+
+        image = Image_Processing(f'../{CONST.TESTING_IMAGE_PATH}')
+        image.resize_image()
+
+        debug_image = create_debug_image()
+        stats = {
+            'event': 'STATE_WITH_SUPER_LARGE_NAME',
+            'button': 'HOME'
+        }
+        debug_image.populate_debug_image(stats)
+
+        combined_image = np.vstack((debug_image.FPS_image, image.resized_image))
+
+        print(COLOR_str.PRESS_KEY_TO_INSTRUCTION
+            .replace('{module}', 'Image Processing')
+            .replace('{key}', 'any key')
+            .replace('{instruction}', 'exit the program')
+        )
+
+        cv2.imshow(f'{CONST.BOT_NAME} - Debug Frame', combined_image)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+
+        print(COLOR_str.SUCCESS_EXIT_PROGRAM
+            .replace('{module}', 'Image Processing')
+            .replace('{reason}', 'Successfully processed the image!') + '\n'
+        )
 
     #######################################################################################################################
     #######################################################################################################################
