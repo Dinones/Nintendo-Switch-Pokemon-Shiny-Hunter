@@ -257,8 +257,7 @@ if __name__ == "__main__":
         print(COLOR_str.MENU_OPTION.replace('{index}', '4').replace('{option}', 'Check lost shiny'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '5').replace('{option}', 'Test debug video frame'))
 
-        # option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Image Processing'))
-        option = '5'
+        option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Image Processing'))
 
         menu_options = {
             '1': process_image,

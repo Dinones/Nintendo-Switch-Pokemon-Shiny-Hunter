@@ -118,7 +118,8 @@ def static_encounter(image, state):
     # Game loading, full black screen
     elif state == 'RESTART_GAME_4':
         # Check if the black screen has ended
-        if not is_black_screen_visible(image):
+        # is_black_screen_visible can't be used due to the loading Pokémon sprites
+        if not is_life_box_visible(image, CONST.LOAD_SCREEN_BLACK_COLOR):
             return 'ENTER_STATIC_COMBAT_1'
 
     # Game loaded, player in the overworld
@@ -171,7 +172,8 @@ def starter_encounter(image, state):
 
     elif state == 'RESTART_GAME_4':
         # Check if the black screen has ended
-        if not is_black_screen_visible(image):
+        # is_black_screen_visible can't be used due to the loading Pokémon sprites
+        if not is_life_box_visible(image, CONST.LOAD_SCREEN_BLACK_COLOR):
             return 'ENTER_LAKE_1'
 
     # In front of the lake entrance
@@ -293,7 +295,8 @@ def shaymin_encounter(image, state):
     # Game loading, full black screen
     elif state == 'RESTART_GAME_4':
         # Check if the black screen has ended
-        if not is_black_screen_visible(image):
+        # is_black_screen_visible can't be used due to the loading Pokémon sprites
+        if not is_life_box_visible(image, CONST.LOAD_SCREEN_BLACK_COLOR):
             return 'ENTER_STATIC_COMBAT_1'
 
     # Combat loaded (Wild Pokémon stars)
@@ -378,17 +381,20 @@ def _check_common_states(image, state):
 
     # Nintendo Switch main menu
     elif state == 'RESTART_GAME_1':
-        if is_black_screen_visible(image):
+        # is_black_screen_visible can't be used due to the loading Nintendo Switch logo
+        if is_life_box_visible(image, CONST.LOAD_SCREEN_BLACK_COLOR):
             return 'RESTART_GAME_2'
 
     # Game main loadscreen (Full black screen)
     elif state == 'RESTART_GAME_2':
-        if not is_black_screen_visible(image):
+        # is_black_screen_visible can't be used due to the loading Nintendo logo
+        if not is_life_box_visible(image, CONST.LOAD_SCREEN_BLACK_COLOR):
             return 'RESTART_GAME_3'
 
     # Game main loadscreen (Dialga / Palkia)
     elif state == 'RESTART_GAME_3':
-        if is_black_screen_visible(image):
+        # is_black_screen_visible can't be used due to the loading Pokémon sprites
+        if is_life_box_visible(image, CONST.LOAD_SCREEN_BLACK_COLOR):
             return 'RESTART_GAME_4'
 
     # Combat loadscreen (Full white screen)
