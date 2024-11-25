@@ -201,7 +201,8 @@ def static_encounter(image, state):
     # Game loading, full black screen
     elif state == 'RESTART_GAME_4':
         # Check if the black screen has ended
-        if not is_black_screen_visible(image):
+        # is_black_screen_visible can't be used due to the loading Pokémon sprites
+        if not is_life_box_visible(image, CONST.LOAD_SCREEN_BLACK_COLOR):
             return 'ENTER_STATIC_COMBAT_1'
 
     # Game loaded, player in the overworld
