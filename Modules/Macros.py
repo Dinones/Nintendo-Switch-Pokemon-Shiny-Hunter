@@ -3,7 +3,9 @@
 ###########################################################################################################################
 
 # Set the cwd to the one of the file
-import os
+import os, logging
+from typing import Union, List
+
 if __name__ == '__main__':
     try: os.chdir(os.path.dirname(__file__))
     except: pass
@@ -88,27 +90,24 @@ def restart_game_macro(controller):
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME], down=0.05, up=0)
     controller.current_button_pressed = ''
 
+    # In case the sleep menu is open press the B button, this will avoid entering the sleep mode by mistake.
     sleep(0.2); controller.current_button_pressed = 'B'
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.B])
     controller.current_button_pressed = ''
+
     sleep(1.3); controller.current_button_pressed = 'X'
-    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.X]); sleep(0.5)
-    
-    if CONST.SKIP_UPDATING_GAME:
-        sleep(0.5)
-        for _ in range(2):
-            controller.current_button_pressed = 'A'; sleep(0.2)
-            controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A])
-            controller.current_button_pressed = ''
-            sleep(0.8)
-        for _ in range(3):
-            controller.current_button_pressed = 'UP'; sleep(0.1)
-            controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.DPAD_UP])
-            controller.current_button_pressed = ''
-    for _ in range(10):
-        controller.current_button_pressed = 'A'; sleep(0.2)
+    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.X])
+    controller.current_button_pressed = ''
+    sleep(1)
+
+    # Confirm the restart, press the A button until the game is restarted
+    # For Sword/Shield the game take longer to exit.
+    # 10 'A' presses are enough for BDSP but 15 for SWSH
+    for _ in range(15):
+        controller.current_button_pressed = 'A'
         controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A])
-        controller.current_button_pressed = ''; sleep(0.1)
+        controller.current_button_pressed = ''
+        sleep(0.3)
 
 ###########################################################################################################################
 
@@ -211,6 +210,7 @@ def enter_static_combat_macro(controller):
 def press_single_button(controller, button):
     controller.current_button_pressed = button
     controller.nxbt_manager.press_buttons(controller.controller_index, [getattr(Buttons, button)])
+    controller.current_button_pressed = ''
 
 ###########################################################################################################################
 
@@ -242,6 +242,49 @@ def bdsp_respawn_shaymin(controller):
     sleep(2.0)
     controller.current_button_pressed = 'A'
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A], down=0.5)
+
+
+def press_button(controller, buttons: Union[str, List[str]], wait_after_action=0.0, down=0.1, up=0.1, block=True):
+    """
+    Press the specified button(s) and wait the specified time after the action
+    :param controller: The controller object
+    :param buttons: The button(s) to press, can be a single string or a list of strings
+    :param wait_after_action: The time to wait after the action
+
+    :param down: How long to hold the buttons down for in seconds, defaults to 0.1
+    :type down: float, optional
+
+    :param up: How long to release the button for in seconds, defaults to 0.1
+    :type up: float, optional
+
+    :param block: A boolean variable indicating whether or not to block until the macro completes,
+        defaults to True
+    :type block: bool, optional
+    """
+
+    if isinstance(buttons, str):
+        buttons = [buttons]
+
+    # TODO add support for multiple buttons
+    controller.current_button_pressed = buttons[0]
+
+    try:
+        controller.nxbt_manager.press_buttons(
+            controller.controller_index,
+            # Convert the button string(s) to the corresponding button object(s)
+            list(map(lambda btn: getattr(Buttons, btn), buttons)),
+            down=down,
+            up=up,
+            block=block
+        )
+    except Exception as e:
+        logging.error(f"Error while pressing button(s): {buttons}, {e}")
+
+    controller.current_button_pressed = ''
+
+    if wait_after_action > 0:
+        sleep(wait_after_action)
+
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################

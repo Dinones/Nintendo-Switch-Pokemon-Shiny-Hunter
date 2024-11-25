@@ -96,7 +96,10 @@ class Game_Capture():
     def add_frame_to_video(self, image):
         if CONST.ENABLE_VIDEO_RECORDING:
             if isinstance(self.video_recorder, type(None)): self.start_recording()
-            self.video_recorder.write(image.original_image)
+            if CONST.SAVED_VIDEO_SIZE == 'RESIZED':
+                self.video_recorder.write(image.resized_image)
+            else:
+                self.video_recorder.write(image.original_image)
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################

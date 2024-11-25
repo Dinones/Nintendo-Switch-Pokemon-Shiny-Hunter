@@ -15,6 +15,10 @@ SKIPPED_FRAMES_TO_RECONNECT = 3
 # Used to debug issues and to save the video of the encounter. Disable this if you have performance issues
 ENABLE_VIDEO_RECORDING = True
 
+# Video size to save. ORIGINAL: Original size (ORIGINAL_FRAME_SIZE) | RESIZED: Resized size (MAIN_FRAME_SIZE)
+# If you have performance issues, use RESIZED
+SAVED_VIDEO_SIZE = 'ORIGINAL'
+
 ###########################################################################################################################
 #################################################     IMAGE PROCESSING     ################################################
 ###########################################################################################################################
@@ -38,6 +42,11 @@ TEXT_PARAMS = {
 PRESSED_BUTTON_COLOR = (255, 0, 200)
 SAVE_IMAGES = True
 IMAGES_FOLDER_PATH = 'Media/Images/'
+
+# Image size to save. ORIGINAL: Original size (ORIGINAL_FRAME_SIZE) | RESIZED: Resized size (MAIN_FRAME_SIZE)
+# If you have performance issues, use RESIZED
+SAVED_IMAGE_SIZE = 'ORIGINAL'
+
 # [BYTES] 1GB = 1073741824B
 CRITICAL_AVAILABLE_SPACE = 1*1073741824
 PIXEL_COLOR_DIFF_THRESHOLD = 7
@@ -95,7 +104,6 @@ WILD_WALKING_SECONDS = 1
 # 'NS': Up/Down | 'EW': Right/Left
 WILD_WALKING_DIRECTION = 'EW'
 MOVE_FORWARD_STATIC_ENCOUNTER = False
-SKIP_UPDATING_GAME = False
 
 # Variable used to skip a white screen flash (some static encounters have two white screen flashes)
 # - Default value is 2
@@ -111,10 +119,21 @@ STUCK_TIMER_SECONDS = 25
 FAILURE_DETECTION_TIME_WARN = 3*60
 # [SECONDS] How long no pokemon has been found before completely stopping program (ERROR)
 FAILURE_DETECTION_TIME_ERROR = 5*60
+# Time to wait before detecting a shiny, used for BDSP and SWSH
 SHINY_DETECTION_TIME = 2
 HOME_MENU_COLOR = (237, 237, 237)
 PAIRING_MENU_COLOR = (135, 135, 125)
 LOAD_SCREEN_BLACK_COLOR = (5, 5, 5)
+SWSH_COMBAT_BOX = {
+    'x_black_grey': 10,
+    'y1_black_grey': 20,
+    'y2_black_grey': 45,
+    'color_black_grey': (38, 38, 38),
+    'x_grey': 65,
+    'y1_grey': 20,
+    'y2_grey': 45,
+    'color_grey': (51, 51, 51),
+}
 TEXT_BOX_LINE = {
     'x': int(MAIN_FRAME_SIZE[0] // 16 * 1.2),
     'y1': int(MAIN_FRAME_SIZE[1] // 16 * 1),
@@ -180,6 +199,7 @@ TELEGRAM_SETTINGS = {
 
 # Will color the pixels that are being used to detect the state. Videos will be recorded without colored pixels
 TESTING = True
+LOG_LEVEL = 'INFO'
 SAVE_ERROR_VIDEOS = False
 TESTING_COLOR = (255, 0, 255)
 TESTING_VIDEO_PATH = 'Media/Tests/XXXX.mp4'

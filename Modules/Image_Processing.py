@@ -99,14 +99,19 @@ class Image_Processing():
 
     #######################################################################################################################
 
-    # Draw the pressed button in the switch controller image
     def draw_button(self, button = ''):
-        if not isinstance(button, str): return
-        if isinstance(self.FPS_image, type(None)):
-            # Without copy() method, images would be linked, meaning that modifying one image would also alter the other
-            self.FPS_image = np.copy(self.resized_image)
+        """
+        Draw the pressed button in the switch controller image
+        The image is first copied from the original image to reset the states of the buttons.
 
+        :param button: The button to be drawn
+        """
+        if not isinstance(button, str): return
+
+        # We always copy the original image to reset the states of the buttons
+        # This method is called only one time per frame, so it's not a performance issue.
         self.FPS_image = np.copy(self.resized_image)
+
         button_coordinates = {
             'A': (307, 80),
             'B': (288, 99),
@@ -171,6 +176,7 @@ class Image_Processing():
         # --psm 6: Assume a single uniform block of text
         custom_config = '--oem 1 --psm 6'
         text = pytesseract.image_to_string(name_image, config=custom_config)
+        logging.debug(f'Detected text: {text}')
 
         # EN: Dialga appeared! | A wild Drifloon appeared! | Go! Chimchar!
         # FR: Dialga apparaît! | Un Baudrive sauvage apparaît! | Ouisticram! Go!
@@ -197,7 +203,10 @@ class Image_Processing():
     def save_image(self, pokemon_name = ''):
         file_name = f'{pokemon_name}_{str(int(time()))}' if pokemon_name else str(int(time()))
         self.saved_image_path = f'./{CONST.IMAGES_FOLDER_PATH}{file_name}.png'
-        cv2.imwrite(self.saved_image_path, self.original_image)
+        if CONST.SAVED_IMAGE_SIZE == 'RESIZED':
+            cv2.imwrite(self.saved_image_path, self.resized_image)
+        else:
+            cv2.imwrite(self.saved_image_path, self.original_image)
 
     #######################################################################################################################
 
@@ -210,9 +219,9 @@ class Image_Processing():
 
     def populate_debug_image(self, stats):
         cv2.putText(
-            self.FPS_image, f'Button: {stats.get("button")} | State: {stats.get("event")}', 
-            CONST.DEBUG_IMAGE_TEXT_PARAMS['position'], cv2.FONT_HERSHEY_SIMPLEX, 
-            CONST.DEBUG_IMAGE_TEXT_PARAMS['font_scale'], CONST.DEBUG_IMAGE_TEXT_PARAMS['font_color'], 
+            self.FPS_image, f'Button: {stats.get("button")} | State: {stats.get("event")}',
+            CONST.DEBUG_IMAGE_TEXT_PARAMS['position'], cv2.FONT_HERSHEY_SIMPLEX,
+            CONST.DEBUG_IMAGE_TEXT_PARAMS['font_scale'], CONST.DEBUG_IMAGE_TEXT_PARAMS['font_color'],
             CONST.DEBUG_IMAGE_TEXT_PARAMS['thickness'], cv2.LINE_AA
         )
 
@@ -222,7 +231,7 @@ def create_debug_image(frame_size = CONST.DEBUG_FRAME_SIZE):
     black_image = np.zeros((frame_size[1], frame_size[0], 4), dtype=np.uint8)
 
     # Same color as for the GUI borders (#aaa)
-    border_color = [170, 170, 170, 255] 
+    border_color = [170, 170, 170, 255]
     border_thickness = 1
     black_image[:border_thickness, :] = border_color  # Top
     black_image[-border_thickness:, :] = border_color  # Bottom
@@ -246,7 +255,7 @@ if __name__ == "__main__":
 
     LEFT_ARROW_KEY_VALUE = 65361
     RIGHT_ARROW_KEY_VALUE = 65363
-   
+
     #######################################################################################################################
 
     def main_menu():

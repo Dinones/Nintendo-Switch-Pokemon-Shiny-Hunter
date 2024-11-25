@@ -3,6 +3,9 @@ __pycache__
 .vscode/
 .pytest_cache
 
+# pyenv virtualenv environment configuration
+.python-version
+
 /Media/Tests/
 /Media/Images/
 /Media/Videos/

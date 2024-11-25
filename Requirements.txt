@@ -1,12 +1,14 @@
+setuptools==75.5.0
+wheel==0.45.0
 numpy==1.24.4
 nxbt==0.1.4
-opencv_python==4.5.3.56
+opencv_python==4.5.5.64
 Pillow==10.4.0
-PyAutoGUI==0.9.53
+PyAutoGUI==0.9.54
 pynput==1.7.1
 cllist==1.1.0
 llist==0.7.1
-pytesseract==0.3.10
+pytesseract==0.3.13
 playsound3==2.4.0
 PyQt5==5.14.1
 requests==2.32.3
