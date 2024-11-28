@@ -5,6 +5,7 @@
 # Set the cwd to the one of the file
 import os
 import logging
+from typing import Tuple
 
 if __name__ == '__main__':
     try: os.chdir(os.path.dirname(__file__))
@@ -16,7 +17,8 @@ import numpy as np
 from time import time, perf_counter
 import PyQt5.QtGui as pyqt_g
 
-import sys; sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import Colored_Strings as COLOR_str
 import Constants as CONST
 
@@ -64,22 +66,26 @@ class Image_Processing():
 
     #######################################################################################################################
 
-    # Draw FPS at the top-left corner
-    def draw_FPS(self, FPS = 0):
+    # Ensure FPS image is initialized
+    def _ensure_fps_image(self):
         if isinstance(self.FPS_image, type(None)):
             # Without copy() method, images would be linked, meaning that modifying one image would also alter the other
             self.FPS_image = np.copy(self.resized_image)
+
+    #######################################################################################################################
+
+    # Draw FPS at the top-left corner
+    def draw_FPS(self, FPS = 0):
+        self._ensure_fps_image()
 
         cv2.putText(self.FPS_image, f'FPS: {FPS}', CONST.TEXT_PARAMS['position'], cv2.FONT_HERSHEY_SIMPLEX,
             CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'], CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
 
     #######################################################################################################################
 
-    # Write the spcified at the top-left corner
+    # Write the specified text at the top-left corner
     def write_text(self, text = '', position_offset = (0, 0)):
-        if isinstance(self.FPS_image, type(None)):
-            # Without copy() method, images would be linked, meaning that modifying one image would also alter the other
-            self.FPS_image = np.copy(self.resized_image)
+        self._ensure_fps_image()
 
         cv2.putText(self.FPS_image, text, tuple(a + b for a, b in zip(CONST.TEXT_PARAMS['position'], position_offset)),
             cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'], 
@@ -102,9 +108,6 @@ class Image_Processing():
     # Draw the pressed button in the switch controller image
     def draw_button(self, button = ''):
         if not isinstance(button, str): return
-        if isinstance(self.FPS_image, type(None)):
-            # Without copy() method, images would be linked, meaning that modifying one image would also alter the other
-            self.FPS_image = np.copy(self.resized_image)
 
         self.FPS_image = np.copy(self.resized_image)
         button_coordinates = {
@@ -137,24 +140,35 @@ class Image_Processing():
 
     #######################################################################################################################
 
-    # Return if all the pixels of the specifiead row are of the specified color
-    def check_multiple_pixel_colors(self, start, end, color):
-        if isinstance(self.FPS_image, type(None)):
-            # Without copy() method, images would be linked, meaning that modifying one image would also alter the other
-            self.FPS_image = np.copy(self.resized_image)
+    def check_column_pixel_colors(self, position: Tuple[int, int], column_height: int, color: Tuple[int, int, int], threshold: int = CONST.PIXEL_COLOR_DIFF_THRESHOLD):
+        """
+        Check if all pixels in a specified column are of the specified color.
+
+        Args:
+            position (tuple): The starting position (x, y) of the column.
+            column_height (int): The height of the column to check.
+            color (tuple): The color to check against.
+            threshold (int): The maximum difference allowed between the pixel color and the specified color.
+
+        Returns:
+            bool: True if all pixels match the specified color, False otherwise.
+        """
+        self._ensure_fps_image()
 
         match_pixels = True
-        for index in range(start[1], end[1]):
-            # if all(self.resized_image[-index][start[0]] == color): continue
-            differences = [abs(self.resized_image[-index][start[0]][color_index] - color[color_index])
+        for row_index in range(position[1], position[1] + column_height):
+            differences = [abs(self.resized_image[-row_index][position[0]][color_index] - color[color_index])
                 for color_index in range(3)]
-            if all(difference <= CONST.PIXEL_COLOR_DIFF_THRESHOLD for difference in differences): continue
+
             # If one False is found, there is no need to check the other pixels
-            else: match_pixels = False; break
+            if not all(difference <= threshold for difference in differences):
+                match_pixels = False
+                break
 
         # Color all the pixels that are being checked
         if CONST.TESTING:
-            for index in range(start[1], end[1]): self.FPS_image[-index][start[0]] = CONST.TESTING_COLOR
+            for row_index in range(position[1], position[1] + column_height):
+                self.FPS_image[-row_index][position[0]] = CONST.TESTING_COLOR
 
         return match_pixels
 
@@ -298,9 +312,9 @@ if __name__ == "__main__":
         # cv2.circle(image.original_image, (20, 20), 9, CONST.PRESSED_BUTTON_COLOR, -1)
         # cv2.rectangle(image.resized_image, (50, 333), (670, 365), (255, 255, 0), 1)
         # print(image.recognize_pokemon())
-        # print(image.check_multiple_pixel_colors(
-        #     [int(CONST.MAIN_FRAME_SIZE[0] // 16 * 13), int(CONST.MAIN_FRAME_SIZE[1] // 16 * 4)],
-        #     [int(CONST.MAIN_FRAME_SIZE[0] // 16 * 13), int(CONST.MAIN_FRAME_SIZE[1] // 16 * 5)],
+        # print(image.check_column_pixel_colors(
+        #     (int(CONST.MAIN_FRAME_SIZE[0] // 16 * 13), int(CONST.MAIN_FRAME_SIZE[1] // 16 * 4)),
+        #     CONST.COLOR_SCREEN_CHECK['column_height'],
         #     CONST.SELECTION_BOX_LINE['color']
         # ))
 

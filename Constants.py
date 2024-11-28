@@ -137,7 +137,20 @@ SELECTION_BOX_LINE = {
     # [BGR]
     'color': (250, 250, 250)
 }
-# 'L': Left | 'C': Center | 'R': Right 
+COLOR_SCREEN_CHECK = {
+    'top_left': (50, 25),
+    'center_left': (50, 405 // 2 - 25),
+    'bottom_left': (50, 405 - 50),
+    'top_right': (720 - 50, 25),
+    'center_right': (720 - 50, 405 // 2 - 25),
+    'bottom_right': (720 - 50, 405 - 50),
+    'center': (720 // 2 - 25, 405 // 2 - 25),
+    'column_height': 25,
+    'black_color': (5, 5, 5),
+    'white_color': (250, 250, 250)
+}
+
+# 'L': Left | 'C': Center | 'R': Right
 STARTER = 'R'
 
 ###########################################################################################################################
