@@ -315,7 +315,7 @@ if __name__ == "__main__":
         # print(image.check_column_pixel_colors(
         #     (int(CONST.MAIN_FRAME_SIZE[0] // 16 * 13), int(CONST.MAIN_FRAME_SIZE[1] // 16 * 4)),
         #     CONST.COLOR_SCREEN_CHECK['column_height'],
-        #     CONST.SELECTION_BOX_LINE['color']
+        #     CONST.COLOR_SCREEN_CHECK['white_color']
         # ))
 
         print(COLOR_str.PRESS_KEY_TO_INSTRUCTION

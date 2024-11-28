@@ -116,26 +116,24 @@ HOME_MENU_COLOR = (237, 237, 237)
 PAIRING_MENU_COLOR = (135, 135, 125)
 LOAD_SCREEN_BLACK_COLOR = (5, 5, 5)
 TEXT_BOX_LINE = {
-    'x': int(MAIN_FRAME_SIZE[0] // 16 * 1.2),
-    'y1': int(MAIN_FRAME_SIZE[1] // 16 * 1),
-    'y2': int(MAIN_FRAME_SIZE[1] // 16 * 2), 
-    # [BGR]
-    'color': (250, 250, 250),
-    'overworld_x': int(MAIN_FRAME_SIZE[0] // 16 * 3.5),
+    'left_white': (int(MAIN_FRAME_SIZE[0] // 16 * 1.2), int(MAIN_FRAME_SIZE[1] // 16 * 1)),
+    'right_white': (MAIN_FRAME_SIZE[0] - int(MAIN_FRAME_SIZE[0] // 16 * 1.2), int(MAIN_FRAME_SIZE[1] // 16 * 1)),
+    'overworld': (int(MAIN_FRAME_SIZE[0] // 16 * 3.5), int(MAIN_FRAME_SIZE[1] // 16 * 1)),
+    'border_left_x': 34,
+    'border_color': (74, 81, 73),
+    'border_color_threshold': 10
 }
 LIFE_BOX_LINE = {
-    'x': int(MAIN_FRAME_SIZE[0] // 96 * 1),
-    'y1': int(MAIN_FRAME_SIZE[1] // 16 * 2),
-    'y2': int(MAIN_FRAME_SIZE[1] // 16 * 2.6),
-    # [BGR]
-    'color': (250, 250, 250)
+    'position': (
+        int(MAIN_FRAME_SIZE[0] // 96 * 1),
+        int(MAIN_FRAME_SIZE[1] // 16 * 2)
+    ),
 }
 SELECTION_BOX_LINE = {
-    'x': int(MAIN_FRAME_SIZE[0] // 16 * 13),
-    'y1': int(MAIN_FRAME_SIZE[1] // 16 * 4),
-    'y2': int(MAIN_FRAME_SIZE[1] // 16 * 5),
-    # [BGR]
-    'color': (250, 250, 250)
+    'position': (
+        int(MAIN_FRAME_SIZE[0] // 16 * 13),
+        int(MAIN_FRAME_SIZE[1] // 16 * 4)
+    ),
 }
 COLOR_SCREEN_CHECK = {
     'top_left': (50, 25),
@@ -146,6 +144,7 @@ COLOR_SCREEN_CHECK = {
     'bottom_right': (720 - 50, 405 - 50),
     'center': (720 // 2 - 25, 405 // 2 - 25),
     'column_height': 25,
+    # [BGR]
     'black_color': (5, 5, 5),
     'white_color': (250, 250, 250)
 }

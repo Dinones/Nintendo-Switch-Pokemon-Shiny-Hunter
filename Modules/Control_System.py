@@ -208,8 +208,8 @@ def starter_encounter(image, state):
     elif state == 'STARTER_SELECTION_2':
         # Look for the selection box: (Yes/No)
         if image.check_column_pixel_colors(
-            (CONST.SELECTION_BOX_LINE['x'], CONST.SELECTION_BOX_LINE['y1']),
-            CONST.COLOR_SCREEN_CHECK['column_height'], CONST.SELECTION_BOX_LINE['color']
+            CONST.SELECTION_BOX_LINE['position'],
+            CONST.COLOR_SCREEN_CHECK['column_height'], CONST.COLOR_SCREEN_CHECK['white_color']
         ):
             return 'STARTER_SELECTION_3'
 
@@ -494,7 +494,7 @@ def check_image_position_colors(image, color, positions):
     return True
 
 
-def is_life_box_visible(image, color=CONST.LIFE_BOX_LINE['color']):
+def is_life_box_visible(image):
     """
     Checks if the life box is visible in the given image.
     Args:
@@ -505,9 +505,9 @@ def is_life_box_visible(image, color=CONST.LIFE_BOX_LINE['color']):
     """
 
     return image.check_column_pixel_colors(
-        (CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y1']),
+        CONST.LIFE_BOX_LINE['position'],
         CONST.COLOR_SCREEN_CHECK['column_height'],
-        color
+        CONST.COLOR_SCREEN_CHECK['white_color']
     )
 
 ###########################################################################################################################
@@ -540,8 +540,8 @@ def is_text_box_visible(image):
         image,
         CONST.COLOR_SCREEN_CHECK['white_color'],
         [
-            (CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']),
-            (CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']),
+            CONST.TEXT_BOX_LINE['left_white'],
+            CONST.TEXT_BOX_LINE['right_white']
         ]
     )
 
@@ -572,9 +572,9 @@ def is_overworld_visible(image):
         bool: True if the overworld is visible, False otherwise.
     """
     return image.check_column_pixel_colors(
-        (CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y1']),
+        CONST.TEXT_BOX_LINE['overworld'],
         CONST.COLOR_SCREEN_CHECK['column_height'],
-        CONST.TEXT_BOX_LINE['color']
+        CONST.COLOR_SCREEN_CHECK['white_color']
     )
 
 ###########################################################################################################################
@@ -587,7 +587,7 @@ def is_white_screen_visible(image):
     Returns:
         bool: True if the white screen is visible, False otherwise.
     """
-    return is_single_color(image, CONST.TEXT_BOX_LINE['color'])
+    return is_single_color(image, CONST.COLOR_SCREEN_CHECK['white_color'])
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
