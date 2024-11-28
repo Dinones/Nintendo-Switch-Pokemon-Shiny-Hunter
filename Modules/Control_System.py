@@ -428,6 +428,7 @@ def is_bdsp_loading_screen(image):
     BDSP loading screen has a black background.
     The top-left may have the Nintendo logo.
     The bottom-right may have the Nintendo Switch logo or the Pokémon starters icons.
+    The center may have the Nintendo copyright texts.
 
     Args:
         image: The image to be checked.
@@ -441,7 +442,6 @@ def is_bdsp_loading_screen(image):
         [
             CONST.COLOR_SCREEN_CHECK['top_right'],
             CONST.COLOR_SCREEN_CHECK['center_left'],
-            CONST.COLOR_SCREEN_CHECK['center'],
             CONST.COLOR_SCREEN_CHECK['center_right'],
             CONST.COLOR_SCREEN_CHECK['bottom_left']
         ]

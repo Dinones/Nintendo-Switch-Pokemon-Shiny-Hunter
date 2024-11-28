@@ -136,12 +136,12 @@ SELECTION_BOX_LINE = {
     ),
 }
 COLOR_SCREEN_CHECK = {
-    'top_left': (50, 25),
+    'top_left': (50, 405 - 50),
     'center_left': (50, 405 // 2 - 25),
-    'bottom_left': (50, 405 - 50),
-    'top_right': (720 - 50, 25),
+    'bottom_left': (50, 25),
+    'top_right': (720 - 50, 405 - 50),
     'center_right': (720 - 50, 405 // 2 - 25),
-    'bottom_right': (720 - 50, 405 - 50),
+    'bottom_right': (720 - 50, 25),
     'center': (720 // 2 - 25, 405 // 2 - 25),
     'column_height': 25,
     # [BGR]
