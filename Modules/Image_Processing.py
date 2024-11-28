@@ -542,7 +542,7 @@ if __name__ == "__main__":
 
         index = 0
         cached_index = -1
-        pause = False
+        pause = True # Start paused; if not, when the dialog shows up, multiple images are already processed
         second_text_position = [CONST.TEXT_PARAMS['position'][0], CONST.TEXT_PARAMS['position'][1] + 20]
 
         while index < len(images):
