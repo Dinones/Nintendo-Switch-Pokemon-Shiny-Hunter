@@ -39,7 +39,7 @@ def search_wild_pokemon(image, state):
     # Game loaded, player in the overworld
     elif state == 'MOVE_PLAYER':
         # Look for the load combat white screen
-        if is_load_fight_white_screen_visible(image):
+        if is_white_screen_visible(image):
             state_timer = time()
             return 'ENTER_COMBAT_1'
 
@@ -118,8 +118,7 @@ def static_encounter(image, state):
     # Game loading, full black screen
     elif state == 'RESTART_GAME_4':
         # Check if the black screen has ended
-        # is_black_screen_visible can't be used due to the loading Pokémon sprites
-        if not is_life_box_visible(image, CONST.LOAD_SCREEN_BLACK_COLOR):
+        if not is_bdsp_loading_screen(image):
             return 'ENTER_STATIC_COMBAT_1'
 
     # Game loaded, player in the overworld
@@ -139,7 +138,7 @@ def static_encounter(image, state):
     # Some static encounters make a white screen flash before entering the combat
     elif state == 'ENTER_STATIC_COMBAT_3' and time() - state_timer >= CONST.STATIC_ENCOUNTERS_DELAY:
         # Look for the load combat white screen
-        if is_load_fight_white_screen_visible(image):
+        if is_white_screen_visible(image):
             state_timer = time()
             return 'ENTER_COMBAT_1'
 
@@ -172,8 +171,7 @@ def starter_encounter(image, state):
 
     elif state == 'RESTART_GAME_4':
         # Check if the black screen has ended
-        # is_black_screen_visible can't be used due to the loading Pokémon sprites
-        if not is_life_box_visible(image, CONST.LOAD_SCREEN_BLACK_COLOR):
+        if not is_bdsp_loading_screen(image):
             return 'ENTER_LAKE_1'
 
     # In front of the lake entrance
@@ -209,9 +207,9 @@ def starter_encounter(image, state):
     # Briefcase is opened
     elif state == 'STARTER_SELECTION_2':
         # Look for the selection box: (Yes/No)
-        if image.check_multiple_pixel_colors(
-            [CONST.SELECTION_BOX_LINE['x'], CONST.SELECTION_BOX_LINE['y1']],
-            [CONST.SELECTION_BOX_LINE['x'], CONST.SELECTION_BOX_LINE['y2']], CONST.SELECTION_BOX_LINE['color']
+        if image.check_column_pixel_colors(
+            CONST.SELECTION_BOX_LINE['position'],
+            CONST.COLOR_SCREEN_CHECK['column_height'], CONST.COLOR_SCREEN_CHECK['white_color']
         ):
             return 'STARTER_SELECTION_3'
 
@@ -288,15 +286,14 @@ def shaymin_encounter(image, state):
     # Some static encounters make a white screen flash before entering the combat
     elif state == 'ENTER_STATIC_COMBAT_3' and time() - state_timer >= CONST.STATIC_ENCOUNTERS_DELAY:
         # Look for the load combat white screen
-        if is_load_fight_white_screen_visible(image):
+        if is_white_screen_visible(image):
             state_timer = time()
             return 'ENTER_COMBAT_1'
     
     # Game loading, full black screen
     elif state == 'RESTART_GAME_4':
         # Check if the black screen has ended
-        # is_black_screen_visible can't be used due to the loading Pokémon sprites
-        if not is_life_box_visible(image, CONST.LOAD_SCREEN_BLACK_COLOR):
+        if not is_bdsp_loading_screen(image):
             return 'ENTER_STATIC_COMBAT_1'
 
     # Combat loaded (Wild Pokémon stars)
@@ -381,27 +378,24 @@ def _check_common_states(image, state):
 
     # Nintendo Switch main menu
     elif state == 'RESTART_GAME_1':
-        # is_black_screen_visible can't be used due to the loading Nintendo Switch logo
-        if is_life_box_visible(image, CONST.LOAD_SCREEN_BLACK_COLOR):
+        if is_bdsp_loading_screen(image):
             return 'RESTART_GAME_2'
 
     # Game main loadscreen (Full black screen)
     elif state == 'RESTART_GAME_2':
-        # is_black_screen_visible can't be used due to the loading Nintendo logo
-        if not is_life_box_visible(image, CONST.LOAD_SCREEN_BLACK_COLOR):
+        if not is_bdsp_loading_screen(image):
             return 'RESTART_GAME_3'
 
     # Game main loadscreen (Dialga / Palkia)
     elif state == 'RESTART_GAME_3':
-        # is_black_screen_visible can't be used due to the loading Pokémon sprites
-        if is_life_box_visible(image, CONST.LOAD_SCREEN_BLACK_COLOR):
+        if is_bdsp_loading_screen(image):
             return 'RESTART_GAME_4'
 
     # Combat loadscreen (Full white screen)
     # Some wild encounters missdetect this state with the grass animation
     elif state == 'ENTER_COMBAT_1' and time() - state_timer >= 0.5:
         # Check if the white load screen has ended
-        if not is_load_fight_white_screen_visible(image):
+        if not is_white_screen_visible(image):
             return 'ENTER_COMBAT_2'
 
     # Combat loadscreen (Grass/Rock/Water animation, wild pokémon appearing)
@@ -427,7 +421,80 @@ def _check_common_states(image, state):
 ###########################################################################################################################
 ###########################################################################################################################
 
-def is_life_box_visible(image, color=CONST.LIFE_BOX_LINE['color']):
+def is_bdsp_loading_screen(image):
+    """
+    Checks if the given image matches the BDSP loading screen by verifying specific color positions.
+    
+    BDSP loading screen has a black background.
+    The top-left may have the Nintendo logo.
+    The bottom-right may have the Nintendo Switch logo or the Pokémon starters icons.
+    The center may have the Nintendo copyright texts.
+
+    Args:
+        image: The image to be checked.
+
+    Returns:
+        bool: True if the image matches the BDSP loading screen, False otherwise.
+    """
+    return check_image_position_colors(
+        image,
+        CONST.COLOR_SCREEN_CHECK['black_color'],
+        [
+            CONST.COLOR_SCREEN_CHECK['top_right'],
+            CONST.COLOR_SCREEN_CHECK['center_left'],
+            CONST.COLOR_SCREEN_CHECK['center_right'],
+            CONST.COLOR_SCREEN_CHECK['bottom_left']
+        ]
+    )
+
+
+def is_single_color(image, color):
+    """
+    Checks if image is of a single color.
+    
+    The image is considered to be of a single color if
+    specific positions in the image are of the given color.
+    The checked positions are the top-left, top-right, center, bottom-left, and bottom-right.
+
+    Args:
+        image (Image): The image to be checked.
+        color (tuple): The color to check for.
+
+    Returns:
+        bool: True if all specified positions in the image are of the given color, False otherwise.
+    """
+    return check_image_position_colors(
+        image,
+        color,
+        [
+            CONST.COLOR_SCREEN_CHECK['top_left'],
+            CONST.COLOR_SCREEN_CHECK['top_right'],
+            CONST.COLOR_SCREEN_CHECK['center'],
+            CONST.COLOR_SCREEN_CHECK['bottom_left'],
+            CONST.COLOR_SCREEN_CHECK['bottom_right']
+        ]
+    )
+
+
+def check_image_position_colors(image, color, positions):
+    """
+    Checks if the specified color is present at the given positions in the image.
+
+    Args:
+        image: The image to check.
+        color: The color to check for at the specified positions.
+        positions: A list of positions (coordinates) to check in the image.
+
+    Returns:
+        bool: True if the specified color is present at all given positions, False otherwise.
+    """
+    for position in positions:
+        if not image.check_column_pixel_colors(position, CONST.COLOR_SCREEN_CHECK['column_height'], color):
+            return False
+    return True
+
+
+def is_life_box_visible(image):
     """
     Checks if the life box is visible in the given image.
     Args:
@@ -436,9 +503,11 @@ def is_life_box_visible(image, color=CONST.LIFE_BOX_LINE['color']):
     Returns:
         bool: True if the life box is visible, False otherwise.
     """
-    return image.check_multiple_pixel_colors(
-        [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y1']],
-        [CONST.LIFE_BOX_LINE['x'], CONST.LIFE_BOX_LINE['y2']], color
+
+    return image.check_column_pixel_colors(
+        CONST.LIFE_BOX_LINE['position'],
+        CONST.COLOR_SCREEN_CHECK['column_height'],
+        CONST.COLOR_SCREEN_CHECK['white_color']
     )
 
 ###########################################################################################################################
@@ -451,30 +520,46 @@ def is_black_screen_visible(image):
     Returns:
         bool: True if the black screen is visible, False otherwise.
     """
-    return is_load_fight_white_screen_visible(image, CONST.LOAD_SCREEN_BLACK_COLOR)
+    return is_single_color(image, CONST.LOAD_SCREEN_BLACK_COLOR)
 
 ###########################################################################################################################
 
 def is_text_box_visible(image):
     """
     Checks if the text box is visible in the given image.
+    The text box is considered visible if the text box content is white
+    and the area outside the text box content is not white.
+
     Args:
         image: The image in which to check for the text box.
-        x: The x coordinate of the text box.
     Returns:
         bool: True if the text box is visible, False otherwise.
     """
-    text_box_left_visible = image.check_multiple_pixel_colors(
-        [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
-        [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']],
-        CONST.TEXT_BOX_LINE['color'])
 
-    text_box_right_visible = image.check_multiple_pixel_colors(
-        [CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
-        [CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']],
-        CONST.TEXT_BOX_LINE['color'])
+    is_text_box_content_white = check_image_position_colors(
+        image,
+        CONST.COLOR_SCREEN_CHECK['white_color'],
+        [
+            CONST.TEXT_BOX_LINE['left_white'],
+            CONST.TEXT_BOX_LINE['right_white']
+        ]
+    )
 
-    return text_box_left_visible and text_box_right_visible
+    if not is_text_box_content_white:
+        # Stop testing if the text box content is not white
+        return False
+
+    is_outside_text_box_white = check_image_position_colors(
+        image,
+        CONST.COLOR_SCREEN_CHECK['white_color'],
+        [
+            CONST.COLOR_SCREEN_CHECK['top_left'],
+            CONST.COLOR_SCREEN_CHECK['top_right'],
+            CONST.COLOR_SCREEN_CHECK['center'],
+        ]
+    )
+
+    return not is_outside_text_box_white
 
 ###########################################################################################################################
 
@@ -486,14 +571,15 @@ def is_overworld_visible(image):
     Returns:
         bool: True if the overworld is visible, False otherwise.
     """
-    return image.check_multiple_pixel_colors(
-        [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y1']],
-        [CONST.TEXT_BOX_LINE['overworld_x'], CONST.TEXT_BOX_LINE['y2']], CONST.TEXT_BOX_LINE['color']
+    return image.check_column_pixel_colors(
+        CONST.TEXT_BOX_LINE['overworld'],
+        CONST.COLOR_SCREEN_CHECK['column_height'],
+        CONST.COLOR_SCREEN_CHECK['white_color']
     )
 
 ###########################################################################################################################
 
-def is_load_fight_white_screen_visible(image, color=CONST.TEXT_BOX_LINE['color']):
+def is_white_screen_visible(image):
     """
     Checks if the white screen is visible in the given image.
     Args:
@@ -501,27 +587,7 @@ def is_load_fight_white_screen_visible(image, color=CONST.TEXT_BOX_LINE['color']
     Returns:
         bool: True if the white screen is visible, False otherwise.
     """
-    is_bottom_left_white = image.check_multiple_pixel_colors(
-        [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
-        [CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']],
-        color)
-
-    is_bottom_right_white = image.check_multiple_pixel_colors(
-        [CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y1']],
-        [CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.TEXT_BOX_LINE['y2']],
-        color)
-
-    is_top_left_white = image.check_multiple_pixel_colors(
-        [CONST.TEXT_BOX_LINE['x'], CONST.MAIN_FRAME_SIZE[1] - CONST.TEXT_BOX_LINE['y2']],
-        [CONST.TEXT_BOX_LINE['x'], CONST.MAIN_FRAME_SIZE[1] - CONST.TEXT_BOX_LINE['y1']],
-        color)
-
-    is_top_right_white = image.check_multiple_pixel_colors(
-        [CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.MAIN_FRAME_SIZE[1] - CONST.TEXT_BOX_LINE['y2']],
-        [CONST.MAIN_FRAME_SIZE[0] - CONST.TEXT_BOX_LINE['x'], CONST.MAIN_FRAME_SIZE[1] - CONST.TEXT_BOX_LINE['y1']],
-        color)
-
-    return is_bottom_left_white and is_bottom_right_white and is_top_left_white and is_top_right_white
+    return is_single_color(image, CONST.COLOR_SCREEN_CHECK['white_color'])
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
