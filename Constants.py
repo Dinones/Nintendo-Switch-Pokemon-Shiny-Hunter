@@ -195,6 +195,6 @@ DEBUG_IMAGE_TEXT_PARAMS = {
     'font_color': (255, 0, 125),
     'thickness': 2,
     # [PIXELS]
-    'position': (10, 28),
-    'star_num_color': (0, 0, 255)
+    'button_position': (10, 28),
+    'state_position': (195, 28)
 }

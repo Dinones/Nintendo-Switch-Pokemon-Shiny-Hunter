@@ -214,8 +214,14 @@ class Image_Processing():
             if stats.get(key) != self.debug_image_stats.get(key):
                 self.FPS_image = np.copy(self.original_image)
                 cv2.putText(
-                    self.FPS_image, f'Button: {stats.get("button")} | State: {stats.get("event")}', 
-                    CONST.DEBUG_IMAGE_TEXT_PARAMS['position'], cv2.FONT_HERSHEY_SIMPLEX, 
+                    self.FPS_image, f'Button: {stats.get("button")}',
+                    CONST.DEBUG_IMAGE_TEXT_PARAMS['button_position'], cv2.FONT_HERSHEY_SIMPLEX, 
+                    CONST.DEBUG_IMAGE_TEXT_PARAMS['font_scale'], CONST.DEBUG_IMAGE_TEXT_PARAMS['font_color'], 
+                    CONST.DEBUG_IMAGE_TEXT_PARAMS['thickness'], cv2.LINE_AA
+                )
+                cv2.putText(
+                    self.FPS_image, f'| State: {stats.get("event")}', 
+                    CONST.DEBUG_IMAGE_TEXT_PARAMS['state_position'], cv2.FONT_HERSHEY_SIMPLEX, 
                     CONST.DEBUG_IMAGE_TEXT_PARAMS['font_scale'], CONST.DEBUG_IMAGE_TEXT_PARAMS['font_color'], 
                     CONST.DEBUG_IMAGE_TEXT_PARAMS['thickness'], cv2.LINE_AA
                 )
