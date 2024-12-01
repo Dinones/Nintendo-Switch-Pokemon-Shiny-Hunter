@@ -212,13 +212,15 @@ class Image_Processing():
         # Only populates if something has changed to reduce workload
         for key in stats:
             if stats.get(key) != self.debug_image_stats.get(key):
+                self.FPS_image = np.copy(self.original_image)
                 cv2.putText(
                     self.FPS_image, f'Button: {stats.get("button")} | State: {stats.get("event")}', 
                     CONST.DEBUG_IMAGE_TEXT_PARAMS['position'], cv2.FONT_HERSHEY_SIMPLEX, 
                     CONST.DEBUG_IMAGE_TEXT_PARAMS['font_scale'], CONST.DEBUG_IMAGE_TEXT_PARAMS['font_color'], 
                     CONST.DEBUG_IMAGE_TEXT_PARAMS['thickness'], cv2.LINE_AA
                 )
-                break
+                self.debug_image_stats = stats
+                return
 
     #######################################################################################################################
 
@@ -230,10 +232,10 @@ class Image_Processing():
 ###########################################################################################################################
 
 def create_debug_image(frame_size = CONST.DEBUG_FRAME_SIZE):
-    black_image = np.zeros((frame_size[1], frame_size[0], 4), dtype=np.uint8)
+    black_image = np.zeros((frame_size[1], frame_size[0], 3), dtype=np.uint8)
 
     # Same color as for the GUI borders (#aaa)
-    border_color = [170, 170, 170, 255] 
+    border_color = [170, 170, 170] 
     border_thickness = 1
     black_image[:border_thickness, :] = border_color  # Top
     black_image[-border_thickness:, :] = border_color  # Bottom
@@ -241,7 +243,6 @@ def create_debug_image(frame_size = CONST.DEBUG_FRAME_SIZE):
     black_image[:, -border_thickness:] = border_color  # Right
 
     debug_image = Image_Processing(black_image)
-    debug_image.FPS_image = np.copy(debug_image.original_image)
 
     return debug_image
 
@@ -624,6 +625,8 @@ if __name__ == "__main__":
             )
 
         image = Image_Processing(f'../{CONST.TESTING_IMAGE_PATH}')
+        # Ensures images has 3 channels instead of 4
+        image.original_image = cv2.cvtColor(image.original_image, cv2.COLOR_BGRA2BGR)
         image.resize_image()
 
         debug_image = create_debug_image()

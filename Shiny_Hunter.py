@@ -35,8 +35,8 @@ from FPS_Counter import FPS_Counter
 from Telegram import Telegram_Sender
 from GUI import GUI, App, play_sound
 from Game_Capture import Game_Capture
-from Image_Processing import Image_Processing
 from Switch_Controller import Switch_Controller
+from Image_Processing import Image_Processing, create_debug_image
 
 ###########################################################################################################################
 #################################################     INITIALIZATIONS     #################################################
@@ -78,6 +78,8 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
 
     last_saved_image_path = str()
 
+    if CONST.DEBUG_VIDEO: debug_image = create_debug_image()
+
     while not shutdown_event.is_set():
         image = Image_Processing(Video_Capture.read_frame())
         if isinstance(image.original_image, type(None)): 
@@ -95,8 +97,6 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
         image.resize_image()
         FPS.get_FPS()
         image.draw_FPS(FPS.FPS)
-
-        Video_Capture.add_frame_to_video(image)
 
         # Don't care if any race condition
         if Controller.current_button_pressed != Controller.previous_button_pressed:
@@ -228,6 +228,14 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                     shutdown_event.set()
                 Timer(3, lambda: _stop_execution(Video_Capture, shutdown_event)).start()
                 Controller.current_event = "STOP_3"
+
+            if CONST.DEBUG_VIDEO:
+                stats = {'event': Controller.current_event, 'button': Controller.current_button_pressed}
+                debug_image.populate_debug_image(stats)
+                combined_image = debug_image.stack_images(debug_image.FPS_image, image.FPS_image)
+                Video_Capture.add_frame_to_video(combined_image)
+            else:
+                Video_Capture.add_frame_to_video(image.original_image)
 
             update_items = {
                 'image': image,

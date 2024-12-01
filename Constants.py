@@ -12,7 +12,7 @@ OUTPUT_VIDEO_PATH = 'Media/Videos/Video.avi'
 # Can't be greater than 110s!
 SHINY_RECORDING_SECONDS = 60
 SKIPPED_FRAMES_TO_RECONNECT = 3
-# Used to debug issues and to save the video of the encounter. Disable this if you have performance issues
+# Save the video of the encounter. Disable this if you have performance issues
 ENABLE_VIDEO_RECORDING = True
 
 ###########################################################################################################################
@@ -186,8 +186,9 @@ TESTING_VIDEO_PATH = 'Media/Tests/XXXX.mp4'
 TESTING_IMAGE_PATH = 'Media/Tests/XXXX.png'
 TESTING_DATABASE_PATH = 'Media/Tests/Test_Database.db'
 SAVING_FRAMES_PATH = 'Media/Tests'
+# WARNING: ENABLE_VIDEO_RECORDING must also be True. Used to debug issues
 DEBUG_VIDEO = False
-DEBUG_FRAME_SIZE = (720, 40)
+DEBUG_FRAME_SIZE = (MAIN_FRAME_SIZE[0], 40)
 DEBUG_IMAGE_TEXT_PARAMS = {
     'font_scale': 0.8,
     # [BGR]

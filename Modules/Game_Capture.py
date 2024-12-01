@@ -77,8 +77,16 @@ class Game_Capture():
     # Record a video of each encounter
     def start_recording(self):
         if CONST.ENABLE_VIDEO_RECORDING:
+            if CONST.DEBUG_VIDEO:
+                frame_size = (
+                    CONST.MAIN_FRAME_SIZE[0],
+                    CONST.MAIN_FRAME_SIZE[1] + CONST.DEBUG_FRAME_SIZE[1]
+                )
+            else:
+                frame_size = CONST.ORIGINAL_FRAME_SIZE
+
             self.video_recorder = cv2.VideoWriter(f'./{CONST.OUTPUT_VIDEO_PATH}', cv2.VideoWriter_fourcc(*'XVID'),
-                CONST.VIDEO_FPS, CONST.ORIGINAL_FRAME_SIZE)
+                CONST.VIDEO_FPS, frame_size)
 
     #######################################################################################################################
 
@@ -89,14 +97,14 @@ class Game_Capture():
             try: 
                 if special_name: os.rename(f'./{CONST.OUTPUT_VIDEO_PATH}', f'./Media/Videos/{special_name}.avi')
             except: pass
-        
+
     #######################################################################################################################
 
     # Add a frame to the video
     def add_frame_to_video(self, image):
         if CONST.ENABLE_VIDEO_RECORDING:
             if isinstance(self.video_recorder, type(None)): self.start_recording()
-            self.video_recorder.write(image.original_image)
+            self.video_recorder.write(image)
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
