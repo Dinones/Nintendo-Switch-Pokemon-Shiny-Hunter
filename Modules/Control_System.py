@@ -33,7 +33,7 @@ def search_wild_pokemon(image, state):
     # Game main loadscreen (Full black screen)
     elif state == 'RESTART_GAME_4':
         # Look for the top-left load screen pixel
-        if image.check_pixel_color(CONST.LOAD_SCREEN_BLACK_COLOR):
+        if not is_bdsp_loading_screen(image):
             return 'MOVE_PLAYER'
 
     # Game loaded, player in the overworld
