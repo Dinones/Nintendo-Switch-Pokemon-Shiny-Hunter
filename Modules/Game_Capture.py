@@ -112,6 +112,7 @@ class Game_Capture():
 
 if __name__ == "__main__":
     from time import time
+    from Control_System import *
     from FPS_Counter import FPS_Counter
     from Image_Processing import Image_Processing
 
@@ -184,6 +185,7 @@ if __name__ == "__main__":
             image.resize_image()
             FPS.get_FPS()
             image.draw_FPS(FPS.FPS)
+            # print(is_home_screen_visible(image))
 
             cv2.imshow(f'{CONST.BOT_NAME} - Device {CONST.VIDEO_CAPTURE_INDEX}', image.FPS_image)
 

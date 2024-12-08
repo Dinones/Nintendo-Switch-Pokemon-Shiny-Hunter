@@ -7,15 +7,34 @@
 
 <h3 id="check-pairing-color">Check Pairing Color</h3>
 
-<p>Check if a specific pixel color located in the top-left part of the screen is of the gray color of the pairing screen.</p>
 
+<p>Check if the top-left and top-right parts of the screen are of the gray color of the pairing screen.</p>
+
+<details>
+    <summary>Toggle to see example images</summary>
+    <h3 align="center">
+            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/Pairing%20Screen%20Visible.png" width="70%">
+        <p></p>
+    </h3>
+</details>
+
+<hr>
 
 <!-- #################### CHECK HOME COLOR #################### -->
 
 <h3 id="check-home-color">Check Home Color</h3>
 
-<p>Verify if the color of a specific pixel located in the top-left part of the screen matches the gray color of the HOME screen.</p>
+<p>Verify if the color of some specific pixels located in the top-left part of the screen match the gray color of the HOME screen.</p>
 
+<details>
+    <summary>Toggle to see example images</summary>
+    <h3 align="center">
+            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/Home%20Screen%20Visible.png" width="70%">
+        <p></p>
+    </h3>
+</details>
+
+<hr>
 
 <!-- #################### WHITE SCREEN VISIBLE #################### -->
 
@@ -23,6 +42,15 @@
 
 <p>Check if the image is completely white by verifying that some specific positions in the image <i>(top-left, top-right, center, bottom-left, and bottom-right)</i> are white.</p>
 
+<details>
+    <summary>Toggle to see example images</summary>
+    <h3 align="center">
+            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/White%20Loadscreen%20Visible.png" width="70%">
+        <p></p>
+    </h3>
+</details>
+
+<hr>
 
 <!-- #################### BLACK SCREEN VISIBLE #################### -->
 
@@ -30,20 +58,47 @@
 
 <p>Check if the image is completely black by verifying that some specific positions in the image <i>(top-left, top-right, center, bottom-left and bottom-right)</i> are black.</p>
 
+<details>
+    <summary>Toggle to see example images</summary>
+    <h3 align="center">
+            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/Black%20Loadscreen%20Visible.png" width="70%">
+        <p></p>
+    </h3>
+</details>
+
+<hr>
 
 <!-- #################### TEXT BOX VISIBLE #################### -->
 
 <h3 id="text-box-visible">Text Box Visible</h3>
 
-<p>Check if the text box is visible by verifying the left and right parts of the text box.</p>
+<p>Check if the text box is visible by verifying the left and right parts of the text box, as well as other points that are not white <i>(center, top-left, and top-right)</i>. This is done to avoid mistakenly detecting the screen as displaying the text box if it is entirely white.</p>
 
+<details>
+    <summary>Toggle to see example images</summary>
+    <h3 align="center">
+            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/Text%20Box%20Visible.png" width="70%">
+        <p></p>
+    </h3>
+</details>
+
+<hr>
 
 <!-- #################### LIFE BOX VISIBLE #################### -->
 
 <h3 id="text-box-visible">Life Box Visible</h3>
 
-<p>Check if the life box is visible by verifying the left part of the life box.</p>
+<p>Check if the life box is visible by verifying the left part of the life box, as well as other points that are not white <i>(center, center-left, and top-left)</i>. This is done to avoid mistakenly detecting the screen as displaying the life box if it is entirely white.</p>
 
+<details>
+    <summary>Toggle to see example images</summary>
+    <h3 align="center">
+            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/Life%20Box%20Visible.png" width="70%">
+        <p></p>
+    </h3>
+</details>
+
+<hr>
 
 <!-- #################### BDSP LOAD SCREEN VISIBLE #################### -->
 
@@ -51,9 +106,22 @@
 
 <p>Check if the image is the BDSP black load screen by verifying that some specific positions in the image <i>(top-right, center-right, center-left and bottom-left)</i> are black.</p>
 
+<details>
+    <summary>Toggle to see example images</summary>
+    <h3 align="center">
+            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/BDSP%20Loadscreen%20Visible%201.png" width="70%">
+        <p></p>
+            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/BDSP%20Loadscreen%20Visible%202.png" width="70%">
+        <p></p>
+            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/BDSP%20Loadscreen%20Visible%203.png" width="70%">
+        <p></p>
+    </h3>
+</details>
+
+<br><br>
 
 <!-- #################### WILD STATE MACHINE #################### -->
-⠀
+
 <h2>
     <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Star.svg" width="30px" align="top"/>
     ⠀Wild Encounter State Machine
@@ -266,7 +334,7 @@ graph TD
 <!-- #################### RESTART GAME STATE DIAGRAM #################### -->
 ⠀
 > [!NOTE]
-> If at any point during the execution of the previous state machine it: <ul><p><li>Gets stuck in any state (excluding "ENTER_LAKE_4", "MOVE_PLAYER", "SHINY_FOUND", "WAIT_HOME_SCREEN" and "WAIT_PAIRING_SCREEN" states) for more than <code>CONST.STUCK_TIMER_SECONDS</code>.</li></p><p><li>Stays more than <code>CONST.FAILURE_DETECTION_TIME_WARN</code> seconds without encountering any pokémon (if not in any of the "ENTER_LAKE_4", "RESTART_GAME_1", "SHINY_FOUND", "WAIT_HOME_SCREEN" and "WAIT_PAIRING_SCREEN" states).</li></p></ul> 
+> If at any point during the execution of the previous state machine it: <ul><p><li>Gets stuck in any state (excluding ENTER_LAKE_4, MOVE_PLAYER, SHINY_FOUND, WAIT_HOME_SCREEN and WAIT_PAIRING_SCREEN states) for more than <code>CONST.STUCK_TIMER_SECONDS</code>.</li></p><p><li>Stays more than <code>CONST.FAILURE_DETECTION_TIME_WARN</code> seconds without encountering any pokémon (if not in any of the ENTER_LAKE_4, RESTART_GAME_1, SHINY_FOUND, WAIT_HOME_SCREEN and WAIT_PAIRING_SCREEN states). This happens when the program got stuck in a loop where states are changing, but no Pokémon is found; such as repeatedly trying to escape from combat without success.</li></p></ul> 
 > It will restart the game by executing the following state machine:
 
 ⠀

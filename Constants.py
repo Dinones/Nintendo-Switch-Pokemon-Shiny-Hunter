@@ -112,9 +112,6 @@ FAILURE_DETECTION_TIME_WARN = 3*60
 # [SECONDS] How long no pokemon has been found before completely stopping program (ERROR)
 FAILURE_DETECTION_TIME_ERROR = 5*60
 SHINY_DETECTION_TIME = 2
-HOME_MENU_COLOR = (237, 237, 237)
-PAIRING_MENU_COLOR = (135, 135, 125)
-LOAD_SCREEN_BLACK_COLOR = (5, 5, 5)
 TEXT_BOX_LINE = {
     'left_white': (int(MAIN_FRAME_SIZE[0] // 16 * 1.2), int(MAIN_FRAME_SIZE[1] // 16 * 1)),
     'right_white': (MAIN_FRAME_SIZE[0] - int(MAIN_FRAME_SIZE[0] // 16 * 1.2), int(MAIN_FRAME_SIZE[1] // 16 * 1)),
@@ -123,13 +120,6 @@ TEXT_BOX_LINE = {
     'border_color': (74, 81, 73),
     'border_color_threshold': 10
 }
-LIFE_BOX_LINE = {
-    'position': (
-        int(MAIN_FRAME_SIZE[0] // 96 * 1),
-        int(MAIN_FRAME_SIZE[1] // 16 * 2)
-    ),
-    'column_height': 15,
-}
 SELECTION_BOX_LINE = {
     'position': (
         int(MAIN_FRAME_SIZE[0] // 16 * 13),
@@ -137,6 +127,11 @@ SELECTION_BOX_LINE = {
     ),
 }
 COLOR_SCREEN_CHECK = {
+    # Bottom point of the columns. Setting points relative to MAIN_FRAME_SIZE allows the resolution to scale without 
+    # requiring any additional adjustments
+    'life_box': (int(MAIN_FRAME_SIZE[0] // 96 * 1), int(MAIN_FRAME_SIZE[1] // 16 * 1.6)),
+    'selection_box': (int(MAIN_FRAME_SIZE[0] // 16 * 13), int(MAIN_FRAME_SIZE[1] // 16 * 4)),
+    'home_menu': (int(MAIN_FRAME_SIZE[0] // 48 * 1), int(MAIN_FRAME_SIZE[1] // 8 * 7)),
     'top_left': (50, MAIN_FRAME_SIZE[1] - 50),
     'center_left': (50, MAIN_FRAME_SIZE[1] // 2 - 25),
     'bottom_left': (50, 25),
@@ -144,10 +139,16 @@ COLOR_SCREEN_CHECK = {
     'center_right': (MAIN_FRAME_SIZE[0] - 50, MAIN_FRAME_SIZE[1] // 2 - 25),
     'bottom_right': (MAIN_FRAME_SIZE[0] - 50, 25),
     'center': (MAIN_FRAME_SIZE[0] // 2 - 25, MAIN_FRAME_SIZE[1] // 2 - 25),
+
+    # Pixel heights
     'column_height': 25,
+    'small_column_height': 15,
+
     # [BGR]
     'black_color': (5, 5, 5),
-    'white_color': (250, 250, 250)
+    'white_color': (250, 250, 250),
+    'home_menu_color': (237, 237, 237),
+    'pairing_menu_color': (135, 135, 125),
 }
 
 # 'L': Left | 'C': Center | 'R': Right

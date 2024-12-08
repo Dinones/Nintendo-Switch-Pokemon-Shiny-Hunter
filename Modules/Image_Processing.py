@@ -140,19 +140,28 @@ class Image_Processing():
 
     #######################################################################################################################
 
-    def check_column_pixel_colors(self, position: Tuple[int, int], column_height: int, color: Tuple[int, int, int], threshold: int = CONST.PIXEL_COLOR_DIFF_THRESHOLD):
+    def check_column_pixel_colors(
+        self,
+        position: Tuple[int, int],
+        column_height: int, 
+        color: Tuple[int, int, int],
+        threshold: int = CONST.PIXEL_COLOR_DIFF_THRESHOLD
+    ) -> bool:
+
         """
         Check if all pixels in a specified column are of the specified color.
 
         Args:
-            position (tuple): The starting position (x, y) of the column.
+            position (tuple): The starting bottom position (x, y) of the column.
             column_height (int): The height of the column to check.
             color (tuple): The color to check against.
-            threshold (int): The maximum difference allowed between the pixel color and the specified color.
+            threshold (int): The maximum difference allowed between the pixel color and the specified color. (Default: 
+                CONST.PIXEL_COLOR_DIFF_THRESHOLD)
 
         Returns:
             bool: True if all pixels match the specified color, False otherwise.
         """
+        
         self._ensure_fps_image()
 
         match_pixels = True
@@ -165,12 +174,17 @@ class Image_Processing():
                 match_pixels = False
                 break
 
-        # Color all the pixels that are being checked
+        self.draw_column(position, column_height)
+
+        return match_pixels
+
+    #######################################################################################################################
+
+    def draw_column(self, position: Tuple[int, int], column_height: int) -> None:
+
         if CONST.TESTING:
             for row_index in range(position[1], position[1] + column_height):
                 self.FPS_image[-row_index][position[0]] = CONST.TESTING_COLOR
-
-        return match_pixels
 
     #######################################################################################################################
 

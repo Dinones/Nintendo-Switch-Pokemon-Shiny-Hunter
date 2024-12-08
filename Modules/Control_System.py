@@ -27,7 +27,7 @@ def search_wild_pokemon(image, state):
     # Nintendo Switch pairing controller menu
     elif state == 'WAIT_HOME_SCREEN':
         # Look for the top-left nintendo switch main menu pixel
-        if image.check_pixel_color(CONST.HOME_MENU_COLOR):
+        if is_home_screen_visible(image):
             return 'MOVE_PLAYER'
 
     # Game main loadscreen (Full black screen)
@@ -112,7 +112,7 @@ def static_encounter(image, state):
     # Nintendo Switch pairing controller menu
     elif state == 'WAIT_HOME_SCREEN':
         # Look for the top-left nintendo switch main menu pixel
-        if image.check_pixel_color(CONST.HOME_MENU_COLOR):
+        if is_home_screen_visible(image):
             return 'ENTER_STATIC_COMBAT_1'
 
     # Game loading, full black screen
@@ -166,7 +166,7 @@ def starter_encounter(image, state):
     # Nintendo Switch pairing controller menu
     elif state == 'WAIT_HOME_SCREEN':
         # Look for the top-left nintendo switch main menu pixel
-        if image.check_pixel_color(CONST.HOME_MENU_COLOR):
+        if is_home_screen_visible(image):
             return 'ENTER_LAKE_1'
 
     elif state == 'RESTART_GAME_4':
@@ -266,7 +266,7 @@ def shaymin_encounter(image, state):
     # Nintendo Switch pairing controller menu
     elif state == 'WAIT_HOME_SCREEN':
         # Look for the top-left nintendo switch main menu pixel
-        if image.check_pixel_color(CONST.HOME_MENU_COLOR): 
+        if is_home_screen_visible(image): 
             return 'ENTER_STATIC_COMBAT_1'
 
     # Game loaded, player in the overworld
@@ -367,13 +367,13 @@ def _check_common_states(image, state):
     # Nintendo Switch pairing controller menu
     if state == 'WAIT_PAIRING_SCREEN':
         # Look for the pairing controller screen
-        if image.check_pixel_color(CONST.PAIRING_MENU_COLOR):
+        if is_pairing_screen_visible(image):
             return 'WAIT_HOME_SCREEN'
 
     # Stuck screen (only used when the bot gets stuck in one state)
     if state == 'RESTART_GAME_0':
         # Look for the top-left nintendo switch main menu pixel
-        if image.check_pixel_color(CONST.HOME_MENU_COLOR):
+        if is_home_screen_visible(image):
             return 'RESTART_GAME_1'
 
     # Nintendo Switch main menu
@@ -447,8 +447,9 @@ def is_bdsp_loading_screen(image):
         ]
     )
 
+###########################################################################################################################
 
-def is_single_color(image, color):
+def is_screen_of_single_color(image, color):
     """
     Checks if image is of a single color.
 
@@ -475,8 +476,10 @@ def is_single_color(image, color):
         ]
     )
 
+###########################################################################################################################
 
 def check_image_position_colors(image, color, positions):
+
     """
     Checks if the specified color is present at the given positions in the image.
 
@@ -488,11 +491,41 @@ def check_image_position_colors(image, color, positions):
     Returns:
         bool: True if the specified color is present at all given positions, False otherwise.
     """
-    for position in positions:
-        if not image.check_column_pixel_colors(position, CONST.COLOR_SCREEN_CHECK['column_height'], color):
-            return False
-    return True
 
+    match_pixels = True
+    for position in positions:
+        # If a detection has failed, there is no need to check the other columns. Nevertheless, they are printed to 
+        # show they are being checked
+        if match_pixels:
+            match_pixels = image.check_column_pixel_colors(position, CONST.COLOR_SCREEN_CHECK['column_height'], color)
+        else: image.draw_column(position, CONST.COLOR_SCREEN_CHECK['column_height'])
+
+    return match_pixels
+
+###########################################################################################################################
+
+def is_pairing_screen_visible(image):
+    return check_image_position_colors(
+        image,
+        CONST.COLOR_SCREEN_CHECK['pairing_menu_color'],
+        [
+            CONST.COLOR_SCREEN_CHECK['top_left'],
+            CONST.COLOR_SCREEN_CHECK['top_right']
+        ]
+    )
+
+###########################################################################################################################
+
+def is_home_screen_visible(image):
+
+    # Check if the top-left part is of the HOME menu color
+    return image.check_column_pixel_colors(
+        CONST.COLOR_SCREEN_CHECK['home_menu'],
+        CONST.COLOR_SCREEN_CHECK['column_height'],
+        CONST.COLOR_SCREEN_CHECK['home_menu_color']
+    )
+
+###########################################################################################################################
 
 def is_life_box_visible(image):
     """
@@ -507,13 +540,17 @@ def is_life_box_visible(image):
         bool: True if the life box is visible, False otherwise.
     """
 
-    is_life_box_content_white = image.check_column_pixel_colors(CONST.LIFE_BOX_LINE['position'], CONST.LIFE_BOX_LINE['column_height'],
-                                             CONST.COLOR_SCREEN_CHECK['white_color'])
+    is_life_box_content_white = image.check_column_pixel_colors(
+        CONST.COLOR_SCREEN_CHECK['life_box'],
+        CONST.COLOR_SCREEN_CHECK['small_column_height'],
+        CONST.COLOR_SCREEN_CHECK['white_color']
+    )
 
     if not is_life_box_content_white:
-        # Stop testing if the text box content is not white
+        # Stop testing if the text box content is not white, but still drawing the other columns
+        for column in ('top_left', 'center_left', 'center', 'bottom_right'):
+            image.draw_column(CONST.COLOR_SCREEN_CHECK[column], CONST.COLOR_SCREEN_CHECK['column_height'])
         return False
-
 
     is_outside_life_box_not_white = check_image_position_colors(
         image,
@@ -538,7 +575,7 @@ def is_black_screen_visible(image):
     Returns:
         bool: True if the black screen is visible, False otherwise.
     """
-    return is_single_color(image, CONST.LOAD_SCREEN_BLACK_COLOR)
+    return is_screen_of_single_color(image, CONST.COLOR_SCREEN_CHECK['black_color'])
 
 ###########################################################################################################################
 
@@ -564,7 +601,9 @@ def is_text_box_visible(image):
     )
 
     if not is_text_box_content_white:
-        # Stop testing if the text box content is not white
+        # Stop testing if the text box content is not white, but still drawing the other columns
+        for column in ('top_left', 'top_right', 'center'):
+            image.draw_column(CONST.COLOR_SCREEN_CHECK[column], CONST.COLOR_SCREEN_CHECK['column_height'])
         return False
 
     is_outside_text_box_not_white = check_image_position_colors(
@@ -605,7 +644,7 @@ def is_white_screen_visible(image):
     Returns:
         bool: True if the white screen is visible, False otherwise.
     """
-    return is_single_color(image, CONST.COLOR_SCREEN_CHECK['white_color'])
+    return is_screen_of_single_color(image, CONST.COLOR_SCREEN_CHECK['white_color'])
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
