@@ -7,7 +7,6 @@
 
 <h3 id="check-pairing-color">Check Pairing Color</h3>
 
-
 <p>Check if the top-left and top-right parts of the screen are of the gray color of the pairing screen.</p>
 
 <details>
