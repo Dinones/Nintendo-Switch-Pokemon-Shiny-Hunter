@@ -245,7 +245,7 @@ graph TD
 
     %%%%%%%%%%%%%%%% ENTER_COMBAT %%%%%%%%%%%%%%%%
 
-    TIMER_COMMENT_1@{shape: braces, label: "<span style='font-size:14px;'>Solves <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/issues/49" style='text-decoration:none;'>#49</a></span>"} --> WHITE_SCREEN_VISIBLE_2
+    TIMER_COMMENT_1@{shape: braces, label: "<span style='font-size:14px;'>Solves <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/issues/49" style='text-decoration:none;'>#49</a></span>"} -.-> WHITE_SCREEN_VISIBLE_2
     ENTER_COMBAT_1 --> WHITE_SCREEN_VISIBLE_2{"
         Time > 0.5s
         + not <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Starter%20State%20Machine.md#white-screen-visible" style='text-decoration:none;'>White<br>Screen<br>Visible</a>

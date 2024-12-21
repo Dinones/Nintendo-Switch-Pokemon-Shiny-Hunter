@@ -45,12 +45,21 @@ def search_wild_pokemon(image, state):
 
     # Combat loaded (Wild Pokémon stars)
     elif state == 'CHECK_SHINY':
-        # Look for the text box
+        # If the text box is detected before WILD_SHINY_DETECTION_TIME seconds, it means the shiny animation has not
+        # occurred
         if is_combat_text_box_visible(image):
             return 'ESCAPE_COMBAT_1'
 
-        # Check the elapsed time
-        if image.shiny_detection_time and time() - image.shiny_detection_time >= CONST.SHINY_DETECTION_TIME:
+        # If the life box is detected before WILD_SHINY_DETECTION_TIME seconds, it indicates that due to resource overload, 
+        # the game skipped the animation of the trainer throwing the Pokéball. This causes the combat to load faster than 
+        # expected, and if this condition is not checked, it would always trigger a false positive shiny detection. If the 
+        # wild Pokémon was shiny, it would still be detected, as the time would exceed 5 seconds
+        if is_life_box_visible(image):
+            return 'ESCAPE_COMBAT_1'
+
+        # Check the elapsed time. The shiny star animation combined with the trainer throwing the Pokémon takes over 5 
+        # seconds. In fact, the shiny animation alone exceeds 5 seconds, so the shiny is confirmed
+        if image.shiny_detection_time and time() - image.shiny_detection_time >= CONST.WILD_SHINY_DETECTION_TIME:
             return 'SHINY_FOUND'
 
     # Combat loaded (Both Pokémon in the field)
@@ -250,7 +259,7 @@ def starter_encounter(image, state):
 
     else:
         state = _check_common_states(image, state)
-        # We need to check the starter pokémon, not the wild one
+        # We need to check the starter Pokémon, not the wild one
         if state == 'ENTER_COMBAT_3': state = 'ENTER_COMBAT_3B'
 
     return state
@@ -398,7 +407,7 @@ def _check_common_states(image, state):
         if not is_white_screen_visible(image):
             return 'ENTER_COMBAT_2'
 
-    # Combat loadscreen (Grass/Rock/Water animation, wild pokémon appearing)
+    # Combat loadscreen (Grass/Rock/Water animation, wild Pokémon appearing)
     elif state == 'ENTER_COMBAT_2':
         # Look for the text box
         if is_combat_text_box_visible(image):
@@ -413,7 +422,7 @@ def _check_common_states(image, state):
     # Stopping program
     elif state == 'STOP_1':
         # Look for the pairing controller screen
-        if image.check_pixel_color(CONST.PAIRING_MENU_COLOR):
+        if is_pairing_screen_visible(image):
             return 'STOP_2'
 
     return state

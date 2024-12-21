@@ -112,6 +112,9 @@ FAILURE_DETECTION_TIME_WARN = 3*60
 # [SECONDS] How long no pokemon has been found before completely stopping program (ERROR)
 FAILURE_DETECTION_TIME_ERROR = 5*60
 SHINY_DETECTION_TIME = 2
+# [SECONDS] Used to avoid false positives when the game skips the trainer's Pokéball throwing animation due to resource 
+# overload. Value MUST be between 4s < WILD_SHINY_DETECTION_TIME < 6s
+WILD_SHINY_DETECTION_TIME = 5
 TEXT_BOX_LINE = {
     'left_white': (int(MAIN_FRAME_SIZE[0] // 16 * 1.2), int(MAIN_FRAME_SIZE[1] // 16 * 1)),
     'right_white': (MAIN_FRAME_SIZE[0] - int(MAIN_FRAME_SIZE[0] // 16 * 1.2), int(MAIN_FRAME_SIZE[1] // 16 * 1)),

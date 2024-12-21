@@ -174,7 +174,7 @@ graph TD
 
     %%%%%%%%%%%%%%%% ENTER_COMBAT %%%%%%%%%%%%%%%%
 
-    TIMER_COMMENT_1@{shape: braces, label: "<span style='font-size:14px;'>Solves <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/issues/49" style='text-decoration:none;'>#49</a></span>"} --> WHITE_SCREEN_VISIBLE_2
+    TIMER_COMMENT_1@{shape: braces, label: "<span style='font-size:14px;'>Solves <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/issues/49" style='text-decoration:none;'>#49</a></span>"} -.-> WHITE_SCREEN_VISIBLE_2
     ENTER_COMBAT_1 --> WHITE_SCREEN_VISIBLE_2{"
         Time > 0.5s
         + not <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#white-screen-visible" style='text-decoration:none;'>White<br>Screen<br>Visible</a>
@@ -222,13 +222,20 @@ graph TD
     ")
 
 
-    CHECK_SHINY --> SHINY_TIMER{"Time > <span style='color:#999;'>SHINY_<br>DETECTION_TIME</span>"}
+    CHECK_SHINY --> SHINY_TIMER{"Time > <span style='color:#999;'>WILD_<br>SHINY_<br>DETECTION_TIME</span>"}
     SHINY_TIMER -- "⠀✘⠀" --> CHECK_SHINY
     SHINY_TIMER -- "⠀✔⠀" --> SHINY_FOUND("
         <b>SHINY_FOUND</b>
         <span style='font-size:14px; color:#C00;'>Loading Combat</span>
     ")
 
+
+    CHECK_SHINY --> LIFE_BOX_VISIBLE_BUG{"
+        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#life-box-visible" style='text-decoration:none;'>Life Box<br>Visible</a>
+    "}
+    LIFE_BOX_VISIBLE_BUG -- "⠀✘⠀" --> CHECK_SHINY
+    LIFE_BOX_VISIBLE_BUG -- "⠀✔⠀" --> ESCAPE_COMBAT_1
+    TIMER_COMMENT_2@{shape: braces, label: "<span style='font-size:14px;'>Solves <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/issues/49" style='text-decoration:none;'>#57</a></span>"} -.-> LIFE_BOX_VISIBLE_BUG
 
     %%%%%%%%%%%%%%%% SHINY_FOUND %%%%%%%%%%%%%%%%
 
@@ -332,7 +339,7 @@ graph TD
     class START,END Start;
 
     classDef Check_Functions font-size:13px;
-    class CHECK_PAIRING_COLOR,CHECK_HOME_COLOR,WHITE_SCREEN_VISIBLE_1,WHITE_SCREEN_VISIBLE_2,TEXT_BOX_VISIBLE_1,TEXT_BOX_VISIBLE_2,TEXT_BOX_VISIBLE_3,SHINY_TIMER,SHINY_RECORDING_TIME,LIFE_BOX_VISIBLE_1,TEXT_BOX_VISIBLE_4,TEXT_BOX_VISIBLE_5,LIFE_BOX_VISIBLE_2,BLACK_SCREEN_VISIBLE_1,BLACK_SCREEN_VISIBLE_2,LIFE_BOX_VISIBLE_3,TEXT_BOX_VISIBLE_6,START_TIMER_1,START_TIMER_2 Check_Functions;
+    class CHECK_PAIRING_COLOR,CHECK_HOME_COLOR,WHITE_SCREEN_VISIBLE_1,WHITE_SCREEN_VISIBLE_2,TEXT_BOX_VISIBLE_1,TEXT_BOX_VISIBLE_2,TEXT_BOX_VISIBLE_3,SHINY_TIMER,SHINY_RECORDING_TIME,LIFE_BOX_VISIBLE_1,TEXT_BOX_VISIBLE_4,TEXT_BOX_VISIBLE_5,LIFE_BOX_VISIBLE_2,BLACK_SCREEN_VISIBLE_1,BLACK_SCREEN_VISIBLE_2,LIFE_BOX_VISIBLE_3,LIFE_BOX_VISIBLE_BUG,TEXT_BOX_VISIBLE_6,START_TIMER_1,START_TIMER_2 Check_Functions;
 ```
 
 
