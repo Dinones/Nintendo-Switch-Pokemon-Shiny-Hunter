@@ -35,6 +35,26 @@
 
 <hr>
 
+<!-- #################### BDSP LOAD SCREEN VISIBLE #################### -->
+
+<h3 id="bdsp-load-screen-visible">BDSP Load Screen Visible</h3>
+
+<p>Check if the image is the BDSP black load screen by verifying that some specific positions in the image <i>(top-right, center-right, center-left and bottom-left)</i> are black.</p>
+
+<details>
+    <summary>Toggle to see example images</summary>
+    <h3 align="center">
+            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/BDSP%20Loadscreen%20Visible%201.png" width="70%">
+        <p></p>
+            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/BDSP%20Loadscreen%20Visible%202.png" width="70%">
+        <p></p>
+            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/BDSP%20Loadscreen%20Visible%203.png" width="70%">
+        <p></p>
+    </h3>
+</details>
+
+<hr>
+
 <!-- #################### WHITE SCREEN VISIBLE #################### -->
 
 <h3 id="white-screen-visible">White Screen Visible</h3>
@@ -67,9 +87,9 @@
 
 <hr>
 
-<!-- #################### TEXT BOX VISIBLE #################### -->
+<!-- #################### COMBAT TEXT BOX VISIBLE #################### -->
 
-<h3 id="text-box-visible">Text Box Visible</h3>
+<h3 id="combat-text-box-visible">Combat Text Box Visible</h3>
 
 <p>Check if the text box is visible by verifying the left and right parts of the text box, as well as other points that are not white <i>(center, top-left, and top-right)</i>. This is done to avoid mistakenly detecting the screen as displaying the text box if it is entirely white.</p>
 
@@ -85,7 +105,7 @@
 
 <!-- #################### LIFE BOX VISIBLE #################### -->
 
-<h3 id="text-box-visible">Life Box Visible</h3>
+<h3 id="life-box-visible">Life Box Visible</h3>
 
 <p>Check if the life box is visible by verifying the left part of the life box, as well as other points that are not white <i>(center, center-left, and top-left)</i>. This is done to avoid mistakenly detecting the screen as displaying the life box if it is entirely white.</p>
 
@@ -93,26 +113,6 @@
     <summary>Toggle to see example images</summary>
     <h3 align="center">
             <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/Life%20Box%20Visible.png" width="70%">
-        <p></p>
-    </h3>
-</details>
-
-<hr>
-
-<!-- #################### BDSP LOAD SCREEN VISIBLE #################### -->
-
-<h3 id="bdsp-load-screen-visible">BDSP Load Screen Visible</h3>
-
-<p>Check if the image is the BDSP black load screen by verifying that some specific positions in the image <i>(top-right, center-right, center-left and bottom-left)</i> are black.</p>
-
-<details>
-    <summary>Toggle to see example images</summary>
-    <h3 align="center">
-            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/BDSP%20Loadscreen%20Visible%201.png" width="70%">
-        <p></p>
-            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/BDSP%20Loadscreen%20Visible%202.png" width="70%">
-        <p></p>
-            <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/BDSP%20Loadscreen%20Visible%203.png" width="70%">
         <p></p>
     </h3>
 </details>
@@ -135,7 +135,7 @@ graph TD
         <span style='font-size:14px; color:#C00;'>Pairing Screen</span>
     ")
     WAIT_PAIRING_SCREEN --> CHECK_PAIRING_COLOR{"
-        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#check-pairing-color" style='text-decoration:none;'>Check</br>Pairing</br>Color</a>
+        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#check-pairing-color" style='text-decoration:none;'>Check<br>Pairing<br>Color</a>
     "}
     CHECK_PAIRING_COLOR -- "⠀✘⠀" --> WAIT_PAIRING_SCREEN
     CHECK_PAIRING_COLOR -- "⠀✔⠀" --> WAIT_HOME_SCREEN("
@@ -148,7 +148,7 @@ graph TD
     %%%%%%%%%%%%%%%% WAIT_HOME_SCREEN %%%%%%%%%%%%%%%%
     
     WAIT_HOME_SCREEN --> CHECK_HOME_COLOR{"
-        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#check-home-color" style='text-decoration:none;'>Check</br>Home</br>Color</a>
+        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#check-home-color" style='text-decoration:none;'>Check<br>Home<br>Color</a>
     "}
     CHECK_HOME_COLOR -- "⠀✘⠀" --> WAIT_HOME_SCREEN
     CHECK_HOME_COLOR -- "⠀✔⠀" --> MOVE_PLAYER("
@@ -161,10 +161,12 @@ graph TD
     %%%%%%%%%%%%%%%% MOVE_PLAYER %%%%%%%%%%%%%%%%
 
     MOVE_PLAYER --> WHITE_SCREEN_VISIBLE_1{"
-        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#white-screen-visible" style='text-decoration:none;'>White</br>Screen</br>Visible</a>
+        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#white-screen-visible" style='text-decoration:none;'>White<br>Screen<br>Visible</a>
     "}
     WHITE_SCREEN_VISIBLE_1 -- "⠀✘⠀" --> MOVE_PLAYER
-    WHITE_SCREEN_VISIBLE_1 -- "⠀✔⠀" --> ENTER_COMBAT_1("
+    WHITE_SCREEN_VISIBLE_1 -- "⠀✔⠀" --> START_TIMER_1{{"Start Timer"}}
+    
+    START_TIMER_1 --> ENTER_COMBAT_1("
         <b>ENTER_COMBAT_1</b>
         <span style='font-size:14px; color:#C00;'>Combat White Loadscreen</span>
     ")
@@ -172,9 +174,10 @@ graph TD
 
     %%%%%%%%%%%%%%%% ENTER_COMBAT %%%%%%%%%%%%%%%%
 
+    TIMER_COMMENT_1@{shape: braces, label: "<span style='font-size:14px;'>Solves <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/issues/49" style='text-decoration:none;'>#49</a></span>"} --> WHITE_SCREEN_VISIBLE_2
     ENTER_COMBAT_1 --> WHITE_SCREEN_VISIBLE_2{"
         Time > 0.5s
-        + not <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#white-screen-visible" style='text-decoration:none;'>White</br>Screen</br>Visible</a>
+        + not <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#white-screen-visible" style='text-decoration:none;'>White<br>Screen<br>Visible</a>
     "}
     WHITE_SCREEN_VISIBLE_2 -- "⠀✘⠀" --> ENTER_COMBAT_1
     WHITE_SCREEN_VISIBLE_2 -- "⠀✔⠀" --> ENTER_COMBAT_2("
@@ -185,7 +188,7 @@ graph TD
 
 
     ENTER_COMBAT_2 --> TEXT_BOX_VISIBLE_1{"
-        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#text-box-visible" style='text-decoration:none;'>Text Box</br>Visible</a>
+        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#combat-text-box-visible" style='text-decoration:none;'>Combat<br>Text Box<br>Visible</a>
     "}
     TEXT_BOX_VISIBLE_1 -- "⠀✘⠀" --> ENTER_COMBAT_2
     TEXT_BOX_VISIBLE_1 -- "⠀✔⠀" --> ENTER_COMBAT_3("
@@ -195,10 +198,12 @@ graph TD
 
 
     ENTER_COMBAT_3 --> TEXT_BOX_VISIBLE_2{"
-        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#text-box-visible" style='text-decoration:none;'>Text Box</br>Visible</a>
+        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#combat-text-box-visible" style='text-decoration:none;'>Combat<br>Text Box<br>Visible</a>
     "}
     TEXT_BOX_VISIBLE_2 -- "⠀✔⠀" --> ENTER_COMBAT_3
-    TEXT_BOX_VISIBLE_2 -- "⠀✘⠀" --> CHECK_SHINY("
+    TEXT_BOX_VISIBLE_2 -- "⠀✘⠀" --> START_TIMER_2{{"Start Timer"}}
+
+    START_TIMER_2 --> CHECK_SHINY("
         <b>CHECK_SHINY</b>
         <span style='font-size:14px; color:#C00;'>Loading Combat</span>
         <span style='font-size:14px; color:#C00;'>(Trainer Throws Pokémon)</span>
@@ -208,7 +213,7 @@ graph TD
     %%%%%%%%%%%%%%%% CHECK_SHINY %%%%%%%%%%%%%%%%
 
     CHECK_SHINY --> TEXT_BOX_VISIBLE_3{"
-        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#text-box-visible" style='text-decoration:none;'>Text Box</br>Visible</a>
+        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#combat-text-box-visible" style='text-decoration:none;'>Combat<br>Text Box<br>Visible</a>
     "}
     TEXT_BOX_VISIBLE_3 -- "⠀✘⠀" --> CHECK_SHINY
     TEXT_BOX_VISIBLE_3 -- "⠀✔⠀" --> ESCAPE_COMBAT_1("
@@ -217,7 +222,7 @@ graph TD
     ")
 
 
-    CHECK_SHINY --> SHINY_TIMER{"Time > 2s"}
+    CHECK_SHINY --> SHINY_TIMER{"Time > <span style='color:#999;'>SHINY_<br>DETECTION_TIME</span>"}
     SHINY_TIMER -- "⠀✘⠀" --> CHECK_SHINY
     SHINY_TIMER -- "⠀✔⠀" --> SHINY_FOUND("
         <b>SHINY_FOUND</b>
@@ -227,7 +232,7 @@ graph TD
 
     %%%%%%%%%%%%%%%% SHINY_FOUND %%%%%%%%%%%%%%%%
 
-    SHINY_FOUND --> SHINY_RECORDING_TIME{{"Record Video for 60s"}}
+    SHINY_FOUND --> SHINY_RECORDING_TIME{{"Record Video for<br><span style='color:#999;'>SHINY_RECORDING_SECONDS</span>"}}
     SHINY_RECORDING_TIME --> STOP("
         <b>STOP</b>
         <span style='font-size:14px; color:#C00;'>Combat Loaded</span>
@@ -239,7 +244,7 @@ graph TD
     %%%%%%%%%%%%%%%% ESCAPE_COMBAT %%%%%%%%%%%%%%%%
 
     ESCAPE_COMBAT_1 --> LIFE_BOX_VISIBLE_1{"
-        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#life-box-visible" style='text-decoration:none;'>Life Box</br>Visible</a>
+        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#life-box-visible" style='text-decoration:none;'>Life Box<br>Visible</a>
     "}
     LIFE_BOX_VISIBLE_1 -- "⠀✘⠀" --> ESCAPE_COMBAT_1
     LIFE_BOX_VISIBLE_1 -- "⠀✔⠀" --> ESCAPE_COMBAT_2("
@@ -250,7 +255,7 @@ graph TD
 
 
     ESCAPE_COMBAT_2 --> TEXT_BOX_VISIBLE_4{"
-        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#text-box-visible" style='text-decoration:none;'>Text Box</br>Visible</a>
+        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#combat-text-box-visible" style='text-decoration:none;'>Combat<br>Text Box<br>Visible</a>
     "}
     TEXT_BOX_VISIBLE_4 -- "⠀✘⠀" --> ESCAPE_COMBAT_2
     TEXT_BOX_VISIBLE_4 -- "⠀✔⠀" --> ESCAPE_COMBAT_3("
@@ -260,7 +265,7 @@ graph TD
 
 
     ESCAPE_COMBAT_3 --> TEXT_BOX_VISIBLE_5{"
-        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#text-box-visible" style='text-decoration:none;'>Text Box</br>Visible</a>
+        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#combat-text-box-visible" style='text-decoration:none;'>Combat<br>Text Box<br>Visible</a>
     "}
     TEXT_BOX_VISIBLE_5 -- "⠀✔⠀" --> ESCAPE_COMBAT_3
     TEXT_BOX_VISIBLE_5 -- "⠀✘⠀" --> ESCAPE_COMBAT_4("
@@ -270,7 +275,7 @@ graph TD
 
 
     ESCAPE_COMBAT_4 --> LIFE_BOX_VISIBLE_2{"
-        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#life-box-visible" style='text-decoration:none;'>Life Box</br>Visible</a>
+        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#life-box-visible" style='text-decoration:none;'>Life Box<br>Visible</a>
     "}
     LIFE_BOX_VISIBLE_2 -- "⠀✘⠀" --> ESCAPE_COMBAT_4
     LIFE_BOX_VISIBLE_2 -- "⠀✔⠀" --> ESCAPE_FAILED_1("
@@ -285,7 +290,7 @@ graph TD
     %% ESCAPE_COMBAT section continues below this section
 
     ESCAPE_FAILED_1 --> LIFE_BOX_VISIBLE_3{"
-        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#life-box-visible" style='text-decoration:none;'>Life Box</br>Visible</a>
+        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#life-box-visible" style='text-decoration:none;'>Life Box<br>Visible</a>
     "}
     LIFE_BOX_VISIBLE_3 -- "⠀✘⠀" --> ESCAPE_FAILED_1
     LIFE_BOX_VISIBLE_3 -- "⠀✔⠀" --> ESCAPE_FAILED_2("
@@ -296,7 +301,7 @@ graph TD
 
 
     ESCAPE_FAILED_2 --> TEXT_BOX_VISIBLE_6{"
-        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#text-box-visible" style='text-decoration:none;'>Text Box</br>Visible</a>
+        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#combat-text-box-visible" style='text-decoration:none;'>Combat<br>Text Box<br>Visible</a>
     "}
     TEXT_BOX_VISIBLE_6 -- "⠀✘⠀" --> ESCAPE_FAILED_2
     TEXT_BOX_VISIBLE_6 -- "⠀✔⠀" --> ESCAPE_COMBAT_3
@@ -305,7 +310,7 @@ graph TD
     %%%%%%%%%%%%%%%% ESCAPE_COMBAT %%%%%%%%%%%%%%%%
 
     ESCAPE_COMBAT_4 --> BLACK_SCREEN_VISIBLE_1{"
-        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#black-screen-visible" style='text-decoration:none;'>Black</br>Screen</br>Visible</a>
+        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#black-screen-visible" style='text-decoration:none;'>Black<br>Screen<br>Visible</a>
     "}
     BLACK_SCREEN_VISIBLE_1 -- "⠀✘⠀" --> ESCAPE_COMBAT_4
     BLACK_SCREEN_VISIBLE_1 -- "⠀✔⠀" --> ESCAPE_COMBAT_5("
@@ -315,7 +320,7 @@ graph TD
 
 
     ESCAPE_COMBAT_5 --> BLACK_SCREEN_VISIBLE_2{"
-        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#black-screen-visible" style='text-decoration:none;'>Black</br>Screen</br>Visible</a>
+        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#black-screen-visible" style='text-decoration:none;'>Black<br>Screen<br>Visible</a>
     "}
     BLACK_SCREEN_VISIBLE_2 -- "⠀✔⠀" --> ESCAPE_COMBAT_5
     BLACK_SCREEN_VISIBLE_2 -- "⠀✘⠀" --> MOVE_PLAYER
@@ -327,13 +332,14 @@ graph TD
     class START,END Start;
 
     classDef Check_Functions font-size:13px;
-    class CHECK_PAIRING_COLOR,CHECK_HOME_COLOR,WHITE_SCREEN_VISIBLE_1,WHITE_SCREEN_VISIBLE_2,TEXT_BOX_VISIBLE_1,TEXT_BOX_VISIBLE_2,TEXT_BOX_VISIBLE_3,SHINY_TIMER,SHINY_RECORDING_TIME,LIFE_BOX_VISIBLE_1,TEXT_BOX_VISIBLE_4,TEXT_BOX_VISIBLE_5,LIFE_BOX_VISIBLE_2,BLACK_SCREEN_VISIBLE_1,BLACK_SCREEN_VISIBLE_2,LIFE_BOX_VISIBLE_3,TEXT_BOX_VISIBLE_6 Check_Functions;
+    class CHECK_PAIRING_COLOR,CHECK_HOME_COLOR,WHITE_SCREEN_VISIBLE_1,WHITE_SCREEN_VISIBLE_2,TEXT_BOX_VISIBLE_1,TEXT_BOX_VISIBLE_2,TEXT_BOX_VISIBLE_3,SHINY_TIMER,SHINY_RECORDING_TIME,LIFE_BOX_VISIBLE_1,TEXT_BOX_VISIBLE_4,TEXT_BOX_VISIBLE_5,LIFE_BOX_VISIBLE_2,BLACK_SCREEN_VISIBLE_1,BLACK_SCREEN_VISIBLE_2,LIFE_BOX_VISIBLE_3,TEXT_BOX_VISIBLE_6,START_TIMER_1,START_TIMER_2 Check_Functions;
 ```
+
 
 <!-- #################### RESTART GAME STATE DIAGRAM #################### -->
 ⠀
 > [!NOTE]
-> If at any point during the execution of the previous state machine it: <ul><p><li>Gets stuck in any state (excluding ENTER_LAKE_4, MOVE_PLAYER, SHINY_FOUND, WAIT_HOME_SCREEN and WAIT_PAIRING_SCREEN states) for more than <code>CONST.STUCK_TIMER_SECONDS</code>.</li></p><p><li>Stays more than <code>CONST.FAILURE_DETECTION_TIME_WARN</code> seconds without encountering any pokémon (if not in any of the ENTER_LAKE_4, RESTART_GAME_1, SHINY_FOUND, WAIT_HOME_SCREEN and WAIT_PAIRING_SCREEN states). This happens when the program got stuck in a loop where states are changing, but no Pokémon is found; such as repeatedly trying to escape from combat without success.</li></p></ul> 
+> If at any point during the execution of the previous state machine it: <ul><p><li>Gets stuck in any state (excluding ENTER_LAKE_4, MOVE_PLAYER, SHINY_FOUND, WAIT_HOME_SCREEN and WAIT_PAIRING_SCREEN states) for more than <code>CONST.STUCK_TIMER_SECONDS</code>.</li></p><p><li>Stays more than <code>CONST.FAILURE_DETECTION_TIME_WARN</code> seconds without encountering any pokémon (if not in any of the ENTER_LAKE_4, RESTART_GAME_1, SHINY_FOUND, WAIT_HOME_SCREEN and WAIT_PAIRING_SCREEN states). This happens when the program gets stuck in a loop where states are changing, but no Pokémon is found; such as repeatedly trying to escape from combat without success.</li></p></ul> 
 > It will restart the game by executing the following state machine:
 
 ⠀
@@ -346,7 +352,7 @@ graph TD
         <span style='font-size:13px; color:#C0C;'><i>restart_game_macro</i></span>
     ")
     RESTART_GAME_1 --> BDSP_BLACK_LOAD_SCREEN_1{"
-        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#bdsp-load-screen-visible" style='text-decoration:none;'>BDSP</br>Load<br>Screen</br>Visible</a>
+        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#bdsp-load-screen-visible" style='text-decoration:none;'>BDSP<br>Load<br>Screen<br>Visible</a>
     "}
     BDSP_BLACK_LOAD_SCREEN_1 -- "⠀✘⠀" --> RESTART_GAME_1
     BDSP_BLACK_LOAD_SCREEN_1 -- "⠀✔⠀" --> RESTART_GAME_2("
@@ -357,7 +363,7 @@ graph TD
 
 
     RESTART_GAME_2 --> BDSP_BLACK_LOAD_SCREEN_2{"
-        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#bdsp-load-screen-visible" style='text-decoration:none;'>BDSP</br>Load<br>Screen</br>Visible</a>
+        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#bdsp-load-screen-visible" style='text-decoration:none;'>BDSP<br>Load<br>Screen<br>Visible</a>
     "}
     BDSP_BLACK_LOAD_SCREEN_2 -- "⠀✔⠀" --> RESTART_GAME_2
     BDSP_BLACK_LOAD_SCREEN_2 -- "⠀✘⠀" --> RESTART_GAME_3("
@@ -368,7 +374,7 @@ graph TD
 
 
     RESTART_GAME_3 --> BDSP_BLACK_LOAD_SCREEN_3{"
-        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#bdsp-load-screen-visible" style='text-decoration:none;'>BDSP</br>Load<br>Screen</br>Visible</a>
+        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#bdsp-load-screen-visible" style='text-decoration:none;'>BDSP<br>Load<br>Screen<br>Visible</a>
     "}
     BDSP_BLACK_LOAD_SCREEN_3 -- "⠀✘⠀" --> RESTART_GAME_3
     BDSP_BLACK_LOAD_SCREEN_3 -- "⠀✔⠀" --> RESTART_GAME_4("
@@ -378,7 +384,7 @@ graph TD
 
 
     RESTART_GAME_4 --> BDSP_BLACK_LOAD_SCREEN_4{"
-        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#bdsp-load-screen-visible" style='text-decoration:none;'>BDSP</br>Load<br>Screen</br>Visible</a>
+        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#bdsp-load-screen-visible" style='text-decoration:none;'>BDSP<br>Load<br>Screen<br>Visible</a>
     "}
     BDSP_BLACK_LOAD_SCREEN_4 -- "⠀✔⠀" --> RESTART_GAME_4
     BDSP_BLACK_LOAD_SCREEN_4 -- "⠀✘⠀" --> MOVE_PLAYER("

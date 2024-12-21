@@ -46,7 +46,7 @@ def search_wild_pokemon(image, state):
     # Combat loaded (Wild Pokémon stars)
     elif state == 'CHECK_SHINY':
         # Look for the text box
-        if is_text_box_visible(image):
+        if is_combat_text_box_visible(image):
             return 'ESCAPE_COMBAT_1'
 
         # Check the elapsed time
@@ -62,13 +62,13 @@ def search_wild_pokemon(image, state):
     # Combat loaded (Escaping combat)
     elif state == 'ESCAPE_COMBAT_2':
         # Look for the text box
-        if is_text_box_visible(image):
+        if is_combat_text_box_visible(image):
             return 'ESCAPE_COMBAT_3'
 
     # Combat loaded (Escaping combat)
     elif state == 'ESCAPE_COMBAT_3':
         # Check if the text box has disappeared
-        if not is_text_box_visible(image):
+        if not is_combat_text_box_visible(image):
             return 'ESCAPE_COMBAT_4'
 
     # Combat loaded (Escaped combat / Failed escaping)
@@ -95,7 +95,7 @@ def search_wild_pokemon(image, state):
     # Failed escaping (Escaping combat)
     elif state == 'ESCAPE_FAILED_2':
         # Look for the text box
-        if is_text_box_visible(image):
+        if is_combat_text_box_visible(image):
             return 'ESCAPE_COMBAT_3'
    
     else: return _check_common_states(image, state)
@@ -124,13 +124,13 @@ def static_encounter(image, state):
     # Game loaded, player in the overworld
     elif state == 'ENTER_STATIC_COMBAT_1':
         # Look for the text box
-        if is_overworld_visible(image):
+        if is_overworld_text_box_visible(image):
             return 'ENTER_STATIC_COMBAT_2'
 
     # Game loaded, player in the overworld
     elif state == 'ENTER_STATIC_COMBAT_2':
         # Look if the text box has disappeared
-        if not is_overworld_visible(image):
+        if not is_overworld_text_box_visible(image):
             state_timer = time()
             return 'ENTER_STATIC_COMBAT_3'
 
@@ -145,7 +145,7 @@ def static_encounter(image, state):
     # Combat loaded (Wild Pokémon stars)
     elif state == 'CHECK_SHINY':
         # Look for the text box
-        if is_text_box_visible(image):
+        if is_combat_text_box_visible(image):
             return 'RESTART_GAME_1'
 
         # Check the elapsed time
@@ -177,19 +177,19 @@ def starter_encounter(image, state):
     # In front of the lake entrance
     elif state == 'ENTER_LAKE_1':
         # Look for the text box
-        if is_overworld_visible(image):
+        if is_overworld_text_box_visible(image):
             return 'ENTER_LAKE_2'
 
     # In front of the lake entrance
     elif state == 'ENTER_LAKE_2':
         # Look if the text box has disappeared
-        if not is_overworld_visible(image):
+        if not is_overworld_text_box_visible(image):
             return 'ENTER_LAKE_3'
 
     # Inside the lake
     elif state == 'ENTER_LAKE_3':
         # Look for the text box
-        if is_overworld_visible(image):
+        if is_overworld_text_box_visible(image):
             return 'ENTER_LAKE_4'
 
     # Inside the lake
@@ -201,7 +201,7 @@ def starter_encounter(image, state):
     # Opening briefcase
     elif state == 'STARTER_SELECTION_1':
         # Look for the text box
-        if is_overworld_visible(image):
+        if is_overworld_text_box_visible(image):
             return 'STARTER_SELECTION_2'
 
     # Briefcase is opened
@@ -216,7 +216,7 @@ def starter_encounter(image, state):
     # Starter has been selected
     elif state == 'STARTER_SELECTION_3':
         # Look for the text box
-        if not is_overworld_visible(image):
+        if not is_overworld_text_box_visible(image):
             state_timer = time()
             return 'STARTER_SELECTION_4'
 
@@ -224,20 +224,20 @@ def starter_encounter(image, state):
     # A white screen flashes before entering the combat
     elif state == 'STARTER_SELECTION_4' and time() - state_timer >= 3.5:
         # Look for the white load screen
-        if is_overworld_visible(image):
+        if is_white_screen_visible(image):
             state_timer = time()
             return 'ENTER_COMBAT_1'
 
     # Combat loaded (Wild Pokémon appeared)
     elif state == 'ENTER_COMBAT_3B':
         # Check if the text box has disappeared
-        if not is_text_box_visible(image):
+        if not is_combat_text_box_visible(image):
             return 'ENTER_COMBAT_4'
 
     # Combat loaded (Starter Pokémon appeared)
     elif state == 'ENTER_COMBAT_4':
         # Look for the text box
-        if is_text_box_visible(image):
+        if is_combat_text_box_visible(image):
             return 'ENTER_COMBAT_5'
 
     # Combat loaded (Wild Pokémon stars)
@@ -272,13 +272,13 @@ def shaymin_encounter(image, state):
     # Game loaded, player in the overworld
     elif state == 'ENTER_STATIC_COMBAT_1':
         # Look for the text box
-        if is_overworld_visible(image):
+        if is_overworld_text_box_visible(image):
             return 'ENTER_STATIC_COMBAT_2'
 
     # Game loaded, player in the overworld
     elif state == 'ENTER_STATIC_COMBAT_2':
         # Look if the text box has disappeared
-        if not is_overworld_visible(image):
+        if not is_overworld_text_box_visible(image):
             state_timer = time()
             return 'ENTER_STATIC_COMBAT_3'
 
@@ -299,7 +299,7 @@ def shaymin_encounter(image, state):
     # Combat loaded (Wild Pokémon stars)
     elif state == 'CHECK_SHINY':
         # Look for the text box
-        if is_text_box_visible(image):
+        if is_combat_text_box_visible(image):
             return 'ESCAPE_COMBAT_1'
 
         # Check the elapsed time
@@ -315,13 +315,13 @@ def shaymin_encounter(image, state):
     # Combat loaded (Escaping combat)
     elif state == 'ESCAPE_COMBAT_2':
         # Look for the text box
-        if is_text_box_visible(image):
+        if is_combat_text_box_visible(image):
             return 'ESCAPE_COMBAT_3'
 
     # Combat loaded (Escaping combat)
     elif state == 'ESCAPE_COMBAT_3':
         # Check if the text box has disappeared
-        if not is_text_box_visible(image):
+        if not is_combat_text_box_visible(image):
             return 'ESCAPE_COMBAT_4'
 
     # Combat loaded (Escaped combat / Failed escaping)
@@ -346,12 +346,12 @@ def shaymin_encounter(image, state):
     # Failed escaping (Escaping combat)
     elif state == 'ESCAPE_FAILED_2':
         # Look for the text box
-        if is_text_box_visible(image):
+        if is_combat_text_box_visible(image):
             return 'ESCAPE_COMBAT_3'
 
     elif state == 'RESPAWN_SHAYMIN':
         #After returning to the original position we begin the event again
-        if is_text_box_visible(image):
+        if is_combat_text_box_visible(image):
             return 'ENTER_STATIC_COMBAT_1'
 
     else: return _check_common_states(image, state)
@@ -401,13 +401,13 @@ def _check_common_states(image, state):
     # Combat loadscreen (Grass/Rock/Water animation, wild pokémon appearing)
     elif state == 'ENTER_COMBAT_2':
         # Look for the text box
-        if is_text_box_visible(image):
+        if is_combat_text_box_visible(image):
             return 'ENTER_COMBAT_3'
 
     # Combat loaded (Wild Pokémon appeared)
     elif state in ['ENTER_COMBAT_3', 'ENTER_COMBAT_5']:
         # Check if the text box has disappeared
-        if not is_text_box_visible(image):
+        if not is_combat_text_box_visible(image):
             return 'CHECK_SHINY'
 
     # Stopping program
@@ -579,7 +579,7 @@ def is_black_screen_visible(image):
 
 ###########################################################################################################################
 
-def is_text_box_visible(image):
+def is_combat_text_box_visible(image):
     """
     Checks if the text box is visible in the given image.
     The text box is considered visible if the text box content is white
@@ -620,7 +620,7 @@ def is_text_box_visible(image):
 
 ###########################################################################################################################
 
-def is_overworld_visible(image):
+def is_overworld_text_box_visible(image):
     """
     Checks if the overworld is visible in the given image.
     Args:
