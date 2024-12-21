@@ -17,7 +17,7 @@
     </h3>
 </details>
 
-<hr style="border: 1px dashed; border-width: 0; border-top-width: 1px;">
+<hr>
 
 <!-- #################### CHECK HOME COLOR #################### -->
 
@@ -33,21 +33,29 @@
     </h3>
 </details>
 
-<hr style="border: 1px dashed; border-width: 0; border-top-width: 1px;">
+<hr>
 
 <!-- #################### OVERWORLD TEXT BOX VISIBLE #################### -->
 
 <h3 id="overworld-text-box-visible">Overworld Text Box Visible</h3>
 
-<p><b><i>TODO! Overworld text box has a different size than combat text box</i></b></p>
+<p>Check if the text box is visible by verifying the left and right parts of the text box, as well as other points that are not white (center, top-left, and top-right). This is done to avoid mistakenly detecting the screen as displaying the text box if it is entirely white. Overworld and combat text boxes have different sizes, which is why there are two separate functions.</p>
 
-<hr style="border: 1px dashed; border-width: 0; border-top-width: 1px;">
+<details>
+    <summary>Toggle to see example images</summary>
+    <h3 align="center">
+        <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/Overworld%20Text%20Box%20Visible.png" width="70%">
+        <p></p>
+    </h3>
+</details>
+
+<hr>
 
 <!-- #################### COMBAT TEXT BOX VISIBLE #################### -->
 
 <h3 id="combat-text-box-visible">Combat Text Box Visible</h3>
 
-<p>Check if the text box is visible by verifying the left and right parts of the text box, as well as other points that are not white <i>(center, top-left, and top-right)</i>. This is done to avoid mistakenly detecting the screen as displaying the text box if it is entirely white.</p>
+<p>Check if the text box is visible by verifying the left and right parts of the text box, as well as other points that are not white <i>(center, top-left, and top-right)</i>. This is done to avoid mistakenly detecting the screen as displaying the text box if it is entirely white. Overworld and combat text boxes have different sizes, which is why there are two separate functions.</p>
 
 <details>
     <summary>Toggle to see example images</summary>
@@ -57,7 +65,7 @@
     </h3>
 </details>
 
-<hr style="border: 1px dashed; border-width: 0; border-top-width: 1px;">
+<hr>
 
 <!-- #################### BLACK SCREEN VISIBLE #################### -->
 
@@ -73,7 +81,7 @@
     </h3>
 </details>
 
-<hr style="border: 1px dashed; border-width: 0; border-top-width: 1px;">
+<hr>
 
 <!-- #################### SELECTION BOX VISIBLE #################### -->
 
@@ -81,7 +89,7 @@
 
 <p><b><i>TODO!</i></b></p>
 
-<hr style="border: 1px dashed; border-width: 0; border-top-width: 1px;">
+<hr>
 
 <!-- #################### BDSP LOAD SCREEN VISIBLE #################### -->
 

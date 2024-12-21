@@ -75,7 +75,15 @@
 
 <h3 id="overworld-text-box-visible">Overworld Text Box Visible</h3>
 
-<p><b><i>TODO! Overworld text box has a different size than combat text box</i></b></p>
+<p>Check if the text box is visible by verifying the left and right parts of the text box, as well as other points that are not white (center, top-left, and top-right). This is done to avoid mistakenly detecting the screen as displaying the text box if it is entirely white. Overworld and combat text boxes have different sizes, which is why there are two separate functions.</p>
+
+<details>
+    <summary>Toggle to see example images</summary>
+    <h3 align="center">
+        <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/Overworld%20Text%20Box%20Visible.png" width="70%">
+        <p></p>
+    </h3>
+</details>
 
 <hr>
 
@@ -83,7 +91,7 @@
 
 <h3 id="combat-text-box-visible">Combat Text Box Visible</h3>
 
-<p>Check if the text box is visible by verifying the left and right parts of the text box, as well as other points that are not white <i>(center, top-left, and top-right)</i>. This is done to avoid mistakenly detecting the screen as displaying the text box if it is entirely white.</p>
+<p>Check if the text box is visible by verifying the left and right parts of the text box, as well as other points that are not white <i>(center, top-left, and top-right)</i>. This is done to avoid mistakenly detecting the screen as displaying the text box if it is entirely white. Overworld and combat text boxes have different sizes, which is why there are two separate functions.</p>
 
 <details>
     <summary>Toggle to see example images</summary>

@@ -606,7 +606,7 @@ def is_combat_text_box_visible(image):
             image.draw_column(CONST.COLOR_SCREEN_CHECK[column], CONST.COLOR_SCREEN_CHECK['column_height'])
         return False
 
-    is_outside_text_box_not_white = check_image_position_colors(
+    is_outside_text_box_white = check_image_position_colors(
         image,
         CONST.COLOR_SCREEN_CHECK['white_color'],
         [
@@ -616,7 +616,7 @@ def is_combat_text_box_visible(image):
         ]
     )
 
-    return not is_outside_text_box_not_white
+    return not is_outside_text_box_white
 
 ###########################################################################################################################
 
@@ -628,11 +628,33 @@ def is_overworld_text_box_visible(image):
     Returns:
         bool: True if the overworld is visible, False otherwise.
     """
-    return image.check_column_pixel_colors(
-        CONST.TEXT_BOX_LINE['overworld'],
-        CONST.COLOR_SCREEN_CHECK['column_height'],
-        CONST.COLOR_SCREEN_CHECK['white_color']
+
+    is_text_box_content_white = check_image_position_colors(
+        image,
+        CONST.COLOR_SCREEN_CHECK['white_color'],
+        [
+            CONST.COLOR_SCREEN_CHECK['overworld_text_box_left'],
+            CONST.COLOR_SCREEN_CHECK['overworld_text_box_right']
+        ]
     )
+    
+    if not is_text_box_content_white:
+        # Stop testing if the text box content is not white, but still drawing the other columns
+        for column in ('top_left', 'top_right', 'center'):
+            image.draw_column(CONST.COLOR_SCREEN_CHECK[column], CONST.COLOR_SCREEN_CHECK['column_height'])
+        return False
+
+    is_outside_text_box_white = check_image_position_colors(
+        image,
+        CONST.COLOR_SCREEN_CHECK['white_color'],
+        [
+            CONST.COLOR_SCREEN_CHECK['top_left'],
+            CONST.COLOR_SCREEN_CHECK['top_right'],
+            CONST.COLOR_SCREEN_CHECK['center'],
+        ]
+    )
+
+    return not is_outside_text_box_white
 
 ###########################################################################################################################
 

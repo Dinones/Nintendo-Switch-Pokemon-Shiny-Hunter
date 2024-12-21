@@ -115,7 +115,6 @@ SHINY_DETECTION_TIME = 2
 TEXT_BOX_LINE = {
     'left_white': (int(MAIN_FRAME_SIZE[0] // 16 * 1.2), int(MAIN_FRAME_SIZE[1] // 16 * 1)),
     'right_white': (MAIN_FRAME_SIZE[0] - int(MAIN_FRAME_SIZE[0] // 16 * 1.2), int(MAIN_FRAME_SIZE[1] // 16 * 1)),
-    'overworld': (int(MAIN_FRAME_SIZE[0] // 16 * 3.5), int(MAIN_FRAME_SIZE[1] // 16 * 1)),
     'border_left_x': 34,
     'border_color': (74, 81, 73),
     'border_color_threshold': 10
@@ -139,6 +138,8 @@ COLOR_SCREEN_CHECK = {
     'center_right': (MAIN_FRAME_SIZE[0] - 50, MAIN_FRAME_SIZE[1] // 2 - 25),
     'bottom_right': (MAIN_FRAME_SIZE[0] - 50, 25),
     'center': (MAIN_FRAME_SIZE[0] // 2 - 25, MAIN_FRAME_SIZE[1] // 2 - 25),
+    'overworld_text_box_left': (int(MAIN_FRAME_SIZE[0] / 32 * 7), int(MAIN_FRAME_SIZE[1] / 16 * 1)),
+    'overworld_text_box_right': (int(MAIN_FRAME_SIZE[0] / 128 * 101), int(MAIN_FRAME_SIZE[1] / 16 * 1)),
 
     # Pixel heights
     'column_height': 25,
