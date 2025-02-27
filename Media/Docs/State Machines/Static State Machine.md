@@ -288,7 +288,7 @@ graph TD
         <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Static%20State%20Machine.md#bdsp-load-screen-visible" style='text-decoration:none;'>BDSP</br>Load<br>Screen</br>Visible</a>
     "}
     BDSP_BLACK_LOAD_SCREEN_4 -- "⠀✔⠀" --> RESTART_GAME_4
-    BDSP_BLACK_LOAD_SCREEN_4 -- "⠀✘⠀" --> ENTER_COMBAT_1
+    BDSP_BLACK_LOAD_SCREEN_4 -- "⠀✘⠀" --> ENTER_STATIC_COMBAT_1
 
 
     %%%%%%%%%%%%%%%% Styles %%%%%%%%%%%%%%%%

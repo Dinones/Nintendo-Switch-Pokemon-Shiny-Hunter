@@ -286,6 +286,7 @@ def create_debug_image(frame_size = CONST.DEBUG_FRAME_SIZE):
 
 if __name__ == "__main__":
     from time import sleep
+    from Control_System import *
     from Game_Capture import Game_Capture
 
     #######################################################################################################################
@@ -349,6 +350,8 @@ if __name__ == "__main__":
         #     CONST.COLOR_SCREEN_CHECK['column_height'],
         #     CONST.COLOR_SCREEN_CHECK['white_color']
         # ))
+        
+        # print(is_white_screen_visible(image))
 
         print(COLOR_str.PRESS_KEY_TO_INSTRUCTION
             .replace('{module}', 'Image Processing')
@@ -357,7 +360,7 @@ if __name__ == "__main__":
         )
 
         # cv2.imshow(f'{CONST.BOT_NAME} - Resized', image.original_image[0:500])
-        cv2.imshow(f'{CONST.BOT_NAME} - Resized', image.resized_image)
+        cv2.imshow(f'{CONST.BOT_NAME} - Resized', image.FPS_image)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
@@ -574,7 +577,8 @@ if __name__ == "__main__":
 
         index = 0
         cached_index = -1
-        pause = True # Start paused; if not, when the dialog shows up, multiple images are already processed
+        # Start paused; if not, when the dialog shows up, multiple images will have already been processed
+        pause = True
         second_text_position = [CONST.TEXT_PARAMS['position'][0], CONST.TEXT_PARAMS['position'][1] + 20]
 
         while index < len(images):

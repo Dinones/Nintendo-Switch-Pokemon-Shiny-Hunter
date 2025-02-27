@@ -69,7 +69,6 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
     shiny_timer = time()
     initial_time = time()
     encounter_playtime = time()
-    shiny_detection_time = 0
 
     database_data = get_all_data()
     local_encounters = database_data['global_encounters']
@@ -104,12 +103,6 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
             Controller.previous_button_pressed = Controller.current_button_pressed
 
         with Controller.event_lock: 
-            # Check if the pokemon is shiny
-            if Controller.current_event == "CHECK_SHINY":
-                # Only reset the first time it enters to the state
-                if time() - shiny_detection_time >= 10: shiny_detection_time = time()
-                image.shiny_detection_time = shiny_detection_time
-
             # Refresh the event
             if Encounter_Type == 'WILD': Controller.current_event = search_wild_pokemon(image, Controller.current_event)
             elif Encounter_Type == 'STATIC': Controller.current_event = static_encounter(image, Controller.current_event)
@@ -265,7 +258,7 @@ def controller_control(controller, shutdown_event):
         # Macros that require A button press
         # ENTER_STATIC_COMBAT_3 needs to press A to enter the combat for Regigigas, it has two dialog phases.
         need_to_press_a_states = ['RESTART_GAME_2', 'RESTART_GAME_3', 'ENTER_STATIC_COMBAT_2', 'ENTER_STATIC_COMBAT_3',
-                  'ESCAPE_FAILED_2', 'ENTER_LAKE_2', 'ENTER_LAKE_4']
+            'ESCAPE_FAILED', 'ENTER_LAKE_2', 'ENTER_LAKE_4']
 
         if aux_current_event == 'WAIT_HOME_SCREEN': fast_start_macro(controller)
         elif aux_current_event == 'RESTART_GAME_1': restart_game_macro(controller)

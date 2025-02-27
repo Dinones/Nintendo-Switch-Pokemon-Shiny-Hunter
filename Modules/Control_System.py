@@ -33,7 +33,7 @@ def search_wild_pokemon(image, state):
     # Game main loadscreen (Full black screen)
     elif state == 'RESTART_GAME_4':
         # Look for the top-left load screen pixel
-        if not is_bdsp_loading_screen(image):
+        if not is_bdsp_loading_screen_visible(image):
             return 'MOVE_PLAYER'
 
     # Game loaded, player in the overworld
@@ -45,6 +45,11 @@ def search_wild_pokemon(image, state):
 
     # Combat loaded (Wild Pokémon stars)
     elif state == 'CHECK_SHINY':
+        # Check the elapsed time. The shiny star animation combined with the trainer throwing the Pokémon takes over 5 
+        # seconds. In fact, the shiny animation alone exceeds 5 seconds, so the shiny is confirmed
+        if time() - state_timer >= CONST.WILD_SHINY_DETECTION_TIME:
+            return 'SHINY_FOUND'
+
         # If the text box is detected before WILD_SHINY_DETECTION_TIME seconds, it means the shiny animation has not
         # occurred
         if is_combat_text_box_visible(image):
@@ -56,11 +61,6 @@ def search_wild_pokemon(image, state):
         # wild Pokémon was shiny, it would still be detected, as the time would exceed 5 seconds
         if is_life_box_visible(image):
             return 'ESCAPE_COMBAT_1'
-
-        # Check the elapsed time. The shiny star animation combined with the trainer throwing the Pokémon takes over 5 
-        # seconds. In fact, the shiny animation alone exceeds 5 seconds, so the shiny is confirmed
-        if image.shiny_detection_time and time() - image.shiny_detection_time >= CONST.WILD_SHINY_DETECTION_TIME:
-            return 'SHINY_FOUND'
 
     # Combat loaded (Both Pokémon in the field)
     elif state == 'ESCAPE_COMBAT_1':
@@ -87,7 +87,7 @@ def search_wild_pokemon(image, state):
             return 'ESCAPE_COMBAT_5'
         # Look for the life box (Escape has failed)
         elif is_life_box_visible(image):
-            return 'ESCAPE_FAILED_1'
+            return 'ESCAPE_FAILED'
 
     # Escaped from combat (Full black screen)
     elif state == 'ESCAPE_COMBAT_5':
@@ -95,14 +95,8 @@ def search_wild_pokemon(image, state):
         if not is_black_screen_visible(image):
             return 'MOVE_PLAYER'
 
-    # Failed escaping (Both Pokémon in the field)
-    elif state == 'ESCAPE_FAILED_1':
-        # Look for the life box
-        if is_life_box_visible(image):
-            return 'ESCAPE_FAILED_2'
-
     # Failed escaping (Escaping combat)
-    elif state == 'ESCAPE_FAILED_2':
+    elif state == 'ESCAPE_FAILED':
         # Look for the text box
         if is_combat_text_box_visible(image):
             return 'ESCAPE_COMBAT_3'
@@ -127,7 +121,7 @@ def static_encounter(image, state):
     # Game loading, full black screen
     elif state == 'RESTART_GAME_4':
         # Check if the black screen has ended
-        if not is_bdsp_loading_screen(image):
+        if not is_bdsp_loading_screen_visible(image):
             return 'ENTER_STATIC_COMBAT_1'
 
     # Game loaded, player in the overworld
@@ -153,13 +147,13 @@ def static_encounter(image, state):
 
     # Combat loaded (Wild Pokémon stars)
     elif state == 'CHECK_SHINY':
+        # Check the elapsed time
+        if time() - state_timer >= CONST.SHINY_DETECTION_TIME:
+            return 'SHINY_FOUND'
+
         # Look for the text box
         if is_combat_text_box_visible(image):
             return 'RESTART_GAME_1'
-
-        # Check the elapsed time
-        if image.shiny_detection_time and time() - image.shiny_detection_time >= CONST.SHINY_DETECTION_TIME:
-            return 'SHINY_FOUND'
 
     else: return _check_common_states(image, state)
 
@@ -180,7 +174,7 @@ def starter_encounter(image, state):
 
     elif state == 'RESTART_GAME_4':
         # Check if the black screen has ended
-        if not is_bdsp_loading_screen(image):
+        if not is_bdsp_loading_screen_visible(image):
             return 'ENTER_LAKE_1'
 
     # In front of the lake entrance
@@ -253,7 +247,7 @@ def starter_encounter(image, state):
     elif state == 'CHECK_SHINY':
         # Look for the text box
         if is_life_box_visible(image):
-            if image.shiny_detection_time and time() - image.shiny_detection_time >= CONST.SHINY_DETECTION_TIME:
+            if time() - state_timer >= CONST.SHINY_DETECTION_TIME:
                 return 'SHINY_FOUND'
             else: return 'RESTART_GAME_1'
 
@@ -302,18 +296,18 @@ def shaymin_encounter(image, state):
     # Game loading, full black screen
     elif state == 'RESTART_GAME_4':
         # Check if the black screen has ended
-        if not is_bdsp_loading_screen(image):
+        if not is_bdsp_loading_screen_visible(image):
             return 'ENTER_STATIC_COMBAT_1'
 
     # Combat loaded (Wild Pokémon stars)
     elif state == 'CHECK_SHINY':
+        # Check the elapsed time
+        if time() - state_timer >= CONST.SHINY_DETECTION_TIME:
+            return 'SHINY_FOUND'
+
         # Look for the text box
         if is_combat_text_box_visible(image):
             return 'ESCAPE_COMBAT_1'
-
-        # Check the elapsed time
-        if image.shiny_detection_time and time() - image.shiny_detection_time >= CONST.SHINY_DETECTION_TIME:
-            return 'SHINY_FOUND'
     
     # Combat loaded (Both Pokémon in the field)
     elif state == 'ESCAPE_COMBAT_1':
@@ -387,17 +381,17 @@ def _check_common_states(image, state):
 
     # Nintendo Switch main menu
     elif state == 'RESTART_GAME_1':
-        if is_bdsp_loading_screen(image):
+        if is_bdsp_loading_screen_visible(image):
             return 'RESTART_GAME_2'
 
     # Game main loadscreen (Full black screen)
     elif state == 'RESTART_GAME_2':
-        if not is_bdsp_loading_screen(image):
+        if not is_bdsp_loading_screen_visible(image):
             return 'RESTART_GAME_3'
 
     # Game main loadscreen (Dialga / Palkia)
     elif state == 'RESTART_GAME_3':
-        if is_bdsp_loading_screen(image):
+        if is_bdsp_loading_screen_visible(image):
             return 'RESTART_GAME_4'
 
     # Combat loadscreen (Full white screen)
@@ -417,6 +411,7 @@ def _check_common_states(image, state):
     elif state in ['ENTER_COMBAT_3', 'ENTER_COMBAT_5']:
         # Check if the text box has disappeared
         if not is_combat_text_box_visible(image):
+            state_timer = time()
             return 'CHECK_SHINY'
 
     # Stopping program
@@ -430,7 +425,7 @@ def _check_common_states(image, state):
 ###########################################################################################################################
 ###########################################################################################################################
 
-def is_bdsp_loading_screen(image):
+def is_bdsp_loading_screen_visible(image):
     """
     Checks if the given image matches the BDSP loading screen by verifying specific color positions.
 
@@ -770,12 +765,6 @@ if __name__ == "__main__":
             image.resize_image()
             FPS.get_FPS()
             image.draw_FPS(FPS.FPS)
-
-            # Needs to be here because this is controlled in the Shiny Hunter loop
-            if state == "CHECK_SHINY":
-                # Only reset the first time it enters to the state
-                if time() - shiny_detection_time >= 10: shiny_detection_time = time()
-                image.shiny_detection_time = shiny_detection_time
 
             state = search_wild_pokemon(image, state)
             image.write_text(state, (0, CONST.TEXT_PARAMS['position'][1] + 5))

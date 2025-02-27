@@ -235,7 +235,7 @@ graph TD
     "}
     LIFE_BOX_VISIBLE_BUG -- "⠀✘⠀" --> CHECK_SHINY
     LIFE_BOX_VISIBLE_BUG -- "⠀✔⠀" --> ESCAPE_COMBAT_1
-    TIMER_COMMENT_2@{shape: braces, label: "<span style='font-size:14px;'>Solves <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/issues/49" style='text-decoration:none;'>#57</a></span>"} -.-> LIFE_BOX_VISIBLE_BUG
+    TIMER_COMMENT_2@{shape: braces, label: "<span style='font-size:14px;'>Solves <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/issues/57" style='text-decoration:none;'>#57</a></span>"} -.-> LIFE_BOX_VISIBLE_BUG
 
     %%%%%%%%%%%%%%%% SHINY_FOUND %%%%%%%%%%%%%%%%
 
@@ -281,42 +281,7 @@ graph TD
     ")
 
 
-    ESCAPE_COMBAT_4 --> LIFE_BOX_VISIBLE_2{"
-        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#life-box-visible" style='text-decoration:none;'>Life Box<br>Visible</a>
-    "}
-    LIFE_BOX_VISIBLE_2 -- "⠀✘⠀" --> ESCAPE_COMBAT_4
-    LIFE_BOX_VISIBLE_2 -- "⠀✔⠀" --> ESCAPE_FAILED_1("
-        <b>ESCAPE_FAILED_1</b>
-        <span style='font-size:14px; color:#C00;'>Combat Loaded</span>
-    ")
-
-
-    %%%%%%%%%%%%%%%% ESCAPE_FAILED %%%%%%%%%%%%%%%%
-
-    %% Written in the middle to avoid arrows crossing each other
-    %% ESCAPE_COMBAT section continues below this section
-
-    ESCAPE_FAILED_1 --> LIFE_BOX_VISIBLE_3{"
-        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#life-box-visible" style='text-decoration:none;'>Life Box<br>Visible</a>
-    "}
-    LIFE_BOX_VISIBLE_3 -- "⠀✘⠀" --> ESCAPE_FAILED_1
-    LIFE_BOX_VISIBLE_3 -- "⠀✔⠀" --> ESCAPE_FAILED_2("
-        <b>ESCAPE_FAILED_2</b>
-        <span style='font-size:14px; color:#C00;'>Combat Loaded</span>
-        <span style='font-size:13px; color:#C0C;'><i>press_A_macro</i></span>
-    ")
-
-
-    ESCAPE_FAILED_2 --> TEXT_BOX_VISIBLE_6{"
-        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#combat-text-box-visible" style='text-decoration:none;'>Combat<br>Text Box<br>Visible</a>
-    "}
-    TEXT_BOX_VISIBLE_6 -- "⠀✘⠀" --> ESCAPE_FAILED_2
-    TEXT_BOX_VISIBLE_6 -- "⠀✔⠀" --> ESCAPE_COMBAT_3
-
-
-    %%%%%%%%%%%%%%%% ESCAPE_COMBAT %%%%%%%%%%%%%%%%
-
-    ESCAPE_COMBAT_4 --> BLACK_SCREEN_VISIBLE_1{"
+    ESCAPE_COMBAT_4 ---> BLACK_SCREEN_VISIBLE_1{"
         <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#black-screen-visible" style='text-decoration:none;'>Black<br>Screen<br>Visible</a>
     "}
     BLACK_SCREEN_VISIBLE_1 -- "⠀✘⠀" --> ESCAPE_COMBAT_4
@@ -331,6 +296,27 @@ graph TD
     "}
     BLACK_SCREEN_VISIBLE_2 -- "⠀✔⠀" --> ESCAPE_COMBAT_5
     BLACK_SCREEN_VISIBLE_2 -- "⠀✘⠀" --> MOVE_PLAYER
+    
+    ESCAPE_COMBAT_4 --> LIFE_BOX_VISIBLE_2{"
+        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#life-box-visible" style='text-decoration:none;'>Life Box<br>Visible</a>
+    "}
+    LIFE_BOX_VISIBLE_2 -- "⠀✔⠀" --> ESCAPE_FAILED("
+        <b>ESCAPE_FAILED</b>
+        <span style='font-size:14px; color:#C00;'>Combat Loaded</span>
+    ")
+    LIFE_BOX_VISIBLE_2 -- "⠀✘⠀" --> ESCAPE_COMBAT_4
+
+
+    %%%%%%%%%%%%%%%% ESCAPE_FAILED %%%%%%%%%%%%%%%%
+
+    %% Written in the middle to avoid arrows crossing each other
+    %% ESCAPE_COMBAT section continues below this section
+
+    ESCAPE_FAILED --> LIFE_BOX_VISIBLE_3{"
+        <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/develop/Media/Docs/State%20Machines/Wild%20State%20Machine.md#life-box-visible" style='text-decoration:none;'>Life Box<br>Visible</a>
+    "}
+    LIFE_BOX_VISIBLE_3 -- "⠀✘⠀" --> ESCAPE_FAILED
+    LIFE_BOX_VISIBLE_3 -- "⠀✔⠀" --> ESCAPE_COMBAT_3
 
 
     %%%%%%%%%%%%%%%% Styles %%%%%%%%%%%%%%%%
