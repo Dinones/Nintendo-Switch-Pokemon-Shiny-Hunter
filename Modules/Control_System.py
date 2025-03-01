@@ -108,6 +108,47 @@ def search_wild_pokemon(image, state):
 ###########################################################################################################################
 ###########################################################################################################################
 
+def search_wild_pokemon_double_combat(image, state):
+    
+    # Combat loaded (Wild Pokémon stars)
+    if state == 'CHECK_SHINY':
+        # Check the elapsed time. The shiny star animation combined with the trainer throwing the Pokémon takes over 5 
+        # seconds. In fact, the shiny animation alone exceeds 5 seconds, so the shiny is confirmed
+        if time() - state_timer >= CONST.WILD_SHINY_DETECTION_TIME:
+            return 'SHINY_FOUND'
+
+        # If the text box is detected before WILD_SHINY_DETECTION_TIME seconds, it means the shiny animation has not
+        # occurred
+        if is_combat_text_box_visible(image):
+            return 'ESCAPE_COMBAT_1'
+
+        # If the life box is detected before WILD_SHINY_DETECTION_TIME seconds, it indicates that due to resource overload, 
+        # the game skipped the animation of the trainer throwing the Pokéball. This causes the combat to load faster than 
+        # expected, and if this condition is not checked, it would always trigger a false positive shiny detection. If the 
+        # wild Pokémon was shiny, it would still be detected, as the time would exceed 5 seconds
+        if is_double_combat_life_box_visible(image):
+            return 'ESCAPE_COMBAT_1'
+
+    # Combat loaded (Both Pokémon in the field)
+    elif state == 'ESCAPE_COMBAT_1':
+        # Look for the life box
+        if is_double_combat_life_box_visible(image):
+            return 'ESCAPE_COMBAT_2'
+
+    # Combat loaded (Escaped combat / Failed escaping)
+    elif state == 'ESCAPE_COMBAT_4':
+        # Look for the black screen
+        if is_black_screen_visible(image):
+            return 'ESCAPE_COMBAT_5'
+        # Look for the life box (Escape has failed)
+        elif is_double_combat_life_box_visible(image):
+            return 'ESCAPE_FAILED'
+
+    return search_wild_pokemon(image, state)
+
+###########################################################################################################################
+###########################################################################################################################
+
 def static_encounter(image, state):
     global state_timer
     if not state: return 'WAIT_PAIRING_SCREEN'
@@ -546,6 +587,45 @@ def is_life_box_visible(image):
 
     is_life_box_content_white = image.check_column_pixel_colors(
         CONST.COLOR_SCREEN_CHECK['life_box'],
+        CONST.COLOR_SCREEN_CHECK['small_column_height'],
+        CONST.COLOR_SCREEN_CHECK['white_color']
+    )
+
+    if not is_life_box_content_white:
+        # Stop testing if the text box content is not white, but still drawing the other columns
+        for column in ('top_left', 'center_left', 'center', 'bottom_right'):
+            image.draw_column(CONST.COLOR_SCREEN_CHECK[column], CONST.COLOR_SCREEN_CHECK['column_height'])
+        return False
+
+    is_outside_life_box_not_white = check_image_position_colors(
+        image,
+        CONST.COLOR_SCREEN_CHECK['white_color'],
+        [
+            CONST.COLOR_SCREEN_CHECK['top_left'],
+            CONST.COLOR_SCREEN_CHECK['center_left'],
+            CONST.COLOR_SCREEN_CHECK['center'],
+            CONST.COLOR_SCREEN_CHECK['bottom_right'],
+        ]
+    )
+
+    return not is_outside_life_box_not_white
+
+###########################################################################################################################
+
+def is_double_combat_life_box_visible(image):
+    """
+    Checks if the enemy life box is visible in the given image. Double combats can be found in Eterna Forest. The life box
+    is considered visible if the life box content is white and the area outside the life box content is not white.
+    
+    Args:
+        image: The image in which to check for the life box.
+        color: The color of the life box.
+    Returns:
+        bool: True if the life box is visible, False otherwise.
+    """
+
+    is_life_box_content_white = image.check_column_pixel_colors(
+        CONST.COLOR_SCREEN_CHECK['double_combat_life_box'],
         CONST.COLOR_SCREEN_CHECK['small_column_height'],
         CONST.COLOR_SCREEN_CHECK['white_color']
     )

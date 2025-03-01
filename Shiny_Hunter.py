@@ -108,6 +108,8 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
             elif Encounter_Type == 'STATIC': Controller.current_event = static_encounter(image, Controller.current_event)
             elif Encounter_Type == 'STARTER': Controller.current_event = starter_encounter(image, Controller.current_event)
             elif Encounter_Type == 'SHAYMIN': Controller.current_event = shaymin_encounter(image, Controller.current_event)
+            elif Encounter_Type == 'WILD_DOUBLES':
+                Controller.current_event = search_wild_pokemon_double_combat(image, Controller.current_event)
 
             # If stuck in the same state for STUCK_TIMER_SECONDS, restart the game
             if (Controller.current_event not in 
@@ -311,6 +313,7 @@ if __name__ == "__main__":
         print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Start static shiny hunter'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '3').replace('{option}', 'Start starter shiny hunter'))
         print(COLOR_str.MENU_OPTION.replace('{index}', '4').replace('{option}', 'Start Shaymin shiny hunter'))
+        print(COLOR_str.MENU_OPTION.replace('{index}', '5').replace('{option}', 'Start wild shiny hunter double combats'))
 
         option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Shiny Hunter'))
 
@@ -319,6 +322,7 @@ if __name__ == "__main__":
             '2': shiny_hunter,
             '3': shiny_hunter,
             '4': shiny_hunter,
+            '5': shiny_hunter,
         }
 
         # Set XDG_RUNTIME_DIR and ALSOFT_LOGLEVEL environment variable (avoid unnecessary warnings)
@@ -339,6 +343,8 @@ if __name__ == "__main__":
         elif option == '2': action = 'static'
         elif option == '3': action = 'starter'
         elif option == '4': action = 'Shaymin'
+        elif option == '5': action = 'wild (double combats)'
+
         print('\n' + COLOR_str.SELECTED_OPTION
             .replace('{module}', 'Shiny Hunter')
             .replace('{option}', f"{option}")
@@ -412,6 +418,7 @@ if __name__ == "__main__":
         elif option == '2': encounter_type = 'STATIC'
         elif option == '3': encounter_type = 'STARTER'
         elif option == '4': encounter_type = 'SHAYMIN'
+        elif option == '5': encounter_type = 'WILD_DOUBLES'
 
         threads = []
         threads.append({

@@ -102,7 +102,7 @@ git clone https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter.git
 Install the necessary libraries. Open a terminal in the project folder and run the following commands:
 
 ```bash
-sudo apt-get install -y python3-pyqt5 tesseract-ocr libtesseract-dev
+sudo apt-get install -y python3-pyqt5 tesseract-ocr libtesseract-dev ffmpeg bluetooth
 ```
 ```bash
 sudo pip install -r Requirements.txt && pip install -r Requirements.txt 

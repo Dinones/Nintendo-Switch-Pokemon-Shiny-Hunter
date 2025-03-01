@@ -351,7 +351,7 @@ if __name__ == "__main__":
         #     CONST.COLOR_SCREEN_CHECK['white_color']
         # ))
         
-        # print(is_white_screen_visible(image))
+        print(is_life_box_visible(image))
 
         print(COLOR_str.PRESS_KEY_TO_INSTRUCTION
             .replace('{module}', 'Image Processing')

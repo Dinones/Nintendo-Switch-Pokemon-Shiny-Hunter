@@ -185,7 +185,7 @@ if __name__ == "__main__":
             image.resize_image()
             FPS.get_FPS()
             image.draw_FPS(FPS.FPS)
-            # print(is_home_screen_visible(image))
+            # print(is_double_combat_life_box_visible(image))
 
             cv2.imshow(f'{CONST.BOT_NAME} - Device {CONST.VIDEO_CAPTURE_INDEX}', image.FPS_image)
 

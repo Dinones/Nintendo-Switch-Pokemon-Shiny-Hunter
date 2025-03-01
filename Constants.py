@@ -132,6 +132,7 @@ COLOR_SCREEN_CHECK = {
     # Bottom point of the columns. Setting points relative to MAIN_FRAME_SIZE allows the resolution to scale without 
     # requiring any additional adjustments
     'life_box': (int(MAIN_FRAME_SIZE[0] // 96 * 1), int(MAIN_FRAME_SIZE[1] // 16 * 1.6)),
+    'double_combat_life_box': (int(MAIN_FRAME_SIZE[0] / 48 * 47), int(MAIN_FRAME_SIZE[1] / 48 * 43)),
     'selection_box': (int(MAIN_FRAME_SIZE[0] // 16 * 13), int(MAIN_FRAME_SIZE[1] // 16 * 4)),
     'home_menu': (int(MAIN_FRAME_SIZE[0] // 48 * 1), int(MAIN_FRAME_SIZE[1] // 8 * 7)),
     'top_left': (50, MAIN_FRAME_SIZE[1] - 50),
