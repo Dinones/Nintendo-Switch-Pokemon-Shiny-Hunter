@@ -52,8 +52,8 @@ def fast_start_macro(controller):
     sleep(1); controller.current_button_pressed = 'HOME'
     controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME])
     controller.current_button_pressed = ''
-    sleep(2); controller.current_button_pressed = 'A'
-    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.A], down=0.03)
+    sleep(2); controller.current_button_pressed = 'HOME'
+    controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.HOME])
     sleep(1)
 
 ###########################################################################################################################

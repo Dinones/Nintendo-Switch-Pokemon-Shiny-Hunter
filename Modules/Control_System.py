@@ -440,10 +440,11 @@ def _check_common_states(image, state):
     elif state == 'ENTER_COMBAT_1' and time() - state_timer >= 0.5:
         # Check if the white load screen has ended
         if not is_white_screen_visible(image):
+            state_timer = time()
             return 'ENTER_COMBAT_2'
 
     # Combat loadscreen (Grass/Rock/Water animation, wild Pokémon appearing)
-    elif state == 'ENTER_COMBAT_2':
+    elif state == 'ENTER_COMBAT_2' and time() - state_timer >= 0.5:
         # Look for the text box
         if is_combat_text_box_visible(image):
             return 'ENTER_COMBAT_3'
