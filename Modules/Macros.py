@@ -67,7 +67,7 @@ def stop_macro(controller):
     controller.current_button_pressed = ''
     sleep(1.5); controller.current_button_pressed = 'DOWN'
     for _ in range(2): controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.DPAD_DOWN])
-    for _ in range(4): 
+    for _ in range(5): 
         controller.current_button_pressed = 'RIGHT'; sleep(0.1) 
         controller.nxbt_manager.press_buttons(controller.controller_index, [Buttons.DPAD_RIGHT])
         controller.current_button_pressed = ''; sleep(0.1)
