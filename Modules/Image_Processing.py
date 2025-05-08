@@ -2,24 +2,18 @@
 ####################################################     LIBRARIES     ####################################################
 ###########################################################################################################################
 
-# Set the cwd to the one of the file
 import os
-import logging
-from typing import Tuple
-
-if __name__ == '__main__':
-    try: os.chdir(os.path.dirname(__file__))
-    except: pass
-
+import sys
 import cv2
 import pytesseract
 import numpy as np
-from time import time, perf_counter
 import PyQt5.QtGui as pyqt_g
+from typing import Tuple, Union
+from time import time, perf_counter
 
-import sys
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-import Colored_Strings as COLOR_str
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
+
+import Modules.Colored_Strings as COLOR_str
 import Constants as CONST
 
 ###########################################################################################################################
@@ -27,89 +21,203 @@ import Constants as CONST
 ###########################################################################################################################
 
 class Image_Processing():
-    def __init__(self, image = ''):
+    def __init__(self, image: Union[str, np.ndarray] = ''):
         self.original_image = None
         self.resized_image = None
         self.pyqt_image = None
         self.FPS_image = None
         self.shiny_detection_time = 0
 
-        # Used to send a notification to the user
-        self.saved_image_path: str = ''
-        # Used to reduce workload by only populating debug images when a stat has changed
+        # File path used to store notification image
+        self.saved_image_path = ''
+
+        # Only used in the controller image to avoid redundant operations
+        self.current_button_pressed = ''
+
+        # Tracks changes in debug state to avoid redundant image updates
         self.debug_image_stats = {
             'event': '',
             'button': ''
         }
 
         # Load the image
-        if isinstance(image, str): self.original_image = cv2.imread(image, cv2.IMREAD_UNCHANGED)
-        else: self.original_image = image
-        if isinstance(self.original_image, type(None)): return print(COLOR_str.COULD_NOT_PROCESS_IMAGE)
+        if isinstance(image, str):
+            self.original_image = cv2.imread(image, cv2.IMREAD_UNCHANGED)
+        else:
+            self.original_image = image
+
+        # If image loading failed
+        if self.original_image is None:
+            print(COLOR_str.COULD_NOT_PROCESS_IMAGE)
 
     #######################################################################################################################
+    #######################################################################################################################
 
-    # Resize the image
     def resize_image(self, desired_size = CONST.MAIN_FRAME_SIZE):
-        if isinstance(self.original_image, type(None)): return
+    
+        """
+        Resizes the original image to fit within a maximum bounding box while preserving the aspect ratio.
 
-        # (width, height)
-        original_size = self.original_image.shape[1::-1]
-        # Get the desired aspect ratio and size
-        aspect_ratio = original_size[0]/original_size[1]
-        max_size_index = np.argmax(original_size)
-        if not max_size_index: new_size = [desired_size[max_size_index], int(desired_size[max_size_index]/aspect_ratio)]
-        else: new_size = [int(desired_size[max_size_index]*aspect_ratio), desired_size[max_size_index]]
+        Args:
+            desired_size (Tuple[int, int]): Target bounding box size (width, height) for resizing
 
-        # Resize the image
-        self.resized_image = cv2.resize(self.original_image, new_size)
+        Returns:
+            None
+        """
+
+        # If there is no image to resize, exit early
+        if self.original_image is None:
+            return
+
+        # Extract original size from image shape
+        width, height = self.original_image.shape[1::-1]
+
+        # Calculate aspect ratio
+        aspect_ratio = width / height
+
+        # Determine whether width or height is the constraining dimension
+        max_size_index = np.argmax((width, height))
+
+        # Compute new size maintaining aspect ratio
+        if max_size_index == 0:  # Width is the limiting dimension
+            new_size = [
+                desired_size[max_size_index],
+                int(desired_size[max_size_index] / aspect_ratio)
+            ]
+        else:  # Height is the limiting dimension
+            new_size = [
+                int(desired_size[max_size_index] * aspect_ratio),
+                desired_size[max_size_index]
+            ]
+
+        # Resize the image using OpenCV
+        self.resized_image = cv2.resize(self.original_image, new_size)  
 
     #######################################################################################################################
+    #######################################################################################################################
+
+
+
 
     # Ensure FPS image is initialized
-    def _ensure_fps_image(self):
-        if isinstance(self.FPS_image, type(None)):
+    def _ensure_fps_image(self, force = False):
+        if self.FPS_image is None or force:
             # Without copy() method, images would be linked, meaning that modifying one image would also alter the other
             self.FPS_image = np.copy(self.resized_image)
 
+
+
+
+    #######################################################################################################################
     #######################################################################################################################
 
-    # Draw FPS at the top-left corner
-    def draw_FPS(self, FPS = 0):
+    def draw_FPS(self, FPS: int = 0):
+
+        """
+        Wrapper for write_text to draw FPS at default position.
+
+        Args:
+            FPS (int): The current frames-per-second value to overlay.
+        
+        Returns:
+            None
+        """
+
+        self.write_text(f'FPS: {FPS}')
+
+    #######################################################################################################################
+    #######################################################################################################################
+
+    def write_text(self, text: str = '', position_offset: Tuple[int, int] = (0, 0)) -> None:
+
+        """
+        Writes arbitrary text onto the FPS image at a specified offset from the default position.
+
+        Args:
+            text (str): The text to display.
+            position_offset (Tuple[int, int]): (x, y) offset added to the default position.
+
+        Returns:
+            None
+        """
+
+        # Ensure FPS image is available and synced with the resized image
         self._ensure_fps_image()
 
-        cv2.putText(self.FPS_image, f'FPS: {FPS}', CONST.TEXT_PARAMS['position'], cv2.FONT_HERSHEY_SIMPLEX,
-            CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'], CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
+        # Compute the final position by offsetting the default
+        position = tuple(a + b for a, b in zip(CONST.TEXT_PARAMS['position'], position_offset))
+
+        # Draw the text on the FPS image
+        cv2.putText(
+            self.FPS_image,
+            text,
+            position,
+            cv2.FONT_HERSHEY_SIMPLEX,
+            CONST.TEXT_PARAMS['font_scale'],
+            CONST.TEXT_PARAMS['font_color'],
+            CONST.TEXT_PARAMS['thickness'],
+            cv2.LINE_AA
+        )
 
     #######################################################################################################################
-
-    # Write the specified text at the top-left corner
-    def write_text(self, text = '', position_offset = (0, 0)):
-        self._ensure_fps_image()
-
-        cv2.putText(self.FPS_image, text, tuple(a + b for a, b in zip(CONST.TEXT_PARAMS['position'], position_offset)),
-            cv2.FONT_HERSHEY_SIMPLEX, CONST.TEXT_PARAMS['font_scale'], CONST.TEXT_PARAMS['font_color'], 
-            CONST.TEXT_PARAMS['thickness'], cv2.LINE_AA)
-
     #######################################################################################################################
 
-    # Convert the image to PyQt compatible format
-    def get_pyqt_image(self, image):
-        try: height, width, channel = image.shape
-        except: height, width = image.shape
+    def get_pyqt_image(self, image: np.ndarray) -> None:
+        
+        """
+        Converts an OpenCV image (NumPy array) to a QPixmap compatible with PyQt. Support both grayscale (2D) and color
+        (3D) images.
 
-        bytes_per_line = 3 * width
-        aux = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        qt_image = pyqt_g.QImage(aux.data, width, height, bytes_per_line, pyqt_g.QImage.Format_RGB888)
+        Args:
+            image (np.ndarray): The image to convert, in BGR format (OpenCV).
+
+        Returns:
+            None
+        """
+
+        # Color image (3D)
+        if len(image.shape) == 3:
+            height, width, channel = image.shape
+            bytes_per_line = 3 * width
+            # Convert from BGR (OpenCV) to RGB (Qt expects RGB)
+            aux_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            qt_format = pyqt_g.QImage.Format_RGB888
+        # Grayscale image (2D)
+        else:
+            height, width = image.shape
+            bytes_per_line = width
+            aux_image = image
+            qt_format = pyqt_g.QImage.Format_Grayscale8
+
+        # Create QImage from the raw image buffer
+        qt_image = pyqt_g.QImage(aux_image.data, width, height, bytes_per_line, qt_format)
+
+        # Convert QImage to QPixmap for display
         self.pyqt_image = pyqt_g.QPixmap.fromImage(qt_image)
 
     #######################################################################################################################
+    #######################################################################################################################
 
-    # Draw the pressed button in the switch controller image
-    def draw_button(self, button = ''):
-        if not isinstance(button, str): return
+    def draw_button(self, button: str = '') -> None:
 
-        self.FPS_image = np.copy(self.resized_image)
+        """
+        Draws a filled circle on the FPS image to indicate the specified button press.
+
+        Args:
+            button (str): The name of the button to highlight ('A', 'B', 'HOME', ...).
+
+        Returns:
+            None
+        """
+
+        # Skip drawing if input is not a string or the same button is already drawn
+        if not isinstance(button, str) or self.current_button_pressed == button:
+            return
+
+        # Start from a fresh copy of the resized image
+        self._ensure_fps_image(force = True)
+
+        # Map button names to fixed pixel coordinates on the controller overlay
         button_coordinates = {
             'A': (307, 80),
             'B': (288, 99),
@@ -121,13 +229,31 @@ class Image_Processing():
             'RIGHT': (81, 148),
             'LEFT': (43, 148)
         }
-        if button in button_coordinates.keys():
+
+        # If the button exists in the map, draw a filled circle on it
+        if button in button_coordinates:
             cv2.circle(self.FPS_image, button_coordinates[button], 9, CONST.PRESSED_BUTTON_COLOR, -1)
+            self.current_button_pressed = button
 
     #######################################################################################################################
+    #######################################################################################################################
 
-    # Return the requested pixel color. Default: top-left corner pixel
-    def get_pixel_color(self, pixel = (20, 20)): return self.original_image[pixel[0]][pixel[1]]
+    def get_pixel_color(self, pixel: Tuple[int, int] = (20, 20)) -> Union[int, np.ndarray]:
+
+        """
+        Returns the color value of a specific pixel in the original image.
+
+        Args:
+            pixel (Tuple[int, int]): The (y, x) coordinates of the pixel to retrieve. Defaults to (20, 20).
+
+        Returns:
+            Union[int, np.ndarray]: The pixel color value. Returns:
+                - int for grayscale images
+                - np.ndarray of shape (3,) for color images (BGR order)
+        """
+
+        return self.original_image[pixel[0], pixel[1]]
+
 
     #######################################################################################################################
 
@@ -285,6 +411,7 @@ def create_debug_image(frame_size = CONST.DEBUG_FRAME_SIZE):
 ###########################################################################################################################
 
 if __name__ == "__main__":
+    import logging
     from time import sleep
     from Control_System import *
     from Game_Capture import Game_Capture
