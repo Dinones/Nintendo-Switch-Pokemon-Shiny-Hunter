@@ -12,3 +12,4 @@ playsound3==2.4.0
 PyQt5==5.14.1
 requests==2.32.3
 python-dotenv==1.0.1
+parameterized==0.9.0
