@@ -36,7 +36,7 @@ from Telegram import Telegram_Sender
 from GUI import GUI, App, play_sound
 from Game_Capture import Game_Capture
 from Switch_Controller import Switch_Controller
-from Image_Processing import Image_Processing, create_debug_image
+from Image_Processing import Image_Processing, Debug_Image
 
 ###########################################################################################################################
 #################################################     INITIALIZATIONS     #################################################
@@ -77,7 +77,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
 
     last_saved_image_path = str()
 
-    if CONST.DEBUG_VIDEO: debug_image = create_debug_image()
+    if CONST.DEBUG_VIDEO: debug_image = Debug_Image()
 
     while not shutdown_event.is_set():
         image = Image_Processing(Video_Capture.read_frame())

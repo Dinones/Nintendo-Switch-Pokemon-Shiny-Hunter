@@ -2,18 +2,16 @@
 ####################################################     LIBRARIES     ####################################################
 ###########################################################################################################################
 
-# Set the cwd to the one of the file
 import os
-if __name__ == '__main__':
-    try: os.chdir(os.path.dirname(__file__))
-    except: pass
+import sys
     
 import cv2
 # Disable warning messages
 cv2.setLogLevel(0)
 
-import sys; sys.path.append('..')
-import Colored_Strings as COLOR_str
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
+
+import Modules.Colored_Strings as COLOR_str
 import Constants as CONST
 
 ###########################################################################################################################

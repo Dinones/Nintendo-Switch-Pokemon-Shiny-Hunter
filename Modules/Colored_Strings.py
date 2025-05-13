@@ -55,7 +55,7 @@ ERROR = f'\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m[X] {RESET_FORMAT}'
 #####################################################     GENERAL     #####################################################
 ###########################################################################################################################
 
-INVALID_PATH_ERROR = \
+G_INVALID_PATH_ERROR = \
     f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}mInvalid path: {RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]};{SPECIAL["Italics"]}m{"{path}"}{RESET_FORMAT}'
@@ -65,12 +65,12 @@ INVALID_PATH_WARNING = \
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mInvalid path: {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}m{"{path}"}{RESET_FORMAT}'
 
-SUCCESS_EXIT_PROGRAM = \
+G_SUCCESS_EXIT_PROGRAM = \
     f'{CORRECT}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}mExiting program: {RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]}m{"{reason}"}{RESET_FORMAT}'
 
-PRESS_KEY_TO_INSTRUCTION = \
+G_PRESS_KEY_TO_INSTRUCTION = \
     f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mPress {RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]}m{"{key}"}{RESET_FORMAT}'+\
@@ -162,29 +162,30 @@ STUCK_FOR_TOO_LONG_ERROR = \
 ######################################################     MENU     #######################################################
 ###########################################################################################################################
 
-MENU = \
-    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
-    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mSelection Menu:{RESET_FORMAT}'
-MENU_OPTION = \
-    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}m    [{"{index}"}] {RESET_FORMAT}'+\
-    f'\033[{COLORS["Blue"]}m{"{option}"}{RESET_FORMAT}'
-
-OPTION_SELECTION = \
-    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
-    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mSelect an option: {RESET_FORMAT}'
-
-INVALID_OPTION = \
-    f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
-    f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}mInvalid option: {RESET_FORMAT}'+\
-    f'\033[{COLORS["Red"]}mExiting the program...{RESET_FORMAT}'
-
-SELECTED_OPTION = \
+M_SELECTED_OPTION = \
     f'{CORRECT}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}mOption {RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]}m{"{option}"}{RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}m selected: {RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]}m{"{action} "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Italics"]}m{"{path} "}{RESET_FORMAT}'
+
+M_MENU = \
+    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
+    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mSelection Menu:{RESET_FORMAT}'
+
+M_MENU_OPTION = \
+    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}m    [{"{index}"}] {RESET_FORMAT}'+\
+    f'\033[{COLORS["Blue"]}m{"{option}"}{RESET_FORMAT}'
+
+M_OPTION_SELECTION = \
+    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
+    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mSelect an option: {RESET_FORMAT}'
+
+M_INVALID_OPTION = \
+    f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
+    f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}mInvalid option: {RESET_FORMAT}'+\
+    f'\033[{COLORS["Red"]}mExiting the program...{RESET_FORMAT}'
 
 ###########################################################################################################################
 ###################################################     GAME CAPTURE     ##################################################
@@ -205,7 +206,7 @@ CAPTURE_DEVICE_NOT_OK = \
     f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}m    Video Capture nº{"{index}"}: {RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]}mNOT OK{RESET_FORMAT}'
 
-IMAGE_SAVED = \
+GC_IMAGE_SAVED = \
     f'{CORRECT}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Game Capture] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}mImage saved: {RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Italics"]}m{"{path}"}{RESET_FORMAT}'
@@ -284,20 +285,21 @@ DIRECTORY_SIZE = \
 #################################################     IMAGE PROCESSING     ################################################
 ###########################################################################################################################
 
-COULD_NOT_PROCESS_IMAGE = \
-    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Image Processing] "}{RESET_FORMAT}'+\
-    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mCould not process image: {RESET_FORMAT}'+\
-    f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}mSkipping frame...{RESET_FORMAT}'
-
-SUCCESSFULLY_EXTRACTED_FRAMES = \
+IP_SUCCESSFULLY_EXTRACTED_FRAMES = \
     f'{CORRECT}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Image Processing] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}mSuccessfully extracted {RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]}m{"{frames}"}{RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}m frames!{RESET_FORMAT}'
 
-SUCCESSFULLY_LOADED_IMAGES = \
+IP_SUCCESSFULLY_LOADED_IMAGES = \
     f'{CORRECT}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Image Processing] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}mSuccessfully loaded {RESET_FORMAT}'+\
+    f'\033[{COLORS["Green"]}m{"{images}"}{RESET_FORMAT}'+\
+    f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}m images!{RESET_FORMAT}'
+
+IP_SUCCESSFULLY_DELETED_IMAGES = \
+    f'{CORRECT}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Image Processing] "}{RESET_FORMAT}'+\
+    f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}mSuccessfully deleted {RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]}m{"{images}"}{RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}m images!{RESET_FORMAT}'
 
@@ -307,30 +309,29 @@ CONTOURS_FOUND = \
     f'\033[{COLORS["Blue"]}m{"{contours}"}{RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}m contours!{RESET_FORMAT}'
 
-CURRENT_EXTRACTED_FRAMES = \
+IP_CURRENT_EXTRACTED_FRAMES = \
     f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Image Processing] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mCurrently extracted {RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]}m{"{extracted_frame}"}/{"{total_frames}"}{RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}m frames {RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]}m({"{percentage}"}%){RESET_FORMAT}'
 
-DELETE_IMAGES_QUESTION = \
+IP_DELETE_IMAGES_QUESTION = \
     f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Image Processing] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mDo you want to delete all the images [Y/n]? {RESET_FORMAT}'
 
-DELETING_IMAGES = \
+IP_DELETING_IMAGES = \
     f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Image Processing] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mDeleting {RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]}m{"{images}"}{RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}m images...{RESET_FORMAT}'
 
-SUCCESSFULLY_DELETED_IMAGES = \
-    f'{CORRECT}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Image Processing] "}{RESET_FORMAT}'+\
-    f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}mSuccessfully deleted {RESET_FORMAT}'+\
-    f'\033[{COLORS["Green"]}m{"{images}"}{RESET_FORMAT}'+\
-    f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}m images!{RESET_FORMAT}'
+IP_COULD_NOT_LOAD_IMAGE = \
+    f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Image Processing] "}{RESET_FORMAT}'+\
+    f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}mCould not load image: {RESET_FORMAT}'+\
+    f'\033[{COLORS["Red"]};{SPECIAL["Italics"]}m{"{path}"}{RESET_FORMAT}'
 
-COULD_NOT_LOAD_IMAGES = \
+IP_NO_IMAGES_IN_FOLDER = \
     f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Image Processing] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}mCould not find any image on: {RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]};{SPECIAL["Italics"]}m{"{path}"}{RESET_FORMAT}'
