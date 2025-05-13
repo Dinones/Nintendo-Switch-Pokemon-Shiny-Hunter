@@ -5,10 +5,10 @@
 import os
 import sys
 import cv2
-import pytesseract
 import numpy as np
+import pytesseract
+from time import time
 import PyQt5.QtGui as pyqt_g
-from time import time, perf_counter
 from typing import Tuple, Union, Dict
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))

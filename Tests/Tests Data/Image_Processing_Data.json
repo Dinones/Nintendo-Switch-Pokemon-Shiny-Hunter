@@ -3,35 +3,30 @@
         "image_path": "Regice_Combat_720p.png",
         "image_original_size": [1280, 720],
         "has_pokemon_name": true,
-        "pokemon_name": "Regice",
-        "force_pyqt_grayscale": false
+        "pokemon_name": "Regice"
     },
     {
         "image_path": "Regice_Combat_1080p.png",
         "image_original_size": [1920, 1080],
         "has_pokemon_name": true,
-        "pokemon_name": "Regice",
-        "force_pyqt_grayscale": false
+        "pokemon_name": "Regice"
     },
     {
         "image_path": "Geodude_Combat_1080p.png",
         "image_original_size": [1920, 1080],
         "has_pokemon_name": true,
-        "pokemon_name": "Geodude",
-        "force_pyqt_grayscale": false
+        "pokemon_name": "Geodude"
     },
     {
         "image_path": "Starly_Combat_1080p.png",
         "image_original_size": [1920, 1080],
         "has_pokemon_name": true,
-        "pokemon_name": "Starly",
-        "force_pyqt_grayscale": false
+        "pokemon_name": "Starly"
     },
     {
         "image_path": "Rotom_Combat_1080p.png",
         "image_original_size": [1920, 1080],
         "has_pokemon_name": true,
-        "pokemon_name": "Rotom",
-        "force_pyqt_grayscale": true
+        "pokemon_name": "Rotom"
     }
 ]

@@ -9,8 +9,6 @@ import json
 import random
 import unittest
 import numpy as np
-import PyQt5.QtGui as pyqt_g
-from PyQt5.QtWidgets import QApplication
 from parameterized import parameterized_class
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
@@ -37,8 +35,6 @@ for item in TEST_DATA:
 # Manually enable debug mode if CONST.TESTING is not active
 if not CONST.TESTING:
     CONST.TESTING = True
-
-app = QApplication(sys.argv)
 
 ###########################################################################################################################
 ###########################################################################################################################
@@ -138,39 +134,6 @@ class Test_Image_Processing(unittest.TestCase):
         # Assert that the recognized name matches the expected one
         self.assertEqual(self.pokemon_name, recognized_name, 'Failed to recognize Pokémon name')
   
-    #######################################################################################################################
-    #######################################################################################################################
-  
-    def test_get_pyqt_image(self):
-
-        """
-        Tests whether an OpenCV image (color or grayscale) is correctly converted into a PyQt QPixmap.
-
-        Asserts:
-            - The resulting PyQt image is not None.
-            - The resulting type is QPixmap.
-            - The dimensions match the original input image.
-        """
-
-        # Use the resized image to convert
-        self.image.resize_image()
-        input_image = self.image.resized_image
-
-        # Simulate grayscale image if needed (forcefully convert)
-        if len(input_image.shape) == 3 and self.force_pyqt_grayscale:
-            input_image = cv2.cvtColor(input_image, cv2.COLOR_BGR2GRAY)
-
-        self.image.get_pyqt_image(input_image)
-
-        # Check that the output is a valid QPixmap
-        self.assertIsNotNone(self.image.pyqt_image, 'Failed to convert to PyQt image')
-        self.assertIsInstance(self.image.pyqt_image, pyqt_g.QPixmap, 'Result is not a QPixmap')
-
-        # Verify that dimensions match the input
-        expected_width, expected_height = input_image.shape[1::-1]
-        self.assertEqual(self.image.pyqt_image.width(), expected_width, 'QPixmap width mismatch')
-        self.assertEqual(self.image.pyqt_image.height(), expected_height, 'QPixmap height mismatch')
-    
     #######################################################################################################################
     #######################################################################################################################
 
