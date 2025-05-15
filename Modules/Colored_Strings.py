@@ -340,26 +340,39 @@ IP_NO_IMAGES_IN_FOLDER = \
 #####################################################     DATABASE     ####################################################
 ###########################################################################################################################
 
-INITIALIZE_DATABASE = \
+DB_INITIALIZE_DATABASE = \
     f'{CORRECT}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Database] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}mSuccessfully initialized database!{RESET_FORMAT}'
 
-DATABASE_INFO = \
+DB_DATABASE_INFO = \
     f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Database] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mDatabase Stats: {RESET_FORMAT}'
 
-DATABASE_STAT_VALUE = \
+DB_DATABASE_STAT_VALUE = \
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}m\t{"{stat}"}: {RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]}m{"{value}"}{RESET_FORMAT}'
 
-SELECT_POKEMON_TO_DELETE = \
+DB_SELECT_POKEMON_TO_DELETE = \
     f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Database] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mWrite the pokémon you want to delete from the database: {RESET_FORMAT}'
 
-COULD_NOT_DELETE_POKEMON = \
+DB_COULD_NOT_DELETE_POKEMON = \
     f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Database] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}mCould not delete pokémon: {RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]}m{"{pokemon}"}{RESET_FORMAT}'
+
+DB_ASK_POKEMON_TO_DELETE = \
+    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Database] "}{RESET_FORMAT}'+\
+    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mAre you sure you want to permanently delete "{"{pokemon}"}" {RESET_FORMAT}'+\
+    f'from the database? This action cannot be undone. (y/N): {RESET_FORMAT}'
+
+DB_DELETION_CANCELLED = \
+    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Database] "}{RESET_FORMAT}'+\
+    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mPokémon deletion cancelled: {RESET_FORMAT}'
+
+DB_POKEMON_DELETED = \
+    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Database] "}{RESET_FORMAT}'+\
+    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mPokémon "{"{pokemon}"}" deleted {RESET_FORMAT}'
 
 ###########################################################################################################################
 #######################################################     GUI     #######################################################

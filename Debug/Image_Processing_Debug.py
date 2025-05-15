@@ -6,11 +6,6 @@ import os
 import sys
 import logging
 from time import sleep, perf_counter
-# import cv2
-# import pytesseract
-# import numpy as np
-# import PyQt5.QtGui as pyqt_g
-# from typing import Tuple, Union, Dict
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
@@ -120,6 +115,9 @@ if __name__ == "__main__":
             None
         """
 
+        ###################################################################################################################
+        ###################################################################################################################
+
         def process_single_frame(frame_num: int = None) -> None:
             
             """
@@ -142,6 +140,7 @@ if __name__ == "__main__":
             image.resize_image()
             cv2.imshow(f'{CONST.BOT_NAME} - Resized', image.resized_image)
         
+        ###################################################################################################################
         ###################################################################################################################
 
         print('\n' + COLOR_str.M_SELECTED_OPTION.format(
