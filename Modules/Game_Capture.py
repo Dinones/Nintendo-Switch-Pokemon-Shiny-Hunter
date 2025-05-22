@@ -11,7 +11,7 @@ cv2.setLogLevel(0)
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
-import Modules.Colored_Strings as COLOR_str
+import Modules.Colored_Strings as STR
 import Constants as CONST
 
 ###########################################################################################################################
@@ -30,7 +30,7 @@ class Game_Capture():
             self.video_capture.release()
             first_available_capture_card = video_captures.index(True)
             self.video_capture = cv2.VideoCapture(first_available_capture_card)
-            print(COLOR_str.USING_DIFFERENT_CAPTURE_CARD
+            print(STR.USING_DIFFERENT_CAPTURE_CARD
                 .replace('{old_video_capture}', str(video_capture_index))
                 .replace('{new_video_capture}', str(first_available_capture_card))
             )
@@ -108,110 +108,110 @@ class Game_Capture():
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
 
-if __name__ == "__main__":
-    from time import time
-    from Control_System import *
-    from FPS_Counter import FPS_Counter
-    from Image_Processing import Image_Processing
+# if __name__ == "__main__":
+#     from time import time
+#     from Control_System import *
+#     from FPS_Counter import FPS_Counter
+#     from Image_Processing import Image_Processing
 
-    #######################################################################################################################
+#     #######################################################################################################################
 
-    def main_menu():
-        print('\n' + COLOR_str.MENU.replace('{module}', 'Game Capture'))
-        print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Print all available video devices'))
-        print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Check current capture device'))
+#     def main_menu():
+#         print('\n' + STR.MENU.replace('{module}', 'Game Capture'))
+#         print(STR.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Print all available video devices'))
+#         print(STR.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Check current capture device'))
 
-        option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Game Capture'))
+#         option = input('\n' + STR.OPTION_SELECTION.replace('{module}', 'Game Capture'))
 
-        menu_options = {
-            '1': print_video_captures,
-            '2': check_video_capture,
-        }
+#         menu_options = {
+#             '1': print_video_captures,
+#             '2': check_video_capture,
+#         }
 
-        if option in menu_options: menu_options[option](option)
-        else: print(COLOR_str.INVALID_OPTION.replace('{module}', 'Game Capture') + '\n')
+#         if option in menu_options: menu_options[option](option)
+#         else: print(STR.INVALID_OPTION.replace('{module}', 'Game Capture') + '\n')
 
-    #######################################################################################################################
+#     #######################################################################################################################
 
-    def print_video_captures(option):
-        print('\n' + COLOR_str.SELECTED_OPTION
-            .replace('{module}', 'Game Capture')
-            .replace('{option}', f"{option}")
-            .replace('{action}', f"Printing all available video devices...")
-            .replace('{path}', f"")
-        )
+#     def print_video_captures(option):
+#         print('\n' + STR.SELECTED_OPTION
+#             .replace('{module}', 'Game Capture')
+#             .replace('{option}', f"{option}")
+#             .replace('{action}', f"Printing all available video devices...")
+#             .replace('{path}', f"")
+#         )
 
-        video_captures = Game_Capture.find_available_video_captures()
-        print(COLOR_str.AVAILABLE_CAPTURE_DEVICES)
-        for index, video_capture in enumerate(video_captures):
-            if video_capture: print(COLOR_str.CAPTURE_DEVICE_OK.replace('{index}', str(index)))
-            else: print(COLOR_str.CAPTURE_DEVICE_NOT_OK.replace('{index}', str(index)))
-        print()
+#         video_captures = Game_Capture.find_available_video_captures()
+#         print(STR.AVAILABLE_CAPTURE_DEVICES)
+#         for index, video_capture in enumerate(video_captures):
+#             if video_capture: print(STR.CAPTURE_DEVICE_OK.replace('{index}', str(index)))
+#             else: print(STR.CAPTURE_DEVICE_NOT_OK.replace('{index}', str(index)))
+#         print()
 
-    #######################################################################################################################
-    #######################################################################################################################
+#     #######################################################################################################################
+#     #######################################################################################################################
 
-    def check_video_capture(option):
-        print('\n' + COLOR_str.SELECTED_OPTION
-            .replace('{module}', 'Game Capture')
-            .replace('{option}', f"{option}")
-            .replace('{action}', f"Activating capture device nº{CONST.VIDEO_CAPTURE_INDEX}...")
-            .replace('{path}', f"")
-        )
+#     def check_video_capture(option):
+#         print('\n' + STR.SELECTED_OPTION
+#             .replace('{module}', 'Game Capture')
+#             .replace('{option}', f"{option}")
+#             .replace('{action}', f"Activating capture device nº{CONST.VIDEO_CAPTURE_INDEX}...")
+#             .replace('{path}', f"")
+#         )
 
-        Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
-        if not Video_Capture.video_capture.isOpened(): 
-            Video_Capture.stop()
-            print(COLOR_str.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{CONST.VIDEO_CAPTURE_INDEX}'") + '\n')
-            return
-        FPS = FPS_Counter()
+#         Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
+#         if not Video_Capture.video_capture.isOpened(): 
+#             Video_Capture.stop()
+#             print(STR.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{CONST.VIDEO_CAPTURE_INDEX}'") + '\n')
+#             return
+#         FPS = FPS_Counter()
 
-        print(COLOR_str.PRESS_KEY_TO_INSTRUCTION
-            .replace('{module}', 'Image Processing')
-            .replace('{key}', "'c'")
-            .replace('{instruction}', 'take a screenshot')
-        ); print(COLOR_str.PRESS_KEY_TO_INSTRUCTION
-            .replace('{module}', 'Image Processing')
-            .replace('{key}', "'q'")
-            .replace('{instruction}', 'exit the program')
-        )
+#         print(STR.PRESS_KEY_TO_INSTRUCTION
+#             .replace('{module}', 'Image Processing')
+#             .replace('{key}', "'c'")
+#             .replace('{instruction}', 'take a screenshot')
+#         ); print(STR.PRESS_KEY_TO_INSTRUCTION
+#             .replace('{module}', 'Image Processing')
+#             .replace('{key}', "'q'")
+#             .replace('{instruction}', 'exit the program')
+#         )
 
-        while True: 
-            image = Image_Processing(Video_Capture.read_frame())
-            if isinstance(image.original_image, type(None)): continue
+#         while True: 
+#             image = Image_Processing(Video_Capture.read_frame())
+#             if isinstance(image.original_image, type(None)): continue
 
-            image.resize_image()
-            FPS.get_FPS()
-            image.draw_FPS(FPS.FPS)
-            # print(is_double_combat_life_box_visible(image))
+#             image.resize_image()
+#             FPS.get_FPS()
+#             image.draw_FPS(FPS.FPS)
+#             # print(is_double_combat_life_box_visible(image))
 
-            cv2.imshow(f'{CONST.BOT_NAME} - Device {CONST.VIDEO_CAPTURE_INDEX}', image.FPS_image)
+#             cv2.imshow(f'{CONST.BOT_NAME} - Device {CONST.VIDEO_CAPTURE_INDEX}', image.FPS_image)
 
-            # Press 'q' to stop the program
-            # Press 'c' to take a screenshot
-            key = cv2.waitKey(1)
-            if key == ord('q') or key == ord('Q'): break
-            elif key == ord('c') or key == ord('C'): 
-                if not os.path.exists(f'../{CONST.SAVING_FRAMES_PATH}'):
-                    print(COLOR_str.INVALID_PATH_WARNING
-                        .replace('{module}', 'Game Capture')
-                        .replace('{path}', f"'../{CONST.SAVING_FRAMES_PATH}'")
-                    )
-                    continue
+#             # Press 'q' to stop the program
+#             # Press 'c' to take a screenshot
+#             key = cv2.waitKey(1)
+#             if key == ord('q') or key == ord('Q'): break
+#             elif key == ord('c') or key == ord('C'): 
+#                 if not os.path.exists(f'../{CONST.SAVING_FRAMES_PATH}'):
+#                     print(STR.INVALID_PATH_WARNING
+#                         .replace('{module}', 'Game Capture')
+#                         .replace('{path}', f"'../{CONST.SAVING_FRAMES_PATH}'")
+#                     )
+#                     continue
 
-                file_name = str(time())
-                cv2.imwrite(f'../{CONST.SAVING_FRAMES_PATH}/{file_name}.png', image.original_image)
-                print(COLOR_str.IMAGE_SAVED.replace('{path}', f"'../{CONST.SAVING_FRAMES_PATH}/{file_name}.png'"))
+#                 file_name = str(time())
+#                 cv2.imwrite(f'../{CONST.SAVING_FRAMES_PATH}/{file_name}.png', image.original_image)
+#                 print(STR.IMAGE_SAVED.replace('{path}', f"'../{CONST.SAVING_FRAMES_PATH}/{file_name}.png'"))
 
-        # Release the capture card and close all windows
-        Video_Capture.stop()
+#         # Release the capture card and close all windows
+#         Video_Capture.stop()
 
-        print(COLOR_str.SUCCESS_EXIT_PROGRAM
-            .replace('{module}', 'Game Capture')
-            .replace('{reason}', 'Successfully activated video device!') + '\n'
-        )
+#         print(STR.SUCCESS_EXIT_PROGRAM
+#             .replace('{module}', 'Game Capture')
+#             .replace('{reason}', 'Successfully activated video device!') + '\n'
+#         )
 
-    #######################################################################################################################
-    #######################################################################################################################
+#     #######################################################################################################################
+#     #######################################################################################################################
 
-    main_menu()
+#     main_menu()

@@ -9,7 +9,7 @@ from threading import Thread, Event
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
 import Constants as CONST
-import Modules.Colored_Strings as COLOR_str
+import Modules.Colored_Strings as STR
 from Modules.FPS_Counter import FPS_Counter
 
 ###########################################################################################################################
@@ -32,7 +32,7 @@ Thread(target=lambda: FPS_Counter.get_memory_usage(Event()), daemon=True).start(
 
 # Print available disk space
 system_space = FPS_Counter.get_system_available_space()
-print('\n' + COLOR_str.SYSTEM_AVAILABLE_SPACE
+print('\n' + STR.SYSTEM_AVAILABLE_SPACE
     .replace('{total_space}', system_space['total'])
     .replace('{used_space}', system_space['used'])
     .replace('{available_space}', system_space['available'])
@@ -40,14 +40,14 @@ print('\n' + COLOR_str.SYSTEM_AVAILABLE_SPACE
 
 # Print size of the Media directory
 media_folder_size = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Media'))
-print(COLOR_str.DIRECTORY_SIZE
+print(STR.DIRECTORY_SIZE
     .replace('{directory}', f"'../Media/'")
     .replace('{size}', media_folder_size)
 )
 
 # Print size of the local Recycle Bin
 recycle_bin_size = FPS_Counter.get_directory_size(os.path.expanduser('~/.local/share/Trash/files'))
-print(COLOR_str.DIRECTORY_SIZE
+print(STR.DIRECTORY_SIZE
     .replace('{directory}', f"'{os.path.expanduser('~/.local/share/Trash/files')}'")
     .replace('{size}', recycle_bin_size)
 )
@@ -70,7 +70,7 @@ while True:
         min_FPS = min(FPS_array) if not min_FPS or min_FPS > min(FPS_array) else min_FPS
 
         # Print live FPS and memory usage display
-        print(COLOR_str.FPS_COUNTER
+        print(STR.FPS_COUNTER
             .replace('{current_fps}', str(FPS_Counter.FPS))
             .replace('{max_fps}', str(max_FPS))
             .replace('{min_fps}', str(min_FPS))

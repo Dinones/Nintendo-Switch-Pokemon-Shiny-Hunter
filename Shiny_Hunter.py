@@ -6,10 +6,10 @@ import os
 import sys; 
 folders = ['Modules', 'Modules/Mail', 'Modules/Telegram']
 for folder in folders: sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), folder)))
-import Colored_Strings as COLOR_str
+import Colored_Strings as STR
 
 # NXBT is only compatible with Linux systems
-if os.name != 'posix': exit(f'\n{COLOR_str.NOT_LINUX_SYSTEM}\n')
+if os.name != 'posix': exit(f'\n{STR.NOT_LINUX_SYSTEM}\n')
 
 if __name__ == '__main__': 
     # Will raise an error when restarting execution using sudo
@@ -17,7 +17,7 @@ if __name__ == '__main__':
     except: pass
     # NXBT requires administrator permissions
     if 'SUDO_USER' not in os.environ: 
-        print(f'\n{COLOR_str.NOT_SUDO}')
+        print(f'\n{STR.NOT_SUDO}')
         program_name = __file__.split('/')[-1]
         exit(os.system(f'sudo python3 {program_name}'))
 
@@ -51,13 +51,13 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
     Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
     if not Video_Capture.video_capture.isOpened(): 
         Video_Capture.stop()
-        print(COLOR_str.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{CONST.VIDEO_CAPTURE_INDEX}'"))
+        print(STR.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{CONST.VIDEO_CAPTURE_INDEX}'"))
         return
     Video_Capture.start_recording()
 
     switch_controller_image = Image_Processing(CONST.SWITCH_CONTROLLER_IMAGE_PATH)
     if isinstance(switch_controller_image.original_image, type(None)):
-        print(COLOR_str.INVALID_PATH_ERROR
+        print(STR.INVALID_PATH_ERROR
             .replace('{module}', 'Shiny Hunter')
             .replace('{path}', f'../{CONST.SWITCH_CONTROLLER_IMAGE_PATH}')
         )
@@ -89,7 +89,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
             Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
             if not Video_Capture.video_capture.isOpened(): 
                 Video_Capture.stop()
-                print(COLOR_str.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{CONST.VIDEO_CAPTURE_INDEX}'"))
+                print(STR.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{CONST.VIDEO_CAPTURE_INDEX}'"))
                 return
             continue
 
@@ -116,7 +116,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                 ["MOVE_PLAYER", "WAIT_PAIRING_SCREEN", "WAIT_HOME_SCREEN", "SHINY_FOUND", "ENTER_LAKE_4"] and \
                 Controller.current_event == Controller.previous_event and \
                 time() - stuck_timer > CONST.STUCK_TIMER_SECONDS):
-                    print(COLOR_str.STUCK_FOR_TOO_LONG_WARN_1
+                    print(STR.STUCK_FOR_TOO_LONG_WARN_1
                         .replace('{module}', 'Shiny Hunter')
                         .replace('{event}', Controller.current_event)
                         .replace('{seconds}', str(CONST.STUCK_TIMER_SECONDS))
@@ -130,7 +130,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
             elif Controller.current_event not in \
                 ["RESTART_GAME_1", "WAIT_PAIRING_SCREEN", "WAIT_HOME_SCREEN", "SHINY_FOUND", "ENTER_LAKE_4"] and \
                 CONST.FAILURE_DETECTION_TIME_WARN < time() - encounter_playtime < CONST.FAILURE_DETECTION_TIME_WARN + 3:
-                    print(COLOR_str.STUCK_FOR_TOO_LONG_WARN_2
+                    print(STR.STUCK_FOR_TOO_LONG_WARN_2
                         .replace('{module}', 'Shiny Hunter')
                         .replace('{minutes}', str(CONST.FAILURE_DETECTION_TIME_WARN//60))
                     )
@@ -142,7 +142,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                 time() - encounter_playtime > CONST.FAILURE_DETECTION_TIME_ERROR:
                     Thread(target=lambda: Telegram.send_error_detected('STUCK'), daemon=False).start()
                     Thread(target=lambda: Email.send_error_detected('STUCK'), daemon=False).start()
-                    print(COLOR_str.STUCK_FOR_TOO_LONG_ERROR
+                    print(STR.STUCK_FOR_TOO_LONG_ERROR
                         .replace('{module}', 'Shiny Hunter')
                         .replace('{minutes}', str(CONST.FAILURE_DETECTION_TIME_ERROR//60))
                     )
@@ -167,7 +167,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                     # Check if the computer is running out of space
                     system_space = FPS.get_system_available_space()
                     if system_space['available_no_format'] < CONST.CRITICAL_AVAILABLE_SPACE:
-                        print(COLOR_str.RUNNING_OUT_OF_SPACE
+                        print(STR.RUNNING_OUT_OF_SPACE
                             .replace('{module}', 'Shiny Hunter')
                             .replace('{available_space}', system_space['available'])
                         )
@@ -205,7 +205,7 @@ def GUI_control(Encounter_Type, FPS, Controller, Image_Queue, shutdown_event, st
                             global_encounters - last_shiny_encounter
                         ), daemon=False
                     ).start()
-                    print(COLOR_str.SHINY_FOUND
+                    print(STR.SHINY_FOUND
                         .replace('{module}', 'Shiny Hunter')
                         .replace('{pokemon}', pokemon_name)
                         .replace('{encounters}', str(global_encounters - last_shiny_encounter))
@@ -291,7 +291,7 @@ def check_threads(threads, shutdown_event):
         for thread in threads:
             if not thread['thread'].is_alive():
                 play_sound(f'./{CONST.ERROR_SOUND_PATH}')
-                print(COLOR_str.THREAD_DIED_ERROR
+                print(STR.THREAD_DIED_ERROR
                     .replace('{module}', 'Shiny Hunter')
                     .replace('{thread}', thread['function'])
                 )
@@ -308,14 +308,14 @@ def check_threads(threads, shutdown_event):
 
 if __name__ == "__main__":
     def main_menu():
-        print('\n' + COLOR_str.MENU.replace('{module}', 'Shiny Hunter'))
-        print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Start wild shiny hunter'))
-        print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Start static shiny hunter'))
-        print(COLOR_str.MENU_OPTION.replace('{index}', '3').replace('{option}', 'Start starter shiny hunter'))
-        print(COLOR_str.MENU_OPTION.replace('{index}', '4').replace('{option}', 'Start Shaymin shiny hunter'))
-        print(COLOR_str.MENU_OPTION.replace('{index}', '5').replace('{option}', 'Start wild shiny hunter double combats'))
+        print('\n' + STR.MENU.replace('{module}', 'Shiny Hunter'))
+        print(STR.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Start wild shiny hunter'))
+        print(STR.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Start static shiny hunter'))
+        print(STR.MENU_OPTION.replace('{index}', '3').replace('{option}', 'Start starter shiny hunter'))
+        print(STR.MENU_OPTION.replace('{index}', '4').replace('{option}', 'Start Shaymin shiny hunter'))
+        print(STR.MENU_OPTION.replace('{index}', '5').replace('{option}', 'Start wild shiny hunter double combats'))
 
-        option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Shiny Hunter'))
+        option = input('\n' + STR.OPTION_SELECTION.replace('{module}', 'Shiny Hunter'))
 
         menu_options = {
             '1': shiny_hunter,
@@ -332,7 +332,7 @@ if __name__ == "__main__":
         os.environ['ALSOFT_LOGLEVEL'] = '0'
 
         if option in menu_options: menu_options[option](option)
-        else: print(COLOR_str.INVALID_OPTION.replace('{module}', 'Shiny Hunter') + '\n')
+        else: print(STR.INVALID_OPTION.replace('{module}', 'Shiny Hunter') + '\n')
 
     
     #######################################################################################################################
@@ -345,7 +345,7 @@ if __name__ == "__main__":
         elif option == '4': action = 'Shaymin'
         elif option == '5': action = 'wild (double combats)'
 
-        print('\n' + COLOR_str.SELECTED_OPTION
+        print('\n' + STR.SELECTED_OPTION
             .replace('{module}', 'Shiny Hunter')
             .replace('{option}', f"{option}")
             .replace('{action}', f"Starting {action} shiny hunter...")
@@ -362,7 +362,7 @@ if __name__ == "__main__":
         # Check the Media/Images/ folder
         media_folder_size = FPS.get_directory_size(CONST.IMAGES_FOLDER_PATH)
         if len(os.listdir(f'./{CONST.IMAGES_FOLDER_PATH}')) - 1 > CONST.IMAGES_COUNT_WARNING:
-            print(COLOR_str.IMAGES_COUNT_WARNING
+            print(STR.IMAGES_COUNT_WARNING
                 .replace('{module}', 'Shiny Hunter')
                 .replace('{images}', str(len(os.listdir(f'./{CONST.IMAGES_FOLDER_PATH}')) - 1))
                 .replace('{path}', f'./{CONST.IMAGES_FOLDER_PATH}')
@@ -372,7 +372,7 @@ if __name__ == "__main__":
         # Check if the recycle bin size is greater than 1GB 
         recycle_bin_size = FPS.get_directory_size(os.path.expanduser('~/.local/share/Trash/files'))
         if recycle_bin_size[-2:] == 'GB':
-            print(COLOR_str.USED_SPACE_WARNING
+            print(STR.USED_SPACE_WARNING
                 .replace('{module}', 'Shiny Hunter')
                 .replace('{path}', f"Recycle Bin")
                 .replace('{used_space}', recycle_bin_size)
@@ -381,22 +381,22 @@ if __name__ == "__main__":
         # Check whole system available space
         system_space = FPS.get_system_available_space()
         if system_space['available_no_format'] < CONST.CRITICAL_AVAILABLE_SPACE:
-            print(COLOR_str.AVAILABLE_SPACE_ERROR
+            print(STR.AVAILABLE_SPACE_ERROR
                 .replace('{module}', 'Shiny Hunter')
                 .replace('{threshold}', FPS.format_space_size(CONST.CRITICAL_AVAILABLE_SPACE))
                 .replace('{available_space}', f"{system_space['available']}")
             )
-            delete = input(COLOR_str.DELETE_IMAGES_QUESTION)
+            delete = input(STR.DELETE_IMAGES_QUESTION)
             if delete.lower().strip() in ('', 'y', 'yes'): 
                 images = sorted([image for image in sorted(os.listdir(f'./{CONST.IMAGES_FOLDER_PATH}')) 
                     if image.lower().endswith(('.png', '.jpg', 'jpeg'))])
-                print(COLOR_str.DELETING_IMAGES.replace('{images}', str(len(images))))
+                print(STR.DELETING_IMAGES.replace('{images}', str(len(images))))
                 for image in images: os.remove(f'./{CONST.IMAGES_FOLDER_PATH}/{image}')
-                print(COLOR_str.SUCCESSFULLY_DELETED_IMAGES.replace('{images}', str(len(images))))
+                print(STR.SUCCESSFULLY_DELETED_IMAGES.replace('{images}', str(len(images))))
 
                 system_space = FPS.get_system_available_space()
                 if system_space['available_no_format'] < CONST.CRITICAL_AVAILABLE_SPACE: 
-                    print(COLOR_str.AVAILABLE_SPACE_ERROR
+                    print(STR.AVAILABLE_SPACE_ERROR
                         .replace('{module}', 'Shiny Hunter')
                         .replace('{threshold}', FPS.format_space_size(CONST.CRITICAL_AVAILABLE_SPACE))
                         .replace('{available_space}', f"{system_space['available']}")
@@ -446,7 +446,7 @@ if __name__ == "__main__":
         GUI_App.exec_()
         shutdown_event.set()
 
-        print(COLOR_str.RELEASING_THREADS
+        print(STR.RELEASING_THREADS
             .replace('{module}', 'Shiny Hunter')
             .replace('{threads}', str(len(threads))) + '\n'
         )

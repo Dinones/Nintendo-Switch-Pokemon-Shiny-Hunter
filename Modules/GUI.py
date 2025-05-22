@@ -19,7 +19,7 @@ from cllist import dllist
 from playsound3 import playsound
 
 import sys; sys.path.append('..')
-import Colored_Strings as COLOR_str
+import Colored_Strings as STR
 import Constants as CONST
 
 ###########################################################################################################################
@@ -129,7 +129,7 @@ class GUI(pyqt_w.QWidget):
                 self.items['music_button'].setText('')
                 self.items['music_button'].setIcon(image)
             else: 
-                print(COLOR_str.COULD_NOT_LOAD_IMAGE.replace('{path}', relative_path))
+                print(STR.COULD_NOT_LOAD_IMAGE.replace('{path}', relative_path))
                 self.items['music_button'].setIcon(pyqt_g.QIcon())
                 self.items['music_button'].setText("M" if CONST.PLAY_SOUNDS else "!M")
 
@@ -156,7 +156,7 @@ class GUI(pyqt_w.QWidget):
         image = pyqt_g.QIcon(relative_path)
         if not image.pixmap(2, 2).isNull(): self.items['discord_button'].setIcon(image)
         else: 
-            print(COLOR_str.COULD_NOT_LOAD_IMAGE.replace('{path}', relative_path))
+            print(STR.COULD_NOT_LOAD_IMAGE.replace('{path}', relative_path))
             self.items['discord_button'].setText("Discord")
 
         ##### GITHUB BUTTON #####
@@ -173,7 +173,7 @@ class GUI(pyqt_w.QWidget):
         image = pyqt_g.QIcon(relative_path)
         if not image.pixmap(2, 2).isNull(): self.items['github_button'].setIcon(image)
         else: 
-            print(COLOR_str.COULD_NOT_LOAD_IMAGE.replace('{path}', relative_path))
+            print(STR.COULD_NOT_LOAD_IMAGE.replace('{path}', relative_path))
             self.items['github_button'].setText("GitHub")
 
         ##### LOGO BUTTON #####
@@ -190,7 +190,7 @@ class GUI(pyqt_w.QWidget):
         image = pyqt_g.QIcon(relative_path)
         if not image.pixmap(2, 2).isNull(): self.items['dinones_button'].setIcon(image)
         else: 
-            print(COLOR_str.COULD_NOT_LOAD_IMAGE.replace('{path}', relative_path))
+            print(STR.COULD_NOT_LOAD_IMAGE.replace('{path}', relative_path))
             self.items['dinones_button'].setText("D")
             
         ##### RAM USAGE #####
@@ -284,7 +284,7 @@ def play_sound(path):
         except: 
             sleep(0.1)
             restore_std(original_stderr_fd, saved_stderr_fd)
-            print(COLOR_str.COULD_NOT_PLAY_SOUND
+            print(STR.COULD_NOT_PLAY_SOUND
                 .replace('{module}', 'Shiny Hunter')
                 .replace('{path}', path)
             )
@@ -307,11 +307,11 @@ if __name__ == "__main__":
     #######################################################################################################################
 
     def main_menu():
-        print('\n' + COLOR_str.MENU.replace('{module}', 'GUI'))
-        print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Open GUI using capture card'))
-        print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Open GUI using a template image'))
+        print('\n' + STR.MENU.replace('{module}', 'GUI'))
+        print(STR.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Open GUI using capture card'))
+        print(STR.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Open GUI using a template image'))
 
-        option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'GUI'))
+        option = input('\n' + STR.OPTION_SELECTION.replace('{module}', 'GUI'))
 
         menu_options = {
             '1': test_GUI_capture_card,
@@ -319,13 +319,13 @@ if __name__ == "__main__":
         }
 
         if option in menu_options: menu_options[option](option)
-        else: print(COLOR_str.INVALID_OPTION.replace('{module}', 'GUI') + '\n')
+        else: print(STR.INVALID_OPTION.replace('{module}', 'GUI') + '\n')
 
     #######################################################################################################################
     #######################################################################################################################
 
     def test_GUI_capture_card(option):
-        print('\n' + COLOR_str.SELECTED_OPTION
+        print('\n' + STR.SELECTED_OPTION
             .replace('{module}', 'GUI')
             .replace('{option}', f"{option}")
             .replace('{action}', f"Testing GUI with the capture card...")
@@ -339,7 +339,7 @@ if __name__ == "__main__":
 
         switch_controller_image = Image_Processing(f'../{CONST.SWITCH_CONTROLLER_IMAGE_PATH}')
         if isinstance(switch_controller_image.original_image, type(None)):
-            print(COLOR_str.INVALID_PATH_ERROR
+            print(STR.INVALID_PATH_ERROR
                 .replace('{module}', 'GUI')
                 .replace('{path}', f'../{CONST.SWITCH_CONTROLLER_IMAGE_PATH}') + '\n'
             )
@@ -351,7 +351,7 @@ if __name__ == "__main__":
             Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
             if not Video_Capture.video_capture.isOpened(): 
                 Video_Capture.stop()
-                print(COLOR_str.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{CONST.VIDEO_CAPTURE_INDEX}'"))
+                print(STR.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{CONST.VIDEO_CAPTURE_INDEX}'"))
                 shutdown_event.set()
                 return
 
@@ -365,7 +365,7 @@ if __name__ == "__main__":
                     Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
                     if not Video_Capture.video_capture.isOpened(): 
                         Video_Capture.stop()
-                        print(COLOR_str.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{CONST.VIDEO_CAPTURE_INDEX}'"))
+                        print(STR.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{CONST.VIDEO_CAPTURE_INDEX}'"))
                         shutdown_event.set()
                     continue
 
@@ -398,13 +398,13 @@ if __name__ == "__main__":
         GUI_App.exec_()
 
         shutdown_event.set()
-        print(COLOR_str.RELEASING_THREADS.replace('{module}', 'GUI').replace('{threads}', str(len(threads))) + '\n')        
+        print(STR.RELEASING_THREADS.replace('{module}', 'GUI').replace('{threads}', str(len(threads))) + '\n')        
 
     #######################################################################################################################
     #######################################################################################################################
 
     def test_GUI_template_image(option):
-        print('\n' + COLOR_str.SELECTED_OPTION
+        print('\n' + STR.SELECTED_OPTION
             .replace('{module}', 'GUI')
             .replace('{option}', f"{option}")
             .replace('{action}', f"Testing GUI using a template image...")
@@ -418,7 +418,7 @@ if __name__ == "__main__":
 
         switch_controller_image = Image_Processing(f'../{CONST.SWITCH_CONTROLLER_IMAGE_PATH}')
         if isinstance(switch_controller_image.original_image, type(None)):
-            print(COLOR_str.INVALID_PATH_ERROR
+            print(STR.INVALID_PATH_ERROR
                 .replace('{module}', 'GUI')
                 .replace('{path}', f'../{CONST.SWITCH_CONTROLLER_IMAGE_PATH}') + '\n'
             )
@@ -428,7 +428,7 @@ if __name__ == "__main__":
 
         image = Image_Processing(f'../{CONST.TEMPLATE_IMAGE_PATH}')
         if isinstance(image.original_image, type(None)):
-            print(COLOR_str.INVALID_PATH_ERROR
+            print(STR.INVALID_PATH_ERROR
                 .replace('{module}', 'GUI')
                 .replace('{path}', f'../{CONST.TEMPLATE_IMAGE_PATH}') + '\n'
             )
@@ -463,7 +463,7 @@ if __name__ == "__main__":
         GUI_App.exec_()
 
         shutdown_event.set()
-        print(COLOR_str.RELEASING_THREADS.replace('{module}', 'GUI').replace('{threads}', str(len(threads))) + '\n')        
+        print(STR.RELEASING_THREADS.replace('{module}', 'GUI').replace('{threads}', str(len(threads))) + '\n')        
 
     #######################################################################################################################
     #######################################################################################################################

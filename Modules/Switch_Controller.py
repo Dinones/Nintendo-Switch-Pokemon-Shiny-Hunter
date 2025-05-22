@@ -3,10 +3,10 @@
 ###########################################################################################################################
 
 import os
-import Colored_Strings as COLOR_str
+import Colored_Strings as STR
 
 # NXBT is only compatible with Linux systems
-if os.name != 'posix': exit(f'\n{COLOR_str.NOT_LINUX_SYSTEM}\n')
+if os.name != 'posix': exit(f'\n{STR.NOT_LINUX_SYSTEM}\n')
 
 if __name__ == '__main__': 
     # Will raise an error when restarting execution using sudo
@@ -14,7 +14,7 @@ if __name__ == '__main__':
     except: pass
     # NXBT requires administrator permissions
     if 'SUDO_USER' not in os.environ: 
-        print(f'\n{COLOR_str.NOT_SUDO}')
+        print(f'\n{STR.NOT_SUDO}')
         program_name = __file__.split('/')[-1]
         exit(os.system(f'sudo python3 {program_name}'))
 
@@ -44,14 +44,14 @@ class Switch_Controller():
 
     @staticmethod
     def restart_bluetooth():
-        print(COLOR_str.RESTARTING_BLUETOOTH)
+        print(STR.RESTARTING_BLUETOOTH)
         # Turn off bluetooth systems
         os.system('sudo rfkill block bluetooth')
         sleep(1)
         # Turn on bluetooth systems
         os.system('sudo rfkill unblock bluetooth')
         sleep(CONST.RESTART_BLUETOOTH_SECONDS)
-        print(COLOR_str.BLUETOOTH_RESTARTED)
+        print(STR.BLUETOOTH_RESTARTED)
 
     #######################################################################################################################
 
@@ -71,10 +71,10 @@ class Switch_Controller():
             controller_indexes.append(controller_index)
 
         self.controller_index = controller_indexes[-1]
-        print(COLOR_str.CONNECTING_TO_SWITCH)
+        print(STR.CONNECTING_TO_SWITCH)
         # Connect to Nintendo Switch
         self.nxbt_manager.wait_for_connection(self.controller_index)
-        print(COLOR_str.CONTROLLER_CONNECTED)
+        print(STR.CONTROLLER_CONNECTED)
 
     #######################################################################################################################
 
@@ -90,7 +90,7 @@ if __name__ == '__main__':
     from threading import Thread, Event
     import PyQt5.QtWidgets as pyqt_w
     
-    import Colored_Strings as COLOR_str
+    import Colored_Strings as STR
     from FPS_Counter import FPS_Counter
     from Game_Capture import Game_Capture
     from GUI import GUI, DllistQueue, App
@@ -99,23 +99,23 @@ if __name__ == '__main__':
     #######################################################################################################################
 
     def main_menu():
-        print('\n' + COLOR_str.MENU.replace('{module}', 'Switch Controller'))
-        print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Test Switch Controller'))
+        print('\n' + STR.MENU.replace('{module}', 'Switch Controller'))
+        print(STR.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Test Switch Controller'))
 
-        option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Switch Controller'))
+        option = input('\n' + STR.OPTION_SELECTION.replace('{module}', 'Switch Controller'))
 
         menu_options = {
             '1': test_controller,
         }
 
         if option in menu_options: menu_options[option](option)
-        else: print(COLOR_str.INVALID_OPTION.replace('{module}', 'Switch Controller') + '\n')
+        else: print(STR.INVALID_OPTION.replace('{module}', 'Switch Controller') + '\n')
 
     #######################################################################################################################
     #######################################################################################################################
 
     def test_controller(option):
-        print('\n' + COLOR_str.SELECTED_OPTION
+        print('\n' + STR.SELECTED_OPTION
             .replace('{module}', 'Switch Controller')
             .replace('{option}', f"{option}")
             .replace('{action}', f"Testing Switch Controller...")
@@ -184,7 +184,7 @@ if __name__ == '__main__':
         
         # Kill all secondary threads
         shutdown_event.set()
-        print(COLOR_str.RELEASING_THREADS
+        print(STR.RELEASING_THREADS
             .replace('{module}', 'Switch Controller')
             .replace('{threads}', str(len(threads))) + '\n'
         )

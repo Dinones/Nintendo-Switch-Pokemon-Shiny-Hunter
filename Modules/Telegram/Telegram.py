@@ -11,7 +11,7 @@ folders = ['../', '../../']
 for folder in folders: sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), folder)))
 
 import Constants as CONST
-import Colored_Strings as COLOR_str
+import Colored_Strings as STR
 
 ###########################################################################################################################
 #################################################     INITIALIZATIONS     #################################################
@@ -43,7 +43,7 @@ class Telegram_Sender():
 
         # Will not raise any error if credentials are wrong or missing, it will just skip the email sending
         if not self._check_valid_credentials:
-            print(COLOR_str.EMPTY_CREDENTIALS
+            print(STR.EMPTY_CREDENTIALS
                 .replace('{module}', 'Telegram')
                 .replace('{path}', SAVE_ENV_FILE_PATH)
             )
@@ -99,13 +99,13 @@ class Telegram_Sender():
                 url = f"https://api.telegram.org/bot{self.__bot_token}/sendMessage"
                 requests.post(url, data=payload, timeout=1)
             except Exception as error:
-                print(COLOR_str.COULD_NOT_SEND_TELEGRAM
+                print(STR.COULD_NOT_SEND_TELEGRAM
                     .replace('{chat_id}', self.__chat_id)
                     .replace('{error}', str(error))
                 )
                 return
 
-        print(COLOR_str.TELEGRAM_SENT.replace('{chat_id}', self.__chat_id))
+        print(STR.TELEGRAM_SENT.replace('{chat_id}', self.__chat_id))
 
     #######################################################################################################################
 
@@ -152,11 +152,11 @@ if __name__ == "__main__":
     #######################################################################################################################
 
     def main_menu():
-        print('\n' + COLOR_str.MENU.replace('{module}', 'Telegram'))
-        print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Send shiny notification'))
-        print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Send error notifications'))
+        print('\n' + STR.MENU.replace('{module}', 'Telegram'))
+        print(STR.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Send shiny notification'))
+        print(STR.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Send error notifications'))
 
-        option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Telegram'))
+        option = input('\n' + STR.OPTION_SELECTION.replace('{module}', 'Telegram'))
 
         menu_options = {
             '1': send_telegram,
@@ -164,14 +164,14 @@ if __name__ == "__main__":
         }
 
         if option in menu_options: menu_options[option](option)
-        else: print(COLOR_str.INVALID_OPTION.replace('{module}', 'Mail') + '\n')
+        else: print(STR.INVALID_OPTION.replace('{module}', 'Mail') + '\n')
 
     #######################################################################################################################
 
     def send_telegram(option):
         if option == '1': action = 'shiny'
         elif option == '2': action = 'error'
-        print('\n' + COLOR_str.SELECTED_OPTION
+        print('\n' + STR.SELECTED_OPTION
             .replace('{module}', 'Telegram')
             .replace('{option}', f"{option}")
             .replace('{action}', f"Sending {action} notifications")

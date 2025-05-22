@@ -9,7 +9,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
 import Constants as CONST
 from Modules.Database import *
-import Modules.Colored_Strings as COLOR_str
+import Modules.Colored_Strings as STR
 from Modules.FPS_Counter import FPS_Counter
 
 ###########################################################################################################################
@@ -26,11 +26,11 @@ DATABASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', CO
 if __name__ == "__main__":
 
     def main_menu():
-        print('\n' + COLOR_str.M_MENU.replace('{module}', MODULE_NAME))
-        print(COLOR_str.M_MENU_OPTION.replace('{index}', '1').replace('{option}', 'Print database'))
-        print(COLOR_str.M_MENU_OPTION.replace('{index}', '2').replace('{option}', 'Remove Pokémon'))
+        print('\n' + STR.M_MENU.replace('{module}', MODULE_NAME))
+        print(STR.M_MENU_OPTION.replace('{index}', '1').replace('{option}', 'Print database'))
+        print(STR.M_MENU_OPTION.replace('{index}', '2').replace('{option}', 'Remove Pokémon'))
 
-        option = input('\n' + COLOR_str.M_OPTION_SELECTION.replace('{module}', MODULE_NAME))
+        option = input('\n' + STR.M_OPTION_SELECTION.replace('{module}', MODULE_NAME))
 
         menu_options = {
             '1': _print_database,
@@ -38,7 +38,7 @@ if __name__ == "__main__":
         }
 
         if option in menu_options: menu_options[option](option)
-        else: print(COLOR_str.M_INVALID_OPTION.replace('{module}', MODULE_NAME) + '\n')
+        else: print(STR.M_INVALID_OPTION.replace('{module}', MODULE_NAME) + '\n')
     
     #######################################################################################################################
     #######################################################################################################################

@@ -20,7 +20,7 @@ folders = ['../', '../../']
 for folder in folders: sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), folder)))
 
 import Constants as CONST
-import Colored_Strings as COLOR_str
+import Colored_Strings as STR
 
 ###########################################################################################################################
 #################################################     INITIALIZATIONS     #################################################
@@ -58,7 +58,7 @@ class Email_Sender():
 
         # Will not raise any error if credentials are wrong or missing, it will just skip the email sending
         if not self._check_valid_credentials():
-            print(COLOR_str.EMPTY_CREDENTIALS
+            print(STR.EMPTY_CREDENTIALS
                 .replace('{module}', 'Email')
                 .replace('{path}', SAVE_ENV_FILE_PATH)
             )
@@ -115,7 +115,7 @@ class Email_Sender():
         if os.path.exists(html_path):
             with open(html_path, 'r', encoding='utf-8') as file: content = file.read()
             for key, text in replace_info.items(): content = content.replace(f'{{{key}}}', text)
-        else: print(COLOR_str.HTML_NOT_FOUND.replace('{html}', html_path))
+        else: print(STR.HTML_NOT_FOUND.replace('{html}', html_path))
 
         return content
 
@@ -136,9 +136,9 @@ class Email_Sender():
                 server.starttls()
                 server.login(self.__email_sender, self.__password)
                 server.sendmail(self.__email_sender, receivers, message.as_string())
-                print(COLOR_str.EMAIL_SENT.replace('{email}', receivers[0]))
+                print(STR.EMAIL_SENT.replace('{email}', receivers[0]))
         except Exception as error:
-            print(COLOR_str.COULD_NOT_SEND_EMAIL.replace('{email}', receivers[0]).replace('{error}', str(error)))
+            print(STR.COULD_NOT_SEND_EMAIL.replace('{email}', receivers[0]).replace('{error}', str(error)))
 
     #######################################################################################################################
 
@@ -264,11 +264,11 @@ if __name__ == "__main__":
     #######################################################################################################################
 
     def main_menu():
-        print('\n' + COLOR_str.MENU.replace('{module}', 'Mail'))
-        print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Send shiny notification'))
-        print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Send error notifications'))
+        print('\n' + STR.MENU.replace('{module}', 'Mail'))
+        print(STR.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Send shiny notification'))
+        print(STR.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Send error notifications'))
 
-        option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Mail'))
+        option = input('\n' + STR.OPTION_SELECTION.replace('{module}', 'Mail'))
 
         menu_options = {
             '1': send_email,
@@ -276,14 +276,14 @@ if __name__ == "__main__":
         }
 
         if option in menu_options: menu_options[option](option)
-        else: print(COLOR_str.INVALID_OPTION.replace('{module}', 'Mail') + '\n')
+        else: print(STR.INVALID_OPTION.replace('{module}', 'Mail') + '\n')
 
     #######################################################################################################################
 
     def send_email(option):
         if option == '1': action = 'shiny'
         elif option == '2': action = 'error'
-        print('\n' + COLOR_str.SELECTED_OPTION
+        print('\n' + STR.SELECTED_OPTION
             .replace('{module}', 'Mail')
             .replace('{option}', f"{option}")
             .replace('{action}', f"Sending {action} notifications")

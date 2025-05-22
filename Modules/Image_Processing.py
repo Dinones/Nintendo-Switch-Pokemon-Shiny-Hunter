@@ -13,7 +13,7 @@ from typing import Tuple, Union, Dict
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
-import Modules.Colored_Strings as COLOR_str
+import Modules.Colored_Strings as STR
 import Constants as CONST
 
 ###########################################################################################################################

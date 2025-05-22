@@ -10,7 +10,7 @@ from time import sleep, perf_counter
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
 from Modules.Game_Capture import Game_Capture
-import Modules.Colored_Strings as COLOR_str
+import Modules.Colored_Strings as STR
 from Modules.Image_Processing import *
 import Constants as CONST
 
@@ -34,14 +34,14 @@ FRAMES_OUTPUT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..
 if __name__ == "__main__":
 
     def main_menu():
-        print('\n' + COLOR_str.M_MENU.replace('{module}', 'Image Processing'))
-        print(COLOR_str.M_MENU_OPTION.replace('{index}', '1').replace('{option}', 'Process image'))
-        print(COLOR_str.M_MENU_OPTION.replace('{index}', '2').replace('{option}', 'Process video'))
-        print(COLOR_str.M_MENU_OPTION.replace('{index}', '3').replace('{option}', 'Extract frames from video'))
-        print(COLOR_str.M_MENU_OPTION.replace('{index}', '4').replace('{option}', 'Check lost shiny'))
-        print(COLOR_str.M_MENU_OPTION.replace('{index}', '5').replace('{option}', 'Test debug video frame'))
+        print('\n' + STR.M_MENU.replace('{module}', 'Image Processing'))
+        print(STR.M_MENU_OPTION.replace('{index}', '1').replace('{option}', 'Process image'))
+        print(STR.M_MENU_OPTION.replace('{index}', '2').replace('{option}', 'Process video'))
+        print(STR.M_MENU_OPTION.replace('{index}', '3').replace('{option}', 'Extract frames from video'))
+        print(STR.M_MENU_OPTION.replace('{index}', '4').replace('{option}', 'Check lost shiny'))
+        print(STR.M_MENU_OPTION.replace('{index}', '5').replace('{option}', 'Test debug video frame'))
 
-        option = input('\n' + COLOR_str.M_OPTION_SELECTION.replace('{module}', 'Image Processing'))
+        option = input('\n' + STR.M_OPTION_SELECTION.replace('{module}', 'Image Processing'))
 
         menu_options = {
             '1': process_image,
@@ -52,7 +52,7 @@ if __name__ == "__main__":
         }
 
         if option in menu_options: menu_options[option](option)
-        else: print(COLOR_str.M_INVALID_OPTION.replace('{module}', 'Image Processing') + '\n')
+        else: print(STR.M_INVALID_OPTION.replace('{module}', 'Image Processing') + '\n')
 
     #######################################################################################################################
     #######################################################################################################################
@@ -69,7 +69,7 @@ if __name__ == "__main__":
             None
         """
 
-        print(COLOR_str.M_SELECTED_OPTION.format(
+        print(STR.M_SELECTED_OPTION.format(
             module=MODULE_NAME,
             option=option,
             action="Processing image",
@@ -78,27 +78,27 @@ if __name__ == "__main__":
 
         # Check if the image path is valid
         if not os.path.exists(TESTING_IMAGE_PATH):
-            print(COLOR_str.G_INVALID_PATH_ERROR.format(module=MODULE_NAME, path=TESTING_IMAGE_PATH))
+            print(STR.G_INVALID_PATH_ERROR.format(module=MODULE_NAME, path=TESTING_IMAGE_PATH))
             return
 
         # Load the image
         image = Image_Processing(TESTING_IMAGE_PATH)
         if image.original_image is None:
-            print(COLOR_str.IP_COULD_NOT_LOAD_IMAGE.format(module=MODULE_NAME, path=TESTING_IMAGE_PATH))
+            print(STR.IP_COULD_NOT_LOAD_IMAGE.format(module=MODULE_NAME, path=TESTING_IMAGE_PATH))
             return 
 
         image.resize_image()
         # FPS image will be used for display (linked to resized version)
         image.FPS_image = image.resized_image
 
-        print(COLOR_str.G_PRESS_KEY_TO_INSTRUCTION.format(module=MODULE_NAME, key='any key', instruction='exit the program'))
+        print(STR.G_PRESS_KEY_TO_INSTRUCTION.format(module=MODULE_NAME, key='any key', instruction='exit the program'))
 
         # Display the image
         cv2.imshow(f'{CONST.BOT_NAME}', image.FPS_image)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
-        print(COLOR_str.G_SUCCESS_EXIT_PROGRAM.format(module=MODULE_NAME, reason='Successfully processed the image!'))
+        print(STR.G_SUCCESS_EXIT_PROGRAM.format(module=MODULE_NAME, reason='Successfully processed the image!'))
 
     #######################################################################################################################
     #######################################################################################################################
@@ -143,7 +143,7 @@ if __name__ == "__main__":
         ###################################################################################################################
         ###################################################################################################################
 
-        print('\n' + COLOR_str.M_SELECTED_OPTION.format(
+        print('\n' + STR.M_SELECTED_OPTION.format(
             module=MODULE_NAME,
             option=option,
             action="Processing video",
@@ -151,7 +151,7 @@ if __name__ == "__main__":
         ))
 
         if not os.path.exists(TESTING_VIDEO_PATH):
-            print(COLOR_str.G_INVALID_PATH_ERROR.format(
+            print(STR.G_INVALID_PATH_ERROR.format(
                 module=MODULE_NAME,
                 path=TESTING_VIDEO_PATH
             ) + '\n')
@@ -170,7 +170,7 @@ if __name__ == "__main__":
         }
 
         for key, instruction in key_instructions.items():
-            print(COLOR_str.G_PRESS_KEY_TO_INSTRUCTION.format(module=MODULE_NAME, key=key, instruction=instruction))
+            print(STR.G_PRESS_KEY_TO_INSTRUCTION.format(module=MODULE_NAME, key=key, instruction=instruction))
 
         frame_index = 0
         pause = False
@@ -194,7 +194,7 @@ if __name__ == "__main__":
                 elif key in [ord('c'), ord('C')]:
                     screenshot_path = os.path.join(FRAMES_OUTPUT_PATH, f"{frame_index}.png")
                     cv2.imwrite(screenshot_path, image.original_image)
-                    print(COLOR_str.GC_IMAGE_SAVED.format(path=screenshot_path))
+                    print(STR.GC_IMAGE_SAVED.format(path=screenshot_path))
 
                 sleep(0.05)
                 continue
@@ -214,7 +214,7 @@ if __name__ == "__main__":
 
         video_capture.stop()
 
-        print(COLOR_str.G_SUCCESS_EXIT_PROGRAM.format(module=MODULE_NAME, reason='Successfully processed the video!'))
+        print(STR.G_SUCCESS_EXIT_PROGRAM.format(module=MODULE_NAME, reason='Successfully processed the video!'))
 
     #######################################################################################################################
     #######################################################################################################################
@@ -231,7 +231,7 @@ if __name__ == "__main__":
             None
         """
 
-        print(COLOR_str.M_SELECTED_OPTION.format(
+        print(STR.M_SELECTED_OPTION.format(
             module=MODULE_NAME,
             option=option,
             action="Extracting frames into",
@@ -240,7 +240,7 @@ if __name__ == "__main__":
 
         # Validate that input video and output folder exist
         if not os.path.exists(TESTING_VIDEO_PATH) or not os.path.exists(FRAMES_OUTPUT_PATH):
-            print(COLOR_str.G_INVALID_PATH_ERROR.format(
+            print(STR.G_INVALID_PATH_ERROR.format(
                 module=MODULE_NAME,
                 path=f"{TESTING_VIDEO_PATH} or {FRAMES_OUTPUT_PATH}"
             ))
@@ -264,7 +264,7 @@ if __name__ == "__main__":
             frame_index += 1
             percentage = int((frame_index) / total_frames * 100)
             # Inefficient? Maybe, but looks cool and doesn't affect the main code
-            print(COLOR_str.IP_CURRENT_EXTRACTED_FRAMES.format(
+            print(STR.IP_CURRENT_EXTRACTED_FRAMES.format(
                 extracted_frame=frame_index,
                 total_frames=total_frames,
                 percentage=percentage
@@ -276,7 +276,7 @@ if __name__ == "__main__":
 
         video_capture.stop()
 
-        print('\n' + COLOR_str.IP_SUCCESSFULLY_EXTRACTED_FRAMES.format(frames=frame_index))
+        print('\n' + STR.IP_SUCCESSFULLY_EXTRACTED_FRAMES.format(frames=frame_index))
 
     #######################################################################################################################
     #######################################################################################################################
@@ -295,7 +295,7 @@ if __name__ == "__main__":
             - If not paused, images will auto-progress at a configured interval.
         """
 
-        print('\n' + COLOR_str.M_SELECTED_OPTION.format(
+        print('\n' + STR.M_SELECTED_OPTION.format(
             module=MODULE_NAME,
             option=option,
             action="Checking lost shiny",
@@ -303,7 +303,7 @@ if __name__ == "__main__":
         ))
 
         if not os.path.exists(IMAGES_FOLDER_PATH):
-            print(COLOR_str.G_INVALID_PATH_ERROR.format(
+            print(STR.G_INVALID_PATH_ERROR.format(
                 module=MODULE_NAME,
                 path=IMAGES_FOLDER_PATH
             ) + '\n')
@@ -314,7 +314,7 @@ if __name__ == "__main__":
         )
 
         if not images:
-            print(COLOR_str.IP_NO_IMAGES_IN_FOLDER.format(path=IMAGES_FOLDER_PATH))
+            print(STR.IP_NO_IMAGES_IN_FOLDER.format(path=IMAGES_FOLDER_PATH))
             return
 
         # Instruction prompts
@@ -325,9 +325,9 @@ if __name__ == "__main__":
             "'D' or '>'": "move a frame forward"
         }
 
-        print(COLOR_str.IP_SUCCESSFULLY_LOADED_IMAGES.format(images=len(images)))
+        print(STR.IP_SUCCESSFULLY_LOADED_IMAGES.format(images=len(images)))
         for key, instruction in key_instructions.items():
-            print(COLOR_str.G_PRESS_KEY_TO_INSTRUCTION.format(module=MODULE_NAME, key=key, instruction=instruction))
+            print(STR.G_PRESS_KEY_TO_INSTRUCTION.format(module=MODULE_NAME, key=key, instruction=instruction))
 
         index = 0
         cached_index = -1
@@ -383,22 +383,22 @@ if __name__ == "__main__":
 
         sleep(1)
 
-        print(COLOR_str.G_SUCCESS_EXIT_PROGRAM.format(
+        print(STR.G_SUCCESS_EXIT_PROGRAM.format(
             module=MODULE_NAME,
             reason=f'Successfully checked {index}/{len(images)} images!'
         ))
 
         cv2.destroyAllWindows()
 
-        delete_images = input(COLOR_str.IP_DELETE_IMAGES_QUESTION)
+        delete_images = input(STR.IP_DELETE_IMAGES_QUESTION)
         if delete_images.lower().strip() in ('', 'y', 'yes'):
-            print(COLOR_str.IP_DELETING_IMAGES.format(images=len(images)))
+            print(STR.IP_DELETING_IMAGES.format(images=len(images)))
             for image in images:
                 try:
                     os.remove(os.path.join(IMAGES_FOLDER_PATH, image))
                 except Exception as e:
                     continue
-            print(COLOR_str.IP_SUCCESSFULLY_DELETED_IMAGES.format(images=len(images)))
+            print(STR.IP_SUCCESSFULLY_DELETED_IMAGES.format(images=len(images)))
 
     #######################################################################################################################
     #######################################################################################################################
@@ -415,7 +415,7 @@ if __name__ == "__main__":
             None
         """
 
-        print('\n' + COLOR_str.M_SELECTED_OPTION.format(
+        print('\n' + STR.M_SELECTED_OPTION.format(
             module=MODULE_NAME,
             option=option,
             action="Testing debug video frame",
@@ -423,7 +423,7 @@ if __name__ == "__main__":
         ))
 
         if not os.path.exists(TESTING_IMAGE_PATH):
-            print(COLOR_str.G_INVALID_PATH_ERROR.format(
+            print(STR.G_INVALID_PATH_ERROR.format(
                 module=MODULE_NAME,
                 path=TESTING_IMAGE_PATH
             ))
@@ -432,7 +432,7 @@ if __name__ == "__main__":
         # Load test image
         image = Image_Processing(TESTING_IMAGE_PATH)
         if image.original_image is None:
-            print(COLOR_str.IP_COULD_NOT_LOAD_IMAGE.format(module=MODULE_NAME, path=TESTING_IMAGE_PATH))
+            print(STR.IP_COULD_NOT_LOAD_IMAGE.format(module=MODULE_NAME, path=TESTING_IMAGE_PATH))
             return
 
         # Ensure it's in BGR format (strip alpha channel)
@@ -452,7 +452,7 @@ if __name__ == "__main__":
         # Stack the debug and test images vertically
         combined_image = debug_image.stack_images(debug_image.FPS_image, image.resized_image)
 
-        print(COLOR_str.G_PRESS_KEY_TO_INSTRUCTION.format(
+        print(STR.G_PRESS_KEY_TO_INSTRUCTION.format(
             module=MODULE_NAME,
             key='any key',
             instruction='exit the program'
@@ -462,7 +462,7 @@ if __name__ == "__main__":
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
-        print(COLOR_str.G_SUCCESS_EXIT_PROGRAM.format(module=MODULE_NAME, reason='Successfully processed the image!'))
+        print(STR.G_SUCCESS_EXIT_PROGRAM.format(module=MODULE_NAME, reason='Successfully processed the image!'))
 
     #######################################################################################################################
     #######################################################################################################################

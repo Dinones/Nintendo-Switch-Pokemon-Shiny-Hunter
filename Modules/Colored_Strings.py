@@ -363,12 +363,13 @@ DB_COULD_NOT_DELETE_POKEMON = \
 
 DB_ASK_POKEMON_TO_DELETE = \
     f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Database] "}{RESET_FORMAT}'+\
-    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mAre you sure you want to permanently delete "{"{pokemon}"}" {RESET_FORMAT}'+\
-    f'from the database? This action cannot be undone. (y/N): {RESET_FORMAT}'
+    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mAre you sure you want to permanently delete {RESET_FORMAT}'+\
+    f'\033[{COLORS["Blue"]}m{"{pokemon}"}{RESET_FORMAT}'+\
+    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}m from the database? This action cannot be undone. (y/N): {RESET_FORMAT}'
 
 DB_DELETION_CANCELLED = \
     f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Database] "}{RESET_FORMAT}'+\
-    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mPokémon deletion cancelled: {RESET_FORMAT}'
+    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mPokémon deletion cancelled.{RESET_FORMAT}'
 
 DB_POKEMON_DELETED = \
     f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Database] "}{RESET_FORMAT}'+\
