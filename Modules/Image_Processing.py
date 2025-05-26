@@ -55,7 +55,7 @@ class Image_Processing():
         Resizes the original image to fit within a maximum bounding box while preserving the aspect ratio.
 
         Args:
-            desired_size (Tuple[int, int]): Target bounding box size (width, height) for resizing
+            desired_size (Tuple[int, int]): Target bounding box size (width, height) for resizing.
 
         Returns:
             None

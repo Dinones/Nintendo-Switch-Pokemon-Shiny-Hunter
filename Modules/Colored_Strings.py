@@ -60,7 +60,7 @@ G_INVALID_PATH_ERROR = \
     f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}mInvalid path: {RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]};{SPECIAL["Italics"]}m{"{path}"}{RESET_FORMAT}'
 
-INVALID_PATH_WARNING = \
+G_INVALID_PATH_WARNING = \
     f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mInvalid path: {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}m{"{path}"}{RESET_FORMAT}'
@@ -191,18 +191,18 @@ M_INVALID_OPTION = \
 ###################################################     GAME CAPTURE     ##################################################
 ###########################################################################################################################
 
-INVALID_VIDEO_CAPTURE = \
+GC_INVALID_VIDEO_CAPTURE = \
     f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Game Capture] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}mCould not access video capture {RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]}m{"{video_capture}"}{RESET_FORMAT}'
 
-AVAILABLE_CAPTURE_DEVICES = \
+GC_AVAILABLE_CAPTURE_DEVICES = \
     f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Game Capture] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mCapture devices found: {RESET_FORMAT}'
-CAPTURE_DEVICE_OK = \
+GC_CAPTURE_DEVICE_OK = \
     f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}m    Video Capture nº{"{index}"}: {RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]}mOK{RESET_FORMAT}'
-CAPTURE_DEVICE_NOT_OK = \
+GC_CAPTURE_DEVICE_NOT_OK = \
     f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}m    Video Capture nº{"{index}"}: {RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]}mNOT OK{RESET_FORMAT}'
 
@@ -211,7 +211,7 @@ GC_IMAGE_SAVED = \
     f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}mImage saved: {RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Italics"]}m{"{path}"}{RESET_FORMAT}'
 
-USING_DIFFERENT_CAPTURE_CARD = \
+GC_USING_DIFFERENT_CAPTURE_CARD = \
     f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Game Capture] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mCould not access video capture {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]}mnº{"{old_video_capture}"}{RESET_FORMAT}'+\

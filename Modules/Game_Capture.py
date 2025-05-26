@@ -4,10 +4,9 @@
 
 import os
 import sys
-    
 import cv2
-# Disable warning messages
-cv2.setLogLevel(0)
+import numpy as np
+from typing import Optional, List, Union
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
@@ -18,63 +17,126 @@ import Constants as CONST
 #################################################     INITIALIZATIONS     #################################################
 ###########################################################################################################################
 
+# Disable warning messages
+cv2.setLogLevel(0)
+
+OUTPUT_VIDEO_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', CONST.OUTPUT_VIDEO_PATH))
+
+###########################################################################################################################
+###########################################################################################################################
+
 class Game_Capture():
     def __init__(self, video_capture_index = CONST.VIDEO_CAPTURE_INDEX):
+
+        """
+        Initializes the video capture device with the specified index. If the device is not available, it automatically
+        tries to use the first available capture card.
+
+        Args:
+            video_capture_index (int): Index of the video capture device to use.
+        """
+
+        # Initialize the main video capture
         self.video_capture = cv2.VideoCapture(video_capture_index)
-        # Highly increase the FPS using the MJPEG codec
+
+        # Use MJPEG codec to improve FPS (if supported by device)
         self.video_capture.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
 
+        # If the capture couldn't be opened, try another available capture card
         if not self.video_capture.isOpened():
             video_captures = self.find_available_video_captures()
-            if not any(video_captures): return
+            # If no other devices are found
+            if not any(video_captures):
+                return
+
             self.video_capture.release()
             first_available_capture_card = video_captures.index(True)
             self.video_capture = cv2.VideoCapture(first_available_capture_card)
-            print(STR.USING_DIFFERENT_CAPTURE_CARD
-                .replace('{old_video_capture}', str(video_capture_index))
-                .replace('{new_video_capture}', str(first_available_capture_card))
+
+            print(
+                STR.GC_USING_DIFFERENT_CAPTURE_CARD.format(
+                    old_video_capture = str(video_capture_index),
+                    new_video_capture = str(first_available_capture_card)
+                )
             )
 
+        # Set fixed resolution
         self.video_capture.set(cv2.CAP_PROP_FRAME_WIDTH, CONST.ORIGINAL_FRAME_SIZE[0])
         self.video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, CONST.ORIGINAL_FRAME_SIZE[1])
-        
+
         self.video_recorder = None
         self.frame = None
         self.skipped_frames = 0
 
     #######################################################################################################################
+    #######################################################################################################################
 
-    # Take a frame
-    def read_frame(self): 
+    def read_frame(self) -> Optional[np.ndarray]:
+
+        """
+        Captures a single frame from the video capture device.
+
+        Returns:
+            Optional[np.ndarray]: The captured frame if successful, otherwise None.
+        """
+
         success, self.frame = self.video_capture.read()
-        # Could not read the frame
-        if not success: self.frame = None; return
+
+        # If frame capture fails, reset frame to None
+        if not success:
+            self.frame = None
+            return None
+
         return self.frame
 
     #######################################################################################################################
+    #######################################################################################################################
 
-    # Release the capture card
-    def stop(self):
+    def stop(self) -> None:
+
+        """
+        Releases the video capture device and closes any OpenCV windows. This should be called when the video processing is
+        finished to free up system resources.
+        """
+
         self.video_capture.release()
         cv2.destroyAllWindows()
 
     #######################################################################################################################
+    #######################################################################################################################
 
-    # Find all available capture cards
     @staticmethod
-    def find_available_video_captures():
+    def find_available_video_captures() -> List[bool]:
+
+        """
+        Scans and returns a list indicating which video capture devices are available.
+
+        Returns:
+            List[bool]: A list of booleans where each element corresponds to whether the capture device at that index is
+                available (True) or not (False).
+        """
+
         video_captures = []
+
         for index in range(CONST.MAX_VIDEO_DEVICES_ANALIZED):
             video_capture = cv2.VideoCapture(index)
             video_captures.append(video_capture.isOpened())
             video_capture.release()
-        return video_captures
+
+        return video_captures   
 
     #######################################################################################################################
+    #######################################################################################################################
 
-    # Record a video of each encounter
-    def start_recording(self):
+    def start_recording(self) -> None:
+
+        """
+        Initializes the video recorder if recording is enabled in the configuration. Depending on debug mode, it adjusts
+        the output frame size to include extra debug UI height.
+        """
+
         if CONST.ENABLE_VIDEO_RECORDING:
+            # Determine the frame size depending on debug mode
             if CONST.DEBUG_VIDEO:
                 frame_size = (
                     CONST.MAIN_FRAME_SIZE[0],
@@ -83,135 +145,62 @@ class Game_Capture():
             else:
                 frame_size = CONST.ORIGINAL_FRAME_SIZE
 
-            self.video_recorder = cv2.VideoWriter(f'./{CONST.OUTPUT_VIDEO_PATH}', cv2.VideoWriter_fourcc(*'XVID'),
-                CONST.VIDEO_FPS, frame_size)
+            # Initialize the video writer with XVID codec
+            self.video_recorder = cv2.VideoWriter(
+                OUTPUT_VIDEO_PATH, cv2.VideoWriter_fourcc(*'XVID'), CONST.VIDEO_FPS, frame_size
+            )
 
     #######################################################################################################################
+    #######################################################################################################################
 
-    # Save the current video and start recording the next one
-    def save_video(self, special_name = ''):
+    def save_video(self, special_name: str = '') -> None:
+
+        """
+        Saves the current video recording by releasing the video writer and renaming the file if a special name is
+        provided.
+
+        Args:
+            special_name (str): Optional custom filename (without extension) for the saved video. If not provided, the
+                default output filename remains unchanged.
+        """
+
         if CONST.ENABLE_VIDEO_RECORDING:
             self.video_recorder.release()
-            try: 
-                if special_name: os.rename(f'./{CONST.OUTPUT_VIDEO_PATH}', f'./Media/Videos/{special_name}.avi')
-            except: pass
+
+            try:
+                if special_name:
+                    new_video_path = os.path.abspath(os.path.join(
+                        os.path.dirname(__file__),
+                        '..',
+                        f"{'/'.join(CONST.OUTPUT_VIDEO_PATH.split('/')[:-1])}/{special_name}.avi"
+                    ))
+                    print(new_video_path)
+                    os.rename(OUTPUT_VIDEO_PATH, new_video_path)
+            except Exception:
+                pass
 
     #######################################################################################################################
+    #######################################################################################################################
 
-    # Add a frame to the video
-    def add_frame_to_video(self, image):
+    def add_frame_to_video(self, image: Union[np.ndarray, None]) -> None:
+
+        """
+        Adds a frame to the current video recording. If recording is enabled but not yet initialized, it starts recording
+        first.
+
+        Args:
+            image (Union[np.ndarray, None]): The frame to write to the video. Must match the initialized frame size and
+                color format (BGR).
+        """
+
         if CONST.ENABLE_VIDEO_RECORDING:
-            if isinstance(self.video_recorder, type(None)): self.start_recording()
+            # Start recording if not already initialized
+            if self.video_recorder is None:
+                self.start_recording()
+
             self.video_recorder.write(image)
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
 
-# if __name__ == "__main__":
-#     from time import time
-#     from Control_System import *
-#     from FPS_Counter import FPS_Counter
-#     from Image_Processing import Image_Processing
-
-#     #######################################################################################################################
-
-#     def main_menu():
-#         print('\n' + STR.MENU.replace('{module}', 'Game Capture'))
-#         print(STR.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Print all available video devices'))
-#         print(STR.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Check current capture device'))
-
-#         option = input('\n' + STR.OPTION_SELECTION.replace('{module}', 'Game Capture'))
-
-#         menu_options = {
-#             '1': print_video_captures,
-#             '2': check_video_capture,
-#         }
-
-#         if option in menu_options: menu_options[option](option)
-#         else: print(STR.INVALID_OPTION.replace('{module}', 'Game Capture') + '\n')
-
-#     #######################################################################################################################
-
-#     def print_video_captures(option):
-#         print('\n' + STR.SELECTED_OPTION
-#             .replace('{module}', 'Game Capture')
-#             .replace('{option}', f"{option}")
-#             .replace('{action}', f"Printing all available video devices...")
-#             .replace('{path}', f"")
-#         )
-
-#         video_captures = Game_Capture.find_available_video_captures()
-#         print(STR.AVAILABLE_CAPTURE_DEVICES)
-#         for index, video_capture in enumerate(video_captures):
-#             if video_capture: print(STR.CAPTURE_DEVICE_OK.replace('{index}', str(index)))
-#             else: print(STR.CAPTURE_DEVICE_NOT_OK.replace('{index}', str(index)))
-#         print()
-
-#     #######################################################################################################################
-#     #######################################################################################################################
-
-#     def check_video_capture(option):
-#         print('\n' + STR.SELECTED_OPTION
-#             .replace('{module}', 'Game Capture')
-#             .replace('{option}', f"{option}")
-#             .replace('{action}', f"Activating capture device nº{CONST.VIDEO_CAPTURE_INDEX}...")
-#             .replace('{path}', f"")
-#         )
-
-#         Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
-#         if not Video_Capture.video_capture.isOpened(): 
-#             Video_Capture.stop()
-#             print(STR.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{CONST.VIDEO_CAPTURE_INDEX}'") + '\n')
-#             return
-#         FPS = FPS_Counter()
-
-#         print(STR.PRESS_KEY_TO_INSTRUCTION
-#             .replace('{module}', 'Image Processing')
-#             .replace('{key}', "'c'")
-#             .replace('{instruction}', 'take a screenshot')
-#         ); print(STR.PRESS_KEY_TO_INSTRUCTION
-#             .replace('{module}', 'Image Processing')
-#             .replace('{key}', "'q'")
-#             .replace('{instruction}', 'exit the program')
-#         )
-
-#         while True: 
-#             image = Image_Processing(Video_Capture.read_frame())
-#             if isinstance(image.original_image, type(None)): continue
-
-#             image.resize_image()
-#             FPS.get_FPS()
-#             image.draw_FPS(FPS.FPS)
-#             # print(is_double_combat_life_box_visible(image))
-
-#             cv2.imshow(f'{CONST.BOT_NAME} - Device {CONST.VIDEO_CAPTURE_INDEX}', image.FPS_image)
-
-#             # Press 'q' to stop the program
-#             # Press 'c' to take a screenshot
-#             key = cv2.waitKey(1)
-#             if key == ord('q') or key == ord('Q'): break
-#             elif key == ord('c') or key == ord('C'): 
-#                 if not os.path.exists(f'../{CONST.SAVING_FRAMES_PATH}'):
-#                     print(STR.INVALID_PATH_WARNING
-#                         .replace('{module}', 'Game Capture')
-#                         .replace('{path}', f"'../{CONST.SAVING_FRAMES_PATH}'")
-#                     )
-#                     continue
-
-#                 file_name = str(time())
-#                 cv2.imwrite(f'../{CONST.SAVING_FRAMES_PATH}/{file_name}.png', image.original_image)
-#                 print(STR.IMAGE_SAVED.replace('{path}', f"'../{CONST.SAVING_FRAMES_PATH}/{file_name}.png'"))
-
-#         # Release the capture card and close all windows
-#         Video_Capture.stop()
-
-#         print(STR.SUCCESS_EXIT_PROGRAM
-#             .replace('{module}', 'Game Capture')
-#             .replace('{reason}', 'Successfully activated video device!') + '\n'
-#         )
-
-#     #######################################################################################################################
-#     #######################################################################################################################
-
-#     main_menu()

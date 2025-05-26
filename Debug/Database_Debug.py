@@ -89,7 +89,7 @@ if __name__ == "__main__":
         Handles the irreversible deletion of a Pokémon from the database.
 
         Args:
-            option (str): Menu option or context for display purposes (e.g., "3").
+            option (str): Menu option for display purposes (e.g., "3").
 
         Returns:
             None
