@@ -4,15 +4,14 @@
 
 import os
 import sys
-import logging
 from time import sleep, perf_counter
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
-from Modules.Game_Capture import Game_Capture
+import Constants as CONST
 import Modules.Colored_Strings as STR
 from Modules.Image_Processing import *
-import Constants as CONST
+from Modules.Game_Capture import Game_Capture
 
 ###########################################################################################################################
 #################################################     INITIALIZATIONS     #################################################

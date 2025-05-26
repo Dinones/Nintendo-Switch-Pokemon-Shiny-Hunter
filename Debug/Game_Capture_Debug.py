@@ -9,12 +9,12 @@ from time import time
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
-from Modules.Image_Processing import Image_Processing
-from Modules.Game_Capture import Game_Capture
-from Modules.FPS_Counter import FPS_Counter
-import Modules.Colored_Strings as STR
-from Modules.Control_System import *
 import Constants as CONST
+from Modules.Control_System import *
+import Modules.Colored_Strings as STR
+from Modules.FPS_Counter import FPS_Counter
+from Modules.Game_Capture import Game_Capture
+from Modules.Image_Processing import Image_Processing
 
 ###########################################################################################################################
 #################################################     INITIALIZATIONS     #################################################

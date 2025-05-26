@@ -10,12 +10,12 @@ import psutil
 from time import time, sleep
 from typing import TYPE_CHECKING, Optional, List, Dict, Union
 
-if TYPE_CHECKING:
-    import threading
-
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
 import Constants as CONST
+
+if TYPE_CHECKING:
+    import threading
 
 ###########################################################################################################################
 #################################################     INITIALIZATIONS     #################################################
