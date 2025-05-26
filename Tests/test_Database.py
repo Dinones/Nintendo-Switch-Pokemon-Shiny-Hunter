@@ -18,7 +18,7 @@ from Modules.Database import *
 
 # Define absolute paths to required resources
 DATABASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', CONST.TESTING_DATABASE_PATH))
-TESTS_DATA_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), 'Tests Data/Database.json'))
+TESTS_DATA_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), 'Tests Data/Database_Data.json'))
 
 # Load test case definitions from JSON
 with open(TESTS_DATA_FILE, 'r') as file: 
@@ -32,8 +32,8 @@ class Test_Database(unittest.TestCase):
     def setUp(self) -> None:
 
         """
-        Prepares a clean test environment before each test case. Deletes the test database file if it already exists to ensure
-        test isolation. Re-initializes the database to a known default.
+        Prepares a clean test environment before each test case. Deletes the test database file if it already exists to
+        ensure test isolation. Re-initializes the database to a known default.
         """
 
         # Ensure the test DB does not exist before each test run
