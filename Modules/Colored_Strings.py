@@ -219,6 +219,11 @@ GC_USING_DIFFERENT_CAPTURE_CARD = \
     f'\033[{COLORS["Yellow"]}mnº{"{new_video_capture} "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}minstead...{RESET_FORMAT}'
 
+GC_CAPTURE_CARD_LOST_CONNECTION = \
+    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Game Capture]"} {"[{time}]"} {RESET_FORMAT}'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mCapture card has been disconnected: {RESET_FORMAT}'+\
+    f'\033[{COLORS["Yellow"]}mPlease, reconnect it...{RESET_FORMAT}'
+
 ###########################################################################################################################
 ################################################     SWITCH CONTROLLER     ################################################
 ###########################################################################################################################

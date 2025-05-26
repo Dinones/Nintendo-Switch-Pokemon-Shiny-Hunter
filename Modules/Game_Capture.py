@@ -6,7 +6,8 @@ import os
 import sys
 import cv2
 import numpy as np
-from typing import Optional, List, Union
+from datetime import datetime
+from typing import Optional, List, Union, Tuple
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
@@ -66,7 +67,8 @@ class Game_Capture():
 
         self.video_recorder = None
         self.frame = None
-        self.skipped_frames = 0
+        self.previous_frame_skipped = False
+        self.connection_error_image = None
 
     #######################################################################################################################
     #######################################################################################################################
@@ -82,10 +84,13 @@ class Game_Capture():
 
         success, self.frame = self.video_capture.read()
 
-        # If frame capture fails, reset frame to None
+        # If frame capture fails, generate a black frame with a connection error message
         if not success:
-            self.frame = None
-            return None
+            self._get_connection_error_image()
+            # Try to initialize the capture card again
+            self.__init__()
+        elif self.previous_frame_skipped:
+            self.previous_frame_skipped = False
 
         return self.frame
 
@@ -199,6 +204,51 @@ class Game_Capture():
                 self.start_recording()
 
             self.video_recorder.write(image)
+
+    #######################################################################################################################
+    #######################################################################################################################
+
+    def _get_connection_error_image(self) -> None:
+
+        """
+        Create a black frame with the "Capture card disconnected. Please, reconnect it..." message.
+
+        Args:
+            position_offset (Tuple[int, int]): (x, y) offset added to the default position.
+
+        Returns:
+            None
+        """
+
+        if self.connection_error_image is None:
+            # Create a black image
+            self.connection_error_image = np.zeros(
+                (CONST.ORIGINAL_FRAME_SIZE[1], CONST.ORIGINAL_FRAME_SIZE[0], 3), dtype=np.uint8
+            )
+
+            # Compute the final position by adapting it to the CONST.ORIGINAL_FRAME_SIZE
+            position = tuple(
+                a + b for a, b in zip(CONST.TEXT_PARAMS['position'],
+                    (0, (CONST.ORIGINAL_FRAME_SIZE[0] * 100) // 1920))
+            )
+
+            # Draw the text on the black image adapting its size to the CONST.ORIGINAL_FRAME_SIZE
+            cv2.putText(
+                self.connection_error_image,
+                "Capture card disconnected. Please, reconnect it...",
+                position,
+                cv2.FONT_HERSHEY_SIMPLEX,
+                (CONST.ORIGINAL_FRAME_SIZE[0] * 2) / 1920,
+                CONST.TEXT_PARAMS['font_color'],
+                (CONST.ORIGINAL_FRAME_SIZE[0] * 5) // 1920,
+                cv2.LINE_AA
+            )
+
+        self.frame = np.copy(self.connection_error_image)
+
+        if not self.previous_frame_skipped:
+            print(STR.GC_CAPTURE_CARD_LOST_CONNECTION.format(time = datetime.now().strftime("%H:%M:%S")))
+            self.previous_frame_skipped = True
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################

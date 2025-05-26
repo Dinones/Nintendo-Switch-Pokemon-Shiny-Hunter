@@ -21,6 +21,7 @@ import Constants as CONST
 ###########################################################################################################################
 
 MODULE_NAME = 'Game Capture'
+SCREENSHOTS_OUTPUT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', CONST.SAVING_FRAMES_PATH))
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
@@ -29,11 +30,11 @@ MODULE_NAME = 'Game Capture'
 if __name__ == "__main__":
 
     def main_menu():
-        print('\n' + STR.M_MENU.replace('{module}', 'Game Capture'))
+        print('\n' + STR.M_MENU.format(module=MODULE_NAME).format(module=MODULE_NAME))
         print(STR.M_MENU_OPTION.format(index = '1', option = 'Print all available video devices'))
         print(STR.M_MENU_OPTION.format(index = '2', option = 'Check current capture device'))
 
-        option = input('\n' + STR.M_OPTION_SELECTION.replace('{module}', 'Game Capture'))
+        option = input('\n' + STR.M_OPTION_SELECTION.format(module=MODULE_NAME))
 
         menu_options = {
             '1': _print_video_captures,
@@ -41,7 +42,7 @@ if __name__ == "__main__":
         }
 
         if option in menu_options: menu_options[option](option)
-        else: print(STR.M_INVALID_OPTION.replace('{module}', 'Game Capture') + '\n')
+        else: print(STR.M_INVALID_OPTION.format(module=MODULE_NAME) + '\n')
 
     #######################################################################################################################
     #######################################################################################################################
@@ -67,41 +68,46 @@ if __name__ == "__main__":
 
         for index, is_available in enumerate(video_captures):
             if is_available:
-                print(STR.GC_CAPTURE_DEVICE_OK.replace('{index}', str(index)))
+                print(STR.GC_CAPTURE_DEVICE_OK.format(index=index))
             else:
-                print(STR.GC_CAPTURE_DEVICE_NOT_OK.replace('{index}', str(index)))
+                print(STR.GC_CAPTURE_DEVICE_NOT_OK.format(index=index))
 
     #######################################################################################################################
     #######################################################################################################################
 
-    def _check_video_capture(option):
-        print('\n' + STR.M_SELECTED_OPTION
-            .replace('{module}', 'Game Capture')
-            .replace('{option}', f"{option}")
-            .replace('{action}', f"Activating capture device nº{CONST.VIDEO_CAPTURE_INDEX}...")
-            .replace('{path}', f"")
-        )
+    def _check_video_capture(option: str) -> None:
+
+        """
+        Show the frames for a video capture device.
+
+        Args:
+            option (str): Menu option for display purposes (e.g., "3").
+        """
+
+        print('\n' + STR.M_SELECTED_OPTION.format(
+            module = MODULE_NAME,
+            option = option,
+            action = f"Activating capture device nº{CONST.VIDEO_CAPTURE_INDEX}...",
+            path = ''
+        ))
 
         Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
-        if not Video_Capture.video_capture.isOpened(): 
+
+        if not Video_Capture.video_capture.isOpened():
             Video_Capture.stop()
-            print(STR.GC_INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{CONST.VIDEO_CAPTURE_INDEX}'") + '\n')
+            print(STR.GC_INVALID_VIDEO_CAPTURE.format(video_capture=CONST.VIDEO_CAPTURE_INDEX) + '\n')
             return
+
         FPS = FPS_Counter()
 
-        print(STR.G_PRESS_KEY_TO_INSTRUCTION
-            .replace('{module}', 'Image Processing')
-            .replace('{key}', "'c'")
-            .replace('{instruction}', 'take a screenshot')
-        ); print(STR.G_PRESS_KEY_TO_INSTRUCTION
-            .replace('{module}', 'Image Processing')
-            .replace('{key}', "'q'")
-            .replace('{instruction}', 'exit the program')
-        )
+        print(STR.G_PRESS_KEY_TO_INSTRUCTION.format(module=MODULE_NAME, key="'c'", instruction='take a screenshot'))
+        print(STR.G_PRESS_KEY_TO_INSTRUCTION.format(module=MODULE_NAME, key="'q'", instruction='exit the program'))
 
-        while True: 
+        while True:
             image = Image_Processing(Video_Capture.read_frame())
-            if isinstance(image.original_image, type(None)): continue
+
+            if image.original_image is None:
+                continue
 
             image.resize_image()
             FPS.get_FPS()
@@ -109,29 +115,21 @@ if __name__ == "__main__":
 
             cv2.imshow(f'{CONST.BOT_NAME} - Device {CONST.VIDEO_CAPTURE_INDEX}', image.FPS_image)
 
-            # Press 'q' to stop the program
-            # Press 'c' to take a screenshot
             key = cv2.waitKey(1)
-            if key == ord('q') or key == ord('Q'): break
-            elif key == ord('c') or key == ord('C'): 
-                if not os.path.exists(f'../{CONST.SAVING_FRAMES_PATH}'):
-                    print(STR.G_INVALID_PATH_WARNING
-                        .replace('{module}', 'Game Capture')
-                        .replace('{path}', f"'../{CONST.SAVING_FRAMES_PATH}'")
-                    )
+            if key in (ord('q'), ord('Q')):
+                break
+            elif key in (ord('c'), ord('C')):
+                if not os.path.exists(SCREENSHOTS_OUTPUT_PATH):
+                    print(STR.G_INVALID_PATH_WARNING.format(module=MODULE_NAME, path=f"'{SCREENSHOTS_OUTPUT_PATH}'"))
                     continue
 
-                file_name = str(time())
-                cv2.imwrite(f'../{CONST.SAVING_FRAMES_PATH}/{file_name}.png', image.original_image)
-                print(STR.GC_IMAGE_SAVED.replace('{path}', f"'../{CONST.SAVING_FRAMES_PATH}/{file_name}.png'"))
-            
-        # Release the capture card and close all windows
+                output_file_path = os.path.join(SCREENSHOTS_OUTPUT_PATH, f"{int(time())}.png")
+                cv2.imwrite(output_file_path, image.original_image)
+                print(STR.GC_IMAGE_SAVED.replace('{path}', f"'{output_file_path}'"))
+
         Video_Capture.stop()
 
-        print(STR.G_SUCCESS_EXIT_PROGRAM
-            .replace('{module}', 'Game Capture')
-            .replace('{reason}', 'Successfully activated video device!')
-        )
+        print(STR.G_SUCCESS_EXIT_PROGRAM.format(module=MODULE_NAME, reason='Successfully activated video device!'))
 
     #######################################################################################################################
     #######################################################################################################################
