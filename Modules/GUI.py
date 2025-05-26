@@ -2,11 +2,10 @@
 ####################################################     LIBRARIES     ####################################################
 ###########################################################################################################################
 
-# Set the cwd to the one of the file
+from __future__ import annotations
+
 import os
-if __name__ == '__main__':
-    try: os.chdir(os.path.dirname(__file__))
-    except: pass
+import sys
 
 import PyQt5.QtWidgets as pyqt_w
 import PyQt5.QtCore as pyqt_c
@@ -15,17 +14,28 @@ import PyQt5.QtGui as pyqt_g
 import subprocess
 from time import sleep
 from queue import Queue
-from cllist import dllist
 from playsound3 import playsound
+from typing import TYPE_CHECKING
 
-import sys; sys.path.append('..')
-import Colored_Strings as STR
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
+
+import Modules.Colored_Strings as STR
 import Constants as CONST
+
+if TYPE_CHECKING:
+    from threading import Event
 
 ###########################################################################################################################
 #################################################     INITIALIZATIONS     #################################################
 ###########################################################################################################################
 
+MODULE_NAME = 'GUI'
+
+SHINY_STARS_SOUND_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', CONST.SHINY_STARS_SOUND_PATH))
+SOUND_OFF_IMAGE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', CONST.SOUND_OFF_IMAGE_PATH))
+SOUND_ON_IMAGE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', CONST.SOUND_ON_IMAGE_PATH))
+
+# Interface widgets configurations
 image_label_style = "background-color: #000; border: 1px solid #aaa;"
 text_label_style = "background-color: #222; border: 1px solid #aaa;"
 text_style = "background-color: #222; border: 1px solid #aaa; color: #aaa; font-size: 13pt; font-family: Arial;"
@@ -36,12 +46,6 @@ stop_button_style = """
 """
 
 ###########################################################################################################################
-
-# Solve Queue memory leaks
-class DllistQueue(Queue):
-    def _init(self, maxsize):
-        self.queue = dllist()
-
 ###########################################################################################################################
 
 class App(pyqt_w.QApplication):
@@ -49,13 +53,25 @@ class App(pyqt_w.QApplication):
         # Initialize the class QApplication object
         super().__init__([])
 
+        # Apply a dark background theme to all QWidget elements
         self.setStyleSheet("QWidget { background-color: #333; }")
 
 ###########################################################################################################################
 ###########################################################################################################################
 
 class GUI(pyqt_w.QWidget):
-    def __init__(self, queue, shutdown_event, stop_event):
+
+    """
+    Main graphical interface for the bot. Displays key info (RAM, CPU, encounter count, etc.) and provides controls like
+    stop, toggle sound, and social/media buttons.
+
+    Args:
+        queue (Queue): Shared queue used for inter-thread communication.
+        shutdown_event (Event): Event used to signal when the app should close.
+        stop_event (Event): Event used to signal the bot to stop its main loop.
+    """
+
+    def __init__(self, queue: Queue, shutdown_event: Event, stop_event: Event) -> None:
         # Initialize the class QWidget object
         super().__init__()
 
@@ -63,12 +79,15 @@ class GUI(pyqt_w.QWidget):
         self.queue = queue
 
         self.setWindowTitle(CONST.BOT_NAME)
+
         # Prevent window from being resized
         self.setFixedSize(CONST.BOT_WINDOW_SIZE[0], CONST.BOT_WINDOW_SIZE[1])
         self.setFixedSize(CONST.BOT_WINDOW_SIZE[0], 572)
+
         # Move the GUI to the middle of the screen
         self.setGeometry(CONST.SPAWN_POSITION[0], CONST.SPAWN_POSITION[1], 0, 0)
 
+        # All widgets stored for easy access
         self.items = {
             'main_image_label': pyqt_w.QLabel(self),
             'clock_label': pyqt_w.QLabel(self),
@@ -78,129 +97,93 @@ class GUI(pyqt_w.QWidget):
             'discord_button': pyqt_w.QPushButton(self),
             'github_button': pyqt_w.QPushButton(self),
             'dinones_button': pyqt_w.QPushButton(self),
-
             'RAM_usage_label': pyqt_w.QLabel(self),
             'CPU_usage_label': pyqt_w.QLabel(self),
             'current_state_label': pyqt_w.QLabel(self),
             'encounter_count_label': pyqt_w.QLabel(self),
         }
-         
-        ##### MAIN IMAGE #####
-        self.items['main_image_label'].setFixedSize(CONST.MAIN_FRAME_SIZE[0], CONST.MAIN_FRAME_SIZE[1])
+
+        # MAIN IMAGE
+        self.items['main_image_label'].setFixedSize(*CONST.MAIN_FRAME_SIZE)
         self.items['main_image_label'].setStyleSheet(image_label_style)
         self.items['main_image_label'].move(10, 10)
 
         ##### SWITCH CONTROLLER #####
-        self.items['switch_controller_image_label'] \
-            .setFixedSize(CONST.SWITCH_CONTROLLER_FRAME_SIZE[0], CONST.SWITCH_CONTROLLER_FRAME_SIZE[1])
+        self.items['switch_controller_image_label'].setFixedSize(*CONST.SWITCH_CONTROLLER_FRAME_SIZE)
         self.items['switch_controller_image_label'].setStyleSheet(image_label_style)
         self.items['switch_controller_image_label'].move(CONST.MAIN_FRAME_SIZE[0] + 20, CONST.CLOCK_FRAME_SIZE[1] + 20)
 
         ##### TIME COUNTER #####
-        self.items['clock_label'].setFixedSize(CONST.CLOCK_FRAME_SIZE[0], CONST.CLOCK_FRAME_SIZE[1])
+        self.items['clock_label'].setFixedSize(*CONST.CLOCK_FRAME_SIZE)
         self.items['clock_label'].setStyleSheet(clock_style)
         self.items['clock_label'].move(CONST.MAIN_FRAME_SIZE[0] + 20, 10)
         self.items['clock_label'].setAlignment(pyqt_c.Qt.AlignCenter)
         self.items['clock_label'].setText("00 : 00 : 00")
 
         ##### STOP BUTTON #####
-        self.items['stop_button'].setFixedSize(CONST.STOP_BUTTON_FRAME_SIZE[0], CONST.STOP_BUTTON_FRAME_SIZE[1])
+        self.items['stop_button'].setFixedSize(*CONST.STOP_BUTTON_FRAME_SIZE)
         self.items['stop_button'].setStyleSheet(stop_button_style)
-        self.items['stop_button'].move(CONST.MAIN_FRAME_SIZE[0] + 20, 
-            CONST.CLOCK_FRAME_SIZE[1] + CONST.SWITCH_CONTROLLER_FRAME_SIZE[1] + 30)
+        self.items['stop_button'].move(
+            CONST.MAIN_FRAME_SIZE[0] + 20,
+            CONST.CLOCK_FRAME_SIZE[1] + CONST.SWITCH_CONTROLLER_FRAME_SIZE[1] + 30
+        )
         self.items['stop_button'].setText("STOP")
         self.items['stop_button'].clicked.connect(stop_event.set)
 
+        ###################################################################################################################
+        ###################################################################################################################
+
         ##### MUSIC BUTTON #####
         def toggle_sound(value, play_activation_sound = True):
-            # I'm editing the value of a constant. I know, I deserve to die!
             CONST.PLAY_SOUNDS = value
-            
-            relative_path = '.' if os.path.exists('./Media/') else '..'
+
             if CONST.PLAY_SOUNDS: 
                 if play_activation_sound:
-                    shiny_sound = relative_path + f'/{CONST.SHINY_STARS_SOUND_PATH}'
-                    play_sound(shiny_sound)
-                relative_path += f'/{CONST.SOUND_ON_IMAGE_PATH}'
-            else: relative_path += f'/{CONST.SOUND_OFF_IMAGE_PATH}'
-            image = pyqt_g.QIcon(relative_path)
+                    play_sound(SHINY_STARS_SOUND_PATH)
+                image = pyqt_g.QIcon(SOUND_ON_IMAGE_PATH)
+            else:
+                image = pyqt_g.QIcon(SOUND_OFF_IMAGE_PATH)
 
-            if not image.pixmap(2, 2).isNull(): 
+            if not image.pixmap(2, 2).isNull():
                 self.items['music_button'].setText('')
                 self.items['music_button'].setIcon(image)
-            else: 
-                print(STR.COULD_NOT_LOAD_IMAGE.replace('{path}', relative_path))
+            else:
+                print(STR.GUI_COULD_NOT_LOAD_IMAGE.format(
+                    path=SOUND_ON_IMAGE_PATH if CONST.PLAY_SOUNDS else SOUND_OFF_IMAGE_PATH
+                ))
                 self.items['music_button'].setIcon(pyqt_g.QIcon())
                 self.items['music_button'].setText("M" if CONST.PLAY_SOUNDS else "!M")
+
+        ###################################################################################################################
+        ###################################################################################################################
 
         self.items['music_button'].setFixedSize(CONST.STOP_BUTTON_FRAME_SIZE[1], CONST.STOP_BUTTON_FRAME_SIZE[1])
         self.items['music_button'].setStyleSheet(stop_button_style)
         self.items['music_button'].setIconSize(
-            pyqt_c.QSize(CONST.STOP_BUTTON_FRAME_SIZE[1] - 15, CONST.STOP_BUTTON_FRAME_SIZE[1] - 15))
-        self.items['music_button'].move(CONST.MAIN_FRAME_SIZE[0] + 20, 
-            CONST.CLOCK_FRAME_SIZE[1] + CONST.SWITCH_CONTROLLER_FRAME_SIZE[1] + CONST.STOP_BUTTON_FRAME_SIZE[1] + 41)
+            pyqt_c.QSize(CONST.STOP_BUTTON_FRAME_SIZE[1] - 15, CONST.STOP_BUTTON_FRAME_SIZE[1] - 15)
+        )
+        self.items['music_button'].move(
+            CONST.MAIN_FRAME_SIZE[0] + 20,
+            CONST.CLOCK_FRAME_SIZE[1] + CONST.SWITCH_CONTROLLER_FRAME_SIZE[1] + CONST.STOP_BUTTON_FRAME_SIZE[1] + 41
+        )
         self.items['music_button'].clicked.connect(lambda: toggle_sound(not CONST.PLAY_SOUNDS))
-        toggle_sound(CONST.PLAY_SOUNDS, play_activation_sound = False)
+        toggle_sound(CONST.PLAY_SOUNDS, play_activation_sound=False)
 
-        ##### DISCORD BUTTON #####
-        self.items['discord_button'].setFixedSize(97, CONST.STOP_BUTTON_FRAME_SIZE[1])
-        self.items['discord_button'].setStyleSheet(stop_button_style)
-        self.items['discord_button'].setIconSize(
-            pyqt_c.QSize(CONST.STOP_BUTTON_FRAME_SIZE[1] - 21, CONST.STOP_BUTTON_FRAME_SIZE[1] - 21))
-        self.items['discord_button'].move(CONST.MAIN_FRAME_SIZE[0] + 30 + 63, 
-            CONST.CLOCK_FRAME_SIZE[1] + CONST.SWITCH_CONTROLLER_FRAME_SIZE[1] + CONST.STOP_BUTTON_FRAME_SIZE[1] + 41)
-        self.items['discord_button'].clicked.connect(lambda: self.open_webpage(CONST.DISCORD_URL))
-
-        relative_path = '.' if os.path.exists('./Media/') else '..'
-        relative_path += f'/{CONST.DISCORD_IMAGE_PATH}'
-        image = pyqt_g.QIcon(relative_path)
-        if not image.pixmap(2, 2).isNull(): self.items['discord_button'].setIcon(image)
-        else: 
-            print(STR.COULD_NOT_LOAD_IMAGE.replace('{path}', relative_path))
-            self.items['discord_button'].setText("Discord")
-
-        ##### GITHUB BUTTON #####
-        self.items['github_button'].setFixedSize(97, CONST.STOP_BUTTON_FRAME_SIZE[1])
-        self.items['github_button'].setStyleSheet(stop_button_style)
-        self.items['github_button'].setIconSize(
-            pyqt_c.QSize(CONST.STOP_BUTTON_FRAME_SIZE[1] - 21, CONST.STOP_BUTTON_FRAME_SIZE[1] - 21))
-        self.items['github_button'].move(CONST.MAIN_FRAME_SIZE[0] + 40 + 160, 
-            CONST.CLOCK_FRAME_SIZE[1] + CONST.SWITCH_CONTROLLER_FRAME_SIZE[1] + CONST.STOP_BUTTON_FRAME_SIZE[1] + 41)
-        self.items['github_button'].clicked.connect(lambda: self.open_webpage(CONST.GITHUB_URL))
-
-        relative_path = '.' if os.path.exists('./Media/') else '..'
-        relative_path += f'/{CONST.GITHUB_IMAGE_PATH}'
-        image = pyqt_g.QIcon(relative_path)
-        if not image.pixmap(2, 2).isNull(): self.items['github_button'].setIcon(image)
-        else: 
-            print(STR.COULD_NOT_LOAD_IMAGE.replace('{path}', relative_path))
-            self.items['github_button'].setText("GitHub")
-
-        ##### LOGO BUTTON #####
-        self.items['dinones_button'].setFixedSize(CONST.STOP_BUTTON_FRAME_SIZE[1], CONST.STOP_BUTTON_FRAME_SIZE[1])
-        self.items['dinones_button'].setStyleSheet(stop_button_style)
-        self.items['dinones_button'].setIconSize(
-            pyqt_c.QSize(CONST.STOP_BUTTON_FRAME_SIZE[1] - 25, CONST.STOP_BUTTON_FRAME_SIZE[1] - 25))
-        self.items['dinones_button'].move(CONST.MAIN_FRAME_SIZE[0] + 50 + 257, 
-            CONST.CLOCK_FRAME_SIZE[1] + CONST.SWITCH_CONTROLLER_FRAME_SIZE[1] + CONST.STOP_BUTTON_FRAME_SIZE[1] + 41)
-        self.items['dinones_button'].clicked.connect(lambda: self.open_webpage(CONST.DINONES_URL))
-        
-        relative_path = '.' if os.path.exists('./Media/') else '..'
-        relative_path += f'/{CONST.DINONES_IMAGE_PATH}'
-        image = pyqt_g.QIcon(relative_path)
-        if not image.pixmap(2, 2).isNull(): self.items['dinones_button'].setIcon(image)
-        else: 
-            print(STR.COULD_NOT_LOAD_IMAGE.replace('{path}', relative_path))
-            self.items['dinones_button'].setText("D")
+        ##### DISCORD, GITHUB & DINONES BUTTONS #####
+        self._init_social_button('discord_button', CONST.DISCORD_IMAGE_PATH, CONST.DISCORD_URL, x_offset=63)
+        self._init_social_button('github_button', CONST.GITHUB_IMAGE_PATH, CONST.GITHUB_URL, x_offset=170)
+        self._init_social_button(
+            'dinones_button', CONST.DINONES_IMAGE_PATH, CONST.DINONES_URL, x_offset=277, is_square=True
+        )
             
         ##### RAM USAGE #####
-        self.items['RAM_usage_label'].setFixedSize(CONST.TEXT_FRAME_SIZE[0], CONST.TEXT_FRAME_SIZE[1])
+        self.items['RAM_usage_label'].setFixedSize(*CONST.TEXT_FRAME_SIZE)
         self.items['RAM_usage_label'].setStyleSheet(text_style)
         self.items['RAM_usage_label'].move(10, CONST.MAIN_FRAME_SIZE[1] + 20)
         self.items['RAM_usage_label'].setText("  ★   RAM Usage: 0 MB")
 
         ##### CPU USAGE #####
-        self.items['CPU_usage_label'].setFixedSize(CONST.TEXT_FRAME_SIZE[0], CONST.TEXT_FRAME_SIZE[1])
+        self.items['CPU_usage_label'].setFixedSize(*CONST.TEXT_FRAME_SIZE)
         self.items['CPU_usage_label'].setStyleSheet(text_style)
         self.items['CPU_usage_label'].move(CONST.MAIN_FRAME_SIZE[0]//2 + 15, CONST.MAIN_FRAME_SIZE[1] + 20)
         self.items['CPU_usage_label'].setText("  ★   CPU Usage: 0 %")
@@ -217,10 +200,10 @@ class GUI(pyqt_w.QWidget):
         self.items['encounter_count_label'].move(10, CONST.MAIN_FRAME_SIZE[1] + 2*CONST.TEXT_FRAME_SIZE[1] + 40)
         self.items['encounter_count_label'].setText("  ★   Encounter Count: 0")
 
-        # QTimer automatically calls the function when finishes the previous execution
+        # QTimer automatically calls the function when finishes the previous execution. Setting it to 16ms provides a
+        # maximum of 60FPS to not overload the program
         self.timer = pyqt_c.QTimer(self)
         self.timer.timeout.connect(lambda: self.update_GUI(shutdown_event))
-        # Setting it to 16ms provides a maximum of 60FPS to not overload the program
         self.timer.start(16)
 
         self.show()
@@ -228,10 +211,62 @@ class GUI(pyqt_w.QWidget):
     #######################################################################################################################
     #######################################################################################################################
 
-    def update_GUI(self, shutdown_event):
-        if shutdown_event.is_set(): self.close()
-        try: update_items = self.queue.get(block=True, timeout=1)
-        except: return
+    def _init_social_button(self, name: str, image_path: str, url: str, x_offset: int, is_square: bool = False):
+
+        """
+        Helper function to initialize a social/media button with an icon.
+
+        Args:
+            name (str): Key in self.items for the button.
+            image_path (str): Path to the icon image.
+            url (str): URL to open when clicked.
+            x_offset (int): Horizontal position offset.
+            is_square (bool): Whether the button is square-shaped or rectangular.
+        """
+
+        button = self.items[name]
+        size = CONST.STOP_BUTTON_FRAME_SIZE[1]
+
+        # Set size depending on whether it's square or rectangular
+        button.setFixedSize(size, size) if is_square else button.setFixedSize(97, size)
+        button.setStyleSheet(stop_button_style)
+        button.setIconSize(pyqt_c.QSize(size - 21, size - 21))
+        button.move(
+            CONST.MAIN_FRAME_SIZE[0] + 30 + x_offset,
+            CONST.CLOCK_FRAME_SIZE[1] + CONST.SWITCH_CONTROLLER_FRAME_SIZE[1] + size + 41
+        )
+        button.clicked.connect(lambda: self.open_webpage(url))
+
+        # Load the image
+        image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', image_path))
+        image = pyqt_g.QIcon(image_path)
+
+        if not image.pixmap(2, 2).isNull():
+            button.setIcon(image)
+        else:
+            print(STR.GUI_COULD_NOT_LOAD_IMAGE.replace('{path}', image_path))
+            button.setText(name.split('_')[0].capitalize())
+
+    #######################################################################################################################
+    #######################################################################################################################
+
+    def update_GUI(self, shutdown_event: Event) -> None:
+
+        """
+        Updates the GUI based on new data received from the shared queue.
+
+        Args:
+            shutdown_event (Event): Event that signals when the GUI should close.
+        """
+
+        if shutdown_event.is_set():
+            self.close()
+            return
+        
+        try:
+            update_items = self.queue.get(block=True, timeout=1)
+        except Exception:
+            return
 
         # Convert images to a PyQt compatible format
         update_items['image'].get_pyqt_image(update_items['image'].FPS_image)
@@ -241,231 +276,96 @@ class GUI(pyqt_w.QWidget):
         self.items['main_image_label'].setPixmap(update_items['image'].pyqt_image)
         self.items['switch_controller_image_label'].setPixmap(update_items['switch_controller_image'].pyqt_image)
 
-        # Update text boxes
-        bad_luck = (1 - 1/4096)**update_items['global_encounter_count']*100 if \
-            update_items['global_encounter_count'] else 100
-        hours = update_items['clock']//3600
-        minutes = (update_items['clock'] - hours*3600)//60
-        seconds = update_items['clock'] - hours*3600 - minutes*60
+        # Update elapsed time
+        total_seconds = update_items['clock']
+        hours = total_seconds // 3600
+        minutes = (total_seconds % 3600) // 60
+        seconds = total_seconds % 60
 
+        # Calculate shiny odds percentage (bad luck chance)
+        encounters = update_items['global_encounter_count']
+        bad_luck = (1 - 1 / 4096) ** encounters * 100 if encounters else 100
+
+        # Update labels with formatted stats
         self.items['RAM_usage_label'].setText(f"  ★   RAM Usage: {update_items['memory_usage']:.2f} MB")
         self.items['CPU_usage_label'].setText(f"  ★   CPU Usage: {update_items['cpu_usage']:.2f} %")
         self.items['current_state_label'].setText(f"  ★   Current State: {update_items['current_state']}")
-        self.items['encounter_count_label'].setText(f"  ★   Encounter Count: {update_items['global_encounter_count']}" + \
-            f"   -   ({bad_luck:.2f}%)   -   {update_items['local_encounter_count']}")
+        self.items['encounter_count_label'].setText(
+            f"  ★   Total Encounter Count: {update_items['global_encounter_count']}" + \
+            f"   -   Bad luck: {bad_luck:.2f}%   -   Current Encounter Count: {update_items['local_encounter_count']}"
+        )
         self.items['clock_label'].setText(f"{hours:02} : {minutes:02} : {seconds:02}")
 
     #######################################################################################################################
     #######################################################################################################################
+    
+    def open_webpage(self, url: str) -> None:
+    
+        """
+        Opens the specified URL in the default system browser as a non-root user.
+        
+        On Linux, running as root (e.g. via sudo) can prevent GUI applications like browsers from launching. This method
+        uses the "SUDO_USER" environment variable to determine the original user and executes "xdg-open" under their
+        account.
 
+        Args:
+            url (str): The URL to open in the browser.
+        """
+        # Determine the real user running the program (not root)
+        user = os.environ.get('SUDO_USER', os.environ.get('USER'))
 
-    def open_webpage(self, url): 
-        # Linux can't open browsers as sudo for security reasons
-        user = os.environ.get('SUDO_USER', os.environ['USER'])
-        subprocess.run(f"sudo -u {user} xdg-open {url}", shell=True)
+        # Run xdg-open under the user's session to avoid permission issues
+        subprocess.run(['sudo', '-u', user, 'xdg-open', url], check=False)
 
 ###########################################################################################################################
 ###########################################################################################################################
 
-def play_sound(path): 
-    def restore_std(original_stderr_fd, saved_stderr_fd):
+def play_sound(path: str) -> None:
+
+    """
+    Plays a sound from the given path if sound is enabled.
+
+    Suppresses stderr output from the "playsound" library, which prints tons of messages. Temporarily redirects stderr to
+    "/dev/null" and restores it afterward.
+
+    Args:
+        path (str): Path to the audio file.
+    """
+
+    def restore_stderr(original_fd: int, saved_fd: int) -> None:
+
+        """
+        Restores the original stderr after redirection.
+
+        Args:
+            original_fd (int): File descriptor of the original stderr.
+            saved_fd (int): Duplicated file descriptor to restore from.
+
+        Returns:
+            None
+        """
+
         sys.stderr.flush()
-        os.dup2(saved_stderr_fd, original_stderr_fd)
+        os.dup2(saved_fd, original_fd)
+        os.close(saved_fd)
 
     if CONST.PLAY_SOUNDS:
-        # Disable playsound messages. It prints SO MANY of logging messages
+        # Redirect stderr to suppress playsound output
         original_stderr_fd = sys.stderr.fileno()
         saved_stderr_fd = os.dup(original_stderr_fd)
-        devnull = os.open(os.devnull, os.O_WRONLY)
-        sys.stderr.flush()
-        os.dup2(devnull, sys.stderr.fileno())
+        devnull_fd = os.open(os.devnull, os.O_WRONLY)
+        os.dup2(devnull_fd, original_stderr_fd)
+        os.close(devnull_fd)
 
-        try: playsound(path, block=False)
-        except: 
+        try:
+            playsound(path, block=False)
+            # Let the async play begin
             sleep(0.1)
-            restore_std(original_stderr_fd, saved_stderr_fd)
-            print(STR.COULD_NOT_PLAY_SOUND
-                .replace('{module}', 'Shiny Hunter')
-                .replace('{path}', path)
-            )
-        else: 
-            sleep(0.1)
-            restore_std(original_stderr_fd, saved_stderr_fd)
+        except Exception:
+            print(STR.COULD_NOT_PLAY_SOUND.format(module=MODULE_NAME, path=path))
+        finally:
+            restore_stderr(original_stderr_fd, saved_stderr_fd)
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
-
-if __name__ == "__main__":
-    import time
-    from threading import Thread, Event
-
-    from FPS_Counter import FPS_Counter
-    from Game_Capture import Game_Capture
-    from Image_Processing import Image_Processing
-
-    #######################################################################################################################
-
-    def main_menu():
-        print('\n' + STR.MENU.replace('{module}', 'GUI'))
-        print(STR.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Open GUI using capture card'))
-        print(STR.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Open GUI using a template image'))
-
-        option = input('\n' + STR.OPTION_SELECTION.replace('{module}', 'GUI'))
-
-        menu_options = {
-            '1': test_GUI_capture_card,
-            '2': test_GUI_template_image,
-        }
-
-        if option in menu_options: menu_options[option](option)
-        else: print(STR.INVALID_OPTION.replace('{module}', 'GUI') + '\n')
-
-    #######################################################################################################################
-    #######################################################################################################################
-
-    def test_GUI_capture_card(option):
-        print('\n' + STR.SELECTED_OPTION
-            .replace('{module}', 'GUI')
-            .replace('{option}', f"{option}")
-            .replace('{action}', f"Testing GUI with the capture card...")
-            .replace('{path}', '')
-        )
-
-        FPS = FPS_Counter()
-        initial_time = time.time()
-        Image_Queue = DllistQueue(maxsize = 2)
-        shutdown_event = Event()
-
-        switch_controller_image = Image_Processing(f'../{CONST.SWITCH_CONTROLLER_IMAGE_PATH}')
-        if isinstance(switch_controller_image.original_image, type(None)):
-            print(STR.INVALID_PATH_ERROR
-                .replace('{module}', 'GUI')
-                .replace('{path}', f'../{CONST.SWITCH_CONTROLLER_IMAGE_PATH}') + '\n'
-            )
-            return
-        switch_controller_image.resize_image(CONST.SWITCH_CONTROLLER_FRAME_SIZE)
-        switch_controller_image.draw_button()
-
-        def test_GUI_control(shutdown_event):
-            Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
-            if not Video_Capture.video_capture.isOpened(): 
-                Video_Capture.stop()
-                print(STR.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{CONST.VIDEO_CAPTURE_INDEX}'"))
-                shutdown_event.set()
-                return
-
-            while not shutdown_event.is_set():
-                image = Image_Processing(Video_Capture.read_frame())
-                if isinstance(image.original_image, type(None)): 
-                    if Video_Capture.skipped_frames < CONST.SKIPPED_FRAMES_TO_RECONNECT - 1: 
-                        Video_Capture.skipped_frames += 1
-                        time.sleep(0.1); continue
-                    Video_Capture.stop()
-                    Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
-                    if not Video_Capture.video_capture.isOpened(): 
-                        Video_Capture.stop()
-                        print(STR.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{CONST.VIDEO_CAPTURE_INDEX}'"))
-                        shutdown_event.set()
-                    continue
-
-                image.resize_image()
-                FPS.get_FPS()
-                image.draw_FPS(FPS.FPS)
-
-                update_items = {
-                    'image': image,
-                    'current_state': 'TESTING',
-                    'shutdown_event': shutdown_event,
-                    'global_encounter_count': 0,
-                    'local_encounter_count': 0,
-                    'memory_usage': FPS.memory_usage,
-                    'cpu_usage': FPS.cpu_usage,
-                    'switch_controller_image': switch_controller_image,
-                    'clock': int(time.time() - initial_time),
-                }
-
-                Image_Queue.put(update_items)
-
-        threads = []
-        threads.append(Thread(target=lambda: test_GUI_control(shutdown_event), daemon=True))
-        threads.append(Thread(target=lambda: FPS.get_memory_usage(shutdown_event), daemon=True))
-        for thread in threads: thread.start()
-
-        GUI_App = App()
-        gui = GUI(Image_Queue, shutdown_event, shutdown_event)
-        # Blocking function until the GUI is closed
-        GUI_App.exec_()
-
-        shutdown_event.set()
-        print(STR.RELEASING_THREADS.replace('{module}', 'GUI').replace('{threads}', str(len(threads))) + '\n')        
-
-    #######################################################################################################################
-    #######################################################################################################################
-
-    def test_GUI_template_image(option):
-        print('\n' + STR.SELECTED_OPTION
-            .replace('{module}', 'GUI')
-            .replace('{option}', f"{option}")
-            .replace('{action}', f"Testing GUI using a template image...")
-            .replace('{path}', '')
-        )
-
-        FPS = FPS_Counter()
-        initial_time = time.time()
-        Image_Queue = DllistQueue(maxsize = 2)
-        shutdown_event = Event()
-
-        switch_controller_image = Image_Processing(f'../{CONST.SWITCH_CONTROLLER_IMAGE_PATH}')
-        if isinstance(switch_controller_image.original_image, type(None)):
-            print(STR.INVALID_PATH_ERROR
-                .replace('{module}', 'GUI')
-                .replace('{path}', f'../{CONST.SWITCH_CONTROLLER_IMAGE_PATH}') + '\n'
-            )
-            return
-        switch_controller_image.resize_image(CONST.SWITCH_CONTROLLER_FRAME_SIZE)
-        switch_controller_image.draw_button()
-
-        image = Image_Processing(f'../{CONST.TEMPLATE_IMAGE_PATH}')
-        if isinstance(image.original_image, type(None)):
-            print(STR.INVALID_PATH_ERROR
-                .replace('{module}', 'GUI')
-                .replace('{path}', f'../{CONST.TEMPLATE_IMAGE_PATH}') + '\n'
-            )
-            return
-        image.resize_image()
-        image.FPS_image = image.resized_image
-
-        def test_GUI_control(shutdown_event):
-            while not shutdown_event.is_set():
-                update_items = {
-                    'image': image,
-                    'current_state': 'TESTING',
-                    'shutdown_event': shutdown_event,
-                    'global_encounter_count': 0,
-                    'local_encounter_count': 0,
-                    'memory_usage': FPS.memory_usage,
-                    'cpu_usage': FPS.cpu_usage,
-                    'switch_controller_image': switch_controller_image,
-                    'clock': int(time.time() - initial_time),
-                }
-
-                Image_Queue.put(update_items)
-
-        threads = []
-        threads.append(Thread(target=lambda: test_GUI_control(shutdown_event), daemon=True))
-        threads.append(Thread(target=lambda: FPS.get_memory_usage(shutdown_event), daemon=True))
-        for thread in threads: thread.start()
-
-        GUI_App = App()
-        gui = GUI(Image_Queue, shutdown_event, shutdown_event)
-        # Blocking function until the GUI is closed
-        GUI_App.exec_()
-
-        shutdown_event.set()
-        print(STR.RELEASING_THREADS.replace('{module}', 'GUI').replace('{threads}', str(len(threads))) + '\n')        
-
-    #######################################################################################################################
-    #######################################################################################################################
-
-    main_menu()

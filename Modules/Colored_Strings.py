@@ -76,7 +76,7 @@ G_PRESS_KEY_TO_INSTRUCTION = \
     f'\033[{COLORS["Blue"]}m{"{key}"}{RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}m to {"{instruction}"}... {RESET_FORMAT}'
 
-RELEASING_THREADS = \
+G_RELEASING_THREADS = \
     f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mReleasing {RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]}m{"{threads}"}{RESET_FORMAT}'+\
@@ -125,7 +125,7 @@ THREAD_DIED_ERROR = \
 COULD_NOT_PLAY_SOUND = \
     f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mCould not play sound: {RESET_FORMAT}'+\
-    f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}m{"{path}"}{RESET_FORMAT}'
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}m"{"{path}"}"{RESET_FORMAT}'
 
 SHINY_FOUND = \
     f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
@@ -228,28 +228,28 @@ GC_CAPTURE_CARD_LOST_CONNECTION = \
 ################################################     SWITCH CONTROLLER     ################################################
 ###########################################################################################################################
 
-NOT_LINUX_SYSTEM = \
+SC_NOT_LINUX_SYSTEM = \
     f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Switch Controller] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}mNXBT is only available on Linux systems!{RESET_FORMAT}'
 
-NOT_SUDO = \
+SC_NOT_SUDO = \
     f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Switch Controller] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mNXBT must be executed with administrator permissions: {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]}mRestarting using sudo...{RESET_FORMAT}'
 
-RESTARTING_BLUETOOTH = \
+SC_RESTARTING_BLUETOOTH = \
     f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Switch Controller] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mRestarting bluetooth systems...{RESET_FORMAT}'
 
-BLUETOOTH_RESTARTED = \
+SC_BLUETOOTH_RESTARTED = \
     f'{CORRECT}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Switch Controller] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}mBluetooth restarted successfully!{RESET_FORMAT}'
 
-CONNECTING_TO_SWITCH = \
+SC_CONNECTING_TO_SWITCH = \
     f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Switch Controller] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mConnecting to Nintendo Switch...{RESET_FORMAT}'
 
-CONTROLLER_CONNECTED = \
+SC_CONTROLLER_CONNECTED = \
     f'{CORRECT}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Switch Controller] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}mController connected!{RESET_FORMAT}'
 
@@ -384,7 +384,7 @@ DB_POKEMON_DELETED = \
 #######################################################     GUI     #######################################################
 ###########################################################################################################################
 
-COULD_NOT_LOAD_IMAGE = \
+GUI_COULD_NOT_LOAD_IMAGE = \
     f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[GUI] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mCould not load image: {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}m{"{path}"}{RESET_FORMAT}'

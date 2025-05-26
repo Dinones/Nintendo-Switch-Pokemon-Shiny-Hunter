@@ -193,6 +193,7 @@ class Image_Processing():
 
         # Skip drawing if input is not a string or the same button is already drawn
         if not isinstance(button, str) or self.current_button_pressed == button:
+            self._ensure_fps_image()
             return
 
         # Start from a fresh copy of the resized image

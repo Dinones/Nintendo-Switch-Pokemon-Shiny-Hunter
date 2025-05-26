@@ -6,6 +6,7 @@ import os
 import sys
 import cv2
 import numpy as np
+from time import time
 from datetime import datetime
 from typing import Optional, List, Union, Tuple
 
@@ -68,6 +69,7 @@ class Game_Capture():
         self.video_recorder = None
         self.frame = None
         self.previous_frame_skipped = False
+        self.last_frame_time = 0
         self.connection_error_image = None
 
     #######################################################################################################################
@@ -88,7 +90,9 @@ class Game_Capture():
         if not success:
             self._get_connection_error_image()
             # Try to initialize the capture card again
-            self.__init__()
+            try:
+                self.__init__()
+            except Exception as e: print(e)
         elif self.previous_frame_skipped:
             self.previous_frame_skipped = False
 
@@ -249,6 +253,7 @@ class Game_Capture():
         if not self.previous_frame_skipped:
             print(STR.GC_CAPTURE_CARD_LOST_CONNECTION.format(time = datetime.now().strftime("%H:%M:%S")))
             self.previous_frame_skipped = True
+            self.last_frame_time = time()
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
