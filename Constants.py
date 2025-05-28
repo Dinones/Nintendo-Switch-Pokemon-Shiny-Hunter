@@ -166,7 +166,7 @@ STARTER = 'R'
 DATABASE_PATH = 'Media/Database.db'
 
 ###########################################################################################################################
-#####################################################     MESSAGES     ####################################################
+##################################################     NOTIFICATIONS     ##################################################
 ###########################################################################################################################
 
 # You will receive mail notifications when a shiny is found or an error occurs
@@ -176,21 +176,20 @@ MAIL_SETTINGS = {
     'port': 587,                        # Port TLS: 587 | SSL: 465
     'smtp_server': 'smtp.gmail.com',    # SMTP server
 
-    'credentials_file_path': 'Modules/Mail/Email_Credentials.env',
-    'save_credentials_file_path': 'Modules/Mail/Credentials.env',
-    'credentials_template_file_path': 'Media/Messages/Email_Credentials_Template.env'
+    'credentials_file_path': 'Modules/Email/Credentials.env',
+    'credentials_template_file_path': 'Media/Notifications/Email_Credentials_Template.env'
 }
 
-MESSAGES_PLACEHOLDER_IMAGE = 'Media/Messages/Dinones.png'
-MESSAGES_ERROR_IMAGE = 'Media/Messages/Dizzy Dinones.png'
-SHINY_HTML_PATH = 'Modules/Mail/Shiny.html'
-ERROR_HTML_PATH = 'Modules/Mail/Error.html'
+MESSAGES_PLACEHOLDER_IMAGE = 'Media/Notifications/Dinones.png'
+MESSAGES_ERROR_IMAGE = 'Media/Notifications/Dizzy Dinones.png'
+SHINY_HTML_PATH = 'Modules/Email/Shiny.html'
+ERROR_HTML_PATH = 'Modules/Email/Error.html'
 
 TELEGRAM_NOTIFICATIONS = False
 TELEGRAM_SETTINGS = {
     'credentials_file_path': 'Modules/Telegram/Telegram_Credentials.env',
     'save_credentials_file_path': 'Modules/Telegram/Credentials.env',
-    'credentials_template_file_path': 'Media/Messages/Telegram_Credentials_Template.env'
+    'credentials_template_file_path': 'Media/Notifications/Telegram_Credentials_Template.env'
 }
 
 ###########################################################################################################################

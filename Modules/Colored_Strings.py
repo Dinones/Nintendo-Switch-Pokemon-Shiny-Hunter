@@ -158,6 +158,18 @@ STUCK_FOR_TOO_LONG_ERROR = \
     f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}m minutes: {RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]}mStopping the program...{RESET_FORMAT}'
 
+G_EMPTY_CREDENTIALS = \
+    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}m{"{module}"} notifications cannot be sent: {RESET_FORMAT}'+\
+    f'\033[{COLORS["Yellow"]}mSome fields are missing in the {RESET_FORMAT}'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}m"{"{path}"}"{RESET_FORMAT}'+\
+    f'\033[{COLORS["Yellow"]}m file{RESET_FORMAT}'
+
+G_TOGGLING_EMAIL_NOTIFICATIONS = \
+    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}m{"{module}"} notifications are disabled: {RESET_FORMAT}'+\
+    f'\033[{COLORS["Yellow"]}mRemember to enable them before running the shiny hunter{RESET_FORMAT}'
+
 ###########################################################################################################################
 ######################################################     MENU     #######################################################
 ###########################################################################################################################
@@ -390,41 +402,38 @@ GUI_COULD_NOT_LOAD_IMAGE = \
     f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}m{"{path}"}{RESET_FORMAT}'
 
 ###########################################################################################################################
-#####################################################     MESSAGES     ####################################################
+######################################################     EMAIL     ######################################################
 ###########################################################################################################################
 
-HTML_NOT_FOUND = \
+EM_HTML_NOT_FOUND = \
     f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Mail] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mCould not find HTML: {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}m{"{html}"}{RESET_FORMAT}'
 
-EMAIL_SENT = \
+EM_EMAIL_SENT = \
     f'{CORRECT}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Mail] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}mSuccessfully sent email to {RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]}m{"{email}"}{RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}m!{RESET_FORMAT}'
 
-COULD_NOT_SEND_EMAIL = \
+EM_COULD_NOT_SEND_EMAIL = \
     f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Mail] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mCould not send email to {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]}m{"{email}"}{RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}m: {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]}m{"{error}"}{RESET_FORMAT}'
 
-EMPTY_CREDENTIALS = \
-    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
-    f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}m{"{module}"} notifications cannot be sent: {RESET_FORMAT}'+\
-    f'\033[{COLORS["Yellow"]}mSome fields are missing in the {RESET_FORMAT}'+\
-    f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}m{"{path}"}{RESET_FORMAT}'+\
-    f'\033[{COLORS["Yellow"]}m file{RESET_FORMAT}'
+###########################################################################################################################
+#####################################################     TELEGRAM     ####################################################
+###########################################################################################################################
 
-TELEGRAM_SENT = \
+TE_TELEGRAM_SENT = \
     f'{CORRECT}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Telegram] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}mSuccessfully sent telegram to chat {RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]}m{"{chat_id}"}{RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}m!{RESET_FORMAT}'
 
-COULD_NOT_SEND_TELEGRAM = \
+TE_COULD_NOT_SEND_TELEGRAM = \
     f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Telegram] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mCould not send telegram to chat {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]}m{"{chat_id}"}{RESET_FORMAT}'+\
