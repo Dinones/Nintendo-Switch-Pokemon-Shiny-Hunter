@@ -11,7 +11,7 @@ VIDEO_FPS = 27
 OUTPUT_VIDEO_PATH = 'Media/Videos/Video.avi'
 # Can't be greater than 110s!
 SHINY_RECORDING_SECONDS = 60
-CAPTURE_CARD_DISCONNECTED_MAX_SECONDS = 3
+CAPTURE_CARD_DISCONNECTED_MAX_SECONDS = 10
 # Save the video of the encounter. Disable this if you have performance issues
 ENABLE_VIDEO_RECORDING = True
 

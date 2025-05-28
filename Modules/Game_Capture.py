@@ -6,7 +6,7 @@ import os
 import sys
 import cv2
 import numpy as np
-from time import time
+from time import time, sleep
 from datetime import datetime
 from typing import Optional, List, Union, Tuple
 
@@ -49,6 +49,8 @@ class Game_Capture():
             video_captures = self.find_available_video_captures()
             # If no other devices are found
             if not any(video_captures):
+                # Forces a maximum of ~60 FPS to reduce overload
+                sleep(0.016)
                 return
 
             self.video_capture.release()
@@ -86,13 +88,10 @@ class Game_Capture():
 
         success, self.frame = self.video_capture.read()
 
-        # If frame capture fails, generate a black frame with a connection error message
+        # If frame capture fails, generate a black frame with a connection error message and try to reconnect to the device
         if not success:
             self._get_connection_error_image()
-            # Try to initialize the capture card again
-            try:
-                self.__init__()
-            except Exception as e: print(e)
+            self.__init__()
         elif self.previous_frame_skipped:
             self.previous_frame_skipped = False
 

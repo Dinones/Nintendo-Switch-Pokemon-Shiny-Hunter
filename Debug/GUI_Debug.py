@@ -176,16 +176,14 @@ if __name__ == "__main__":
             while not shutdown_event.is_set():
                 image = Image_Processing(Video_Capture.read_frame())
 
-                # If frame failed to capture
-                if image.original_image is None:
-                    if time() - Video_Capture.last_frame_time > CONST.CAPTURE_CARD_DISCONNECTED_MAX_SECONDS:
-                        Video_Capture.stop()
-                        print(STR.GC_INVALID_VIDEO_CAPTURE.format(video_capture=f"'{CONST.VIDEO_CAPTURE_INDEX}'"))
-                        shutdown_event.set()
-
-                    sleep(1)
-
-                    continue
+                # Stop if capture card disconnected for more than CAPTURE_CARD_DISCONNECTED_MAX_SECONDS
+                if (
+                    Video_Capture.previous_frame_skipped and
+                    time() - Video_Capture.last_frame_time > CONST.CAPTURE_CARD_DISCONNECTED_MAX_SECONDS
+                ):
+                    Video_Capture.stop()
+                    print(STR.GC_INVALID_VIDEO_CAPTURE.format(video_capture=f"'{CONST.VIDEO_CAPTURE_INDEX}'"))
+                    shutdown_event.set()
 
                 # Frame is valid
                 image.resize_image()

@@ -7,7 +7,7 @@ from __future__ import annotations
 import os
 import sys
 import psutil
-from time import time, sleep
+from time import time
 from typing import TYPE_CHECKING, Optional, List, Dict, Union
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))

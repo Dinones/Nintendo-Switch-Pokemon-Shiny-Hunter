@@ -385,6 +385,11 @@ class Image_Processing():
             None
         """
 
+        # If a frame is corrupted (None), generate a black frame to prevent an error
+        # This is likely to happen when the capture card is reconnected after it's been disconnected
+        if self.resized_image is None:
+            self.resized_image = np.zeros((CONST.MAIN_FRAME_SIZE[1], CONST.MAIN_FRAME_SIZE[0], 3), dtype=np.uint8)
+
         # If FPS_image is not initialized or force is True, create a fresh copy
         if self.FPS_image is None or force:
             # Use copy to avoid linking images preventing unintended modifications
