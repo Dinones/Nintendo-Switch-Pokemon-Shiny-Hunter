@@ -36,7 +36,7 @@ class Email_Sender():
     def __init__(self) -> None:
 
         """
-        Initialize the Email_Sender and check if credentials are not empty.
+        Initialize the Email sender and check if credentials are not empty.
 
         Args:
             None
@@ -188,7 +188,7 @@ class Email_Sender():
     def _generate_credentials_file() -> None:
 
         """
-        Generates the mail credentials (.env) file from a template if it doesn't already exist.
+        Generates the Telegram credentials file "Credentials.env" from a template if it doesn't already exist.
 
         Args:
             None

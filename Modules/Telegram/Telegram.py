@@ -3,188 +3,198 @@
 ###########################################################################################################################
 
 import os
+import sys
 import requests
+from typing import Optional
 from dotenv import load_dotenv
 
-import sys
-folders = ['../', '../../']
-for folder in folders: sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), folder)))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
 import Constants as CONST
-import Colored_Strings as STR
+import Modules.Colored_Strings as STR
 
 ###########################################################################################################################
 #################################################     INITIALIZATIONS     #################################################
 ###########################################################################################################################
 
 SHINY_FOUND_MESSAGE = "A shiny <b>{pokemon_name}</b> has been found! It took <b>{n_encounters}</b> encounters to find it."
+ERROR_DETECTED_MESSAGE = (
+    '<b>⚠️ Error Detected! ⚠️</b>\n\n{reason}\n\nIf the error persists, please report it on '
+    '<a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/issues">GitHub</a> '
+    'or <a href="https://discordapp.com/users/177131156028784640">Discord</a>.'
+)
 
 ###########################################################################################################################
+###########################################################################################################################
 
-SAVE_ENV_FILE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), 
-    f"../../{CONST.TELEGRAM_SETTINGS.get('save_credentials_file_path')}"))
+MODULE_NAME = 'Telegram'
 
+CREDENTIALS_ENV_FILE_PATH = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), '../../', CONST.TELEGRAM_SETTINGS.get('credentials_file_path'))
+)
+
+###########################################################################################################################
 ###########################################################################################################################
 
 class Telegram_Sender():
     def __init__(self) -> None:
 
         """
-            Initializes the Telegram sender
+        Initialize the Telegram sender and check if credentials are not empty.
+
+        Args:
+            None
+
+        Output:
+            None
         """
 
         if not CONST.TELEGRAM_NOTIFICATIONS: return
 
-        self._protect_credentials()
-        load_dotenv(SAVE_ENV_FILE_PATH)
+        self._generate_credentials_file()
+        load_dotenv(CREDENTIALS_ENV_FILE_PATH)
 
         self.__bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
         self.__chat_id = os.getenv('TELEGRAM_CHAT_ID')
 
-        # Will not raise any error if credentials are wrong or missing, it will just skip the email sending
-        if not self._check_valid_credentials:
-            print(STR.EMPTY_CREDENTIALS
-                .replace('{module}', 'Telegram')
-                .replace('{path}', SAVE_ENV_FILE_PATH)
-            )
+        # Will not raise any error if credentials are wrong or missing, it will just skip the telegram sending
+        if not self._check_valid_credentials():
+            print(STR.G_EMPTY_CREDENTIALS.format(module=MODULE_NAME, path=CREDENTIALS_ENV_FILE_PATH))
 
+    #######################################################################################################################
+    #######################################################################################################################
+
+    def send_shiny_found(self, pokemon_name: str, image_name: str, n_encounters: int) -> None:
+
+        """
+        Sends a Telegram notification when a shiny Pokémon is found. If Telegram notifications are disabled or credentials
+        are invalid, the message is not sent.
+
+        Args:
+            pokemon_name (str): Name of the shiny Pokémon found.
+            image_name (str): Relative path to the shiny Pokémon image.
+            n_encounters (int): Number of encounters it took to find the shiny.
+
+        Returns:
+            None
+        """
+
+        if not CONST.TELEGRAM_NOTIFICATIONS or not self._check_valid_credentials():
+            return
+
+        text = SHINY_FOUND_MESSAGE.format(pokemon_name=pokemon_name, n_encounters=str(n_encounters))
+        image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), f'../../{image_name}'))
+
+        self._send_telegram(text, image_path)
+
+    #######################################################################################################################
+    #######################################################################################################################
+
+    def send_error_detected(self, error_type: Optional[str] = '', died_thread: Optional[str] = '') -> None:
+
+        """
+        Sends a Telegram notification when an error is detected. The message includes the reason for failure and links to
+        GitHub/Discord for reporting.
+
+        Args:
+            error_type (Optional[str]): Can be "STUCK" or "THREAD_DIED".
+            died_thread (Optional[str]): Name of the thread that died (used if error_type is "THREAD_DIED").
+
+        Returns:
+            None
+        """
+
+        if not CONST.TELEGRAM_NOTIFICATIONS or not self._check_valid_credentials():
+            return
+
+        error_message = ERROR_DETECTED_MESSAGE
+
+        if error_type == "STUCK":
+            minutes = CONST.FAILURE_DETECTION_TIME_ERROR // 60
+            reason = f"Shiny Hunter has been more than <b>{minutes} minutes</b> without encountering any Pokémon."
+        elif error_type == "THREAD_DIED":
+            reason = f"Thread <b>{died_thread}</b> died."
+        error_message = error_message.format(reason=reason)
+
+        image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), f'../../{CONST.MESSAGES_ERROR_IMAGE}'))
+        self._send_telegram(error_message, image_path)
+    
+    #######################################################################################################################
+    #######################################################################################################################
+
+    @staticmethod
+    def _generate_credentials_file() -> None:
+
+        """
+        Generates the Telegram credentials file "Credentials.env" from a template if it doesn't already exist.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
+
+        if not os.path.exists(CREDENTIALS_ENV_FILE_PATH):
+            TEMPLATE_ENV_FILE_PATH = os.path.abspath(os.path.join(
+                os.path.dirname(__file__), '../../', CONST.TELEGRAM_SETTINGS.get('credentials_template_file_path')
+            ))
+            with open(TEMPLATE_ENV_FILE_PATH, 'rb') as src_file, open(CREDENTIALS_ENV_FILE_PATH, 'wb') as dest_file:
+                    dest_file.write(src_file.read())
+    
+    #######################################################################################################################
     #######################################################################################################################
 
     def _check_valid_credentials(self):
-        return all((isinstance(field, str) and field != '') for field in [self.__bot_token, self.__chat_id])
+        return all((isinstance(field, str) and field.strip() != '') for field in [self.__bot_token, self.__chat_id])
 
     #######################################################################################################################
-
-    def _protect_credentials(self):
-
-        """
-            Prevent credentials from being accidentally pushed to the remote repository by renaming the credentials file
-        """
-
-        ENV_FILE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__),
-            f"../../{CONST.TELEGRAM_SETTINGS.get('credentials_file_path')}"))
-        TEMPLATE_ENV_FILE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__),
-            f"../../{CONST.TELEGRAM_SETTINGS.get('credentials_template_file_path')}"))
-
-        # SAVE_ENV_FILE_PATH is included in the .gitignore file so it will never be pushed to the remothe GitHub repository
-        if os.path.exists(ENV_FILE_PATH) and not os.path.exists(SAVE_ENV_FILE_PATH): 
-            os.rename(ENV_FILE_PATH, SAVE_ENV_FILE_PATH)
-        if os.path.exists(TEMPLATE_ENV_FILE_PATH) and not os.path.exists(ENV_FILE_PATH): 
-            with open(TEMPLATE_ENV_FILE_PATH, 'rb') as src_file:
-                with open(ENV_FILE_PATH, 'wb') as dest_file:
-                    dest_file.write(src_file.read())
-
     #######################################################################################################################
 
-    def _send_telegram(self, text, image_path):
-        url = f"https://api.telegram.org/bot{self.__bot_token}/sendPhoto"
+    def _send_telegram(self, text: str, image_path: Optional[str]) -> None:
+
+        """
+        Sends a message to a Telegram chat, attaching the image. If the image is not found, a placeholder is used. Falls
+        back to sending a plain text message if the photo request fails.
+
+        Args:
+            text (str): Message content to send (can include HTML formatting).
+            image_path (Optional[str]): Path to the image to attach.
+
+        Returns:
+            None
+        """
+
+        photo_url = f"https://api.telegram.org/bot{self.__bot_token}/sendPhoto"
+        message_url = f"https://api.telegram.org/bot{self.__bot_token}/sendMessage"
 
         payload = {
             'chat_id': self.__chat_id,
             'caption': text,
-            'text': text,
+            'text': text, # Only used for fallback in case the image fails to load
             'parse_mode': 'HTML'
         }
 
-        files = {}
-        if not os.path.exists(image_path):
-            image_path = os.path.abspath(os.path.join(os.path.dirname(__file__),
-                f'../../{CONST.MESSAGES_PLACEHOLDER_IMAGE}'))
+        # Fallback to placeholder image if needed
+        if not os.path.exists(image_path or ''):
+            image_path = os.path.abspath(os.path.join(
+                os.path.dirname(__file__), f'../../{CONST.MESSAGES_PLACEHOLDER_IMAGE}'
+            ))
+
         try:
-            with open(image_path, 'rb') as image:
-                files['photo'] = image
-                requests.post(url, data=payload, files=files, timeout=1)
-        except:
+            with open(image_path, 'rb') as image_file:
+                files = {'photo': image_file}
+                requests.post(photo_url, data=payload, files=files, timeout=1)
+        except Exception:
+            # Fallback to text message
             try:
-                url = f"https://api.telegram.org/bot{self.__bot_token}/sendMessage"
-                requests.post(url, data=payload, timeout=1)
+                requests.post(message_url, data=payload, timeout=1)
             except Exception as error:
-                print(STR.COULD_NOT_SEND_TELEGRAM
-                    .replace('{chat_id}', self.__chat_id)
-                    .replace('{error}', str(error))
-                )
+                print(STR.TE_COULD_NOT_SEND_TELEGRAM.format(chat_id=self.__chat_id, error=str(error)))
                 return
 
-        print(STR.TELEGRAM_SENT.replace('{chat_id}', self.__chat_id))
-
-    #######################################################################################################################
-
-    def send_shiny_found(self, pokemon_name: str, image_name: str, n_encounters: int) -> None:
-        if not CONST.TELEGRAM_NOTIFICATIONS or not self._check_valid_credentials(): return
-
-        text = SHINY_FOUND_MESSAGE.replace('{pokemon_name}', pokemon_name).replace('{n_encounters}', str(n_encounters))
-        image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), f'../../{image_name}'))
-        self._send_telegram(text, image_path)
-
-    #######################################################################################################################
-
-    def send_error_detected(self, error_type: str = str(), died_thread: str = str()) -> None:
-        """
-            Sends an error notification when the program has encountered an error. This message is only sent to the 
-            primary recipient of the email
-            Args: 
-                error_type (Optional(str)): Can be "STUCK" or "THREAD_DIED"
-                died_thread (Optional(str)): Name of the thread that has died
-            Output: None
-        """
-        if not CONST.TELEGRAM_NOTIFICATIONS or not self._check_valid_credentials(): return
-
-        error_message = "<b>⚠️ Error Detected! ⚠️</b>\n\n"
-        if error_type == "STUCK":
-            error_message += f"Shiny Hunter has been more than <b>{str(CONST.FAILURE_DETECTION_TIME_ERROR//60)} " +\
-                "minutes</b> without encountering any Pokémon."
-        elif error_type == "THREAD_DIED":
-            error_message += f"Thread <b>{died_thread}</b> died."
-        error_message += '\n\nIf the error persists, please report it on <a href="https://github.com/Dinones/Nintendo-' +\
-            'Switch-Pokemon-Shiny-Hunter/issues">Github</a> or <a href="https://discordapp.com/users/177131156028784640 '+\
-            '">Discord</a>.'
-
-        image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), f'../../{CONST.MESSAGES_ERROR_IMAGE}'))
-        self._send_telegram(error_message, image_path)
+        print(STR.TE_TELEGRAM_SENT.format(chat_id=self.__chat_id))
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
-
-if __name__ == "__main__":
-    from random import randint
-
-    #######################################################################################################################
-
-    def main_menu():
-        print('\n' + STR.MENU.replace('{module}', 'Telegram'))
-        print(STR.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Send shiny notification'))
-        print(STR.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Send error notifications'))
-
-        option = input('\n' + STR.OPTION_SELECTION.replace('{module}', 'Telegram'))
-
-        menu_options = {
-            '1': send_telegram,
-            '2': send_telegram,
-        }
-
-        if option in menu_options: menu_options[option](option)
-        else: print(STR.INVALID_OPTION.replace('{module}', 'Mail') + '\n')
-
-    #######################################################################################################################
-
-    def send_telegram(option):
-        if option == '1': action = 'shiny'
-        elif option == '2': action = 'error'
-        print('\n' + STR.SELECTED_OPTION
-            .replace('{module}', 'Telegram')
-            .replace('{option}', f"{option}")
-            .replace('{action}', f"Sending {action} notifications")
-            .replace('{path}', '')
-        )
-
-        Telegram = Telegram_Sender()
-        if option == '1': Telegram.send_shiny_found('Dinones', None, randint(1, 10000))
-        if option == '2': 
-            Telegram.send_error_detected('STUCK')
-            Telegram.send_error_detected('THREAD_DIED', 'GUI_control')
-        print()
-
-    #######################################################################################################################
-
-    main_menu()

@@ -165,7 +165,7 @@ G_EMPTY_CREDENTIALS = \
     f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}m"{"{path}"}"{RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]}m file{RESET_FORMAT}'
 
-G_TOGGLING_EMAIL_NOTIFICATIONS = \
+G_TOGGLING_NOTIFICATIONS = \
     f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}m{"{module}"} notifications are disabled: {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]}mRemember to enable them before running the shiny hunter{RESET_FORMAT}'

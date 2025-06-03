@@ -10,13 +10,13 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
 import Constants as CONST
 import Modules.Colored_Strings as STR
-from Modules.Email.Email import Email_Sender
+from Modules.Telegram.Telegram import Telegram_Sender
 
 ###########################################################################################################################
 #################################################     INITIALIZATIONS     #################################################
 ###########################################################################################################################
 
-MODULE_NAME = 'Email'
+MODULE_NAME = 'Telegram'
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
@@ -25,38 +25,24 @@ MODULE_NAME = 'Email'
 if __name__ == "__main__":
 
     def main_menu():
-        print('\n' + STR.M_MENU.format(module=MODULE_NAME).format(module=MODULE_NAME))
-        print(STR.M_MENU_OPTION.format(index = '1', option = 'Send shiny notification'))
-        print(STR.M_MENU_OPTION.format(index = '2', option = 'Send error notifications (all errors)'))
+        print('\n' + STR.M_MENU.replace('{module}', 'Telegram'))
+        print(STR.M_MENU_OPTION.replace('{index}', '1').replace('{option}', 'Send shiny notification'))
+        print(STR.M_MENU_OPTION.replace('{index}', '2').replace('{option}', 'Send error notifications'))
 
-        option = input('\n' + STR.M_OPTION_SELECTION.format(module=MODULE_NAME))
+        option = input('\n' + STR.M_OPTION_SELECTION.replace('{module}', 'Telegram'))
 
         menu_options = {
-            '1': _send_email,
-            '2': _send_email,
+            '1': send_telegram,
+            '2': send_telegram,
         }
 
         if option in menu_options: menu_options[option](option)
-        else: print(STR.M_INVALID_OPTION.format(module=MODULE_NAME) + '\n')
+        else: print(STR.M_INVALID_OPTION.replace('{module}', 'Mail') + '\n')
 
     #######################################################################################################################
     #######################################################################################################################
 
-    def _send_email(option: str) -> None:
-
-        """
-        Sends a test email notification based on the given option.
-
-        - Option '1' triggers a shiny found notification.
-        - Option '2' sends both a "stuck" and "thread died" error notification.
-
-        Args:
-            option (str): Email type to send. Must be '1' (shiny) or '2' (error).
-
-        Returns:
-            None
-        """
-
+    def send_telegram(option):
         if option == '1':
             action = 'shiny'
         elif option == '2':
@@ -65,21 +51,20 @@ if __name__ == "__main__":
         print('\n' + STR.M_SELECTED_OPTION.format(
             module=MODULE_NAME,
             option=option,
-            action=f"Sending {action} notification(s)",
+            action=f"Sending {action} notifications",
             path=''
         ))
 
-        if not CONST.MAIL_NOTIFICATIONS:
+        if not CONST.TELEGRAM_NOTIFICATIONS:
             print(STR.G_TOGGLING_NOTIFICATIONS.format(module=MODULE_NAME))
-            CONST.MAIL_NOTIFICATIONS = True
+            CONST.TELEGRAM_NOTIFICATIONS = True
 
-        Email = Email_Sender()
-
+        Telegram = Telegram_Sender()
         if option == '1':
-            Email.send_shiny_found('Dinones', '', randint(1, 10000))
-        elif option == '2':
-            Email.send_error_detected('STUCK')
-            Email.send_error_detected('THREAD_DIED', 'controller_control')
+            Telegram.send_shiny_found('Dinones', None, randint(1, 10000))
+        if option == '2': 
+            Telegram.send_error_detected('STUCK')
+            Telegram.send_error_detected('THREAD_DIED', 'GUI_control')
 
     #######################################################################################################################
     #######################################################################################################################

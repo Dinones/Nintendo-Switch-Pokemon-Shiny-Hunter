@@ -166,12 +166,11 @@ STARTER = 'R'
 DATABASE_PATH = 'Media/Database.db'
 
 ###########################################################################################################################
-##################################################     NOTIFICATIONS     ##################################################
+######################################################     EMAIL     ######################################################
 ###########################################################################################################################
 
 # You will receive mail notifications when a shiny is found or an error occurs
 MAIL_NOTIFICATIONS = False
-# If you have configured the email notifications, fill in the following fields
 MAIL_SETTINGS = {
     'port': 587,                        # Port TLS: 587 | SSL: 465
     'smtp_server': 'smtp.gmail.com',    # SMTP server
@@ -185,10 +184,14 @@ MESSAGES_ERROR_IMAGE = 'Media/Notifications/Dizzy Dinones.png'
 SHINY_HTML_PATH = 'Modules/Email/Shiny.html'
 ERROR_HTML_PATH = 'Modules/Email/Error.html'
 
+###########################################################################################################################
+####################################################     TELEGRAM     #####################################################
+###########################################################################################################################
+
+# You will receive telegram notifications when a shiny is found or an error occurs
 TELEGRAM_NOTIFICATIONS = False
 TELEGRAM_SETTINGS = {
-    'credentials_file_path': 'Modules/Telegram/Telegram_Credentials.env',
-    'save_credentials_file_path': 'Modules/Telegram/Credentials.env',
+    'credentials_file_path': 'Modules/Telegram/Credentials.env',
     'credentials_template_file_path': 'Media/Notifications/Telegram_Credentials_Template.env'
 }
 
