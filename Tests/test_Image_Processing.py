@@ -13,8 +13,8 @@ from parameterized import parameterized_class
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
-from Modules.Image_Processing import *
 import Constants as CONST
+from Modules.Image_Processing import *
 
 ###########################################################################################################################
 #################################################     INITIALIZATIONS     #################################################

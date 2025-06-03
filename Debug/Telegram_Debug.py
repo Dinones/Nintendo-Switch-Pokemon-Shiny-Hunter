@@ -25,11 +25,11 @@ MODULE_NAME = 'Telegram'
 if __name__ == "__main__":
 
     def main_menu():
-        print('\n' + STR.M_MENU.replace('{module}', 'Telegram'))
-        print(STR.M_MENU_OPTION.replace('{index}', '1').replace('{option}', 'Send shiny notification'))
-        print(STR.M_MENU_OPTION.replace('{index}', '2').replace('{option}', 'Send error notifications'))
+        print('\n' + STR.M_MENU.format(module=MODULE_NAME))
+        print(STR.M_MENU_OPTION.format(index='1', option='Send shiny notification'))
+        print(STR.M_MENU_OPTION.format(index='2', option='Send error notifications'))
 
-        option = input('\n' + STR.M_OPTION_SELECTION.replace('{module}', 'Telegram'))
+        option = input('\n' + STR.M_OPTION_SELECTION.format(module=MODULE_NAME))
 
         menu_options = {
             '1': send_telegram,
@@ -37,7 +37,7 @@ if __name__ == "__main__":
         }
 
         if option in menu_options: menu_options[option](option)
-        else: print(STR.M_INVALID_OPTION.replace('{module}', 'Mail') + '\n')
+        else: print(STR.M_INVALID_OPTION.format(module=MODULE_NAME) + '\n')
 
     #######################################################################################################################
     #######################################################################################################################

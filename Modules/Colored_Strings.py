@@ -58,12 +58,12 @@ ERROR = f'\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m[X] {RESET_FORMAT}'
 G_INVALID_PATH_ERROR = \
     f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}mInvalid path: {RESET_FORMAT}'+\
-    f'\033[{COLORS["Red"]};{SPECIAL["Italics"]}m{"{path}"}{RESET_FORMAT}'
+    f'\033[{COLORS["Red"]};{SPECIAL["Italics"]}m"{"{path}"}"{RESET_FORMAT}'
 
 G_INVALID_PATH_WARNING = \
     f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mInvalid path: {RESET_FORMAT}'+\
-    f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}m{"{path}"}{RESET_FORMAT}'
+    f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}m"{"{path}"}"{RESET_FORMAT}'
 
 G_SUCCESS_EXIT_PROGRAM = \
     f'{CORRECT}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\

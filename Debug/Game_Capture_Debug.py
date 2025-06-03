@@ -10,7 +10,7 @@ from time import time
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
 import Constants as CONST
-from Modules.Control_System import *
+from Modules.State_Machine import *
 import Modules.Colored_Strings as STR
 from Modules.FPS_Counter import FPS_Counter
 from Modules.Game_Capture import Game_Capture

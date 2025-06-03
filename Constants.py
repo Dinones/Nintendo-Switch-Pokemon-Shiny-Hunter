@@ -179,10 +179,11 @@ MAIL_SETTINGS = {
     'credentials_template_file_path': 'Media/Notifications/Email_Credentials_Template.env'
 }
 
-MESSAGES_PLACEHOLDER_IMAGE = 'Media/Notifications/Dinones.png'
-MESSAGES_ERROR_IMAGE = 'Media/Notifications/Dizzy Dinones.png'
 SHINY_HTML_PATH = 'Modules/Email/Shiny.html'
 ERROR_HTML_PATH = 'Modules/Email/Error.html'
+
+MESSAGES_PLACEHOLDER_IMAGE = 'Media/Notifications/Dinones.png'
+MESSAGES_ERROR_IMAGE = 'Media/Notifications/Dizzy Dinones.png'
 
 ###########################################################################################################################
 ####################################################     TELEGRAM     #####################################################

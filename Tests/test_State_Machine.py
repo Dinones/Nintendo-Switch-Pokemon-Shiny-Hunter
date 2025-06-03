@@ -2,171 +2,194 @@
 ####################################################     LIBRARIES     ####################################################
 ###########################################################################################################################
 
-# Set the cwd to the one of the file
 import os
-if __name__ == '__main__':
-    try: os.chdir(os.path.dirname(__file__))
-    except: pass
-
+import sys
+import json
 import unittest
-from time import sleep
 from parameterized import parameterized_class
 
-import sys
-folders = ['../', '../Modules']
-for folder in folders: sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), folder)))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
-# Mock Qt modules to make them optional in the tests
-from unittest.mock import MagicMock
-sys.modules['PyQt5'] = MagicMock()
-sys.modules['PyQt5.QtGui'] = MagicMock()
-
-from Image_Processing import Image_Processing
-import Constants as CONST
-import Control_System
+from Modules.State_Machine import *
+from Modules.Image_Processing import Image_Processing
 
 ###########################################################################################################################
 #################################################     INITIALIZATIONS     #################################################
 ###########################################################################################################################
 
+# Define absolute paths to required resources
 IMAGE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'Media/Images'))
+TESTS_DATA_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), 'Tests Data/State_Machine_Data.json'))
+
+# Load test case definitions from JSON
+with open(TESTS_DATA_FILE, 'r') as file: 
+    TEST_DATA = json.load(file)
+
+# Prepend absolute path to each image_path in the test data
+for item in TEST_DATA: 
+    item['image_path'] = os.path.join(IMAGE_DIR, item['image_path'])
 
 ###########################################################################################################################
+###########################################################################################################################
 
-@parameterized_class([{'state': 'WAIT_PAIRING_SCREEN'}])
-class Test_Image_Processing(unittest.TestCase):
+@parameterized_class(TEST_DATA)
+class Test_State_Machine(unittest.TestCase): 
     def setUp(self):
-        pass
+
+        """
+        Prepares the test case by verifying image existence and initializing the image processor. This function will run
+        before every test function.
+        """
+
+        # Ensure the file exists
+        self.assertTrue(os.path.exists(self.image_path), f'File not found: {self.image_path}')
+
+        # Initialize the image processor object
+        self.image = Image_Processing(self.image_path)
+        self.image.resize_image()
 
     #######################################################################################################################
-
-    def test_wild_encounter_shiny(self):
-        # Test wild shiny encounter state machine path
-
-        # Dialga_Animation_1080p.png is a generic image used for state transitions like checking if the white load screen
-        # has disappeared of if the text box is not visible anymore
-        necessary_images = [
-            'Pairing_Screen_1080p.png', 'Home_Screen_1080p.png', 'Overworld_Cave_1080p.png', 'White_Load_Screen_1080p.png',
-            'Geodude_Combat_1080p.png', 'Combat_Screen_1080p.png', 'Black_Load_Screen_1080p.png',
-            'Dialga_Animation_1080p.png'
-        ]
-
-        # Load and resize all images
-        for image_name in necessary_images: 
-            attribute_name = image_name.split('.')[0]
-            if not hasattr(self, attribute_name):
-                image_path = os.path.join(IMAGE_DIR, image_name)
-                self.assertTrue(os.path.exists(image_path), f'File not found: {image_path}')
-                setattr(self, attribute_name, Image_Processing(image_path))
-                getattr(self, attribute_name).resize_image()
-
-        # Open Game
-        self.state = Control_System.search_wild_pokemon(self.Pairing_Screen_1080p, self.state) # WAIT_HOME_SCREEN
-        self.state = Control_System.search_wild_pokemon(self.Home_Screen_1080p, self.state) # MOVE_PLAYER
-        self.state = Control_System.search_wild_pokemon(self.Overworld_Cave_1080p, self.state) # MOVE_PLAYER
-
-        # Not Shiny - Case 1 (Normal)
-        self.state = Control_System.search_wild_pokemon(self.White_Load_Screen_1080p, self.state) # ENTER_COMBAT_1
-        self.state = Control_System.search_wild_pokemon(self.Geodude_Combat_1080p, self.state) # ENTER_COMBAT_1
-        Control_System.state_timer -= 0.5 # Simulate time has elapsed
-        self.state = Control_System.search_wild_pokemon(self.Dialga_Animation_1080p, self.state) # ENTER_COMBAT_2
-        self.state = Control_System.search_wild_pokemon(self.Geodude_Combat_1080p, self.state) # ENTER_COMBAT_3
-        self.state = Control_System.search_wild_pokemon(self.Dialga_Animation_1080p, self.state) # CHECK_SHINY
-        self.state = Control_System.search_wild_pokemon(self.Geodude_Combat_1080p, self.state) # ESCAPE_COMBAT_1
-        self.state = Control_System.search_wild_pokemon(self.Combat_Screen_1080p, self.state) # ESCAPE_COMBAT_2
-        self.state = Control_System.search_wild_pokemon(self.Geodude_Combat_1080p, self.state) # ESCAPE_COMBAT_3
-        self.state = Control_System.search_wild_pokemon(self.Dialga_Animation_1080p, self.state) # ESCAPE_COMBAT_4
-        self.state = Control_System.search_wild_pokemon(self.Black_Load_Screen_1080p, self.state) # ESCAPE_COMBAT_5
-        self.state = Control_System.search_wild_pokemon(self.Overworld_Cave_1080p, self.state) # MOVE_PLAYER
-
-        # Not Shiny - Case 2 (Animation skipped due to resource overload)
-        self.state = Control_System.search_wild_pokemon(self.White_Load_Screen_1080p, self.state) # ENTER_COMBAT_1
-        Control_System.state_timer -= 0.5 # Simulate time has elapsed
-        self.state = Control_System.search_wild_pokemon(self.Dialga_Animation_1080p, self.state) # ENTER_COMBAT_2
-        self.state = Control_System.search_wild_pokemon(self.Geodude_Combat_1080p, self.state) # ENTER_COMBAT_3
-        self.state = Control_System.search_wild_pokemon(self.Dialga_Animation_1080p, self.state) # CHECK_SHINY
-        self.state = Control_System.search_wild_pokemon(self.Combat_Screen_1080p, self.state) # ESCAPE_COMBAT_1
-        self.state = Control_System.search_wild_pokemon(self.Combat_Screen_1080p, self.state) # ESCAPE_COMBAT_2
-        self.state = Control_System.search_wild_pokemon(self.Geodude_Combat_1080p, self.state) # ESCAPE_COMBAT_3
-        self.state = Control_System.search_wild_pokemon(self.Dialga_Animation_1080p, self.state) # ESCAPE_COMBAT_4
-        self.state = Control_System.search_wild_pokemon(self.Combat_Screen_1080p, self.state) # ESCAPE_FAILED
-        self.state = Control_System.search_wild_pokemon(self.Geodude_Combat_1080p, self.state) # ESCAPE_COMBAT_3
-        self.state = Control_System.search_wild_pokemon(self.Dialga_Animation_1080p, self.state) # ESCAPE_COMBAT_4
-        self.state = Control_System.search_wild_pokemon(self.Black_Load_Screen_1080p, self.state) # ESCAPE_COMBAT_5
-        self.state = Control_System.search_wild_pokemon(self.Overworld_Cave_1080p, self.state) # MOVE_PLAYER
-
-        # Shiny Found
-        self.state = Control_System.search_wild_pokemon(self.White_Load_Screen_1080p, self.state) # ENTER_COMBAT_1
-        Control_System.state_timer -= 0.5 # Simulate time has elapsed
-        self.state = Control_System.search_wild_pokemon(self.Dialga_Animation_1080p, self.state) # ENTER_COMBAT_2
-        self.state = Control_System.search_wild_pokemon(self.Geodude_Combat_1080p, self.state) # ENTER_COMBAT_3
-        self.state = Control_System.search_wild_pokemon(self.Dialga_Animation_1080p, self.state) # CHECK_SHINY
-        Control_System.state_timer -= CONST.WILD_SHINY_DETECTION_TIME # Simulate time has elapsed
-        self.state = Control_System.search_wild_pokemon(self.Geodude_Combat_1080p, self.state) # SHINY_FOUND
-
-        self.assertEqual(self.state, "SHINY_FOUND", 'Failed to find shiny in wild encounters')
-
     #######################################################################################################################
 
-    def test_static_encounter_shiny(self):
-        # Test static shiny encounter state machine path
+    def test_is_pairing_screen_visible(self):
 
-        # Dialga_Animation_1080p.png is a generic image used for state transitions like checking if the white load screen
-        # has disappeared of if the text box is not visible anymore
-        necessary_images = [
-            'Pairing_Screen_1080p.png', 'Home_Screen_1080p.png', 'Overworld_Cave_1080p.png', 'White_Load_Screen_1080p.png',
-            'Geodude_Combat_1080p.png', 'Combat_Screen_1080p.png', 'BDSP_Load_Screen_1_1080p.png',
-            'BDSP_Load_Screen_2_1080p.png', 'BDSP_Load_Screen_3_1080p.png', 'Overworld_Text_Box_1080p.png',
-            'Dialga_Animation_1080p.png'
-        ]
+        """
+        Unit test for the 'is_pairing_screen_visible' function.
 
-        # Load and resize all images
-        for image_name in necessary_images: 
-            attribute_name = image_name.split('.')[0]
-            if not hasattr(self, attribute_name):
-                image_path = os.path.join(IMAGE_DIR, image_name)
-                self.assertTrue(os.path.exists(image_path), f'File not found: {image_path}')
-                setattr(self, attribute_name, Image_Processing(image_path))
-                getattr(self, attribute_name).resize_image()
+        Asserts:
+            - That the detection result matches the expected outcome.
+        """
 
-        # Open Game
-        self.state = Control_System.static_encounter(self.Pairing_Screen_1080p, self.state) # WAIT_HOME_SCREEN
-        self.state = Control_System.static_encounter(self.Home_Screen_1080p, self.state) # ENTER_STATIC_COMBAT_1
-        self.state = Control_System.static_encounter(self.Overworld_Cave_1080p, self.state) # ENTER_STATIC_COMBAT_1
+        pairing_screen_visible = is_pairing_screen_visible(self.image)
+        self.assertEqual(self.is_pairing_screen_visible, pairing_screen_visible, 'Failed to recognize pairing screen') 
+    
+    #######################################################################################################################
+    #######################################################################################################################
 
-        # Not Shiny
-        self.state = Control_System.static_encounter(self.Overworld_Text_Box_1080p, self.state) # ENTER_STATIC_COMBAT_2
-        self.state = Control_System.static_encounter(self.Dialga_Animation_1080p, self.state) # ENTER_STATIC_COMBAT_3
-        self.state = Control_System.static_encounter(self.White_Load_Screen_1080p, self.state) # ENTER_STATIC_COMBAT_3
-        Control_System.state_timer -= CONST.STATIC_ENCOUNTERS_DELAY # Simulate time has elapsed
-        self.state = Control_System.static_encounter(self.White_Load_Screen_1080p, self.state) # ENTER_STATIC_COMBAT_3
-        self.state = Control_System.static_encounter(self.White_Load_Screen_1080p, self.state) # ENTER_COMBAT_1
-        Control_System.state_timer -= 0.5 # Simulate time has elapsed
-        self.state = Control_System.static_encounter(self.Dialga_Animation_1080p, self.state) # ENTER_COMBAT_2
-        self.state = Control_System.static_encounter(self.Geodude_Combat_1080p, self.state) # ENTER_COMBAT_3
-        self.state = Control_System.static_encounter(self.Dialga_Animation_1080p, self.state) # CHECK_SHINY
-        self.state = Control_System.static_encounter(self.Geodude_Combat_1080p, self.state) # RESTART_GAME_1
-        self.state = Control_System.static_encounter(self.BDSP_Load_Screen_1_1080p, self.state) # RESTART_GAME_2
-        self.state = Control_System.static_encounter(self.BDSP_Load_Screen_2_1080p, self.state) # RESTART_GAME_2
-        self.state = Control_System.static_encounter(self.BDSP_Load_Screen_3_1080p, self.state) # RESTART_GAME_2
-        self.state = Control_System.static_encounter(self.Dialga_Animation_1080p, self.state) # RESTART_GAME_3
-        self.state = Control_System.static_encounter(self.BDSP_Load_Screen_2_1080p, self.state) # RESTART_GAME_4
-        self.state = Control_System.static_encounter(self.Overworld_Cave_1080p, self.state) # ENTER_STATIC_COMBAT_1
+    def test_is_home_screen_visible(self):
 
-        # Shiny Found
-        self.state = Control_System.static_encounter(self.Overworld_Text_Box_1080p, self.state) # ENTER_STATIC_COMBAT_2
-        self.state = Control_System.static_encounter(self.Dialga_Animation_1080p, self.state) # ENTER_STATIC_COMBAT_3
-        Control_System.state_timer -= CONST.STATIC_ENCOUNTERS_DELAY # Simulate time has elapsed
-        self.state = Control_System.static_encounter(self.White_Load_Screen_1080p, self.state) # ENTER_STATIC_COMBAT_3
-        self.state = Control_System.static_encounter(self.White_Load_Screen_1080p, self.state) # ENTER_COMBAT_1
-        Control_System.state_timer -= 0.5 # Simulate time has elapsed
-        self.state = Control_System.static_encounter(self.Dialga_Animation_1080p, self.state) # ENTER_COMBAT_2
-        self.state = Control_System.static_encounter(self.Geodude_Combat_1080p, self.state) # ENTER_COMBAT_3
-        self.state = Control_System.static_encounter(self.Dialga_Animation_1080p, self.state) # CHECK_SHINY
-        Control_System.state_timer -= 50 # Simulate time has elapsed
-        self.state = Control_System.static_encounter(self.Geodude_Combat_1080p, self.state) # SHINY_FOUND
-        
-        self.assertEqual(self.state, "SHINY_FOUND", 'Failed to find shiny in wild encounters')
+        """
+        Unit test for the 'is_home_screen_visible' function.
+
+        Asserts:
+            - That the detection result matches the expected outcome.
+        """
+
+        home_screen_visible = is_home_screen_visible(self.image)
+        self.assertEqual(self.is_home_screen_visible, home_screen_visible, 'Failed to recognize home screen') 
+
+    #######################################################################################################################
+    #######################################################################################################################
+
+    def test_is_bdsp_load_screen_visible(self):
+
+        """
+        Unit test for the 'is_bdsp_loading_screen_visible' function.
+
+        Asserts:
+            - That the detection result matches the expected outcome.
+        """
+
+        bdsp_load_screen_visible = is_bdsp_loading_screen_visible(self.image)
+        self.assertEqual(
+            self.is_bdsp_load_white_screen_visible, bdsp_load_screen_visible, 'Failed to recognize BDSP load screen'
+        ) 
+
+    #######################################################################################################################
+    #######################################################################################################################
+
+    def test_is_load_black_screen_visible(self):
+
+        """
+        Unit test for the 'is_black_screen_visible' function.
+
+        Asserts:
+            - That the detection result matches the expected outcome.
+        """
+
+        black_screen_visible = is_black_screen_visible(self.image)
+        self.assertEqual(self.is_load_black_screen_visible, black_screen_visible, 'Failed to recognize black load screen')  
+
+    #######################################################################################################################
+    #######################################################################################################################
+
+    def test_is_load_white_screen_visible(self):
+
+        """
+        Unit test for the 'is_white_screen_visible' function.
+
+        Asserts:
+            - That the detection result matches the expected outcome.
+        """
+
+        white_screen_visible = is_white_screen_visible(self.image)
+        self.assertEqual(self.is_load_white_screen_visible, white_screen_visible, 'Failed to recognize white load screen')
+
+    #######################################################################################################################
+    #######################################################################################################################
+
+    def test_is_overworld_text_box_visible(self):
+
+        """
+        Unit test for the 'is_overworld_text_box_visible' function.
+
+        Asserts:
+            - That the detection result matches the expected outcome.
+        """
+
+        overworld_text_box_visible = is_overworld_text_box_visible(self.image)
+        self.assertEqual(
+            self.is_overworld_text_box_visible, overworld_text_box_visible, 'Failed to recognize overworld text box'
+        )
+
+    #######################################################################################################################
+    #######################################################################################################################
+
+    def test_is_combat_text_box_visible(self):
+
+        """
+        Unit test for the 'is_combat_text_box_visible' function.
+
+        Asserts:
+            - That the detection result matches the expected outcome.
+        """
+
+        combat_text_box_visible = is_combat_text_box_visible(self.image)
+        self.assertEqual(self.is_combat_text_box_visible, combat_text_box_visible, 'Failed to recognize combat text box')
+
+    #######################################################################################################################
+    #######################################################################################################################
+
+    def test_is_life_box_visible(self):
+
+        """
+        Unit test for the 'is_life_box_visible' function.
+
+        Asserts:
+            - That the detection result matches the expected outcome.
+        """
+
+        life_box_visible = is_life_box_visible(self.image)
+        self.assertEqual(self.is_life_box_visible, life_box_visible, 'Failed to recognize life box')
+
+    #######################################################################################################################
+    #######################################################################################################################
+
+    def test_is_double_combat_life_box_visible(self):
+
+        """
+        Unit test for the 'is_double_combat_life_box_visible' function.
+
+        Asserts:
+            - That the detection result matches the expected outcome.
+        """
+
+        double_combat_life_box_visible = is_double_combat_life_box_visible(self.image)
+        self.assertEqual(
+            self.is_double_combat_life_box_visible,
+            double_combat_life_box_visible,
+            'Failed to recognize life box in double combat'
+        )
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################

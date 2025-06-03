@@ -2,17 +2,19 @@
 ####################################################     LIBRARIES     ####################################################
 ###########################################################################################################################
 
-# Set the cwd to the one of the file
+from __future__ import annotations
+
 import os
-if __name__ == '__main__':
-    try: os.chdir(os.path.dirname(__file__))
-    except: pass
-
-import cv2
+import sys
 from time import time
+from typing import TYPE_CHECKING, Tuple, List
 
-import sys; sys.path.append('..')
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
+
 import Constants as CONST
+
+if TYPE_CHECKING:
+    import numpy as np
 
 ###########################################################################################################################
 #################################################     INITIALIZATIONS     #################################################
@@ -20,9 +22,29 @@ import Constants as CONST
 
 state_timer = 0
 
-def search_wild_pokemon(image, state):
+###########################################################################################################################
+###########################################################################################################################
+
+def search_wild_pokemon(image: np.ndarray, state: str) -> str:
+
+    """
+    This function analyzes the current screen image and uses it to determine the next state in wild encounters
+    (grass/surf). It handles detection of various in-game screens, such as overworld, combat, escape sequences, and shiny
+    encounter detection.
+
+    Args:
+        image (np.ndarray): Current game screen image.
+        state (str): Next state based on the detected game screen, or the same state if no transition applies.
+
+    Returns:
+        str: Next state in the encounter state machine.
+    """
+
     global state_timer
-    if not state: return 'WAIT_PAIRING_SCREEN'
+
+    # Start of the execution
+    if not state:
+        return 'WAIT_PAIRING_SCREEN'
 
     # Nintendo Switch pairing controller menu
     elif state == 'WAIT_HOME_SCREEN':
@@ -45,8 +67,8 @@ def search_wild_pokemon(image, state):
 
     # Combat loaded (Wild Pokémon stars)
     elif state == 'CHECK_SHINY':
-        # Check the elapsed time. The shiny star animation combined with the trainer throwing the Pokémon takes over 5 
-        # seconds. In fact, the shiny animation alone exceeds 5 seconds, so the shiny is confirmed
+        # Check the elapsed time. The shiny star animation combined with the trainer throwing the Pokémon takes over
+        # CONST.WILD_SHINY_DETECTION_TIME seconds, so the shiny is confirmed
         if time() - state_timer >= CONST.WILD_SHINY_DETECTION_TIME:
             return 'SHINY_FOUND'
 
@@ -58,7 +80,8 @@ def search_wild_pokemon(image, state):
         # If the life box is detected before WILD_SHINY_DETECTION_TIME seconds, it indicates that due to resource overload, 
         # the game skipped the animation of the trainer throwing the Pokéball. This causes the combat to load faster than 
         # expected, and if this condition is not checked, it would always trigger a false positive shiny detection. If the 
-        # wild Pokémon was shiny, it would still be detected, as the time would exceed 5 seconds
+        # wild Pokémon was shiny, it would still be detected, as the time would exceed CONST.WILD_SHINY_DETECTION_TIME
+        # seconds
         if is_life_box_visible(image):
             return 'ESCAPE_COMBAT_1'
 
@@ -108,12 +131,29 @@ def search_wild_pokemon(image, state):
 ###########################################################################################################################
 ###########################################################################################################################
 
-def search_wild_pokemon_double_combat(image, state):
+def search_wild_pokemon_double_combat(image: np.ndarray, state: str) -> str:
+
+    """
+    This function analyzes the current screen image and uses it to determine the next state in double combat wild
+    encounters. It handles detection of various in-game screens, such as overworld, combat, escape sequences, and shiny
+    encounter detection.
+
+    Args:
+        image (np.ndarray): Current game screen image.
+        state (str): Next state based on the detected game screen, or the same state if no transition applies.
+
+    Returns:
+        str: Next state in the encounter state machine.
+    """
     
+    # Start of the execution
+    if not state:
+        return 'WAIT_PAIRING_SCREEN'
+
     # Combat loaded (Wild Pokémon stars)
     if state == 'CHECK_SHINY':
-        # Check the elapsed time. The shiny star animation combined with the trainer throwing the Pokémon takes over 5 
-        # seconds. In fact, the shiny animation alone exceeds 5 seconds, so the shiny is confirmed
+        # Check the elapsed time. The shiny star animation combined with the trainer throwing the Pokémon takes over
+        # CONST.WILD_SHINY_DETECTION_TIME seconds, so the shiny is confirmed
         if time() - state_timer >= CONST.WILD_SHINY_DETECTION_TIME:
             return 'SHINY_FOUND'
 
@@ -125,7 +165,8 @@ def search_wild_pokemon_double_combat(image, state):
         # If the life box is detected before WILD_SHINY_DETECTION_TIME seconds, it indicates that due to resource overload, 
         # the game skipped the animation of the trainer throwing the Pokéball. This causes the combat to load faster than 
         # expected, and if this condition is not checked, it would always trigger a false positive shiny detection. If the 
-        # wild Pokémon was shiny, it would still be detected, as the time would exceed 5 seconds
+        # wild Pokémon was shiny, it would still be detected, as the time would exceed CONST.WILD_SHINY_DETECTION_TIME
+        # seconds
         if is_double_combat_life_box_visible(image):
             return 'ESCAPE_COMBAT_1'
 
@@ -149,9 +190,25 @@ def search_wild_pokemon_double_combat(image, state):
 ###########################################################################################################################
 ###########################################################################################################################
 
-def static_encounter(image, state):
+def static_encounter(image: np.ndarray, state: str) -> str:
+
+    """
+    This function analyzes the current screen image and uses it to determine the next state in static encounters. It
+    handles detection of various in-game screens, such as overworld, combat, restart game sequences, and shiny encounter
+    detection.
+
+    Args:
+        image (np.ndarray): Current game screen image.
+        state (str): Next state based on the detected game screen, or the same state if no transition applies.
+
+    Returns:
+        str: Next state in the encounter state machine.
+    """
+
     global state_timer
-    if not state: return 'WAIT_PAIRING_SCREEN'
+
+    if not state:
+        return 'WAIT_PAIRING_SCREEN'
 
     # Nintendo Switch pairing controller menu
     elif state == 'WAIT_HOME_SCREEN':
@@ -203,9 +260,25 @@ def static_encounter(image, state):
 ###########################################################################################################################
 ###########################################################################################################################
 
-def starter_encounter(image, state):
+def starter_encounter(image: np.ndarray, state: str) -> str:
+
+    """
+    This function analyzes the current screen image and uses it to determine the next state in starter encounters. It
+    handles detection of various in-game screens, such as overworld, combat, restart game sequences, and shiny encounter
+    detection.
+
+    Args:
+        image (np.ndarray): Current game screen image.
+        state (str): Next state based on the detected game screen, or the same state if no transition applies.
+
+    Returns:
+        str: Next state in the encounter state machine.
+    """
+
     global state_timer
-    if not state: return 'WAIT_PAIRING_SCREEN'
+
+    if not state:
+        return 'WAIT_PAIRING_SCREEN'
 
     # Nintendo Switch pairing controller menu
     elif state == 'WAIT_HOME_SCREEN':
@@ -302,10 +375,27 @@ def starter_encounter(image, state):
 ###########################################################################################################################
 ###########################################################################################################################
 
-# This is a faster loop for static shaymin on BDSP as it does not close and open the game on each try
-def shaymin_encounter(image, state):
+def shaymin_encounter(image: np.ndarray, state: str) -> str:
+
+    """
+    This function analyzes the current screen image and uses it to determine the next state in Sahymin encounters. It
+    handles detection of various in-game screens, such as overworld, combat, escape combat sequences, and shiny encounter
+    detection.
+
+    This is a faster loop for static shaymin on BDSP as it does not close and open the game on each try.
+
+    Args:
+        image (np.ndarray): Current game screen image.
+        state (str): Next state based on the detected game screen, or the same state if no transition applies.
+
+    Returns:
+        str: Next state in the encounter state machine.
+    """
+
     global state_timer
-    if not state: return 'WAIT_PAIRING_SCREEN'
+
+    if not state:
+        return 'WAIT_PAIRING_SCREEN'
 
     # Nintendo Switch pairing controller menu
     elif state == 'WAIT_HOME_SCREEN':
@@ -405,7 +495,19 @@ def shaymin_encounter(image, state):
 ###########################################################################################################################
 ###########################################################################################################################
 
-def _check_common_states(image, state):
+def _check_common_states(image: np.ndarray, state: str) -> str:
+
+    """
+    Handles common state transitions shared across multiple Pokémon encounter flows.
+
+    Args:
+        image (np.ndarray): Current game screen image.
+        state (str): Next state based on the detected game screen, or the same state if no transition applies.
+
+    Returns:
+        str: Next state based on the detected game screen, or the same state if no transition applies.
+    """
+
     global state_timer
 
     # Nintendo Switch pairing controller menu
@@ -467,49 +569,47 @@ def _check_common_states(image, state):
 ###########################################################################################################################
 ###########################################################################################################################
 
-def is_bdsp_loading_screen_visible(image):
-    """
-    Checks if the given image matches the BDSP loading screen by verifying specific color positions.
+def check_image_position_colors(image: np.ndarray, color: Tuple[int, int, int], positions: List[Tuple[int, int]]):
 
-    BDSP loading screen has a black background.
-    The top-left may have the Nintendo logo.
-    The bottom-right may have the Nintendo Switch logo or the Pokémon starters icons.
-    The center may have the Nintendo copyright texts.
+    """
+    Checks if the specified color is present at the given positions in the image.
 
     Args:
-        image: The image to be checked.
+        image (np.ndarray): The image to check.
+        color (Tuple[int, int, int]): The color to check for at the specified positions.
+        positions (List[Tuple[int, int]]): A list of (x, y) positions to check columns from.
 
     Returns:
-        bool: True if the image matches the BDSP loading screen, False otherwise.
+        bool: True if the specified color is present at all given positions, False otherwise.
     """
-    return check_image_position_colors(
-        image,
-        CONST.COLOR_SCREEN_CHECK['black_color'],
-        [
-            CONST.COLOR_SCREEN_CHECK['top_right'],
-            CONST.COLOR_SCREEN_CHECK['center_left'],
-            CONST.COLOR_SCREEN_CHECK['center_right'],
-            CONST.COLOR_SCREEN_CHECK['bottom_left']
-        ]
-    )
+
+    match_pixels = True
+    for position in positions:
+        # If any column fails, it stops checking further but draws all columns for debugging purposes.
+        if match_pixels:
+            match_pixels = image.check_column_pixel_colors(position, CONST.COLOR_SCREEN_CHECK['column_height'], color)
+        else:
+            image.draw_column(position, CONST.COLOR_SCREEN_CHECK['column_height'])
+
+    return match_pixels
 
 ###########################################################################################################################
+###########################################################################################################################
 
-def is_screen_of_single_color(image, color):
+def is_screen_of_single_color(image: np.ndarray, color: Tuple[int, int, int]) -> bool:
+
     """
-    Checks if image is of a single color.
-
-    The image is considered to be of a single color if
-    specific positions in the image are of the given color.
-    The checked positions are the top-left, top-right, center, bottom-left, and bottom-right.
+    Checks if image is of a single color. The image is considered to be of a single color if specific positions in the
+    image are of the given color. The checked positions are the top-left, top-right, center, bottom-left, and bottom-right.
 
     Args:
-        image (Image): The image to be checked.
-        color (tuple): The color to check for.
+        image (np.ndarray): The image to be checked.
+        color (Tuple[int, int, int]): The color to check for.
 
     Returns:
         bool: True if all specified positions in the image are of the given color, False otherwise.
     """
+
     return check_image_position_colors(
         image,
         color,
@@ -523,34 +623,51 @@ def is_screen_of_single_color(image, color):
     )
 
 ###########################################################################################################################
-
-def check_image_position_colors(image, color, positions):
-
-    """
-    Checks if the specified color is present at the given positions in the image.
-
-    Args:
-        image: The image to check.
-        color: The color to check for at the specified positions.
-        positions: A list of positions (coordinates) to check in the image.
-
-    Returns:
-        bool: True if the specified color is present at all given positions, False otherwise.
-    """
-
-    match_pixels = True
-    for position in positions:
-        # If a detection has failed, there is no need to check the other columns. Nevertheless, they are printed to 
-        # show they are being checked
-        if match_pixels:
-            match_pixels = image.check_column_pixel_colors(position, CONST.COLOR_SCREEN_CHECK['column_height'], color)
-        else: image.draw_column(position, CONST.COLOR_SCREEN_CHECK['column_height'])
-
-    return match_pixels
-
 ###########################################################################################################################
 
-def is_pairing_screen_visible(image):
+def is_bdsp_loading_screen_visible(image: np.ndarray):
+
+    """
+    Checks if the given image matches the BDSP loading screen by verifying specific color positions.
+
+    BDSP loading screen has a black background.
+    The top-left corner may have the Nintendo logo.
+    The bottom-right may have the Nintendo Switch logo or the Pokémon starters icons.
+    The center may have the Nintendo copyright texts.
+
+    Args:
+        image (np.ndarray): The image to be checked.
+
+    Returns:
+        bool: True if the image matches the BDSP loading screen, False otherwise.
+    """
+
+    return check_image_position_colors(
+        image,
+        CONST.COLOR_SCREEN_CHECK['black_color'],
+        [
+            CONST.COLOR_SCREEN_CHECK['top_right'],
+            CONST.COLOR_SCREEN_CHECK['center_left'],
+            CONST.COLOR_SCREEN_CHECK['center_right'],
+            CONST.COLOR_SCREEN_CHECK['bottom_left']
+        ]
+    )
+
+###########################################################################################################################
+###########################################################################################################################
+
+def is_pairing_screen_visible(image: np.ndarray) -> bool:
+
+    """
+    Checks if the Nintendo Switch pairing screen is visible.
+
+    Args:
+        image (np.ndarray): The image to be checked.
+
+    Returns:
+        bool: True if the pairing screen is visible, False otherwise.
+    """
+
     return check_image_position_colors(
         image,
         CONST.COLOR_SCREEN_CHECK['pairing_menu_color'],
@@ -561,8 +678,19 @@ def is_pairing_screen_visible(image):
     )
 
 ###########################################################################################################################
+###########################################################################################################################
 
-def is_home_screen_visible(image):
+def is_home_screen_visible(image: np.ndarray) -> bool:
+
+    """
+    Checks if the Nintendo Switch HOME screen is visible.
+
+    Args:
+        image (np.ndarray): The image to be checked.
+
+    Returns:
+        bool: True if the HOME screen is visible, False otherwise.
+    """
 
     # Check if the top-left part is of the HOME menu color
     return image.check_column_pixel_colors(
@@ -572,20 +700,22 @@ def is_home_screen_visible(image):
     )
 
 ###########################################################################################################################
+###########################################################################################################################
 
-def is_life_box_visible(image):
+def is_life_box_visible(image: np.ndarray) -> bool:
+
     """
-    Checks if the life box is visible in the given image.
-    The life box is considered visible if the life box content is white
-    and the area outside the life box content is not white.
+    Checks if the life box is visible in the given image. The life box is considered visible if the life box content is
+    white and the area outside the life box content is not white. This is made to avoid false positives during white load
+    screens.
     
     Args:
-        image: The image in which to check for the life box.
-        color: The color of the life box.
+        image (np.ndarray): The image to be checked.
     Returns:
         bool: True if the life box is visible, False otherwise.
     """
 
+    # Check if life box content area is white
     is_life_box_content_white = image.check_column_pixel_colors(
         CONST.COLOR_SCREEN_CHECK['life_box'],
         CONST.COLOR_SCREEN_CHECK['small_column_height'],
@@ -593,11 +723,12 @@ def is_life_box_visible(image):
     )
 
     if not is_life_box_content_white:
-        # Stop testing if the text box content is not white, but still drawing the other columns
+        # If any column fails, it stops checking further but draws all columns for debugging purposes.
         for column in ('top_left', 'center_left', 'center', 'bottom_right'):
             image.draw_column(CONST.COLOR_SCREEN_CHECK[column], CONST.COLOR_SCREEN_CHECK['column_height'])
         return False
 
+    # Ensure surrounding regions are not white (to avoid matching a white load screen)
     is_outside_life_box_not_white = check_image_position_colors(
         image,
         CONST.COLOR_SCREEN_CHECK['white_color'],
@@ -612,19 +743,24 @@ def is_life_box_visible(image):
     return not is_outside_life_box_not_white
 
 ###########################################################################################################################
+###########################################################################################################################
 
-def is_double_combat_life_box_visible(image):
+def is_double_combat_life_box_visible(image: np.ndarray) -> bool:
+
     """
-    Checks if the enemy life box is visible in the given image. Double combats can be found in Eterna Forest. The life box
-    is considered visible if the life box content is white and the area outside the life box content is not white.
+    Checks if the enemy life box is visible in the given image. The life box is considered visible if the life box content
+    is white and the area outside the life box content is not white. This is made to avoid false positives during white
+    load screens.
     
+    Double combats can be found in Eterna Forest during the main story.
+
     Args:
-        image: The image in which to check for the life box.
-        color: The color of the life box.
+        image (np.ndarray): The image to be checked.
     Returns:
         bool: True if the life box is visible, False otherwise.
     """
 
+    # Check if life box content area is white
     is_life_box_content_white = image.check_column_pixel_colors(
         CONST.COLOR_SCREEN_CHECK['double_combat_life_box'],
         CONST.COLOR_SCREEN_CHECK['small_column_height'],
@@ -632,11 +768,12 @@ def is_double_combat_life_box_visible(image):
     )
 
     if not is_life_box_content_white:
-        # Stop testing if the text box content is not white, but still drawing the other columns
+        # If any column fails, it stops checking further but draws all columns for debugging purposes.
         for column in ('top_left', 'center_left', 'center', 'bottom_right'):
             image.draw_column(CONST.COLOR_SCREEN_CHECK[column], CONST.COLOR_SCREEN_CHECK['column_height'])
         return False
 
+    # Ensure surrounding regions are not white (to avoid matching a white load screen)
     is_outside_life_box_not_white = check_image_position_colors(
         image,
         CONST.COLOR_SCREEN_CHECK['white_color'],
@@ -651,31 +788,25 @@ def is_double_combat_life_box_visible(image):
     return not is_outside_life_box_not_white
 
 ###########################################################################################################################
-
-def is_black_screen_visible(image):
-    """
-    Checks if a black screen is visible in the given image.
-    Args:
-        image: The image in which to check for the black screen.
-    Returns:
-        bool: True if the black screen is visible, False otherwise.
-    """
-    return is_screen_of_single_color(image, CONST.COLOR_SCREEN_CHECK['black_color'])
-
 ###########################################################################################################################
 
-def is_combat_text_box_visible(image):
+def is_combat_text_box_visible(image: np.ndarray) -> bool:
+
     """
-    Checks if the text box is visible in the given image.
-    The text box is considered visible if the text box content is white
-    and the area outside the text box content is not white.
+    Checks if the text box is visible in the given image. The text box is considered visible if the text box content is
+    white and the area outside the text box content is not white. This is made to avoid false positives during white load
+    screens.
+
+    Combat text boxes are slightly smaller than overworld text boxes, that's why there are two different methods.
 
     Args:
-        image: The image in which to check for the text box.
+        image (np.ndarray): The image to be checked.
+
     Returns:
         bool: True if the text box is visible, False otherwise.
     """
 
+    # Check if the textbox area is white
     is_text_box_content_white = check_image_position_colors(
         image,
         CONST.COLOR_SCREEN_CHECK['white_color'],
@@ -686,11 +817,12 @@ def is_combat_text_box_visible(image):
     )
 
     if not is_text_box_content_white:
-        # Stop testing if the text box content is not white, but still drawing the other columns
+        # If any column fails, it stops checking further but draws all columns for debugging purposes.
         for column in ('top_left', 'top_right', 'center'):
             image.draw_column(CONST.COLOR_SCREEN_CHECK[column], CONST.COLOR_SCREEN_CHECK['column_height'])
         return False
 
+    # Ensure surrounding regions are not white (to avoid matching a white load screen)
     is_outside_text_box_white = check_image_position_colors(
         image,
         CONST.COLOR_SCREEN_CHECK['white_color'],
@@ -705,15 +837,21 @@ def is_combat_text_box_visible(image):
 
 ###########################################################################################################################
 
-def is_overworld_text_box_visible(image):
+def is_overworld_text_box_visible(image: np.ndarray) -> bool:
+
     """
-    Checks if the overworld is visible in the given image.
+    Checks if the overworld text box is visible in the given image.
+
+    Overworld text boxes are slightly bigger than combat text boxes, that's why there are two different methods.
+
     Args:
-        image: The image in which to check for the overworld.
+        image (np.ndarray): The image to be checked.
+
     Returns:
-        bool: True if the overworld is visible, False otherwise.
+        bool: True if the overworld text box is visible, False otherwise.
     """
 
+    # Check if the textbox area is white
     is_text_box_content_white = check_image_position_colors(
         image,
         CONST.COLOR_SCREEN_CHECK['white_color'],
@@ -724,11 +862,12 @@ def is_overworld_text_box_visible(image):
     )
     
     if not is_text_box_content_white:
-        # Stop testing if the text box content is not white, but still drawing the other columns
+        # If any column fails, it stops checking further but draws all columns for debugging purposes.
         for column in ('top_left', 'top_right', 'center'):
             image.draw_column(CONST.COLOR_SCREEN_CHECK[column], CONST.COLOR_SCREEN_CHECK['column_height'])
         return False
 
+    # Ensure surrounding regions are not white (to avoid matching a white load screen)
     is_outside_text_box_white = check_image_position_colors(
         image,
         CONST.COLOR_SCREEN_CHECK['white_color'],
@@ -742,125 +881,39 @@ def is_overworld_text_box_visible(image):
     return not is_outside_text_box_white
 
 ###########################################################################################################################
+###########################################################################################################################
 
-def is_white_screen_visible(image):
+def is_white_screen_visible(image: np.ndarray) -> bool:
+
     """
     Checks if the white screen is visible in the given image.
+
     Args:
-        image: The image in which to check for the white screen.
+        image (np.ndarray): The image to be checked.
+
     Returns:
         bool: True if the white screen is visible, False otherwise.
     """
+
     return is_screen_of_single_color(image, CONST.COLOR_SCREEN_CHECK['white_color'])
+
+###########################################################################################################################
+###########################################################################################################################
+
+def is_black_screen_visible(image: np.ndarray) -> bool:
+
+    """
+    Checks if a black screen is visible in the given image.
+
+    Args:
+        image (np.ndarray): The image to be checked.
+
+    Returns:
+        bool: True if the black screen is visible, False otherwise.
+    """
+
+    return is_screen_of_single_color(image, CONST.COLOR_SCREEN_CHECK['black_color'])
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
-
-if __name__ == "__main__":
-    import numpy as np
-    from time import sleep
-
-    from FPS_Counter import FPS_Counter
-    import Colored_Strings as COLOR_str
-    from Game_Capture import Game_Capture
-    from Image_Processing import Image_Processing
-
-    #######################################################################################################################
-
-    LEFT_ARROW_KEY_VALUE = 65361
-    RIGHT_ARROW_KEY_VALUE = 65363
-
-    #######################################################################################################################
-
-    def main_menu():
-        print('\n' + COLOR_str.MENU.replace('{module}', 'Control System'))
-        print(COLOR_str.MENU_OPTION.replace('{index}', '1').replace('{option}', 'Check states from capture card'))
-        print(COLOR_str.MENU_OPTION.replace('{index}', '2').replace('{option}', 'Check states from video'))
-
-        option = input('\n' + COLOR_str.OPTION_SELECTION.replace('{module}', 'Control System'))
-
-        menu_options = {
-            '1': check_states,
-            '2': check_states,
-        }
-
-        if option in menu_options: menu_options[option](option)
-        else: print(COLOR_str.INVALID_OPTION.replace('{module}', 'Control System') + '\n')
-
-    #######################################################################################################################
-    #######################################################################################################################
-
-    def check_states(option):
-        if option == '1': tool = 'capture card'
-        elif option == '2': tool = 'video'
-        print('\n' + COLOR_str.SELECTED_OPTION
-            .replace('{module}', 'Control System')
-            .replace('{option}', f"{option}")
-            .replace('{action}', f"Checking states using {tool}...")
-            .replace('{path}', '')
-        )
-
-        if option == '1':
-            Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
-            if not Video_Capture.video_capture.isOpened():
-                Video_Capture.stop()
-                print(COLOR_str.INVALID_VIDEO_CAPTURE.replace('{video_capture}', f"'{CONST.VIDEO_CAPTURE_INDEX}'") + '\n')
-                return
-        elif option == '2':
-            if not os.path.exists(f'../{CONST.TESTING_VIDEO_PATH}'):
-                return print(COLOR_str.INVALID_PATH_ERROR
-                    .replace('{module}', 'Image Processing')
-                    .replace('{path}', f"'../{CONST.TESTING_VIDEO_PATH}' or '../{CONST.SAVING_FRAMES_PATH}'") + '\n'
-                )
-            Video_Capture = Game_Capture(f'../{CONST.TESTING_VIDEO_PATH}')
-
-        FPS = FPS_Counter()
-        state = 'MOVE_PLAYER'
-        pause = False
-        shiny_detection_time = 0
-        total_frames = int(Video_Capture.video_capture.get(cv2.CAP_PROP_FRAME_COUNT))
-        current_frames = 0
-        force_load_frame = False
-
-        while True:
-            # Function waitKeyEx() detect more keys than waitKey()
-            key = cv2.waitKeyEx(1)
-            if key in [ord('q'), ord('Q')]: break
-            elif key == ord(' '): pause = not pause
-            elif pause and key in [ord('a'), ord('A'), LEFT_ARROW_KEY_VALUE]:
-                current_frames = max(0, current_frames - 2)
-                force_load_frame = True
-            elif pause and key in [ord('d'), ord('D'), RIGHT_ARROW_KEY_VALUE]:
-                force_load_frame = True
-
-            if pause and not force_load_frame: continue
-            if force_load_frame:
-                Video_Capture.video_capture.set(cv2.CAP_PROP_POS_FRAMES, current_frames)
-
-            # Adjust to match the FPS of the video 0.05s ~ 20 FPS
-            if option == '2' and not force_load_frame: sleep(0.05)
-           
-            image = Image_Processing(Video_Capture.read_frame())
-            if type(image.original_image) == type(None): break
-            image.resize_image()
-            FPS.get_FPS()
-            image.draw_FPS(FPS.FPS)
-
-            state = search_wild_pokemon(image, state)
-            image.write_text(state, (0, CONST.TEXT_PARAMS['position'][1] + 5))
-
-            current_frames += 1
-            force_load_frame = False
-            cv2.imshow(f'{CONST.BOT_NAME} - Image', image.FPS_image)
-
-        Video_Capture.stop()
-        print(COLOR_str.SUCCESS_EXIT_PROGRAM
-            .replace('{module}', 'Control System')
-            .replace('{reason}', 'Successfully checked states!') + '\n'
-        )
-
-    #######################################################################################################################
-    #######################################################################################################################
-
-    main_menu()
