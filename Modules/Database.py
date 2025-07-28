@@ -33,13 +33,16 @@ def initialize_database(db_file: str = DATABASE_PATH) -> None:
         None
     """
 
+    if os.path.exists(db_file):
+        return
+
     # Connect to the database (creates it if it doesn't exist)
     connection = sqlite3.connect(db_file)
     cursor = connection.cursor()
 
     # Create "General" table
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS General (
+        CREATE TABLE General (
             global_encounters INTEGER,
             global_playtime REAL,
             last_shiny_encounter INTEGER,
@@ -49,7 +52,7 @@ def initialize_database(db_file: str = DATABASE_PATH) -> None:
 
     # Create "Pokemon" table
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS Pokemon (
+        CREATE TABLE Pokemon (
             pokemon_name TEXT NOT NULL,
             shiny_encounters INTEGER,
             encounters INTEGER

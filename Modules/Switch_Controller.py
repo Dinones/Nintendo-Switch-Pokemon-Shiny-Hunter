@@ -10,21 +10,13 @@ from threading import Lock
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
+import Constants as CONST
+from Modules.Macros import *
 import Modules.Colored_Strings as STR
 
 # NXBT is only compatible with Linux systems
 if os.name != 'posix':
     exit(f'\n{STR.SC_NOT_LINUX_SYSTEM}\n')
-
-if __name__ == '__main__':
-    # NXBT requires administrator permissions
-    if 'SUDO_USER' not in os.environ: 
-        print(f'\n{STR.SC_NOT_SUDO}')
-        program_name = os.path.abspath(os.path.join(os.path.dirname(__file__), __file__.split('/')[-1]))
-        exit(os.system(f'sudo python3 {program_name}'))
-
-import Constants as CONST
-from Modules.Macros import *
 
 ###########################################################################################################################
 #################################################     INITIALIZATIONS     #################################################

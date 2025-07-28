@@ -25,6 +25,36 @@ state_timer = 0
 ###########################################################################################################################
 ###########################################################################################################################
 
+def get_next_state(image: np.ndarray, state: str, encounter_type: str) -> str:
+
+    """
+    Determines the next state in the encounter state machine based on the current screen image and encounter type.
+
+    Delegates to the appropriate encounter handler depending on the type:
+        - WILD: Standard wild Pokémon encounter
+        - STATIC: Static overworld Pokémon (e.g. legendaries)
+        - STARTER: Starter selection encounter
+        - SHAYMIN: Special Shaymin encounter
+        - WILD_DOUBLES: Wild double encounters (Eterna Forest)
+
+    Args:
+        image (np.ndarray): Current game screen image.
+        state (str): The current state in the state machine.
+        encounter_type (str): The kind of encounter being processed.
+
+    Returns:
+        str: Next state in the encounter state machine.
+    """
+
+    if encounter_type == 'WILD': return search_wild_pokemon(image, state)
+    elif encounter_type == 'STATIC': return static_encounter(image, state)
+    elif encounter_type == 'STARTER': return starter_encounter(image, state)
+    elif encounter_type == 'SHAYMIN': return shaymin_encounter(image, state)
+    elif encounter_type == 'WILD_DOUBLES': return search_wild_pokemon_double_combat(image, state)
+
+###########################################################################################################################
+###########################################################################################################################
+
 def search_wild_pokemon(image: np.ndarray, state: str) -> str:
 
     """
@@ -34,10 +64,10 @@ def search_wild_pokemon(image: np.ndarray, state: str) -> str:
 
     Args:
         image (np.ndarray): Current game screen image.
-        state (str): Next state based on the detected game screen, or the same state if no transition applies.
+        state (str): The current state in the state machine.
 
     Returns:
-        str: Next state in the encounter state machine.
+        str: Next state based on the detected game screen, or the same state if no transition applies.
     """
 
     global state_timer
@@ -140,10 +170,10 @@ def search_wild_pokemon_double_combat(image: np.ndarray, state: str) -> str:
 
     Args:
         image (np.ndarray): Current game screen image.
-        state (str): Next state based on the detected game screen, or the same state if no transition applies.
+        state (str): The current state in the state machine.
 
     Returns:
-        str: Next state in the encounter state machine.
+        str: Next state based on the detected game screen, or the same state if no transition applies.
     """
     
     # Start of the execution
@@ -199,10 +229,10 @@ def static_encounter(image: np.ndarray, state: str) -> str:
 
     Args:
         image (np.ndarray): Current game screen image.
-        state (str): Next state based on the detected game screen, or the same state if no transition applies.
+        state (str): The current state in the state machine.
 
     Returns:
-        str: Next state in the encounter state machine.
+        str: Next state based on the detected game screen, or the same state if no transition applies.
     """
 
     global state_timer
@@ -269,10 +299,10 @@ def starter_encounter(image: np.ndarray, state: str) -> str:
 
     Args:
         image (np.ndarray): Current game screen image.
-        state (str): Next state based on the detected game screen, or the same state if no transition applies.
+        state (str): The current state in the state machine.
 
     Returns:
-        str: Next state in the encounter state machine.
+        str: Next state based on the detected game screen, or the same state if no transition applies.
     """
 
     global state_timer
@@ -386,10 +416,10 @@ def shaymin_encounter(image: np.ndarray, state: str) -> str:
 
     Args:
         image (np.ndarray): Current game screen image.
-        state (str): Next state based on the detected game screen, or the same state if no transition applies.
+        state (str): The current state in the state machine.
 
     Returns:
-        str: Next state in the encounter state machine.
+        str: Next state based on the detected game screen, or the same state if no transition applies.
     """
 
     global state_timer
@@ -502,7 +532,7 @@ def _check_common_states(image: np.ndarray, state: str) -> str:
 
     Args:
         image (np.ndarray): Current game screen image.
-        state (str): Next state based on the detected game screen, or the same state if no transition applies.
+        state (str): The current state in the state machine.
 
     Returns:
         str: Next state based on the detected game screen, or the same state if no transition applies.

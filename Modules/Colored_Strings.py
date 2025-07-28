@@ -282,7 +282,7 @@ FPS_COUNTER = \
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mRAM Usage: {RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]}m{"{memory_usage} MB"}     {RESET_FORMAT}'
 
-SYSTEM_AVAILABLE_SPACE = \
+FPS_SYSTEM_AVAILABLE_SPACE = \
     f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[FPS Counter] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mTotal system space: {RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]}m{"{total_space}"}     {RESET_FORMAT}'+\
@@ -291,7 +291,7 @@ SYSTEM_AVAILABLE_SPACE = \
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mAvailable System Space: {RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]}m{"{available_space}"}     {RESET_FORMAT}'
 
-DIRECTORY_SIZE = \
+FPS_DIRECTORY_SIZE = \
     f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[FPS Counter] "}{RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mSize of {RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Italics"]}m{"{directory}"}{RESET_FORMAT}'+\
@@ -319,12 +319,6 @@ IP_SUCCESSFULLY_DELETED_IMAGES = \
     f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}mSuccessfully deleted {RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]}m{"{images}"}{RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}m images!{RESET_FORMAT}'
-
-CONTOURS_FOUND = \
-    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Image Processing] "}{RESET_FORMAT}'+\
-    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mFound {RESET_FORMAT}'+\
-    f'\033[{COLORS["Blue"]}m{"{contours}"}{RESET_FORMAT}'+\
-    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}m contours!{RESET_FORMAT}'
 
 IP_CURRENT_EXTRACTED_FRAMES = \
     f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Image Processing] "}{RESET_FORMAT}'+\

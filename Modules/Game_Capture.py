@@ -36,6 +36,9 @@ class Game_Capture():
 
         Args:
             video_capture_index (int): Index of the video capture device to use.
+        
+        Returns:
+            None
         """
 
         # Initialize the main video capture
@@ -81,6 +84,9 @@ class Game_Capture():
 
         """
         Captures a single frame from the video capture device.
+        
+        Args:
+            None
 
         Returns:
             Optional[np.ndarray]: The captured frame if successful, otherwise None.
@@ -105,6 +111,12 @@ class Game_Capture():
         """
         Releases the video capture device and closes any OpenCV windows. This should be called when the video processing is
         finished to free up system resources.
+        
+        Args:
+            None
+        
+        Returns:
+            None
         """
 
         self.video_capture.release()
@@ -118,6 +130,9 @@ class Game_Capture():
 
         """
         Scans and returns a list indicating which video capture devices are available.
+        
+        Args:
+            None
 
         Returns:
             List[bool]: A list of booleans where each element corresponds to whether the capture device at that index is
@@ -141,6 +156,12 @@ class Game_Capture():
         """
         Initializes the video recorder if recording is enabled in the configuration. Depending on debug mode, it adjusts
         the output frame size to include extra debug UI height.
+        
+        Args:
+            None
+        
+        Returns:
+            None
         """
 
         if CONST.ENABLE_VIDEO_RECORDING:
@@ -170,6 +191,9 @@ class Game_Capture():
         Args:
             special_name (str): Optional custom filename (without extension) for the saved video. If not provided, the
                 default output filename remains unchanged.
+        
+        Returns:
+            None
         """
 
         if CONST.ENABLE_VIDEO_RECORDING:
@@ -199,6 +223,9 @@ class Game_Capture():
         Args:
             image (Union[np.ndarray, None]): The frame to write to the video. Must match the initialized frame size and
                 color format (BGR).
+        
+        Returns:
+            None
         """
 
         if CONST.ENABLE_VIDEO_RECORDING:

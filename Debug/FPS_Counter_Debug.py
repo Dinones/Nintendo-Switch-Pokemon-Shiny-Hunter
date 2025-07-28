@@ -32,7 +32,7 @@ Thread(target=lambda: FPS_Counter.get_memory_usage(Event()), daemon=True).start(
 
 # Print available disk space
 system_space = FPS_Counter.get_system_available_space()
-print('\n' + STR.SYSTEM_AVAILABLE_SPACE
+print('\n' + STR.FPS_SYSTEM_AVAILABLE_SPACE
     .replace('{total_space}', system_space['total'])
     .replace('{used_space}', system_space['used'])
     .replace('{available_space}', system_space['available'])
@@ -40,14 +40,14 @@ print('\n' + STR.SYSTEM_AVAILABLE_SPACE
 
 # Print size of the Media directory
 media_folder_size = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Media'))
-print(STR.DIRECTORY_SIZE
+print(STR.FPS_DIRECTORY_SIZE
     .replace('{directory}', f"'../Media/'")
     .replace('{size}', media_folder_size)
 )
 
 # Print size of the local Recycle Bin
 recycle_bin_size = FPS_Counter.get_directory_size(os.path.expanduser('~/.local/share/Trash/files'))
-print(STR.DIRECTORY_SIZE
+print(STR.FPS_DIRECTORY_SIZE
     .replace('{directory}', f"'{os.path.expanduser('~/.local/share/Trash/files')}'")
     .replace('{size}', recycle_bin_size)
 )

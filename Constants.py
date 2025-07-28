@@ -105,12 +105,12 @@ SKIP_UPDATING_GAME = False
 # - Regigigas: 7
 STATIC_ENCOUNTERS_DELAY = 2
 
-# [SECONDS] How long has the bot been stuck in the same state before trying to restart the game
+# [SECONDS] How long has the program been stuck in the same state before trying to restart the game
 STUCK_TIMER_SECONDS = 25
-# [SECONDS] How long no pokemon has been found before completely stopping program (ERROR)
-FAILURE_DETECTION_TIME_WARN = 3*60
-# [SECONDS] How long no pokemon has been found before completely stopping program (ERROR)
-FAILURE_DETECTION_TIME_ERROR = 5*60
+# [SECONDS] How long has the program been without encountering a pokémon before trying to restart the game
+FAILURE_DETECTION_SECONDS_WARN = 3*60
+# [SECONDS] How long has the program been without encountering a pokémon before completely stopping program execution
+FAILURE_DETECTION_SECONDS_ERROR = 5*60
 SHINY_DETECTION_TIME = 2
 # [SECONDS] Used to avoid false positives when the game skips the trainer's Pokéball throwing animation due to resource 
 # overload. Value MUST be WILD_SHINY_DETECTION_TIME < 3.5s
