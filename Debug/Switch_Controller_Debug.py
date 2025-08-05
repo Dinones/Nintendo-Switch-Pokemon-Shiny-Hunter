@@ -5,25 +5,27 @@
 import os
 import sys
 import time
+from queue import Queue
 from threading import Thread, Event
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
 import Constants as CONST
+from Modules.GUI import GUI, App
 from Modules.Macros import test_macro
 import Modules.Colored_Strings as STR
 from Modules.FPS_Counter import FPS_Counter
 from Modules.Game_Capture import Game_Capture
-from Modules.GUI import GUI, DllistQueue, App
 from Modules.Image_Processing import Image_Processing
 from Modules.Switch_Controller import Switch_Controller
+from Modules.Control_System import _draw_switch_controller_buttons
 
 if __name__ == '__main__':
     # NXBT requires administrator permissions
     if 'SUDO_USER' not in os.environ: 
         print(f'\n{STR.SC_NOT_SUDO}')
         program_name = os.path.abspath(os.path.join(os.path.dirname(__file__), __file__.split('/')[-1]))
-        exit(os.system(f'sudo python3 {program_name}'))
+        exit(os.system(f'sudo .venv/bin/python {program_name}'))
 
 ###########################################################################################################################
 #################################################     INITIALIZATIONS     #################################################
@@ -54,7 +56,7 @@ if __name__ == '__main__':
     #######################################################################################################################
 
     def test_controller(option):
-        print('\n' + STR.SELECTED_OPTION.format(
+        print('\n' + STR.M_SELECTED_OPTION.format(
             module = MODULE_NAME,
             option = option,
             action = 'Testing Switch Controller...',
@@ -68,16 +70,19 @@ if __name__ == '__main__':
 
         FPS = FPS_Counter()
         initial_time = time.time()
-        Image_Queue = DllistQueue(maxsize = 2)
+        Image_Queue = Queue(maxsize = 2)
         Controller = Switch_Controller()
         shutdown_event = Event()
         Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
 
-        switch_controller_image = Image_Processing(f'../{CONST.SWITCH_CONTROLLER_IMAGE_PATH}')
+        switch_controller_image_path = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), '..', CONST.SWITCH_CONTROLLER_IMAGE_PATH)
+        )
+        switch_controller_image = Image_Processing(switch_controller_image_path)
         switch_controller_image.resize_image(CONST.SWITCH_CONTROLLER_FRAME_SIZE)
         switch_controller_image.draw_button()
 
-        def test_GUI_control(shutdown_event = None):
+        def test_GUI_control(controller, shutdown_event = None):
             if isinstance(shutdown_event, type(None)): return
 
             while not shutdown_event.is_set():
@@ -87,6 +92,8 @@ if __name__ == '__main__':
                 image.resize_image()
                 FPS.get_FPS()
                 image.draw_FPS(FPS.FPS)
+
+                _draw_switch_controller_buttons(controller, switch_controller_image)
 
                 update_items = {
                     'image': image,
@@ -111,7 +118,7 @@ if __name__ == '__main__':
             shutdown_event.set()
 
         threads = []
-        threads.append(Thread(target=lambda: test_GUI_control(shutdown_event), daemon=True))
+        threads.append(Thread(target=lambda: test_GUI_control(Controller, shutdown_event), daemon=True))
         threads.append(Thread(target=lambda: FPS.get_memory_usage(shutdown_event), daemon=True))
         threads.append(Thread(target=lambda: run_test_controller(Controller, shutdown_event), daemon=True))
         for thread in threads: thread.start()
@@ -123,12 +130,13 @@ if __name__ == '__main__':
         
         # Kill all secondary threads
         shutdown_event.set()
-        print(STR.RELEASING_THREADS
+        print(STR.G_RELEASING_THREADS
             .replace('{module}', 'Switch Controller')
-            .replace('{threads}', str(len(threads))) + '\n'
+            .replace('{threads}', str(len(threads)))
         )
 
     #######################################################################################################################
     #######################################################################################################################
 
     main_menu()
+    print()

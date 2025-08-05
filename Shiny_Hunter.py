@@ -22,7 +22,7 @@ if __name__ == '__main__':
     if 'SUDO_USER' not in os.environ: 
         print(f'\n{STR.SC_NOT_SUDO}')
         program_name = os.path.abspath(os.path.join(os.path.dirname(__file__), __file__.split('/')[-1]))
-        exit(os.system(f'sudo python3 {program_name}'))
+        exit(os.system(f'sudo .venv/bin/python3 {program_name}'))
 
 ###########################################################################################################################
 #################################################     INITIALIZATIONS     #################################################

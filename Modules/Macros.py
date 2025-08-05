@@ -109,10 +109,10 @@ def start_macro(controller: nxbt.Nxbt, force_execution: bool = False) -> None:
         return
 
     # Press 'B' to exit the "Change Grip/Order" menu
-    wait_and_press_single_button(controller, 1, 'B')
+    wait_and_press_single_button(controller, 10, 'B')
 
     # Press 'HOME' to go to the HOME menu
-    wait_and_press_single_button(controller, 1, 'HOME')
+    wait_and_press_single_button(controller, 10, 'HOME')
 
 ###########################################################################################################################
 ###########################################################################################################################
