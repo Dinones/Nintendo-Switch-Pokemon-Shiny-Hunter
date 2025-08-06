@@ -241,6 +241,44 @@ def _record_new_video(Controller: Switch_Controller, Video_Capture: Game_Capture
 ###########################################################################################################################
 ###########################################################################################################################
 
+def _add_frame_to_video(
+    Controller: Switch_Controller,
+    Video_Capture: Game_Capture,
+    image: Image_Processing,
+    debug_image: Union[Debug_Image, None]
+) -> None:
+
+    """
+    Add a video frame to the current recording, optionally stacking it with debug data.
+
+    Args:
+        Controller (Switch_Controller): Provides the current macro state and pressed button.
+        Video_Capture (Game_Capture): Video object to record the current frame.
+        image (Image_Processing): Processed frame from the capture card or video.
+        debug_image (Union[Debug_Image, None]): Image used to visualize debugging information.
+
+    Returns:
+        None
+    """
+
+    if CONST.DEBUG_VIDEO:
+        # Include event and button state in the debug image
+        stats = {
+            'event': Controller.current_event,
+            'button': Controller.current_button_pressed
+        }
+        debug_image.populate_debug_image(stats)
+
+        # Combine debug and gameplay images for recording
+        combined_image = debug_image.stack_images(debug_image.FPS_image, image.FPS_image)
+        Video_Capture.add_frame_to_video(combined_image)
+
+    else:
+        Video_Capture.add_frame_to_video(image.original_image)
+
+###########################################################################################################################
+###########################################################################################################################
+
 def _update_database(
     FPS: FPS_Counter,
     Controller: Switch_Controller,
@@ -444,9 +482,8 @@ def start_control_system(
     last_saved_image_path = ''
     encounter_playtime = time()
 
-    if CONST.DEBUG_VIDEO:
-        debug_image = Debug_Image()
-
+    debug_image = Debug_Image() if CONST.DEBUG_VIDEO else None
+    
     while not shutdown_event.is_set():
 
         # Start a perfect counter to force a maximum of 60 FPS
@@ -483,6 +520,8 @@ def start_control_system(
 
             # Start recording a new video after a non-shiny pokemon is found. Ovewrites the older one
             _record_new_video(Controller, Video_Capture)
+
+            _add_frame_to_video(Controller, Video_Capture, image, debug_image)
 
             # Save the last frame where the name of the pokemon appears in the text box. This is the image that will be
             # attached to the notification if the pokemon is shiny
@@ -630,3 +669,13 @@ def check_threads(threads: List[Dict[str, Any]], shutdown_event: Event) -> None:
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
+
+"""
+if CONST.DEBUG_VIDEO:
+    stats = {'event': Controller.current_event, 'button': Controller.current_button_pressed}
+    debug_image.populate_debug_image(stats)
+    combined_image = debug_image.stack_images(debug_image.FPS_image, image.FPS_image)
+    Video_Capture.add_frame_to_video(combined_image)
+else:
+    Video_Capture.add_frame_to_video(image.original_image)
+"""
