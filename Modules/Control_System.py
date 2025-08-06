@@ -84,7 +84,6 @@ def _draw_switch_controller_buttons(Controller, switch_controller_image):
 def _is_program_stuck(Controller, Video_Capture, shutdown_event):
     global stuck_timer, encounter_playtime
 
-
     # If stuck in the same state for STUCK_TIMER_SECONDS, restart the game
     skip_states = ("MOVE_PLAYER", "WAIT_PAIRING_SCREEN", "WAIT_HOME_SCREEN", "SHINY_FOUND", "ENTER_LAKE_4")
     if (
@@ -161,7 +160,17 @@ def _record_new_video(Controller, Video_Capture):
 ###########################################################################################################################
 ###########################################################################################################################
 
-def _update_database(FPS, Controller, Video_Capture, stop_event, pokemon_image, encounter_type, last_shiny_encounter):
+def _update_database(FPS,
+    Controller,
+    Video_Capture,
+    stop_event,
+    pokemon_image,
+    encounter_type,
+    last_shiny_encounter,
+    encounter_playtime,
+    global_encounters,
+    last_saved_image_path
+):
     global shiny_timer
 
     # A new pokemon has been found. Don't know if shiny or not yet
@@ -192,8 +201,6 @@ def _update_database(FPS, Controller, Video_Capture, stop_event, pokemon_image, 
         # Start the timer so if the pokémon is shiny, the video records for SHINY_RECORDING_SECONDS before stopping
         shiny_timer = time()
         pokemon_image = None
-
-        return last_saved_image_path
 
     elif Controller.current_event == "SHINY_FOUND":
         # It sometimes gets bugged and detects the Starly instead of the starter, which will raise always a false positive
@@ -234,6 +241,8 @@ def _update_database(FPS, Controller, Video_Capture, stop_event, pokemon_image, 
             ))
 
             stop_event.set()
+    
+    return global_encounters, encounter_playtime, last_saved_image_path, pokemon_image
 
 ###########################################################################################################################
 ###########################################################################################################################
@@ -273,7 +282,10 @@ def start_control_system(Encounter_Type, FPS, Controller, Image_Queue, shutdown_
 
     # Get the global stats of the database (create a new database if it doesn't exist)
     local_encounters, global_encounters, last_shiny_encounter = _get_database_components()
+
     pokemon_image = None
+    last_saved_image_path = ''
+    encounter_playtime = time()
 
     if CONST.DEBUG_VIDEO:
         debug_image = Debug_Image()
@@ -318,8 +330,17 @@ def start_control_system(Encounter_Type, FPS, Controller, Image_Queue, shutdown_
             if Controller.current_event in ('ENTER_COMBAT_3', 'ENTER_COMBAT_5'):
                 pokemon_image = image
 
-            _update_database(
-                FPS, Controller, Video_Capture, stop_event, pokemon_image, Encounter_Type, last_shiny_encounter
+            global_encounters, encounter_playtime, last_saved_image_path, pokemon_image = _update_database(
+                FPS,
+                Controller,
+                Video_Capture,
+                stop_event,
+                pokemon_image,
+                Encounter_Type,
+                last_shiny_encounter,
+                encounter_playtime,
+                global_encounters,
+                last_saved_image_path
             )
 
             # Stop program execution (shiny found or stop button pressed)
