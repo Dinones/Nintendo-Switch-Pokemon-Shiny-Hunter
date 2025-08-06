@@ -215,7 +215,8 @@ class Image_Processing():
         # If the button exists in the map, draw a filled circle on it
         if button in button_coordinates:
             cv2.circle(self.FPS_image, button_coordinates[button], 9, CONST.PRESSED_BUTTON_COLOR, -1)
-            self.current_button_pressed = button
+
+        self.current_button_pressed = button
 
     #######################################################################################################################
     #######################################################################################################################

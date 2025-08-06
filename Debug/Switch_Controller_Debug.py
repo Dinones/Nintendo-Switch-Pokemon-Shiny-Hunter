@@ -4,7 +4,7 @@
 
 import os
 import sys
-import time
+from time import time
 from queue import Queue
 from threading import Thread, Event
 
@@ -18,11 +18,11 @@ from Modules.FPS_Counter import FPS_Counter
 from Modules.Game_Capture import Game_Capture
 from Modules.Image_Processing import Image_Processing
 from Modules.Switch_Controller import Switch_Controller
-from Modules.Control_System import _draw_switch_controller_buttons
+from Modules.Control_System import _draw_switch_controller_buttons, _initialize_switch_controller_image
 
 if __name__ == '__main__':
     # NXBT requires administrator permissions
-    if 'SUDO_USER' not in os.environ: 
+    if 'SUDO_USER' not in os.environ:
         print(f'\n{STR.SC_NOT_SUDO}')
         program_name = os.path.abspath(os.path.join(os.path.dirname(__file__), __file__.split('/')[-1]))
         exit(os.system(f'sudo .venv/bin/python {program_name}'))
@@ -69,18 +69,13 @@ if __name__ == '__main__':
         os.chmod(os.environ['XDG_RUNTIME_DIR'], 0o700)
 
         FPS = FPS_Counter()
-        initial_time = time.time()
+        initial_time = time()
         Image_Queue = Queue(maxsize = 2)
         Controller = Switch_Controller()
         shutdown_event = Event()
         Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
 
-        switch_controller_image_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), '..', CONST.SWITCH_CONTROLLER_IMAGE_PATH)
-        )
-        switch_controller_image = Image_Processing(switch_controller_image_path)
-        switch_controller_image.resize_image(CONST.SWITCH_CONTROLLER_FRAME_SIZE)
-        switch_controller_image.draw_button()
+        switch_controller_image = _initialize_switch_controller_image()
 
         def test_GUI_control(controller, shutdown_event = None):
             if isinstance(shutdown_event, type(None)): return
@@ -104,7 +99,7 @@ if __name__ == '__main__':
                     'memory_usage': FPS.memory_usage,
                     'cpu_usage': FPS.cpu_usage,
                     'switch_controller_image': switch_controller_image,
-                    'clock': int(time.time() - initial_time),
+                    'clock': int(time() - initial_time),
                 }
 
                 Image_Queue.put(update_items)

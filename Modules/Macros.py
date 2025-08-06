@@ -44,9 +44,10 @@ def press_single_button(controller: nxbt.Nxbt, button: str, down_time: float = 0
         button = f'DPAD_{button}'
 
     if down_time:
-        controller.nxbt_manager.press_buttons(controller.controller_index, [getattr(Buttons, button)])
-    else:
         controller.nxbt_manager.press_buttons(controller.controller_index, [getattr(Buttons, button)], down=down_time)
+    else:
+        controller.nxbt_manager.press_buttons(controller.controller_index, [getattr(Buttons, button)])
+
     controller.current_button_pressed = ''
 
 ###########################################################################################################################
@@ -109,10 +110,10 @@ def start_macro(controller: nxbt.Nxbt, force_execution: bool = False) -> None:
         return
 
     # Press 'B' to exit the "Change Grip/Order" menu
-    wait_and_press_single_button(controller, 10, 'B')
+    wait_and_press_single_button(controller, 1, 'B')
 
     # Press 'HOME' to go to the HOME menu
-    wait_and_press_single_button(controller, 10, 'HOME')
+    wait_and_press_single_button(controller, 1, 'HOME')
 
 ###########################################################################################################################
 ###########################################################################################################################
@@ -180,7 +181,7 @@ def stop_macro(controller: nxbt.Nxbtt, force_execution: bool = False) -> None:
     wait_and_press_single_button(controller, 0.5, 'A')
 
     # Press 'A' to enter the final menu
-    wait_and_press_single_button(controller, 2, 'RIGHT')
+    wait_and_press_single_button(controller, 2, 'A')
 
     sleep(1)
 
