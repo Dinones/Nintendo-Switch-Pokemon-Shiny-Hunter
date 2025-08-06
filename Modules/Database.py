@@ -34,6 +34,8 @@ def initialize_database(db_file: str = DATABASE_PATH) -> None:
     """
 
     if os.path.exists(db_file):
+        # Give write access to everyone
+        os.chmod(db_file, 0o666)
         return
 
     # Connect to the database (creates it if it doesn't exist)
@@ -71,6 +73,9 @@ def initialize_database(db_file: str = DATABASE_PATH) -> None:
     # Finalize and close
     connection.commit()
     connection.close()
+
+    # Give write access to everyone
+    os.chmod(db_file, 0o666)
 
     print(STR.DB_INITIALIZE_DATABASE)
 
@@ -194,7 +199,7 @@ def get_all_data(db_file: str = DATABASE_PATH) -> Dict[str, Union[int, float, Li
 ###########################################################################################################################
 ###########################################################################################################################
 
-def delete_pokemon_database(pokemon: str, db_file: str = DATABASE_PATH) -> None:
+def delete_pokemon_from_database(pokemon: str, db_file: str = DATABASE_PATH) -> None:
 
     """
     Deletes a specific Pokémon's encounter data from the database and adjusts global stats accordingly.
@@ -297,83 +302,5 @@ def decrement_pokemon_shiny(pokemon: str, db_file: str = DATABASE_PATH) -> None:
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
 
-# if __name__ == "__main__":
-#     def main_menu():
-#         print('\n' + STR.M_MENU.replace('{module}', 'Database'))
-#         print(STR.M_MENU_OPTION.replace('{index}', '1').replace('{option}', 'Print database'))
-#         print(STR.M_MENU_OPTION.replace('{index}', '2').replace('{option}', 'Print testing database'))
-#         print(STR.M_MENU_OPTION.replace('{index}', '3').replace('{option}', 'Delete pokémon from database'))
-
-#         option = input('\n' + STR.M_OPTION_SELECTION.replace('{module}', 'Database'))
-
-#         menu_options = {
-#             '1': print_database,
-#             '2': print_database,
-#             '3': delete_pokemon,
-#         }
-
-#         if option in menu_options: menu_options[option](option)
-#         else: print(STR.M_INVALID_OPTION.replace('{module}', 'Database') + '\n')
-
-#     #######################################################################################################################
-#     #######################################################################################################################
-    
-#     def print_database(option):
-#         if option == '2': action = 'test'
-#         else: action = 'normal'
-#         print('\n' + STR.M_SELECTED_OPTION
-#             .replace('{module}', 'Database')
-#             .replace('{option}', f"{option}")
-#             .replace('{action}', f"Printing {'testing ' if action == 'test' else ''}database...")
-#             .replace('{path}', '')
-#         )
-
-#         print()
-#         path = f'../{CONST.DATABASE_PATH}' if action == 'normal' else f'../{CONST.TESTING_DATABASE_PATH}'
-#         initialize_database(path)
-#         if action == 'test':
-#             # The shiny one doesn't add an encounter to the global encounters of the pokemon
-#             # because the main program would add the encounter twice
-#             add_or_update_encounter({'name': 'Arceus', 'shiny': True}, 15843, f'../{CONST.TESTING_DATABASE_PATH}')
-#         data = get_all_data(path)
-
-#         days = int(data['global_playtime']//86400)
-#         hours = int((data['global_playtime'] - days*86400)//3600)
-#         minutes = int((data['global_playtime'] - days*86400 - hours*3600)//60)
-#         seconds = int(data['global_playtime'] - days*86400 - hours*3600 - minutes*60)
-
-#         print(STR.DB_DATABASE_INFO)
-#         for key in data.keys():
-#             aux_key = ''
-#             for word in key.split('_'): aux_key += word.capitalize() + ' '
-#             aux_key = aux_key.strip()
-            
-#             value = str(data[key])
-#             if key == 'global_playtime': value = f"{days}d {hours}h {minutes}min {seconds}s"
-#             elif key == 'encounters': value = ''
-
-#             print(STR.DB_DATABASE_STAT_VALUE
-#                 .replace('{stat}', f'· {aux_key}')
-#                 .replace('{value}', value)
-#             )
-
-#         for index, encounter in enumerate(data['encounters']):
-#             print(STR.DB_DATABASE_STAT_VALUE
-#                 .replace('{stat}', f'\t{encounter[0]}')
-#                 .replace('{value}', f'Encounters: {encounter[1]} - Shiny Encounters: {encounter[2]}')
-#             )
-#         print()
-
-#     #######################################################################################################################
-#     #######################################################################################################################
-
-#     def delete_pokemon(option):
-#         print_database(str(3))
-#         print(STR.DB_SELECT_POKEMON_TO_DELETE, end = '')
-#         pokemon = input()
-#         delete_pokemon_database(pokemon, f'../{CONST.DATABASE_PATH}')
-
-#     #######################################################################################################################
-#     #######################################################################################################################
-
-#     main_menu()
+if __name__ == '__main__':
+    import Debug.Database_Debug

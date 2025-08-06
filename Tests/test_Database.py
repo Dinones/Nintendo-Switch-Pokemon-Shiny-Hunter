@@ -146,7 +146,7 @@ class Test_Database(unittest.TestCase):
     #######################################################################################################################
     #######################################################################################################################
 
-    def test_delete_pokemon_database(self) -> None:
+    def test_delete_pokemon_from_database(self) -> None:
 
         """
         Tests that a Pokémon can be deleted from the database and global stats are updated accordingly.
@@ -169,7 +169,7 @@ class Test_Database(unittest.TestCase):
             self.assertEqual(cursor.fetchone(), (1, 0))
 
         # Delete the Pokémon
-        delete_pokemon_database(pokemon['name'], DATABASE_PATH)
+        delete_pokemon_from_database(pokemon['name'], DATABASE_PATH)
 
         # Confirm it was deleted
         with sqlite3.connect(DATABASE_PATH) as conn:

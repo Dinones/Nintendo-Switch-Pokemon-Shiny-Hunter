@@ -384,7 +384,9 @@ DB_DELETION_CANCELLED = \
 
 DB_POKEMON_DELETED = \
     f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[Database] "}{RESET_FORMAT}'+\
-    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mPokémon "{"{pokemon}"}" deleted {RESET_FORMAT}'
+    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mPokémon {RESET_FORMAT}'+\
+    f'\033[{COLORS["Blue"]}m{"{pokemon}"}{RESET_FORMAT}'+\
+    f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}m deleted {RESET_FORMAT}'
 
 ###########################################################################################################################
 #######################################################     GUI     #######################################################

@@ -149,7 +149,7 @@ class Email_Sender():
         # Generate dynamic HTML error message
         if error_type == "STUCK":
             error_message = (
-                f"Shiny Hunter has been more than <b>{CONST.FAILURE_DETECTION_TIME_ERROR // 60} minutes</b> "
+                f"Shiny Hunter has been more than <b>{CONST.FAILURE_DETECTION_SECONDS_ERROR // 60} minutes</b> "
                 "without encountering any Pokémon."
             )
         elif error_type == "THREAD_DIED":
@@ -316,3 +316,6 @@ class Email_Sender():
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
+
+if __name__ == '__main__':
+    import Debug.Email_Debug

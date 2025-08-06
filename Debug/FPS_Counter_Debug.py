@@ -39,16 +39,16 @@ print('\n' + STR.FPS_SYSTEM_AVAILABLE_SPACE
 )
 
 # Print size of the Media directory
-media_folder_size = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Media'))
+media_folder_size = FPS_Counter.get_directory_size(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Media')))
 print(STR.FPS_DIRECTORY_SIZE
-    .replace('{directory}', f"'../Media/'")
+    .replace('{directory}', f'"{os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "Media"))}"')
     .replace('{size}', media_folder_size)
 )
 
 # Print size of the local Recycle Bin
 recycle_bin_size = FPS_Counter.get_directory_size(os.path.expanduser('~/.local/share/Trash/files'))
 print(STR.FPS_DIRECTORY_SIZE
-    .replace('{directory}', f"'{os.path.expanduser('~/.local/share/Trash/files')}'")
+    .replace('{directory}', f'"{os.path.expanduser("~/.local/share/Trash/files")}"')
     .replace('{size}', recycle_bin_size)
 )
 

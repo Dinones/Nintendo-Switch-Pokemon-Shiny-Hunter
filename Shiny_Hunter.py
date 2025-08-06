@@ -3,8 +3,8 @@
 ###########################################################################################################################
 
 import os
-import sys
 from queue import Queue
+from typing import Optional
 from threading import Event, Thread
 
 import Constants as CONST
@@ -35,15 +35,29 @@ IMAGES_FOLDER_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), CON
 ###########################################################################################################################
 ###########################################################################################################################
 
-def check_system_available_space(FPS):
-    # Check system's available space. Constantly saving images can cause to run out of space
+def check_system_available_space(FPS: FPS_Counter) -> Optional[None]:
 
-    # Check the images in the "Media/Images/" folder
+    """
+    Check the system's available disk space and warn the user if critical thresholds are reached. Offers the option to
+    delete saved images to free up space.
+
+    Args:
+        FPS (FPS_Counter): Object to get directory sizes and format available space.
+
+    Returns:
+        None
+    """
+
+    # Check the number and total size of images in the "Media/Images/" folder
     media_folder_size = FPS.get_directory_size(IMAGES_FOLDER_PATH)
-    if len(os.listdir(IMAGES_FOLDER_PATH)) - 1 > CONST.IMAGES_COUNT_WARNING:
+    images = [
+        image for image in os.listdir(IMAGES_FOLDER_PATH) if image.lower().endswith(('.png', '.jpg', 'jpeg'))
+    ]
+
+    if len(images) > CONST.IMAGES_COUNT_WARNING:
         print(STR.IMAGES_COUNT_WARNING.format(
             module=MODULE_NAME,
-            images=len(os.listdir(IMAGES_FOLDER_PATH)) - 1,
+            images=len(images),
             path=IMAGES_FOLDER_PATH,
             size=media_folder_size
         ))
@@ -65,9 +79,6 @@ def check_system_available_space(FPS):
         # Ask the user if wants to delete all images inside the "Media/Images/" folder
         delete = input(STR.IP_DELETE_IMAGES_QUESTION)
         if delete.lower().strip() in ('', 'y', 'yes'): 
-            images = [
-                image for image in os.listdir(IMAGES_FOLDER_PATH) if image.lower().endswith(('.png', '.jpg', 'jpeg'))
-            ]
             
             # Delete all the images
             print(STR.IP_DELETING_IMAGES.format(images=len(images)))

@@ -22,52 +22,66 @@ MODULE_NAME = 'Telegram'
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
 
-if __name__ == "__main__":
+def main_menu():
+    print('\n' + STR.M_MENU.format(module=MODULE_NAME))
+    print(STR.M_MENU_OPTION.format(index='1', option='Send shiny notification'))
+    print(STR.M_MENU_OPTION.format(index='2', option='Send error notifications'))
 
-    def main_menu():
-        print('\n' + STR.M_MENU.format(module=MODULE_NAME))
-        print(STR.M_MENU_OPTION.format(index='1', option='Send shiny notification'))
-        print(STR.M_MENU_OPTION.format(index='2', option='Send error notifications'))
+    option = input('\n' + STR.M_OPTION_SELECTION.format(module=MODULE_NAME))
 
-        option = input('\n' + STR.M_OPTION_SELECTION.format(module=MODULE_NAME))
+    menu_options = {
+        '1': send_telegram,
+        '2': send_telegram,
+    }
 
-        menu_options = {
-            '1': send_telegram,
-            '2': send_telegram,
-        }
+    if option in menu_options: menu_options[option](option)
+    else: print(STR.M_INVALID_OPTION.format(module=MODULE_NAME) + '\n')
 
-        if option in menu_options: menu_options[option](option)
-        else: print(STR.M_INVALID_OPTION.format(module=MODULE_NAME) + '\n')
+###########################################################################################################################
+###########################################################################################################################
 
-    #######################################################################################################################
-    #######################################################################################################################
+def send_telegram(option: str) -> None:
 
-    def send_telegram(option):
-        if option == '1':
-            action = 'shiny'
-        elif option == '2':
-            action = 'error'
+    """
+    Send test notifications via Telegram, either for shiny found or errors.
 
-        print('\n' + STR.M_SELECTED_OPTION.format(
-            module=MODULE_NAME,
-            option=option,
-            action=f"Sending {action} notifications",
-            path=''
-        ))
+    Args:
+        option (str): '1' to send shiny notification, '2' to send error notifications.
 
-        if not CONST.TELEGRAM_NOTIFICATIONS:
-            print(STR.G_TOGGLING_NOTIFICATIONS.format(module=MODULE_NAME))
-            CONST.TELEGRAM_NOTIFICATIONS = True
+    Returns:
+        None
+    """
 
-        Telegram = Telegram_Sender()
-        if option == '1':
-            Telegram.send_shiny_found('Dinones', None, randint(1, 10000))
-        if option == '2': 
-            Telegram.send_error_detected('STUCK')
-            Telegram.send_error_detected('THREAD_DIED', 'GUI_control')
+    if option == '1':
+        action = 'shiny'
+    elif option == '2':
+        action = 'error'
 
-    #######################################################################################################################
-    #######################################################################################################################
+    print('\n' + STR.M_SELECTED_OPTION.format(
+        module=MODULE_NAME,
+        option=option,
+        action=f"Sending {action} notifications",
+        path=''
+    ))
 
-    main_menu()
-    print()
+    # If notifications are disabled, enable them
+    if not CONST.TELEGRAM_NOTIFICATIONS:
+        print(STR.G_TOGGLING_NOTIFICATIONS.format(module=MODULE_NAME))
+        CONST.TELEGRAM_NOTIFICATIONS = True
+
+    Telegram = Telegram_Sender()
+
+    # Send shiny found test message
+    if option == '1':
+        Telegram.send_shiny_found('Dinones', None, randint(1, 10000))
+
+    # Send two test error messages
+    if option == '2': 
+        Telegram.send_error_detected('STUCK')
+        Telegram.send_error_detected('THREAD_DIED', 'GUI_control')
+
+###########################################################################################################################
+###########################################################################################################################
+
+main_menu()
+print()

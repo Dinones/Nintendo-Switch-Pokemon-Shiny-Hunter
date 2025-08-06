@@ -104,3 +104,12 @@ class Switch_Controller():
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
+
+if __name__ == '__main__':
+    # NXBT requires administrator permissions
+    if 'SUDO_USER' not in os.environ:
+        print(f'\n{STR.SC_NOT_SUDO}')
+        program_name = os.path.abspath(os.path.join(os.path.dirname(__file__), __file__.split('/')[-1]))
+        exit(os.system(f'sudo .venv/bin/python {program_name}'))
+
+    import Debug.Switch_Controller_Debug

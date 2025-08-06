@@ -6,6 +6,7 @@ import os
 import sys
 from time import time
 from queue import Queue
+from typing import Optional
 from threading import Thread, Event
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
@@ -37,101 +38,153 @@ MODULE_NAME = 'Switch Controller'
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
 
-if __name__ == '__main__':
+def main_menu():
+    print('\n' + STR.M_MENU.format(module=MODULE_NAME))
+    print(STR.M_MENU_OPTION.format(index=1, option='Test Switch Controller'))
 
-    def main_menu():
-        print('\n' + STR.M_MENU.format(module=MODULE_NAME))
-        print(STR.M_MENU_OPTION.format(index=1, option='Test Switch Controller'))
+    option = input('\n' + STR.M_OPTION_SELECTION.format(module=MODULE_NAME))
 
-        option = input('\n' + STR.M_OPTION_SELECTION.format(module=MODULE_NAME))
+    menu_options = {
+        '1': test_controller,
+    }
 
-        menu_options = {
-            '1': test_controller,
-        }
+    if option in menu_options: menu_options[option](option)
+    else: print(STR.M_INVALID_OPTION.format(module=MODULE_NAME) + '\n')
 
-        if option in menu_options: menu_options[option](option)
-        else: print(STR.M_INVALID_OPTION.format(module=MODULE_NAME) + '\n')
+###########################################################################################################################
+###########################################################################################################################
+
+def test_controller(option: str) -> None:
+
+    """
+    Launch a test sequence to validate the Switch controller input and GUI display.
+
+    Args:
+        option (str): Menu option for display purposes.
+
+    Returns:
+        None
+    """
+
+    print('\n' + STR.M_SELECTED_OPTION.format(
+        module = MODULE_NAME,
+        option = option,
+        action = 'Testing Switch Controller...',
+        path = ''
+    ))
+
+    # Set XDG_RUNTIME_DIR to avoid warnings in some environments
+    os.environ['XDG_RUNTIME_DIR'] = "/tmp/runtime-root"
+    os.makedirs(os.environ['XDG_RUNTIME_DIR'], exist_ok=True)
+    os.chmod(os.environ['XDG_RUNTIME_DIR'], 0o700)
+
+    FPS = FPS_Counter()
+    initial_time = time()
+    Image_Queue = Queue(maxsize = 2)
+    Controller = Switch_Controller()
+    shutdown_event = Event()
+    Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
+
+    switch_controller_image = _initialize_switch_controller_image()
 
     #######################################################################################################################
     #######################################################################################################################
 
-    def test_controller(option):
-        print('\n' + STR.M_SELECTED_OPTION.format(
-            module = MODULE_NAME,
-            option = option,
-            action = 'Testing Switch Controller...',
-            path = ''
-        ))
+    def test_GUI_control(controller: Switch_Controller, shutdown_event: Optional[Event] = None) -> None:
 
-        # Set XDG_RUNTIME_DIR environment variable (avoid unnecessary warnings)
-        os.environ['XDG_RUNTIME_DIR'] = "/tmp/runtime-root"
-        os.makedirs(os.environ['XDG_RUNTIME_DIR'], exist_ok=True)
-        os.chmod(os.environ['XDG_RUNTIME_DIR'], 0o700)
+        """
+        Continuously updates the image queue with GUI and controller state until shutdown.
 
-        FPS = FPS_Counter()
-        initial_time = time()
-        Image_Queue = Queue(maxsize = 2)
-        Controller = Switch_Controller()
-        shutdown_event = Event()
-        Video_Capture = Game_Capture(CONST.VIDEO_CAPTURE_INDEX)
+        Args:
+            controller (Switch_Controller): The controller instance.
+            shutdown_event (Event): Event used to signal shutdown.
 
-        switch_controller_image = _initialize_switch_controller_image()
+        Returns:
+            None
+        """
 
-        def test_GUI_control(controller, shutdown_event = None):
-            if isinstance(shutdown_event, type(None)): return
+        if shutdown_event is None:
+            return
 
-            while not shutdown_event.is_set():
-                image = Image_Processing(Video_Capture.read_frame())
-                if isinstance(image.original_image, type(None)): continue
+        while not shutdown_event.is_set():
+            image = Image_Processing(Video_Capture.read_frame())
+            if image.original_image is None:
+                continue
 
-                image.resize_image()
-                FPS.get_FPS()
-                image.draw_FPS(FPS.FPS)
+            image.resize_image()
+            FPS.get_FPS()
+            image.draw_FPS(FPS.FPS)
 
-                _draw_switch_controller_buttons(controller, switch_controller_image)
+            _draw_switch_controller_buttons(controller, switch_controller_image)
 
-                update_items = {
-                    'image': image,
-                    'current_state': None,
-                    'shutdown_event': shutdown_event,
-                    'global_encounter_count': 0,
-                    'local_encounter_count': 0,
-                    'memory_usage': FPS.memory_usage,
-                    'cpu_usage': FPS.cpu_usage,
-                    'switch_controller_image': switch_controller_image,
-                    'clock': int(time() - initial_time),
-                }
+            update_items = {
+                'image': image,
+                'current_state': None,
+                'shutdown_event': shutdown_event,
+                'global_encounter_count': 0,
+                'local_encounter_count': 0,
+                'memory_usage': FPS.memory_usage,
+                'cpu_usage': FPS.cpu_usage,
+                'switch_controller_image': switch_controller_image,
+                'clock': int(time() - initial_time),
+            }
 
-                Image_Queue.put(update_items)
+            Image_Queue.put(update_items)
 
-        def run_test_controller(controller, shutdown_event):
-            try: 
-                controller.connect_controller()
-                test_macro(controller)
-                controller.disconnect_controller()
-            except: pass
-            shutdown_event.set()
+    #######################################################################################################################
+    #######################################################################################################################
 
-        threads = []
-        threads.append(Thread(target=lambda: test_GUI_control(Controller, shutdown_event), daemon=True))
-        threads.append(Thread(target=lambda: FPS.get_memory_usage(shutdown_event), daemon=True))
-        threads.append(Thread(target=lambda: run_test_controller(Controller, shutdown_event), daemon=True))
-        for thread in threads: thread.start()
+    def run_test_controller(controller: Switch_Controller, shutdown_event: Event) -> None:
 
-        GUI_App = App()
-        gui = GUI(Image_Queue, shutdown_event, shutdown_event)
-        # Blocking function until the GUI is closed
-        GUI_App.exec_()
-        
-        # Kill all secondary threads
+        """
+        Run the controller macro test and disconnect once finished.
+
+        Args:
+            controller (Switch_Controller): The controller instance.
+            shutdown_event (Event): Event used to signal shutdown.
+
+        Returns:
+            None
+        """
+
+        try: 
+            controller.connect_controller()
+            test_macro(controller)
+            controller.disconnect_controller()
+        except:
+            pass
+
         shutdown_event.set()
-        print(STR.G_RELEASING_THREADS
-            .replace('{module}', 'Switch Controller')
-            .replace('{threads}', str(len(threads)))
-        )
 
     #######################################################################################################################
     #######################################################################################################################
 
-    main_menu()
-    print()
+    # Start background threads
+    threads = [
+        Thread(target=lambda: test_GUI_control(Controller, shutdown_event), daemon=True),
+        Thread(target=lambda: FPS.get_memory_usage(shutdown_event), daemon=True),
+        Thread(target=lambda: run_test_controller(Controller, shutdown_event), daemon=True)
+    ]
+
+    for thread in threads:
+        thread.start()
+
+    # Launch the GUI
+    GUI_App = App()
+    gui = GUI(Image_Queue, shutdown_event, shutdown_event)
+    # Blocking function until the GUI is closed
+    GUI_App.exec_()
+    
+    # Signal shutdown to threads
+    shutdown_event.set()
+
+    print(STR.G_RELEASING_THREADS
+        .replace('{module}', 'Switch Controller')
+        .replace('{threads}', str(len(threads)))
+    )
+
+###########################################################################################################################
+###########################################################################################################################
+
+main_menu()
+print()

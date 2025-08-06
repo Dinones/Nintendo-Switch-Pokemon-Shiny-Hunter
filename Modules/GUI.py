@@ -284,7 +284,7 @@ class GUI(pyqt_w.QWidget):
 
         # Calculate shiny odds percentage (bad luck chance)
         encounters = update_items['global_encounter_count']
-        bad_luck = (1 - 1 / 4096) ** encounters * 100 if encounters else 100
+        bad_luck = 100 - ((1 - 1 / 4096) ** encounters * 100 if encounters else 100)
 
         # Update labels with formatted stats
         self.items['RAM_usage_label'].setText(f"  ★   RAM Usage: {update_items['memory_usage']:.2f} MB")
@@ -369,3 +369,6 @@ def play_sound(path: str) -> None:
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
+
+if __name__ == '__main__':
+    import Debug.GUI_Debug
