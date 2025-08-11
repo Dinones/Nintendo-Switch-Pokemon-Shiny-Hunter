@@ -118,7 +118,7 @@ class FPS_Counter():
                     # No read permission on file
                     pass
 
-        return self._format_space_size(total_size)
+        return self.format_space_size(total_size)
 
     #######################################################################################################################
     #######################################################################################################################
@@ -144,9 +144,9 @@ class FPS_Counter():
         used_space = total_space - available_space
 
         return {
-            'total': self._format_space_size(total_space),
-            'used': self._format_space_size(used_space),
-            'available': self._format_space_size(available_space),
+            'total': self.format_space_size(total_space),
+            'used': self.format_space_size(used_space),
+            'available': self.format_space_size(available_space),
             'available_no_format': available_space
         }
     
@@ -154,7 +154,7 @@ class FPS_Counter():
     #######################################################################################################################
 
     @staticmethod
-    def _format_space_size(size: float) -> str:
+    def format_space_size(size: float) -> str:
 
         """
         Converts a byte size into a human-readable format (B, KB, MB, GB, etc.).

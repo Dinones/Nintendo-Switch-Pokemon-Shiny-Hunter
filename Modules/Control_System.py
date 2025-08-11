@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import os
 import sys
+from datetime import datetime
 from threading import Thread, Timer
 from time import sleep, time, perf_counter
 from typing import Any, Optional, Literal, TYPE_CHECKING
@@ -156,18 +157,19 @@ def _is_program_stuck(Controller: Switch_Controller, Video_Capture: Game_Capture
         Controller.current_event == Controller.previous_event and
         time() - stuck_timer > CONST.STUCK_TIMER_SECONDS
     ):
-        stuck_timer = time()
-        encounter_playtime = time()
-
         # If got stuck in "RESTART_GAME_1", it would be stuck forever
         Controller.previous_event = None
         Controller.current_event = "RESTART_GAME_1"
 
         print(STR.STUCK_FOR_TOO_LONG_WARN_1.format(
+            time=datetime.now().strftime("%H:%M:%S"),
             module=MODULE_NAME,
             event=Controller.current_event,
             seconds=CONST.STUCK_TIMER_SECONDS
         ))
+
+        stuck_timer = time()
+        encounter_playtime = time()
 
         # Save the video of the error
         if CONST.SAVE_ERROR_VIDEOS:
@@ -188,7 +190,11 @@ def _is_program_stuck(Controller: Switch_Controller, Video_Capture: Game_Capture
         Controller.previous_event = None
         Controller.current_event = "RESTART_GAME_1"
 
-        print(STR.STUCK_FOR_TOO_LONG_WARN_2.format(module=MODULE_NAME, minutes=CONST.FAILURE_DETECTION_SECONDS_WARN//60))
+        print(STR.STUCK_FOR_TOO_LONG_WARN_2.format(
+            time=datetime.now().strftime("%H:%M:%S"),
+            module=MODULE_NAME,
+            minutes=CONST.FAILURE_DETECTION_SECONDS_WARN//60)
+        )
 
         # Save the error video
         if CONST.SAVE_ERROR_VIDEOS:
@@ -205,7 +211,11 @@ def _is_program_stuck(Controller: Switch_Controller, Video_Capture: Game_Capture
         Thread(target=lambda: Telegram.send_error_detected('STUCK'), daemon=False).start()
         Thread(target=lambda: Email.send_error_detected('STUCK'), daemon=False).start()
 
-        print(STR.STUCK_FOR_TOO_LONG_ERROR.format(module=MODULE_NAME, minutes=CONST.FAILURE_DETECTION_SECONDS_ERROR//60))
+        print(STR.STUCK_FOR_TOO_LONG_ERROR.format(
+            time=datetime.now().strftime("%H:%M:%S"),
+            module=MODULE_NAME,
+            minutes=CONST.FAILURE_DETECTION_SECONDS_ERROR//60)
+        )
 
         shutdown_event.set()
         return
@@ -213,6 +223,10 @@ def _is_program_stuck(Controller: Switch_Controller, Video_Capture: Game_Capture
     # Reset the stuck timer if the state changed normally
     elif Controller.current_event != Controller.previous_event:
         stuck_timer = time()
+
+    # Reset the encounter timer when a pokemon is found
+    elif Controller.current_event == 'CHECK_SHINY':
+        encounter_playtime = time()
 
 ###########################################################################################################################
 ###########################################################################################################################
@@ -349,6 +363,8 @@ def _update_database(
 
     # A shiny pokemon has appeared
     elif Controller.current_event == "SHINY_FOUND":
+        pokemon_name = last_saved_image_path.split('/')[-1].split('\\')[-1].split('_')[0]
+
         # It sometimes gets bugged and detects the Starly instead of the starter, which will raise always a false positive
         # due to the amount of time between the text boxes. It also restarts the game if no pokemon name is detected
         if (
@@ -367,7 +383,7 @@ def _update_database(
             Video_Capture.save_video(f'Shiny {pokemon_name} - {time()}')
 
             # Play a sound so the user can hear a shiny has been found
-            sound_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', CONST.CONST.SHINY_SOUND_PATH))
+            sound_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', CONST.SHINY_SOUND_PATH))
             Thread(target=lambda: play_sound(sound_path), daemon=True).start()
             
             # Send a shiny notification to Telegram and/or Email (does nothing if notifications are disabled)
@@ -669,13 +685,3 @@ def check_threads(threads: List[Dict[str, Any]], shutdown_event: Event) -> None:
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
 ###########################################################################################################################
-
-"""
-if CONST.DEBUG_VIDEO:
-    stats = {'event': Controller.current_event, 'button': Controller.current_button_pressed}
-    debug_image.populate_debug_image(stats)
-    combined_image = debug_image.stack_images(debug_image.FPS_image, image.FPS_image)
-    Video_Capture.add_frame_to_video(combined_image)
-else:
-    Video_Capture.add_frame_to_video(image.original_image)
-"""

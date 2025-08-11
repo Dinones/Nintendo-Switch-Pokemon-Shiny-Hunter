@@ -95,7 +95,8 @@ def check_system_available_space(FPS: FPS_Counter) -> Optional[None]:
                     available_space=system_space['available']
                 ))
             
-        else: return print()
+        else:
+            exit('')
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################
@@ -127,8 +128,7 @@ if __name__ == "__main__":
         os.environ['ALSOFT_LOGLEVEL'] = '0'
 
         if option in menu_options: menu_options[option](option)
-        else: print(STR.M_INVALID_OPTION.format(module=MODULE_NAME) + '\n')
-
+        else: print(STR.M_INVALID_OPTION.format(module=MODULE_NAME))
     
     #######################################################################################################################
     #######################################################################################################################
@@ -204,9 +204,10 @@ if __name__ == "__main__":
 
         shutdown_event.set()
 
-        print(STR.G_RELEASING_THREADS.format(module=MODULE_NAME, threads=len(threads)), '\n')
+        print(STR.G_RELEASING_THREADS.format(module=MODULE_NAME, threads=len(threads)))
 
     #######################################################################################################################
     #######################################################################################################################
 
     main_menu()
+    print()

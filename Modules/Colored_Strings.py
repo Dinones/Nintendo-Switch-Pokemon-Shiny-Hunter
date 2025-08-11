@@ -56,34 +56,34 @@ ERROR = f'\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m[X] {RESET_FORMAT}'
 ###########################################################################################################################
 
 G_INVALID_PATH_ERROR = \
-    f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
+    f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}]"} {RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}mInvalid path: {RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]};{SPECIAL["Italics"]}m"{"{path}"}"{RESET_FORMAT}'
 
 G_INVALID_PATH_WARNING = \
-    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
+    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}]"} {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mInvalid path: {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}m"{"{path}"}"{RESET_FORMAT}'
 
 G_SUCCESS_EXIT_PROGRAM = \
-    f'{CORRECT}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
+    f'{CORRECT}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}]"} {RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}mExiting program: {RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]}m{"{reason}"}{RESET_FORMAT}'
 
 G_PRESS_KEY_TO_INSTRUCTION = \
-    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
+    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}]"} {RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mPress {RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]}m{"{key}"}{RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}m to {"{instruction}"}... {RESET_FORMAT}'
 
 G_RELEASING_THREADS = \
-    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
+    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}]"} {RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mReleasing {RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]}m{"{threads}"}{RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}m thread(s)... {RESET_FORMAT}'
 
 IMAGES_COUNT_WARNING = \
-    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
+    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}]"} {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mDetected {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]}m{"{images}"}{RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}m images inside {RESET_FORMAT}'+\
@@ -93,7 +93,7 @@ IMAGES_COUNT_WARNING = \
     f'\033[{COLORS["Yellow"]}mPlease, consider checking and deleting them...{RESET_FORMAT}'
 
 USED_SPACE_WARNING = \
-    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
+    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}]"} {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mSpace in {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}m{"{path}"}{RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}m is greater than {RESET_FORMAT}'+\
@@ -102,33 +102,33 @@ USED_SPACE_WARNING = \
     f'\033[{COLORS["Yellow"]}mPlease, consider freeing some space...{RESET_FORMAT}'
 
 AVAILABLE_SPACE_ERROR = \
-    f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
+    f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}]"} {RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}mSystem\'s available space is less than {RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]}m{"{threshold} ({available_space})"}{RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}m: {RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]}mPlease, free some space before continuing...{RESET_FORMAT}'
 
 RUNNING_OUT_OF_SPACE = \
-    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
+    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}]"} {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mThere\'s only {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]}m{"{available_space}"}{RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}m of space left in the system: {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]}mNo longer saving screenshots of the encounters...{RESET_FORMAT}'
 
 THREAD_DIED_ERROR = \
-    f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
+    f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}]"} {RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}mThread {RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]};{SPECIAL["Italics"]}m{"{thread}"}{RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}m died: {RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]}mShutting down program...{RESET_FORMAT}'
 
 COULD_NOT_PLAY_SOUND = \
-    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
+    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}]"} {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mCould not play sound: {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}m"{"{path}"}"{RESET_FORMAT}'
 
 SHINY_FOUND = \
-    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
+    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}]"} {RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mShiny {RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]}m{"{pokemon}"}{RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}m found after {RESET_FORMAT}'+\
@@ -136,7 +136,7 @@ SHINY_FOUND = \
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}m encounters!{RESET_FORMAT}'
 
 STUCK_FOR_TOO_LONG_WARN_1 = \
-    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
+    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}]"} {"[{time}]"} {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mGot stuck in the {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]}m{"{event}"}{RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}m state for {RESET_FORMAT}'+\
@@ -145,28 +145,28 @@ STUCK_FOR_TOO_LONG_WARN_1 = \
     f'\033[{COLORS["Yellow"]}mTrying to restart the game...{RESET_FORMAT}'
 
 STUCK_FOR_TOO_LONG_WARN_2 = \
-    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
+    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}]"} {"[{time}]"} {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}mNo pokémon has been found for {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]}m{"{minutes}"}{RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}m minutes: {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]}mTrying to restart the game...{RESET_FORMAT}'
 
 STUCK_FOR_TOO_LONG_ERROR = \
-    f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
+    f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}]"} {"[{time}]"} {RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}mNo pokémon has been found for {RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]}m{"{minutes}"}{RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}m minutes: {RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]}mStopping the program...{RESET_FORMAT}'
 
 G_EMPTY_CREDENTIALS = \
-    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
+    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}]"} {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}m{"{module}"} notifications cannot be sent: {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]}mSome fields are missing in the {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}m"{"{path}"}"{RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]}m file{RESET_FORMAT}'
 
 G_TOGGLING_NOTIFICATIONS = \
-    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
+    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}]"} {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}m{"{module}"} notifications are disabled: {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]}mRemember to enable them before running the shiny hunter{RESET_FORMAT}'
 
@@ -175,7 +175,7 @@ G_TOGGLING_NOTIFICATIONS = \
 ###########################################################################################################################
 
 M_SELECTED_OPTION = \
-    f'{CORRECT}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
+    f'{CORRECT}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}]"} {RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}mOption {RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]}m{"{option}"}{RESET_FORMAT}'+\
     f'\033[{COLORS["Green"]};{SPECIAL["Bold"]}m selected: {RESET_FORMAT}'+\
@@ -183,7 +183,7 @@ M_SELECTED_OPTION = \
     f'\033[{COLORS["Green"]};{SPECIAL["Italics"]}m{"{path} "}{RESET_FORMAT}'
 
 M_MENU = \
-    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
+    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}]"} {RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mSelection Menu:{RESET_FORMAT}'
 
 M_MENU_OPTION = \
@@ -191,11 +191,11 @@ M_MENU_OPTION = \
     f'\033[{COLORS["Blue"]}m{"{option}"}{RESET_FORMAT}'
 
 M_OPTION_SELECTION = \
-    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
+    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}]"} {RESET_FORMAT}'+\
     f'\033[{COLORS["Blue"]};{SPECIAL["Bold"]}mSelect an option: {RESET_FORMAT}'
 
 M_INVALID_OPTION = \
-    f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}] "}{RESET_FORMAT}'+\
+    f'{ERROR}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}]"} {RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]};{SPECIAL["Bold"]}mInvalid option: {RESET_FORMAT}'+\
     f'\033[{COLORS["Red"]}mExiting the program...{RESET_FORMAT}'
 

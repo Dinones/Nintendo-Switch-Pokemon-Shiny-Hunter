@@ -35,7 +35,8 @@ def initialize_database(db_file: str = DATABASE_PATH) -> None:
 
     if os.path.exists(db_file):
         # Give write access to everyone
-        os.chmod(db_file, 0o666)
+        if 'SUDO_USER' in os.environ: 
+            os.chmod(db_file, 0o666)
         return
 
     # Connect to the database (creates it if it doesn't exist)
