@@ -4,13 +4,13 @@
     </br>
 </h1>
 
-<h4 align="center">Search for shiny pokémon on your Nintendo Switch while sleeping!</h4>
+<h4 align="center">Search for shiny pokémon on your Nintendo Switch while sleeping ✨</h4>
 
 <div align="center">
     
-<!-- [![GitHub Repo Stars](https://img.shields.io/github/stars/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter?label=%E2%9C%A8%20Stars&color=ff0000)](https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter) -->
+<!-- [![GitHub Repo Stars](https://img.shields.io/github/stars/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter?label=%E2%9C%A8%20Stars&color=ff0000)](https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter)
 [![Discord](https://img.shields.io/badge/contact-Dinones-blue?logo=discord&label=Discord&logoColor=5865f2&color=5865f2)](https://discordapp.com/users/177131156028784640)
-[![YouTube Channel Subscribers](https://img.shields.io/youtube/channel/subscribers/UCUDcDii2WU8SVoTCgYlQCiw?style=flat&logo=youtube&logoColor=ff0000&label=Youtube&color=ff0000)](https://www.youtube.com/watch?v=XE8Oeh71BQ4&ab_channel=Dinones)
+[![YouTube Channel Subscribers](https://img.shields.io/youtube/channel/subscribers/UCUDcDii2WU8SVoTCgYlQCiw?style=flat&logo=youtube&logoColor=ff0000&label=Youtube&color=ff0000)](https://www.youtube.com/watch?v=XE8Oeh71BQ4&ab_channel=Dinones) -->
 
 </div>
 
@@ -30,13 +30,13 @@
 </h1>
 
 <!-- #################### CREATION PROCESS #################### -->
-⠀
+<!-- ⠀
 <h2 id="youtube">
     <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Youtube.svg" width="30px" align="top"/>
     ⠀Creation Process
 </h2>
 
-<p>In my <a href="https://www.youtube.com/@DinoDinones">Youtube Channel</a> you can follow the entire creation process of the project. Don’t miss it!</p>
+<p>In my <a href="https://www.youtube.com/@DinoDinones">Youtube Channel</a> you can follow the entire creation process of the project. Don’t miss it!</p> -->
 
 <!-- #################### KEY FEATURES #################### -->
 ⠀
@@ -49,7 +49,7 @@
     <p>
         &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Raspberry.svg" width="20px" align="center"/>⠀ Use your computer to <b>automatically</b> search for shiny pokémon. <br>
     </p><p>
-        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/NS%20Controller.svg" width="20px" align="center" style="margin-top:0px"/>⠀ Works on physical games running on a Nintendo Switch, <b>not emulators</b>! <br>
+        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/NS%20Controller.svg" width="20px" align="center" style="margin-top:0px"/>⠀ Works on official games running on a Nintendo Switch, <b>not emulators</b>! <br>
     </p>
     <p>
         &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Camera.svg" width="20px" align="top"/>⠀ Automatically saves a video of the shiny encounter. <br>
@@ -58,7 +58,7 @@
         &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Music.svg" width="20px" align="top"/>⠀ Plays a sound whenever a shiny Pokémon is found. <br>
     </p> 
     <p>
-        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Notification.svg" width="20px" align="top"/>⠀ Sends an email, Telegram and/or Discord <b>notification</b> when a shiny is found. <br>
+        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Notification.svg" width="20px" align="top"/>⠀ Sends an Email, Telegram and/or Discord <b>notification</b> when a shiny is found. <br>
     </p> 
 </p>
 

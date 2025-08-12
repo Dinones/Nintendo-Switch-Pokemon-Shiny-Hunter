@@ -9,7 +9,6 @@ REFRESH_FPS_TIME = 1
 MAX_VIDEO_DEVICES_ANALIZED = 5
 VIDEO_FPS = 27
 OUTPUT_VIDEO_PATH = 'Media/Videos/Video.avi'
-# Can't be greater than 110s!
 SHINY_RECORDING_SECONDS = 60
 CAPTURE_CARD_DISCONNECTED_MAX_SECONDS = 10
 # Save the video of the encounter. Disable this if you have performance issues
@@ -91,10 +90,10 @@ CONTROLLER_BUTTONS_COLOR = (200, 0, 0)
 
 IMAGES_COUNT_WARNING = 300
 # Time the player is moving in each direction
-WILD_WALKING_SECONDS = 1
+WILD_WALKING_SECONDS = 1.2
 # 'NS': Up/Down | 'EW': Right/Left
 WILD_WALKING_DIRECTION = 'EW'
-MOVE_FORWARD_STATIC_ENCOUNTER = False
+MOVE_FORWARD_STATIC_ENCOUNTER = True
 SKIP_UPDATING_GAME = False
 
 # Variable used to skip a white screen flash (some static encounters have two white screen flashes)
@@ -170,7 +169,7 @@ DATABASE_PATH = 'Media/Database.db'
 ###########################################################################################################################
 
 # You will receive mail notifications when a shiny is found or an error occurs
-MAIL_NOTIFICATIONS = False
+MAIL_NOTIFICATIONS = True
 MAIL_SETTINGS = {
     'port': 587,                        # Port TLS: 587 | SSL: 465
     'smtp_server': 'smtp.gmail.com',    # SMTP server
@@ -204,7 +203,7 @@ TELEGRAM_SETTINGS = {
 TESTING = True
 SAVE_ERROR_VIDEOS = False
 TESTING_COLOR = (255, 0, 255)
-TESTING_VIDEO_PATH = 'Media/Tests/XXXX.avi'
+TESTING_VIDEO_PATH = 'Media/Tests/Video.avi'
 TESTING_IMAGE_PATH = 'Media/Tests/XXXX.png'
 TESTING_DATABASE_PATH = 'Media/Tests/Test_Database.db'
 SAVING_FRAMES_PATH = 'Media/Tests'
