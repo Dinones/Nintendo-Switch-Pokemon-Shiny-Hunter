@@ -151,7 +151,10 @@ def _is_program_stuck(Controller: Switch_Controller, Video_Capture: Game_Capture
     global stuck_timer, encounter_playtime
 
     # Stuck in the same state for STUCK_TIMER_SECONDS -> Restart the game
-    skip_states = ("MOVE_PLAYER", "WAIT_PAIRING_SCREEN", "WAIT_HOME_SCREEN", "SHINY_FOUND", "ENTER_LAKE_4")
+    skip_states = (
+        "MOVE_PLAYER", "WAIT_PAIRING_SCREEN", "WAIT_HOME_SCREEN", "SHINY_FOUND", "ENTER_LAKE_4", "STOP_1", "STOP_2",
+        "STOP_3"
+    )
     if (
         Controller.current_event not in skip_states and
         Controller.current_event == Controller.previous_event and
@@ -178,7 +181,10 @@ def _is_program_stuck(Controller: Switch_Controller, Video_Capture: Game_Capture
         return
 
     # Stuck in a loop where states change, but no pokemon is found for FAILURE_DETECTION_SECONDS_WARN -> Restart the game
-    skip_states = ("RESTART_GAME_1", "WAIT_PAIRING_SCREEN", "WAIT_HOME_SCREEN", "SHINY_FOUND", "ENTER_LAKE_4")
+    skip_states = (
+        "RESTART_GAME_1", "WAIT_PAIRING_SCREEN", "WAIT_HOME_SCREEN", "SHINY_FOUND", "ENTER_LAKE_4", "STOP_1", "STOP_2",
+        "STOP_3"
+    )
     if (
         Controller.current_event not in skip_states and
         time() - encounter_playtime > CONST.FAILURE_DETECTION_SECONDS_WARN
@@ -606,7 +612,7 @@ def controller_control(controller: Switch_Controller, shutdown_event: Event) -> 
         # ENTER_STATIC_COMBAT_3 needs to press A for some pokemon that have two dialog phases
         press_A_states = (
             'RESTART_GAME_2', 'RESTART_GAME_3', 'ENTER_STATIC_COMBAT_2', 'ENTER_STATIC_COMBAT_3', 'ESCAPE_FAILED',
-            'ENTER_LAKE_2', 'ENTER_LAKE_4'
+            'ENTER_LAKE_2', 'ENTER_LAKE_4', 'RESPAWN_SHAYMIN_1', 'RESPAWN_SHAYMIN_2'
         )
 
         if aux_current_event == 'WAIT_HOME_SCREEN':
@@ -629,7 +635,7 @@ def controller_control(controller: Switch_Controller, shutdown_event: Event) -> 
             escape_combat_macro(controller)
         elif aux_current_event == 'STOP_1':
             stop_macro(controller)
-        elif aux_current_event == 'RESPAWN_SHAYMIN':
+        elif aux_current_event == 'RESPAWN_SHAYMIN_3':
             bdsp_respawn_shaymin(controller)
 
         # Don't care about race conditions here

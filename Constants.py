@@ -93,12 +93,11 @@ IMAGES_COUNT_WARNING = 300
 WILD_WALKING_SECONDS = 1.2
 # 'NS': Up/Down | 'EW': Right/Left
 WILD_WALKING_DIRECTION = 'EW'
-MOVE_FORWARD_STATIC_ENCOUNTER = True
+MOVE_FORWARD_STATIC_ENCOUNTER = False
 SKIP_UPDATING_GAME = False
 
 # Variable used to skip a white screen flash (some static encounters have two white screen flashes)
 # - Default value is 2
-# - Dialga and Palkia: 4
 # - Arceus: 6.5
 # - Uxie: 3
 # - Regigigas: 7
@@ -169,7 +168,7 @@ DATABASE_PATH = 'Media/Database.db'
 ###########################################################################################################################
 
 # You will receive mail notifications when a shiny is found or an error occurs
-MAIL_NOTIFICATIONS = True
+MAIL_NOTIFICATIONS = False
 MAIL_SETTINGS = {
     'port': 587,                        # Port TLS: 587 | SSL: 465
     'smtp_server': 'smtp.gmail.com',    # SMTP server

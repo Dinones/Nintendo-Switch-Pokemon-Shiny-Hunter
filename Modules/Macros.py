@@ -409,14 +409,11 @@ def bdsp_respawn_shaymin(controller: nxbt.Nxbt) -> None:
         controller (nxbt.Nxbt): The controller managing button presses via nxbt.
     """
 
-    # Wait for the escape animation to end
-    sleep(1.5)
-
-    # Press 'A' to close combat textboxes
-    press_single_button(controller, 'A', 0.5)
+    # Wait for the text box to disappear
+    sleep(0.5)
 
     # Mount the bike (must have fast gear enabled and bike on bottom option)
-    press_single_button(controller, 'PLUS', 0.75)
+    press_single_button(controller, 'PLUS')
 
     # Move down to unload Shaymin
     press_single_button(controller, 'DOWN', 3)
@@ -425,13 +422,13 @@ def bdsp_respawn_shaymin(controller: nxbt.Nxbt) -> None:
     press_single_button(controller, 'UP', 3.5)
 
     # Interact with Shaymin
-    press_single_button(controller, 'A', 0.5)
+    press_single_button(controller, 'A')
 
     # Wait for the dismount animation before the textbox appears
     sleep(2)
 
     # Close Shaymin's intro textbox
-    press_single_button(controller, 'A', 0.5)
+    press_single_button(controller, 'A')
 
 ###########################################################################################################################
 #####################################################     PROGRAM     #####################################################

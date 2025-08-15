@@ -500,7 +500,7 @@ def shaymin_encounter(image: np.ndarray, state: str) -> str:
     elif state == 'ESCAPE_COMBAT_5':
         # Check if the black screen has ended
         if not is_black_screen_visible(image):
-            return 'RESPAWN_SHAYMIN'
+            return 'RESPAWN_SHAYMIN_1'
 
     elif state == 'ESCAPE_FAILED_1':
         # Look for the life box
@@ -513,10 +513,20 @@ def shaymin_encounter(image: np.ndarray, state: str) -> str:
         if is_combat_text_box_visible(image):
             return 'ESCAPE_COMBAT_3'
 
-    elif state == 'RESPAWN_SHAYMIN':
-        #After returning to the original position we begin the event again
-        if is_combat_text_box_visible(image):
-            return 'ENTER_STATIC_COMBAT_1'
+    elif state == 'RESPAWN_SHAYMIN_1':
+        # Look for the overworld text box
+        if is_overworld_text_box_visible(image):
+            return 'RESPAWN_SHAYMIN_2'
+    
+    elif state == 'RESPAWN_SHAYMIN_2':
+        # Look for the overworld text box
+        if not is_overworld_text_box_visible(image):
+            return 'RESPAWN_SHAYMIN_3'
+    
+    elif state == 'RESPAWN_SHAYMIN_3':
+        # Look for the overworld text box
+        if is_overworld_text_box_visible(image):
+            return 'ENTER_STATIC_COMBAT_2'
 
     else: return _check_common_states(image, state)
 
