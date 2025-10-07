@@ -40,10 +40,12 @@ SWITCH_CONTROLLER_IMAGE_PATH = os.path.abspath(
     os.path.join(os.path.dirname(__file__), '..', CONST.SWITCH_CONTROLLER_IMAGE_PATH)
 )
 
-stuck_timer = time()
+stuck_timer = time() # Used to check if stuck in the same state
+encounter_playtime = time() # Used to check if stuck in a loop where states change, but no pokemon is found
+critical_stuck_timer = time() # Used to stop the program if it hasn't found a pokemon for too long
+
 shiny_timer = time()
 initial_time = time()
-encounter_playtime = time()
 last_saved_image_path = ''
 
 Email = Email_Sender()
@@ -134,7 +136,7 @@ def _draw_switch_controller_buttons(Controller: Switch_Controller, switch_contro
 ###########################################################################################################################
 ###########################################################################################################################
 
-def _is_program_stuck(Controller: Switch_Controller, Video_Capture: Game_Capture, shutdown_event: Event) -> None:
+def _is_program_stuck(Controller: Switch_Controller, Video_Capture: Game_Capture, stop_event: Event) -> None:
 
     """
     Detect whether the program is stuck in an invalid state or endless loop, and take action accordingly.
@@ -142,19 +144,23 @@ def _is_program_stuck(Controller: Switch_Controller, Video_Capture: Game_Capture
     Args:
         Controller (Switch_Controller): Controller tracking the current and previous state.
         Video_Capture (Game_Capture): Object used to save the video when an error occurs.
-        shutdown_event (Event): Event to signal shutdown if an unrecoverable error is detected.
+        stop_event (Event): Event to signal shutdown if an unrecoverable error is detected.
 
     Returns:
         None
     """
 
-    global stuck_timer, encounter_playtime
+    global stuck_timer, encounter_playtime, critical_stuck_timer
+
+    if stop_event.is_set():
+        return
 
     # Stuck in the same state for STUCK_TIMER_SECONDS -> Restart the game
     skip_states = (
         "MOVE_PLAYER", "WAIT_PAIRING_SCREEN", "WAIT_HOME_SCREEN", "SHINY_FOUND", "ENTER_LAKE_4", "STOP_1", "STOP_2",
         "STOP_3"
     )
+
     if (
         Controller.current_event not in skip_states and
         Controller.current_event == Controller.previous_event and
@@ -172,7 +178,6 @@ def _is_program_stuck(Controller: Switch_Controller, Video_Capture: Game_Capture
         ))
 
         stuck_timer = time()
-        encounter_playtime = time()
 
         # Save the video of the error
         if CONST.SAVE_ERROR_VIDEOS:
@@ -185,13 +190,11 @@ def _is_program_stuck(Controller: Switch_Controller, Video_Capture: Game_Capture
         "RESTART_GAME_1", "WAIT_PAIRING_SCREEN", "WAIT_HOME_SCREEN", "SHINY_FOUND", "ENTER_LAKE_4", "STOP_1", "STOP_2",
         "STOP_3"
     )
+
     if (
         Controller.current_event not in skip_states and
         time() - encounter_playtime > CONST.FAILURE_DETECTION_SECONDS_WARN
     ):
-        stuck_timer = time()
-        encounter_playtime = time()
-
         # If got stuck in "RESTART_GAME_1", it would be stuck forever
         Controller.previous_event = None
         Controller.current_event = "RESTART_GAME_1"
@@ -202,6 +205,9 @@ def _is_program_stuck(Controller: Switch_Controller, Video_Capture: Game_Capture
             minutes=CONST.FAILURE_DETECTION_SECONDS_WARN//60)
         )
 
+        stuck_timer = time()
+        encounter_playtime = time()
+
         # Save the error video
         if CONST.SAVE_ERROR_VIDEOS:
             Video_Capture.save_video(f'Loop Stuck Error - {time()}')
@@ -211,7 +217,7 @@ def _is_program_stuck(Controller: Switch_Controller, Video_Capture: Game_Capture
     # No pokemon is found for FAILURE_DETECTION_SECONDS_ERROR -> stop the program
     if (
         Controller.current_event != 'SHINY_FOUND' and
-        time() - encounter_playtime > CONST.FAILURE_DETECTION_SECONDS_ERROR
+        time() - critical_stuck_timer > CONST.FAILURE_DETECTION_SECONDS_ERROR
     ):
         # Send Telegram and/or Email notifications
         Thread(target=lambda: Telegram.send_error_detected('STUCK'), daemon=False).start()
@@ -223,7 +229,7 @@ def _is_program_stuck(Controller: Switch_Controller, Video_Capture: Game_Capture
             minutes=CONST.FAILURE_DETECTION_SECONDS_ERROR//60)
         )
 
-        shutdown_event.set()
+        stop_event.set()
         return
 
     # Reset the stuck timer if the state changed normally
@@ -233,6 +239,7 @@ def _is_program_stuck(Controller: Switch_Controller, Video_Capture: Game_Capture
     # Reset the encounter timer when a pokemon is found
     elif Controller.current_event == 'CHECK_SHINY':
         encounter_playtime = time()
+        critical_stuck_timer = time()
 
 ###########################################################################################################################
 ###########################################################################################################################
@@ -362,7 +369,6 @@ def _update_database(
         pokemon = {'name': pokemon_name, 'shiny': False}
         add_or_update_encounter(pokemon, int(time() - encounter_playtime))
 
-        encounter_playtime = time()
         # Start a timer so if the pokemon is shiny, the video records for SHINY_RECORDING_SECONDS before stopping
         shiny_timer = time()
         pokemon_image = None
@@ -538,7 +544,7 @@ def start_control_system(
 
             # Check if the program is stuck. If it is, try to solve the issue by restarting the game. If cannot, stop the 
             # program execution and notify the user (if notifications are enabled)
-            _is_program_stuck(Controller, Video_Capture, shutdown_event)
+            _is_program_stuck(Controller, Video_Capture, stop_event)
 
             # Start recording a new video after a non-shiny pokemon is found. Ovewrites the older one
             _record_new_video(Controller, Video_Capture)

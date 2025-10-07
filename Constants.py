@@ -106,9 +106,9 @@ STATIC_ENCOUNTERS_DELAY = 2
 # [SECONDS] How long has the program been stuck in the same state before trying to restart the game
 STUCK_TIMER_SECONDS = 25
 # [SECONDS] How long has the program been without encountering a pokémon before trying to restart the game
-FAILURE_DETECTION_SECONDS_WARN = 3*60
+FAILURE_DETECTION_SECONDS_WARN = 2*60
 # [SECONDS] How long has the program been without encountering a pokémon before completely stopping program execution
-FAILURE_DETECTION_SECONDS_ERROR = 5*60
+FAILURE_DETECTION_SECONDS_ERROR = 4*60
 SHINY_DETECTION_TIME = 2
 # [SECONDS] Used to avoid false positives when the game skips the trainer's Pokéball throwing animation due to resource 
 # overload. Value MUST be WILD_SHINY_DETECTION_TIME < 3.5s
