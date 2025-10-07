@@ -47,7 +47,7 @@
 
 <p>
     <p>
-        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Raspberry.svg" width="20px" align="center"/>⠀ Use your computer to <b>automatically</b> search for shiny pokémon. <br>
+        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Raspberry.svg" width="20px" align="center"/>⠀ Use your computer or Raspberry Pi to <b>automatically</b> search for shiny pokémon. <br>
     </p><p>
         &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/NS%20Controller.svg" width="20px" align="center" style="margin-top:0px"/>⠀ Works on official games running on a Nintendo Switch, <b>not emulators</b>! <br>
     </p>
@@ -86,33 +86,7 @@
     ⠀Installation
 </h2>
 
-If you are not familiar with Linux systems, please read <a href="#windows-and-macos">Windows and MacOS</a> before. Then, come back here.
-
-Download or clone the repository. Open a terminal and run the following command:
-```bash
-git clone https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter.git 
-```
-
-### Linux Distributions
-
-<p>
-    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Warning.svg" width="17px" align="left"/><span><strong>Warning:</strong>  This project is not compatible with Python 3.12 due to the removal of the <code>imp</code> module, which affects dependencies like <code>dbus-python</code>. Please use Python 3.11 or earlier to avoid issues. If you followed the VM installation guide, don't worry about this warning.</span>
-</p>
-
-Install the necessary libraries. Open a terminal in the project folder and run the following commands:
-
-```bash
-sudo apt-get install -y python3-pyqt5 tesseract-ocr libtesseract-dev ffmpeg bluetooth
-```
-```bash
-sudo pip install -r Requirements.txt && pip install -r Requirements.txt 
-```
-
-Please, take a look at the configuration of the Virtual Machine mentioned in <a href="#windows-and-macos">Windows and MacOS</a>. Even if you know about Linux systems, there are some important things to do. If something fails, it is probably due to a misconfiguration. This configuration has been tested multiple times and following all the steps should never raise any error.
-
-### Windows and MacOS
-
-Install a Linux Virtual Machine and follow the installation steps for <a href="#linux-distributions">Linux Distributions</a>. The program has been tested using Virtual Box with XUbuntu 22.04.3. You can find a step-by-step guide on how to setup the Virtual Machine [here](./Media/Docs/VM%20Setup.md).
+Follow the <a href="./Media/Docs/Installation.md">installation guide</a> to set everything up from scratch. It walks you through each step clearly, so you don’t need any previous experience with virtual machines or coding. Just follow the steps in order, and you’ll have everything installed and ready to go in no time.
 
 ### Verify Installation
 

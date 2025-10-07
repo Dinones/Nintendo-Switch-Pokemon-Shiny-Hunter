@@ -1,15 +1,18 @@
+<!-- #################### INDEX #################### -->
+
 <h2>
     <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Index.svg" width="30px" align="top"/>
     ⠀Index
 </h2>
 
-- <a href="#linux-installation">Linux</a></li>
-- <a href="#windows-installation">Windows</a>
-    - <a href="#windows-10-installation">Windows 10</a></li>
-    - <a href="#windows-11-installation">Windows 11</a></li>
-        - <a href="#windows-11-dual-boot">Dual Boot</a></li>
-        - <a href="#windows-11-live-usb">Live USB</a></li>
-- <a href="#macos-installation">MacOS</a></li>
+- <a href="#linux-installation">**Linux**</a>
+- <a href="#windows-installation">**Windows**</a>
+    - <a href="#windows-10-installation">Windows 10</a>
+        - <a href="#windows-10-vm-installation">VM Installation</a>
+    - <a href="#windows-11-installation">Windows 11</a>
+        - <a href="#windows-11-dual-boot">Dual Boot</a>
+        - <a href="#windows-11-live-usb">Live USB</a>
+- <a href="#macos-installation">**MacOS**</a>
 
 <!-- #################### LINUX INSTALLATION #################### -->
 ⠀
@@ -19,15 +22,23 @@
 </h2>
 
 > [!WARNING]
-> This project is not compatible with Python 3.12 due to the removal of the <code>imp</code> module, which affects dependencies like <code>dbus-python</code>. Please use Python 3.11 or earlier to avoid issues (I'm currently using 3.11.13). If you are following the installation guide, don't worry about this warning.</span>
+> This project is **not** compatible with Python 3.12 due to the removal of the `imp` module, which affects dependencies like `dbus-python`. Please use Python 3.11 or earlier to avoid issues (I'm currently using 3.11.13). If you are following the installation guide, don't worry about this warning.
 
-Install the necessary libraries. Open a terminal in the project folder and run the following commands:
+Install all required dependencies for your system. Open a terminal in the Desktop directory and run the following command:
 
 ```bash
-sudo apt-get install -y python3-pyqt5 tesseract-ocr libtesseract-dev ffmpeg bluetooth
+sudo apt update && sudo apt install -y git python3-pip python3-dev python3-pyqt5 tesseract-ocr libtesseract-dev ffmpeg bluetooth libdbus-1-dev libglib2.0-dev -y
+```
+
+Once system dependencies are installed, open a terminal inside the project folder and execute the following commands one by one (line by line):
+
+```bash
+python3.11 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
 ```
 ```bash
-sudo pip install -r Requirements.txt && pip install -r Requirements.txt 
+pip install -r Requirements.txt
 ```
 
 <!-- #################### WINDOWS INSTALLATION #################### -->
@@ -41,21 +52,22 @@ sudo pip install -r Requirements.txt && pip install -r Requirements.txt
     Windows 10 (Using VirtualBox VM)
 </h3>
 
+Windows 10 works pretty well with VirtualBox. It usually lets you share things like Bluetooth devices with the virtual machine without many issues.
+For detailed instructions on creating and configuring a VirtualBox VM from scratch, see the following documentation.
+
+- <a id="windows-10-vm-installation" href="./Installation%20Dual%20Boot.md">VM Installation</a>
+
 <h3 id="windows-11-installation">
     Windows 11 (Dual Boot or Live USB)
 </h3>
 
 <p>
-    Windows 11 is more aggressive in sharing Bluetooth components between VirtualBox and your computer, so a VM setup will likely fail to connect. Instead, I recommend creating a disk partition and installing Linux alongside Windows 11. Another option is to use a Linux USB instead, though I haven’t tested this.
+    Windows 11 is more aggressive in sharing Bluetooth components between VirtualBox and your computer, so a VM setup will likely fail to connect. Instead, I recommend creating a disk partition and installing Linux alongside Windows 11. Another option is to use a Linux USB instead, though I haven’t tested its performance.
 </p>
 
-- <h3 id="windows-11-dual-boot">
-    <a href="./Installation%20Dual%20Boot.md">Dual Boot</a>
-</h3>
+- <a id="windows-11-dual-boot" href="./Installation%20Dual%20Boot.md">Dual Boot</a>
 
-- <h3 id="windows-11-live-usb">
-    <a href="./Installation%20Live%20USB.md">Live USB</a>
-</h3>
+- <a id="windows-11-live-usb" href="./Installation%20Live%20USB.md">Live USB</a>
 
 <!-- #################### MAC OS INSTALLATION #################### -->
 ⠀
