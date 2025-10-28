@@ -1,5 +1,5 @@
 <h2>
-    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/VBox%20Instructions/SVG/Virtual%20Box.svg" width="30px" align="top"/>
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Virtual%20Box.svg" width="30px" align="top"/>
     ⠀Download Ubuntu 24.04 ISO
 </h2>
 

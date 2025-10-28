@@ -146,7 +146,7 @@ Finally, enter the game and place the player on the grass/water for a wild encou
 Now, you are ready to go! Open a terminal in the project folder, run the following command, and follow the instructions that will appear:
 
 ```bash
-sudo python3 Shiny_Hunter.py
+sudo .venv/bin/python Shiny_Hunter.py
 ```
 
 <!-- #################### TROUBLESHOOTING #################### -->
