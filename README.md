@@ -6,13 +6,13 @@
 
 <h4 align="center">Search for shiny pokémon on your Nintendo Switch while sleeping ✨</h4>
 
-<div align="center">
+<!-- <div align="center">
     
-<!-- [![GitHub Repo Stars](https://img.shields.io/github/stars/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter?label=%E2%9C%A8%20Stars&color=ff0000)](https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter)
+[![GitHub Repo Stars](https://img.shields.io/github/stars/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter?label=%E2%9C%A8%20Stars&color=ff0000)](https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter)
 [![Discord](https://img.shields.io/badge/contact-Dinones-blue?logo=discord&label=Discord&logoColor=5865f2&color=5865f2)](https://discordapp.com/users/177131156028784640)
-[![YouTube Channel Subscribers](https://img.shields.io/youtube/channel/subscribers/UCUDcDii2WU8SVoTCgYlQCiw?style=flat&logo=youtube&logoColor=ff0000&label=Youtube&color=ff0000)](https://www.youtube.com/watch?v=XE8Oeh71BQ4&ab_channel=Dinones) -->
+[![YouTube Channel Subscribers](https://img.shields.io/youtube/channel/subscribers/UCUDcDii2WU8SVoTCgYlQCiw?style=flat&logo=youtube&logoColor=ff0000&label=Youtube&color=ff0000)](https://www.youtube.com/watch?v=XE8Oeh71BQ4&ab_channel=Dinones)
 
-</div>
+</div> -->
 
 <p align="center">
     <a href="#key-features">Key Features</a> •
@@ -41,24 +41,24 @@
 <!-- #################### KEY FEATURES #################### -->
 ⠀
 <h2 id="key-features">
-    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Star.svg" width="30px" align="top"/>
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Star.svg" width="30px" align="top"/>
     ⠀Key Features
 </h2>
 
 <p>
     <p>
-        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Raspberry.svg" width="20px" align="center"/>⠀ Use your computer or Raspberry Pi to <b>automatically</b> search for shiny pokémon. <br>
+        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Raspberry%20Pi.svg" width="20px" align="center"/>⠀ Use your computer or Raspberry Pi to <b>automatically</b> search for shiny pokémon. <br>
     </p><p>
-        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/NS%20Controller.svg" width="20px" align="center" style="margin-top:0px"/>⠀ Works on official games running on a Nintendo Switch, <b>not emulators</b>! <br>
+        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/NS%20Controller.svg" width="20px" align="center" style="margin-top:0px"/>⠀ Works on official games running on a Nintendo Switch, <b>not emulators</b>! <br>
     </p>
     <p>
-        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Camera.svg" width="20px" align="top"/>⠀ Automatically saves a video of the shiny encounter. <br>
+        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Camera.svg" width="20px" align="top"/>⠀ Automatically saves a video of the shiny encounter. <br>
     </p> 
     <p>
-        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Music.svg" width="20px" align="top"/>⠀ Plays a sound whenever a shiny Pokémon is found. <br>
+        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Music.svg" width="20px" align="top"/>⠀ Plays a sound whenever a shiny Pokémon is found. <br>
     </p> 
     <p>
-        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Notification.svg" width="20px" align="top"/>⠀ Sends an Email, Telegram and/or Discord <b>notification</b> when a shiny is found. <br>
+        &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Notification.svg" width="20px" align="top"/>⠀ Sends an Email, Telegram and/or Discord <b>notification</b> when a shiny is found. <br>
     </p> 
 </p>
 
@@ -82,11 +82,11 @@
 <!-- #################### INSTALLATION #################### -->
 ⠀
 <h2 id="installation">
-    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Gear.svg" width="30px" align="top"/>
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Gear%201.svg" width="30px" align="top"/>
     ⠀Installation
 </h2>
 
-Follow the <a href="./Media/Docs/Installation.md">installation guide</a> to set everything up from scratch. It walks you through each step clearly, so you don’t need any previous experience with virtual machines or coding. Just follow the steps in order, and you’ll have everything installed and ready to go in no time.
+Follow the <a href="./Media/Docs/Installation.md">installation guide</a> to set everything up from scratch. It walks you through each step clearly, so you don’t need any previous experience with virtual machines or coding. Just follow the steps in order, and you’ll have everything installed and ready to go.
 
 ### Verify Installation
 
@@ -95,18 +95,18 @@ In order to verify if everything has been properly installed, follow [these step
 <!-- #################### GETTING STARTED #################### -->
 ⠀
 <h2 id="getting-started">
-    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Rocket.svg" width="30px" align="top"/>
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Rocket.svg" width="30px" align="top"/>
     ⠀Getting Started
 </h2>
 
 ### Material List
 
 <p>
-    &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/USB.svg" width="14px">
+    &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/USB.svg" width="14px">
     ⠀Capture card that converts HDMI input into USB output. <i>Mine is just 7€ worth</i>.<br>
-    &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Switch.svg" width="14px">
+    &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/NS%20Controller.svg" width="14px">
     ⠀Nintendo Switch Dock. <br>
-    &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Cable.svg" width="14px">
+    &emsp; <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/HDMI.svg" width="14px">
     ⠀HDMI cable. <br>
 </p>
 
@@ -118,32 +118,26 @@ Place the Nintendo Switch into the Dock. Connect the dock to the official Ninten
     <strong>NOTE:</strong>  The program will always open the first game slot. Make sure the pokémon game you want to run is in the first position. If it's not, you can simply start the game and it'll move to the beginning.</span>
 </p>
 
-<p>
-    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Warning.svg" width="17px" align="left"/><span><strong>IMPORTANT:</strong>  Set your Nintendo Switch to <b>light mode</b> and do <b>NOT</b> use any custom/animated theme.</span>
-</p>
+[!WARNING] Set your Nintendo Switch to <b>light mode</b> and do <b>NOT</b> use any custom/animated theme.
 
 <!-- #################### RUNNING SHINY HUNTER #################### -->
 ⠀
 <h2>
-    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Pokeball.svg" width="30px" align="top"/>
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Pokeball.svg" width="30px" align="top"/>
     ⠀Running the Shiny Hunter
 </h2>
 
-<img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Warning.svg" width="17px" align="left"/><span><strong>IMPORTANT:</strong> Before running the Shiny Hunter, there are a few variables of the **Constants.py** file that need to be mentioned. You will need to edit them in order to use the program. (See constants [here](./Media/Docs/Constants.md)).
-
-<b>NOTE:</b> If you want to receive an email and/or Telegram notification whenever a shiny is found or an error occurs, you will have to set the notifications up as it is outlined in the [Notifications section](./Media/Docs/Notifications.md).
+[!WARNING] Before running the Shiny Hunter, there are a few variables of the **Constants.py** file that need to be mentioned. You will need to edit them in order to use the program. (See constants [here](./Media/Docs/Constants.md)).
 
 Now, you <b>must</b> change the game configuration as follows:
 
-<ul>
-    <li><p><b>Text Speed:</b> Fast.</p></li>
-    <li><p><b>Battle Effects:</b> Off.</p></li>
-    <li><p><b>Autosave:</b> Off.</p></li>
-</ul>
+- **Text Speed**: Fast.
+- **Battle Effects**: Off *(optional, but much more efficient in some cases)*.
+- **Autosave**: Off.
 
 Finally, enter the game and place the player on the grass/water for a wild encounter; in front of the Pokémon for the static encounter; and one step before entering the lake for the starter encounter. See an example of the positions [here](./Media/Docs/Starting%20Positions.md). Once there, <b>save the game</b> and go to the home screen (leave the game as idle, don't close it); then, go to "<i>Controllers</i>" > "<i>Change Grip/Order Menu</i>". Plug in both controllers to the Nintendo Switch and if not, make sure they're not connected via Bluetooth. (See steps [here](./Media/Docs/Change%20Grip%20Menu.md)).
 
-Now, you are ready to go! Open a terminal in the project folder, run the following command, and follow the instructions that will appear:
+Now, you are ready to go! Open a terminal in the project folder, run the following command, and follow the instructions that will appear in the terminal:
 
 ```bash
 sudo .venv/bin/python Shiny_Hunter.py
@@ -152,27 +146,26 @@ sudo .venv/bin/python Shiny_Hunter.py
 <!-- #################### TROUBLESHOOTING #################### -->
 ⠀
 <h2 id="troubleshooting">
-    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Virus.svg" width="30px" align="top"/>
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Virus.svg" width="30px" align="top"/>
     ⠀Troubleshooting
 </h2>
 
-### Program is getting stuck in the Home screen
-<p>Try setting your Nintendo Switch to <b>light mode</b> and do <b>NOT</b> use any custom/animated theme. The program detects some specific pixels to determine if it is in the Home screen; therefore, using any custom/animated theme will break this feature.</p>
+Please, before opening a new issue, try the troubleshooting steps listed in the <a href="./Media/Docs/Troubleshooting.md">troubleshooting section</a>. These are common problems that other users have already encountered, and following these instructions might save both of us some time. Keep in mind that this project is maintained by a single person, so I may not be able to respond to every issue immediately. Thank you for your understanding! If your problem persists after trying these solutions, feel free to report it on the <a href="https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/issues">issues</a> page.
 
 <!-- #################### CONTRIBUTORS #################### -->
 ⠀
 <h2 id="contributors">
-    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Developer.svg" width="30px" align="top"/>
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Developer.svg" width="30px" align="top"/>
     ⠀Top Contributors
 </h2>
 
-- [@David34920](https://github.com/David34920) - General 
-- [@Gr33nBug](https://github.com/Gr33nBug) - Shaymin integration
+- **[@David34920](https://github.com/David34920)**: General improvements + first **SWSH** Regis integration.
+- **[@Gr33nBug](https://github.com/Gr33nBug)**: **BDSP** Shaymin integration.
 
 <!-- #################### CREDITS #################### -->
 ⠀
 <h2 id="credits">
-    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/NS%20Shiny%20Hunter/SVG/Medal.svg" width="30px" align="top"/>
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Medal.svg" width="30px" align="top"/>
     ⠀Credits
 </h2>
 
