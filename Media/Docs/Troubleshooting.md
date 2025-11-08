@@ -1,5 +1,30 @@
+<!-- ############################################### -->
+<!-- #################### INDEX #################### -->
+<!-- ############################################### -->
+
+<h2>
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Index.svg" width="30px" align="top"/>
+    ⠀Index
+</h2>
+
+- <a href="#troubleshooting">**Troubleshooting**</a>
+- **Raspberry Pi Issues**
+    - <a href="#raspberry-pi-installation-error">Raspberry Pi PyQt5 Installation Error</a>
+    - <a href="#raspberry-pi-qt-plugin-error">PyQt5 Platform Plugin xcb Could Not Be Initialized</a>
+- **Program Stuck Issues**
+    - <a href="#program-getting-stuck-in-home-screen-light-mode">Program Getting Stuck in the HOME Screen</a>
+    - <a href="#program-getting-stuck-in-pairing-screen-screen-size">Program Getting Stuck in the Pairing Screen</a>
+- **Bluetooth Connection Issues**
+    - <a href="#bluetooth-pairing-loop">Bluetooth Controller Enters in "Pairing" Loop</a>
+
+<br>
+
+<!-- ############################################### -->
+<!-- ############### TROUBLESHOOTING ############### -->
+<!-- ############################################### -->
+
 <h1 id="troubleshooting">
-    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Virus.svg" width="30px" align="top"/>
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Virus.svg" width="35px" align="top"/>
     ⠀Troubleshooting
 </h1>
 
@@ -7,8 +32,12 @@ Please, before opening a new issue, try the troubleshooting steps listed below. 
 
 <br>
 
+<!-- ##################################################################### -->
+<!-- ############### Raspberry Pi PyQt5 Installation Error ############### -->
+<!-- ##################################################################### -->
+
 <h2 id="raspberry-pi-installation-error">
-    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Raspberry%20Pi.svg" width="25px" align="top"/>
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Raspberry%20Pi.svg" width="30px" align="top"/>
     ⠀Raspberry Pi <code>PyQt5</code> Installation Error
 </h2>
 
@@ -33,12 +62,16 @@ Once it finishes, reboot the Raspbeery Pi.
 
 <br>
 
+<!-- ################################################################################## -->
+<!-- ############### PyQt5 Platform Plugin xcb Could Not Be Initialized ############### -->
+<!-- ################################################################################## -->
+
 <h2 id="raspberry-pi-qt-plugin-error">
-    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Raspberry%20Pi.svg" width="25px" align="top"/>
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Raspberry%20Pi.svg" width="30px" align="top"/>
     ⠀<code>PyQt5</code> Platform Plugin <code>xcb</code> Could Not Be Initialized
 </h2>
 
-If you encounter the following error while running the code:
+If you encounter the following error while trying to install <code>PyQt5</code>:
 
 ```
 QObject::moveToThread: Current thread (0x341923c0) is not the object's thread (0x345240f0).
@@ -68,8 +101,12 @@ Once it finished, reboot the Raspbeery Pi and try to run the code again.
 
 <br>
 
+<!-- ######################################################################## -->
+<!-- ############### Program Getting Stuck in the HOME Screen ############### -->
+<!-- ######################################################################## -->
+
 <h2 id="program-getting-stuck-in-home-screen-light-mode">
-    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Monitor.svg" width="25px" align="top"/>
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Monitor.svg" width="30px" align="top"/>
     ⠀Program Getting Stuck in the HOME Screen
 </h2>
 
@@ -77,8 +114,12 @@ Try setting your Nintendo Switch to <b>light mode</b> and do <b>NOT</b> use any 
 
 <br>
 
+<!-- ########################################################################### -->
+<!-- ############### Program Getting Stuck in the Pairing Screen ############### -->
+<!-- ########################################################################### -->
+
 <h2 id="program-getting-stuck-in-pairing-screen-screen-size">
-    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Monitor.svg" width="25px" align="top"/>
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Monitor.svg" width="30px" align="top"/>
     ⠀Program Getting Stuck in the Pairing Screen
 </h2>
 
@@ -93,3 +134,80 @@ If that happens, the issue is most likely related to your Nintendo Switch displa
 Please go to **System Settings → TV Settings → Screen Size** and set the value to **100%** on your Nintendo Switch.
 
 After changing this, start the program as you did before, and everything should work.
+
+<br>
+
+<!-- ########################################################################### -->
+<!-- ############### Program Getting Stuck in the Pairing Screen ############### -->
+<!-- ########################################################################### -->
+
+<h2 id="bluetooth-pairing-loop">
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Controller.svg" width="30px" align="top"/>
+    ⠀Bluetooth Controller Enters in "Pairing" Loop
+</h2>
+
+- This solution was proposed by **[@Lcocks](https://github.com/Lcocks)** in this [issue](https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter/blob/master/Media/Docs/Troubleshooting.md#bluetooth-pairing-loop).
+
+<br>
+
+If the Switch shows `Paired` but no controller fills slot 1, and you see connect/disconnect loops, edit the `/etc/bluetooth/main.conf` file by opening a terminal and running `sudo nano /etc/bluetooth/main.conf`. Search for the `[General]` section and set the specified parameters as follows:
+
+```
+[General]
+Discoverable=true
+DiscoverableTimeout=0
+FastConnectable=true
+RemoteNameRequest=false
+DiscoverServices=false
+BrEdrInterleaveEnabled=false
+```
+
+Save the file by pressing `Ctrl + S` and then `Ctrl + X`. Then run:
+
+```bash
+sudo systemctl restart bluetooth
+```
+
+Optionally (but recommended), reinstall `nxbt`. Open a terminal in the project folder and run:
+
+```bash
+# Activate the venv
+source .venv/bin/activate
+
+# Reinstall nxbt
+pip install nxbt --force-reinstall
+```
+
+Add your user to the Bluetooth group:
+
+```
+sudo usermod -aG bluetooth $USER
+```
+Then, reboot the system so the new group permissions take effect.
+   
+Restart the Bluetooth service:
+
+```bash
+sudo systemctl restart bluetooth
+```
+
+Check that your user now has access. Run:
+
+```bash
+groups
+```
+
+And make sure `bluetooth` appears in the list.
+
+Optionally verify adapter status:
+
+```bash
+bluetoothctl show
+
+# It should show:
+# Powered: yes
+# Discoverable: yes
+# Pairable: yes
+```
+
+Re-run the program and check if it works now. If it still fails, reboot once.
