@@ -3,4 +3,5 @@
     ⠀Create a Live USB
 </h2>
 
-Not tested yet.
+> [!NOTE]
+> Not tested yet.
