@@ -33,6 +33,12 @@ Install all required dependencies for your system. Open a terminal in the Deskto
 sudo apt update && sudo apt install -y git python3-pip python3-dev python3-pyqt5 tesseract-ocr libtesseract-dev ffmpeg bluetooth libdbus-1-dev libglib2.0-dev
 ```
 
+Donwload the project repository:
+
+```bash
+git clone https://github.com/Dinones/Nintendo-Switch-Pokemon-Shiny-Hunter.git
+```
+
 Once system dependencies are installed, open a terminal inside the project folder and execute the following commands one by one (line by line):
 
 ```bash
@@ -40,6 +46,7 @@ python3.11 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
 ```
+
 ```bash
 pip install -r Requirements.txt
 ```

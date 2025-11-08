@@ -9,6 +9,7 @@
 - <a href="#create-the-vm">**Create the Virtual Machine**</a>
     - <a href="#change-keyboard-distribution">Change Keyboard Distribution</a>
     - <a href="#auto-resize-vbox-window">Auto-Resize Virtual Box Window</a>
+    - <a href="#install-python-3-11">Install Python 3.11</a>
     - <a href="#attach-bluetooth-and-capture-cards-to-vm">Attach Buetooth and Capture Cards to Virtual Box</a>
 - <a href="#extra-vm-configurations">**Extra Configurations for the Virtual Machine**</a>
     - <a href="#run-sudo-commands-without-entering-password">Run Administrator Commands without Entering Password</a>
@@ -99,13 +100,13 @@
 - First of all, if your keyboard layout does not match with the *"English (US)"* one, go to the start menu, type `keyboard` and open the keyboard manager.
 
     <h6 align="center">
-        <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/VBox%20Instructions/Change%20Keyboard%20Distribution%201.png" width="40%" style="border-radius: 5px;">
+        <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/VBox%20Instructions/Change%20Keyboard%20Distribution%201.png" width="70%" style="border-radius: 5px;">
     </h6>
 
 - Now, go to the **Input Sources** section and click `Add Input Source`. Choose your keyboard layout from the list. Once it's added, move your language to the top of the list and/or remove the *"English (US)"* layout if you don't need it.
 
     <h6 align="center">
-        <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/VBox%20Instructions/Change%20Keyboard%20Distribution%202.png" width="40%" style="border-radius: 5px;">
+        <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/VBox%20Instructions/Change%20Keyboard%20Distribution%202.png" width="70%" style="border-radius: 5px;">
     </h6>
 
 <!-- #################### AUTO-RESIZE VM WINDOW #################### -->
@@ -165,6 +166,22 @@
         <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/VBox%20Instructions/Insert%20Guest%20Additions%204.png" width="60%" style="border-radius: 5px;">
     </h6>
 
+<!-- #################### INSTALL PYTHON 3.11 #################### -->
+
+<h3 id="install-python-3-11">
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Python.svg" width="25px" align="top"/>
+    ⠀Install Python 3.11
+</h3>
+
+- This operating system comes with **Python 3.12** by default, but this version isn't compatible with the main library used by the project to emulate the controllers (`nxbt`). Because of that, you'll need to install **Python 3.11** instead. Open a terminal in the Desktop and run the following commands one by one to install it:
+
+    ```bash
+    sudo apt update && sudo apt install -y software-properties-common && sudo add-apt-repository ppa:deadsnakes/ppa -y && sudo apt update
+    sudo apt install -y python3.11 python3.11-venv python3.11-dev
+    ```
+
+    Once installed, you’ll be ready to create a virtual environment using Python 3.11.
+
 <!-- #################### ATTACH BLUETOOTH AND CAPTURE CARDS TO VBOX #################### -->
 
 <h3 id="attach-bluetooth-and-capture-cards-to-vm">
@@ -175,7 +192,7 @@
 - Once you have successfully installed and configured the VM, power it off. Open **Oracle VM VirtualBox**, select your VM and click the `Configuration` button.
 
     <h6 align="center">
-        <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/VBox%20Instructions/VBox%2012.png" width="50%" style="border-radius: 5px;">
+        <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/VBox%20Instructions/VBox%2012.png" width="70%" style="border-radius: 5px;">
     </h6>
 
 - Click on the `Add New USB Filter` button and select your Bluetooth adapter (*"Intel Corp"* in my case, but it will vary depending on your adapter brand). If you don't know what your adapter is, try disconnecting all USB from your computer; it will filter all your external devices and make it easier to identify it.
@@ -285,7 +302,7 @@ This option lets you copy text on your host computer and paste it inside the VM,
     ⠀Make a Snapshot of the Virtual Machine
 </h3>
 
-You can create a snapshot of the virtual machine so that if something goes wrong later, you don’t have to repeat all the setup steps. The snapshot saves the current state of the VM, letting you easily roll back to this exact point whenever you need.
+You can create a snapshot of the virtual machine so that if something goes wrong later, you don't have to repeat all the setup steps. The snapshot saves the current state of the VM, letting you easily roll back to this exact point whenever you need.
 
 - To do so, power off the VM. Open **Oracle VM VirtualBox**, select your VM, click on `Options` ➔ `Snapshots` and create a snapshot.
 
