@@ -159,7 +159,7 @@ STUCK_FOR_TOO_LONG_ERROR = \
     f'\033[{COLORS["Red"]}mStopping the program...{RESET_FORMAT}'
 
 G_EMPTY_CREDENTIALS = \
-    f'{INFO}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}]"} {RESET_FORMAT}'+\
+    f'{WARN}\033[{SPECIAL["Bold"]};{COLORS["Magenta"]}m{"[{module}]"} {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Bold"]}m{"{module}"} notifications cannot be sent: {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]}mSome fields are missing in the {RESET_FORMAT}'+\
     f'\033[{COLORS["Yellow"]};{SPECIAL["Italics"]}m"{"{path}"}"{RESET_FORMAT}'+\

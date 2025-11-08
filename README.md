@@ -112,13 +112,13 @@ In order to verify if everything has been properly installed, follow [these step
 
 ### Setting Up the Nintendo Switch
 
-Place the Nintendo Switch into the Dock. Connect the dock to the official Nintendo Switch charger. Connect the HDMI output of the Dock to the input of your capture card. Finally, connect your capture card to your computer / Raspberry via USB. If your game is not digital, insert the game card in the Nintendo.
+Place the Nintendo Switch into the Dock. Connect the dock to the official Nintendo Switch charger. Connect the HDMI output of the Dock to the input of your capture card. Finally, connect your capture card to your computer / Raspberry Pi via USB. If your game is not digital, insert the game card in the Nintendo.
 
-<p>
-    <strong>NOTE:</strong>  The program will always open the first game slot. Make sure the pokémon game you want to run is in the first position. If it's not, you can simply start the game and it'll move to the beginning.</span>
-</p>
+> [!NOTE]
+> The program will always open the first game slot. Make sure the pokémon game you want to run is in the first position. If it's not, you can simply start the game and it'll move to the beginning.
 
-[!WARNING] Set your Nintendo Switch to <b>light mode</b> and do <b>NOT</b> use any custom/animated theme.
+> [!WARNING]
+> Set your Nintendo Switch to **light mode** and do **NOT** use any custom/animated theme.
 
 <!-- #################### RUNNING SHINY HUNTER #################### -->
 ⠀
@@ -127,17 +127,20 @@ Place the Nintendo Switch into the Dock. Connect the dock to the official Ninten
     ⠀Running the Shiny Hunter
 </h2>
 
-[!WARNING] Before running the Shiny Hunter, there are a few variables of the **Constants.py** file that need to be mentioned. You will need to edit them in order to use the program. (See constants [here](./Media/Docs/Constants.md)).
+> [!WARNING]
+> Before running the Shiny Hunter, there are a few variables of the **Constants.py** file that need to be mentioned. You will need to edit them in order to use the program. (See constants [here](./Media/Docs/Constants.md)).
 
-Now, you <b>must</b> change the game configuration as follows:
+Now, you **must** change the game configuration as follows:
 
 - **Text Speed**: Fast.
 - **Battle Effects**: Off *(optional, but much more efficient in some cases)*.
 - **Autosave**: Off.
 
-Finally, enter the game and place the player on the grass/water for a wild encounter; in front of the Pokémon for the static encounter; and one step before entering the lake for the starter encounter. See an example of the positions [here](./Media/Docs/Starting%20Positions.md). Once there, <b>save the game</b> and go to the home screen (leave the game as idle, don't close it); then, go to "<i>Controllers</i>" > "<i>Change Grip/Order Menu</i>". Plug in both controllers to the Nintendo Switch and if not, make sure they're not connected via Bluetooth. (See steps [here](./Media/Docs/Change%20Grip%20Menu.md)).
+Finally, enter the game and place the player on the grass/water for a wild encounter; in front of the Pokémon for the static encounter; and one step before entering the lake for the starter encounter. See an example of the positions [here](./Media/Docs/Starting%20Positions.md). Once there, **save the game** and go to the home screen (leave the game as idle, don't close it). Then, go to `Controllers` > `Change Grip/Order Menu`. Plug in both controllers to the Nintendo Switch and if not, make sure they're not connected via Bluetooth. (See steps [here](./Media/Docs/Change%20Grip%20Menu.md)).
 
-Now, you are ready to go! Open a terminal in the project folder, run the following command, and follow the instructions that will appear in the terminal:
+If you want to enable the email, Telegram or Discord notifications to get a message whenever a shiny is found, read [this section](./Media/Docs/Notifications.md) first.
+
+Now, you are ready to go! Open a terminal in the project folder, run the following command and follow the instructions that will appear in the terminal:
 
 ```bash
 sudo .venv/bin/python Shiny_Hunter.py
