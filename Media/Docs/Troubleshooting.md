@@ -13,7 +13,8 @@
     - <a href="#raspberry-pi-qt-plugin-error">PyQt5 Platform Plugin xcb Could Not Be Initialized</a>
 - **Program Stuck Issues**
     - <a href="#program-getting-stuck-in-home-screen-light-mode">Program Getting Stuck in the HOME Screen</a>
-    - <a href="#program-getting-stuck-in-pairing-screen-screen-size">Program Getting Stuck in the Pairing Screen</a>
+    - <a href="#program-getting-stuck-in-pairing-screen-screen-size">Program Getting Stuck in the Pairing Screen (Black Borders)</a>
+    - <a href="#program-getting-stuck-in-pairing-screen-pixel-detection">Program Getting Stuck in the Pairing Screen (Pixel Detection)</a>
 - **Bluetooth Connection Issues**
     - <a href="#bluetooth-pairing-loop">Bluetooth Controller Enters in "Pairing" Loop</a>
 
@@ -114,13 +115,13 @@ Try setting your Nintendo Switch to <b>light mode</b> and do <b>NOT</b> use any 
 
 <br>
 
-<!-- ########################################################################### -->
-<!-- ############### Program Getting Stuck in the Pairing Screen ############### -->
-<!-- ########################################################################### -->
+<!-- ########################################################################################### -->
+<!-- ############### Program Getting Stuck in the Pairing Screen (Black Borders) ############### -->
+<!-- ########################################################################################### -->
 
 <h2 id="program-getting-stuck-in-pairing-screen-screen-size">
     <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Monitor.svg" width="30px" align="top"/>
-    ⠀Program Getting Stuck in the Pairing Screen
+    ⠀Program Getting Stuck in the Pairing Screen (Black Borders)
 </h2>
 
 When running the program, the controller connects successfully but remains stuck on the pairing screen, as shown in the image below.
@@ -134,6 +135,24 @@ If that happens, the issue is most likely related to your Nintendo Switch displa
 Please go to **System Settings → TV Settings → Screen Size** and set the value to **100%** on your Nintendo Switch.
 
 After changing this, start the program as you did before, and everything should work.
+
+If that didn't solve the issue, have a look at this <a href="#program-getting-stuck-in-pairing-screen-pixel-detection">solution</a>.
+
+<br>
+
+<!-- ############################################################################################# -->
+<!-- ############### Program Getting Stuck in the Pairing Screen (Pixel Detection) ############### -->
+<!-- ############################################################################################# -->
+
+<h2 id="program-getting-stuck-in-pairing-screen-pixel-detection">
+    <img src="https://raw.githubusercontent.com/Dinones/Repository-Images/master/SVG/Monitor.svg" width="30px" align="top"/>
+    ⠀Program Getting Stuck in the Pairing Screen (Pixel Detection)
+</h2>
+
+When running the program, the controller connects successfully but remains stuck on the pairing screen.
+Please, have a look at this <a href="#program-getting-stuck-in-pairing-screen-screen-size">solution</a> before. If that didn't solve the issue, continue with this section.
+
+It may be that your capture card is detecting slightly different colors compared to mine. Try going into the `Constants.py` file and changing the `PIXEL_COLOR_DIFF_THRESHOLD` value from `7` to something a bit higher, like `9` or `10`. Bigger numbers may cause missdetections in other states, so it's not recommended to increase its value much more than that.
 
 <br>
 

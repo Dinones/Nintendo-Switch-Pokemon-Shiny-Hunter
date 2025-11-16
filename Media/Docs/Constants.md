@@ -15,6 +15,8 @@
     - <a href="#WILD_WALKING_DIRECTION">WILD_WALKING_DIRECTION</a>
     - <a href="#STARTER">STARTER</a>
     - <a href="#STATIC_ENCOUNTERS_DELAY">STATIC_ENCOUNTERS_DELAY</a>
+    - <a href="#SKIP_UPDATING_GAME">SKIP_UPDATING_GAME</a>
+    - <a href="#MOVE_FORWARD_STATIC_ENCOUNTER">MOVE_FORWARD_STATIC_ENCOUNTER</a>
 - <a href="#other-variables">**Other Variables**</a>
     - <a href="#SHINY_RECORDING_SECONDS">SHINY_RECORDING_SECONDS</a>
     - <a href="#PLAY_SOUNDS">PLAY_SOUNDS</a>
@@ -44,15 +46,15 @@ You can run the `Game_Capture.py` script to help you find the desired index:
     # Select option 2: Check current capture device
     ```
 
-    - *The value must be an integer number starting from `0` (included)*.
+    - *The value must be an integer number starting from `0` (included). Default: `0`.*
 
 - <span id="LANGUAGE"> **LANGUAGE:** Select your in-game language. For `KO`, `ZH-CN` and `ZH-TW` the program will work, but the database module will do weird things.
 
-    - *The value must be a literal string of the following: `ES`, `EN`, `DE`, `FR`, `IT`, `KO`, `ZH-CN` or `ZH-TW`.*
+    - *The value must be a literal string of the following: `ES`, `EN`, `DE`, `FR`, `IT`, `KO`, `ZH-CN` or `ZH-TW`. Default: `EN`.*
 
 - <span id="SAVE_IMAGES"> **SAVE_IMAGES:** The program will automatically save an image of every encounter *(by default)* in the `Media/Images/`. You can stop saving images with this variable. Remember to erase the images from time to time to not run out of space.
 
-    - *The value must be a boolean `True` or `False`.*
+    - *The value must be a boolean `True` or `False`. Default: `True`.*
 
     You can check the saved images afterwards by running the `Image_Processing.py` script:
 
@@ -63,7 +65,7 @@ You can run the `Game_Capture.py` script to help you find the desired index:
 
 - <span id="ENABLE_VIDEO_RECORDING"> **ENABLE_VIDEO_RECORDING:** The program will automatically save a video of the shiny encounter *(by default)* in the `Media/Videos/` folder. This may cause a huge degradation in the program performance in less powerful systems (like some Raspberry Pi). You can disable this feature with this variable.
 
-    - *The value must be a boolean `True` or `False`.*
+    - *The value must be a boolean `True` or `False`. Default: `True`.*
 
 - <span id="WILD_WALKING_SECONDS"> **WILD_WALKING_SECONDS:** Specifies the amount of time (seconds) the player will move in each direction when searching a wild Pokémon.
 
@@ -79,12 +81,17 @@ You can run the `Game_Capture.py` script to help you find the desired index:
 
 - <span id="STATIC_ENCOUNTERS_DELAY"> **STATIC_ENCOUNTERS_DELAY:** Some static encounters make a white screen flash before entering the combat. This variable is really important for a precise detection of the Pokémon. The default value is `2` and works for most of the static encounters. Nevertheless, you must raise this value for some pokémon:
 
-    - *The value must be an integer number equal or greater than `2`.*
-    - Default: `2`.
+    - *The value must be an integer number equal or greater than `2`. Default: `2`.*
     - Uxie: `3`.
     - Dialga and Palkia: `4`.
     - Arceus: `6.5`.
     - Regigigas: `7`.
+
+- <span id="SKIP_UPDATING_GAME"> **SKIP_UPDATING_GAME:** You may want to skip installing the game updates to prevent certain exploitable features from being patched. There's an option in the program that handles this automatically. By setting this variable to `False`, the program will press the `UP` button when entering the game, skipping the "Update game" pop-up.
+    > [!WARNING]
+    > If there's a connection error when pressing `UP`, the game will still update. Use this option at your own risk.
+
+    - *The value must be a boolean `True` or `False`. Default: `False`.*
 
 <br>
 
